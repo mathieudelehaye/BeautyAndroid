@@ -29,6 +29,6 @@
             android:background="@color/BarOrange"
             app:popupTheme="@style/Theme.BeautyAndroid"
             android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="bottom"/>
+            android:layout_gravity="bottom" android:contentDescription="@string/TabBarReadableLabel"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,9 +4,16 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="third_fragment_label">Third Fragment</string>
+    <string name="fourth_fragment_label">Fourth Fragment</string>
+    <string name="back">Back</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="confirm">Confirm</string>
 
-    <string name="hello_first_fragment">Beauty: First screen</string>
-    <string name="hello_second_fragment">Beauty: Second screen</string>
+    <string name="hello_first_fragment">Welcome to Beauty</string>
+    <string name="hello_second_fragment">Login</string>
+    <string name="hello_third_fragment">Register</string>
+    <string name="hello_fourth_fragment">Home</string>
+    <string name="TabBarReadableLabel">Choose your screen</string>
 </resources>
