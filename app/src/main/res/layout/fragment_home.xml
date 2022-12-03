@@ -5,35 +5,35 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".FirstFragment">
+        tools:context=".FragmentHome">
 
     <TextView
-            android:id="@+id/textview_first"
+            android:id="@+id/textview_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hello_first_fragment"
+            android:text="@string/title_home_fragment"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/choice_1_first"
+            app:layout_constraintBottom_toTopOf="@id/choice_1_home"
             android:textSize="24sp"/>
 
     <Button
-            android:id="@+id/choice_1_first"
+            android:id="@+id/choice_1_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            app:layout_constraintTop_toBottomOf="@id/textview_first"
+            app:layout_constraintTop_toBottomOf="@id/textview_home"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.5"/>
     <Button
-            android:id="@+id/choice_2_first"
+            android:id="@+id/choice_2_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register"
-            app:layout_constraintTop_toBottomOf="@id/textview_first"
+            app:layout_constraintTop_toBottomOf="@id/textview_home"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

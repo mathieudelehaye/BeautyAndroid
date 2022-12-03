@@ -12,15 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.databinding.FragmentSecondBinding;
+import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SecondFragment extends Fragment {
+public class FragmentLogin extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentLoginBinding binding;
     private EditText email;
     private EditText password;
     private FirebaseAuth mAuth;
@@ -42,7 +42,7 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -54,15 +54,15 @@ public class SecondFragment extends Fragment {
         password = view.findViewById(R.id.signin_password);
         mAuth = FirebaseAuth.getInstance();
 
-        binding.backSecond.setOnClickListener(new View.OnClickListener() {
+        binding.backLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                NavHostFragment.findNavController(FragmentLogin.this)
+                        .navigate(R.id.action_LoginFragment_to_HomeFragment);
             }
         });
 
-        binding.confirmSecond.setOnClickListener(new View.OnClickListener() {
+        binding.confirmLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -91,8 +91,8 @@ public class SecondFragment extends Fragment {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("BeautyOrder", "signInWithEmail:success");
 
-                                    NavHostFragment.findNavController(SecondFragment.this)
-                                        .navigate(R.id.action_SecondFragment_to_FourthFragment);
+                                    NavHostFragment.findNavController(FragmentLogin.this)
+                                        .navigate(R.id.action_LoginFragment_to_MapFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyOrder", "signInWithEmail:failure", task.getException());

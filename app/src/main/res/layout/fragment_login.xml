@@ -5,55 +5,55 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ThirdFragment">
+        tools:context=".FragmentLogin">
 
     <TextView
-            android:id="@+id/textview_third"
+            android:id="@+id/textview_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hello_third_fragment"
+            android:text="@string/title_login_fragment"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/confirm_third"
+            app:layout_constraintBottom_toTopOf="@id/confirm_login"
             android:textSize="24sp"/>
 
     <EditText
-            android:id="@+id/register_email"
+            android:id="@+id/signin_email"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:hint="Enter Email"
             android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/textview_third"
+            app:layout_constraintTop_toBottomOf="@id/textview_login"
             android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
-            android:id="@+id/register_password"
+            android:id="@+id/signin_password"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:hint="Enter Password"
             android:textSize="20sp"
             android:inputType="textPassword"
-            app:layout_constraintTop_toBottomOf="@id/register_email"
+            app:layout_constraintTop_toBottomOf="@id/signin_email"
             android:layout_marginTop="35dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+
     <Button
-            android:id="@+id/back_third"
+            android:id="@+id/back_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back"
-            app:layout_constraintTop_toBottomOf="@id/textview_third"
+            app:layout_constraintTop_toBottomOf="@id/textview_login"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.263"/>
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.263"/>
 
     <Button
-            android:id="@+id/confirm_third"
+            android:id="@+id/confirm_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/confirm"
-            app:layout_constraintTop_toBottomOf="@id/textview_third"
+            app:layout_constraintTop_toBottomOf="@id/textview_login"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

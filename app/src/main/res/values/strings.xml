@@ -2,18 +2,18 @@
     <string name="app_name">Beauty-Android</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="third_fragment_label">Third Fragment</string>
-    <string name="fourth_fragment_label">Fourth Fragment</string>
+    <string name="home_fragment_label">Home Fragment</string>
+    <string name="login_fragment_label">Login Fragment</string>
+    <string name="register_fragment_label">Register Fragment</string>
+    <string name="map_fragment_label">Map Fragment</string>
     <string name="back">Back</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="confirm">Confirm</string>
 
-    <string name="hello_first_fragment">Welcome to Beauty</string>
-    <string name="hello_second_fragment">Login</string>
-    <string name="hello_third_fragment">Register</string>
-    <string name="hello_fourth_fragment">Home</string>
+    <string name="title_home_fragment">Welcome to Beauty</string>
+    <string name="title_login_fragment">Login</string>
+    <string name="title_register_fragment">Register</string>
+    <string name="title_map_fragment">Map</string>
     <string name="TabBarReadableLabel">Choose your screen</string>
 </resources>

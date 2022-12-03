@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.beautyorder.androidclient.databinding.FragmentFourthBinding;
+import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 
-public class FourthFragment extends Fragment {
+public class FragmentMap extends Fragment {
 
-    private FragmentFourthBinding binding;
+    private FragmentMapBinding binding;
 
     @Override
     public View onCreateView(
@@ -18,7 +18,7 @@ public class FourthFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFourthBinding.inflate(inflater, container, false);
+        binding = FragmentMapBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }

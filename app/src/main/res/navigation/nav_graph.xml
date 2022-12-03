@@ -3,52 +3,52 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/FirstFragment">
+            app:startDestination="@id/FragmentHome">
 
     <fragment
-            android:id="@+id/FirstFragment"
-            android:name="com.beautyorder.androidclient.FirstFragment"
-            android:label="@string/first_fragment_label"
-            tools:layout="@layout/fragment_first">
+            android:id="@+id/FragmentHome"
+            android:name="com.beautyorder.androidclient.FragmentHome"
+            android:label="@string/home_fragment_label"
+            tools:layout="@layout/fragment_home">
 
         <action
-                android:id="@+id/action_FirstFragment_to_SecondFragment"
-                app:destination="@id/SecondFragment"/>
+                android:id="@+id/action_HomeFragment_to_LoginFragment"
+                app:destination="@id/FragmentLogin"/>
         <action
-                android:id="@+id/action_FirstFragment_to_ThirdFragment"
-                app:destination="@id/ThirdFragment"/>
+                android:id="@+id/action_HomeFragment_to_RegisterFragment"
+                app:destination="@id/FragmentRegister"/>
     </fragment>
     <fragment
-            android:id="@+id/SecondFragment"
-            android:name="com.beautyorder.androidclient.SecondFragment"
-            android:label="@string/second_fragment_label"
-            tools:layout="@layout/fragment_second">
+            android:id="@+id/FragmentLogin"
+            android:name="com.beautyorder.androidclient.FragmentLogin"
+            android:label="@string/login_fragment_label"
+            tools:layout="@layout/fragment_login">
 
         <action
-                android:id="@+id/action_SecondFragment_to_FirstFragment"
-                app:destination="@id/FirstFragment"/>
+                android:id="@+id/action_LoginFragment_to_HomeFragment"
+                app:destination="@id/FragmentHome"/>
         <action
-                android:id="@+id/action_SecondFragment_to_FourthFragment"
-                app:destination="@id/FourthFragment"/>
+                android:id="@+id/action_LoginFragment_to_MapFragment"
+                app:destination="@id/FragmentMap"/>
     </fragment>
     <fragment
-            android:id="@+id/ThirdFragment"
-            android:name="com.beautyorder.androidclient.ThirdFragment"
-            android:label="@string/third_fragment_label"
-            tools:layout="@layout/fragment_third">
+            android:id="@+id/FragmentRegister"
+            android:name="com.beautyorder.androidclient.FragmentRegister"
+            android:label="@string/register_fragment_label"
+            tools:layout="@layout/fragment_register">
 
         <action
-                android:id="@+id/action_ThirdFragment_to_FirstFragment"
-                app:destination="@id/FirstFragment"/>
+                android:id="@+id/action_HomeFragment_to_HomeFragment"
+                app:destination="@id/FragmentHome"/>
         <action
-                android:id="@+id/action_ThirdFragment_to_FourthFragment"
-                app:destination="@id/FourthFragment"/>
+                android:id="@+id/action_RegisterFragment_to_MapFragment"
+                app:destination="@id/FragmentMap"/>
     </fragment>
 
     <fragment
-            android:id="@+id/FourthFragment"
-            android:name="com.beautyorder.androidclient.FourthFragment"
-            android:label="@string/fourth_fragment_label"
-            tools:layout="@layout/fragment_fourth">
+            android:id="@+id/FragmentMap"
+            android:name="com.beautyorder.androidclient.FragmentMap"
+            android:label="@string/map_fragment_label"
+            tools:layout="@layout/fragment_map">
     </fragment>
 </navigation>

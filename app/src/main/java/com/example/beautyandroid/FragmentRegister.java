@@ -12,15 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.databinding.FragmentThirdBinding;
+import com.beautyorder.androidclient.databinding.FragmentRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class ThirdFragment extends Fragment {
-    private FragmentThirdBinding binding;
+public class FragmentRegister extends Fragment {
+    private FragmentRegisterBinding binding;
 
     private EditText email;
     private EditText password;
@@ -42,7 +41,7 @@ public class ThirdFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentThirdBinding.inflate(inflater, container, false);
+        binding = FragmentRegisterBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
 
@@ -55,15 +54,15 @@ public class ThirdFragment extends Fragment {
         password = view.findViewById(R.id.register_password);
         mAuth = FirebaseAuth.getInstance();
 
-        binding.backThird.setOnClickListener(new View.OnClickListener() {
+        binding.backRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(ThirdFragment.this)
-                        .navigate(R.id.action_ThirdFragment_to_FirstFragment);
+                NavHostFragment.findNavController(FragmentRegister.this)
+                        .navigate(R.id.action_HomeFragment_to_HomeFragment);
             }
         });
 
-        binding.confirmThird.setOnClickListener(new View.OnClickListener() {
+        binding.confirmRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -92,8 +91,8 @@ public class ThirdFragment extends Fragment {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("BeautyOrder", "createUserWithEmail:success");
 
-                                    NavHostFragment.findNavController(ThirdFragment.this)
-                                        .navigate(R.id.action_ThirdFragment_to_FourthFragment);
+                                    NavHostFragment.findNavController(FragmentRegister.this)
+                                        .navigate(R.id.action_RegisterFragment_to_MapFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyOrder", "createUserWithEmail:failure", task.getException());

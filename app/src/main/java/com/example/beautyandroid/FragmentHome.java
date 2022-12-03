@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.databinding.FragmentFirstBinding;
+import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 
-public class FirstFragment extends Fragment {
+public class FragmentHome extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentHomeBinding binding;
 
     @Override
     public View onCreateView(
@@ -19,7 +19,7 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -27,19 +27,19 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.choice1First.setOnClickListener(new View.OnClickListener() {
+        binding.choice1Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(FragmentHome.this)
+                        .navigate(R.id.action_HomeFragment_to_LoginFragment);
             }
         });
 
-        binding.choice2First.setOnClickListener(new View.OnClickListener() {
+        binding.choice2Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_ThirdFragment);
+                NavHostFragment.findNavController(FragmentHome.this)
+                        .navigate(R.id.action_HomeFragment_to_RegisterFragment);
             }
         });
     }
