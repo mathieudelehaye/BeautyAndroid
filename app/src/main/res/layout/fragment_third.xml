@@ -18,6 +18,24 @@
             app:layout_constraintBottom_toTopOf="@id/confirm_third"
             android:textSize="24sp"/>
 
+    <EditText
+            android:id="@+id/register_email"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:hint="Enter Email"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/textview_third"
+            android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+    <EditText
+            android:id="@+id/register_password"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:hint="Enter Password"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/register_email"
+            android:layout_marginTop="35dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
     <Button
             android:id="@+id/back_third"
             android:layout_width="wrap_content"
@@ -26,7 +44,8 @@
             app:layout_constraintTop_toBottomOf="@id/textview_third"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.263"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.263"/>
 
     <Button
             android:id="@+id/confirm_third"
