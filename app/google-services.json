@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1082206135153",
+    "project_id": "beautyorder-fa43e",
+    "storage_bucket": "beautyorder-fa43e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082206135153:android:3891eb7a24991c86b2ccd0",
+        "android_client_info": {
+          "package_name": "com.beautyorder.androidclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082206135153-uvqmf00sc71ikfg9ds5dl85ugegr9hh3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC40SM51sfg7E5AYdVovFF2jik7wwfPJq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082206135153-uvqmf00sc71ikfg9ds5dl85ugegr9hh3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

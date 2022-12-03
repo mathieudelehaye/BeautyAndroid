@@ -1,4 +1,4 @@
-package com.beauty.android;
+package com.beautyorder.androidclient;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beauty.android.databinding.FragmentFirstBinding;
+import com.beautyorder.androidclient.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
 

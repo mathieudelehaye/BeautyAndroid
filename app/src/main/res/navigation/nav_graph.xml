@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/FirstFragment"
-            android:name="com.beauty.android.FirstFragment"
+            android:name="com.beautyorder.androidclient.FirstFragment"
             android:label="@string/first_fragment_label"
             tools:layout="@layout/fragment_first">
 
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
             android:id="@+id/SecondFragment"
-            android:name="com.beauty.android.SecondFragment"
+            android:name="com.beautyorder.androidclient.SecondFragment"
             android:label="@string/second_fragment_label"
             tools:layout="@layout/fragment_second">
 
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
             android:id="@+id/ThirdFragment"
-            android:name="com.beauty.android.ThirdFragment"
+            android:name="com.beautyorder.androidclient.ThirdFragment"
             android:label="@string/third_fragment_label"
             tools:layout="@layout/fragment_third">
 
@@ -47,7 +47,7 @@
 
     <fragment
             android:id="@+id/FourthFragment"
-            android:name="com.beauty.android.FourthFragment"
+            android:name="com.beautyorder.androidclient.FourthFragment"
             android:label="@string/fourth_fragment_label"
             tools:layout="@layout/fragment_fourth">
     </fragment>

@@ -1,4 +1,4 @@
-package com.beauty.android;
+package com.beautyorder.androidclient;
 
 import android.os.Bundle;
 import com.google.android.material.snackbar.Snackbar;
@@ -8,7 +8,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import com.beauty.android.databinding.ActivityMainBinding;
+import com.beautyorder.androidclient.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;

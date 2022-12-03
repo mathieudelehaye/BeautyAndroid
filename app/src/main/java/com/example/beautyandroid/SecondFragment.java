@@ -1,4 +1,4 @@
-package com.beauty.android;
+package com.beautyorder.androidclient;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,7 +10,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beauty.android.databinding.FragmentSecondBinding;
+import com.beautyorder.androidclient.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {
 
