@@ -33,6 +33,7 @@
             android:layout_height="50dp"
             android:hint="Enter Password"
             android:textSize="20sp"
+            android:inputType="textPassword"
             app:layout_constraintTop_toBottomOf="@id/signin_email"
             android:layout_marginTop="35dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
