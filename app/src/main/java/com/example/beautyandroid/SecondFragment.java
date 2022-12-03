@@ -1,4 +1,4 @@
-package com.example.beautyandroid;
+package com.beauty.android;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,7 +10,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.example.beautyandroid.databinding.FragmentSecondBinding;
+import com.beauty.android.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {
 

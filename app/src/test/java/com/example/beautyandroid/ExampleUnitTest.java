@@ -1,4 +1,4 @@
-package com.example.beautyandroid;
+package com.beauty.android;
 
 import org.junit.Test;
 
