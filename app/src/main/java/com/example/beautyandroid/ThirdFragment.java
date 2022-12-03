@@ -81,17 +81,6 @@ public class ThirdFragment extends Fragment {
 
                 if (navigate) {
 
-//                    Auth.auth().createUser(withEmail: username, password: password) { authResult, error in
-//
-//                        if let e = error {
-//                            print(e.localizedDescription)
-//                        } else {
-//                            print("User registration succesful")
-//
-//                            welcomeCallbacks.segueCallback?(K.welcomeToDaySegueIdentifier)
-//                        }
-//                    }
-
                     String emailText = email.getText().toString();
                     String passwordText = password.getText().toString();
 

@@ -2,21 +2,28 @@ package com.beautyorder.androidclient;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.databinding.FragmentSecondBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     private EditText email;
     private EditText password;
+    private FirebaseAuth mAuth;
 
     // TODO: put those methods in a shared module
     boolean isEmail(EditText text) {
@@ -45,6 +52,7 @@ public class SecondFragment extends Fragment {
 
         email = view.findViewById(R.id.signin_email);
         password = view.findViewById(R.id.signin_password);
+        mAuth = FirebaseAuth.getInstance();
 
         binding.backSecond.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +79,28 @@ public class SecondFragment extends Fragment {
                 }
 
                 if (navigate) {
-                    NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FourthFragment);
+
+                    String emailText = email.getText().toString();
+                    String passwordText = password.getText().toString();
+
+                    mAuth.signInWithEmailAndPassword(emailText, passwordText)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("BeautyOrder", "signInWithEmail:success");
+
+                                    NavHostFragment.findNavController(SecondFragment.this)
+                                        .navigate(R.id.action_SecondFragment_to_FourthFragment);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("BeautyOrder", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(view.getContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                    });
                 }
             }
         });
