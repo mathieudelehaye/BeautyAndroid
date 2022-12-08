@@ -23,14 +23,20 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".FragmentRegister">
+        tools:context=".FragmentMap">
 
-    <TextView
-            android:id="@+id/textview_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_map_fragment"
-            android:textSize="24sp" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="56dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+
+            <org.osmdroid.views.MapView android:id="@+id/map"
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="450dp"
+                                        android:layout_marginTop="56dp" app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+                                        tools:ignore="MissingConstraints"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

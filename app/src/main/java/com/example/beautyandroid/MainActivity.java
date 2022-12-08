@@ -18,18 +18,22 @@
 
 package com.beautyorder.androidclient;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.View;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import com.beautyorder.androidclient.databinding.ActivityMainBinding;
-
 import android.view.Menu;
 import android.view.MenuItem;
+import com.beautyorder.androidclient.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
