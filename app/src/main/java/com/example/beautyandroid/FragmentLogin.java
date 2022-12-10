@@ -107,13 +107,13 @@ public class FragmentLogin extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d("BeautyOrder", "signInWithEmail:success");
+                                    Log.d("BeautyAndroid", "signInWithEmail:success");
 
                                     NavHostFragment.findNavController(FragmentLogin.this)
                                         .navigate(R.id.action_LoginFragment_to_MapFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Log.w("BeautyOrder", "signInWithEmail:failure", task.getException());
+                                    Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());
                                     Toast.makeText(view.getContext(), "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                                 }

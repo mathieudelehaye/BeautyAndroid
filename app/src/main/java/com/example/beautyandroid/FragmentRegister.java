@@ -170,7 +170,7 @@ public class FragmentRegister extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d("BeautyOrder", "createUserWithEmail:success");
+                                    Log.d("BeautyAndroid", "createUserWithEmail:success");
 
                                     FirebaseUser user = mAuth.getCurrentUser();
 
@@ -187,13 +187,13 @@ public class FragmentRegister extends Fragment {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Log.d("BeautyOrder", "DocumentSnapshot successfully written!");
+                                                Log.d("BeautyAndroid", "DocumentSnapshot successfully written!");
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Log.w("BeautyOrder", "Error writing document", e);
+                                                Log.w("BeautyAndroid", "Error writing document", e);
                                             }
                                         });
 
@@ -202,7 +202,7 @@ public class FragmentRegister extends Fragment {
                                         .navigate(R.id.action_RegisterFragment_to_MapFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                    Log.w("BeautyOrder", "createUserWithEmail:failure", task.getException());
+                                    Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());
                                     Toast.makeText(view.getContext(), "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                                 }

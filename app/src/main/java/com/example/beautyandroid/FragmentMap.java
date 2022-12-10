@@ -22,6 +22,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -34,12 +35,19 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import java.util.ArrayList;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -54,6 +62,8 @@ public class FragmentMap extends Fragment {
 
     private MyLocationNewOverlay mLocationOverlay;
 
+    private FirebaseFirestore mDatabase;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -65,6 +75,9 @@ public class FragmentMap extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Get the DB
+        mDatabase = FirebaseFirestore.getInstance();
 
         //handle permissions first, before map is created. not depicted here
 
@@ -97,36 +110,108 @@ public class FragmentMap extends Fragment {
         map.setMultiTouchControls(true);
 
         IMapController mapController = map.getController();
-        mapController.setZoom(12.5);
-        GeoPoint startPoint = new GeoPoint(55.8642, -4.2518);
-        mapController.setCenter(startPoint);
+        mapController.setZoom(14.0);
 
-        this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx),map);
-        this.mLocationOverlay.enableMyLocation();
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx),map);
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
-        //your items
-        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-        items.add(new OverlayItem("My position", "This is where Mathieu lives", new GeoPoint(55.8602,-4.2502))); // Lat/Lon decimal degrees
-        items.add(new OverlayItem("The cathedral", "This is where Batman lives", new GeoPoint(55.8627,-4.2346))); // Lat/Lon decimal degrees
+        mLocationOverlay.runOnFirstFix(new Runnable() {
+            public void run() {
 
-        //the overlay
-        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
-                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        Log.i("BeautyAndroid", "Single tap");
-                        return true;
-                    }
-                    @Override
-                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                        Log.i("BeautyAndroid", "Long press");
-                        return false;
-                    }
-                }, ctx);
-        mOverlay.setFocusItemsOnTap(true);
+                try {
+                    double userLatitude = mLocationOverlay.getMyLocation().getLatitude();
+                    double userLongitude = mLocationOverlay.getMyLocation().getLongitude();
+                    GeoPoint geopoint = new GeoPoint((double) (userLatitude), (double) (userLongitude));
 
-        map.getOverlays().add(mOverlay);
+                    final String userLatitudeText = userLatitude+"";
+                    final String userLongitudeText = userLongitude+"";
+                    Log.d("BeautyAndroid", "user coordinates: latitude " + userLatitudeText + ", longitude "
+                            + userLongitudeText);
+
+                    double truncatedLatitude = Math.floor(userLatitude * 100) / 100;
+                    double truncatedLongitude = Math.floor(userLongitude * 100) / 100;
+                    final double maxSearchLatitude = truncatedLatitude + 0.05;
+                    final double minSearchLatitude = truncatedLatitude - 0.05;
+                    final double maxSearchLongitude = truncatedLongitude + 0.05;
+                    final double minSearchLongitude = truncatedLongitude - 0.05;
+
+                    mDatabase.collection("recyclePointInfos")
+                        .whereLessThan("Latitude", maxSearchLatitude)
+                        .whereGreaterThan("Latitude", minSearchLatitude)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        final double longitude = (double)document.getData().get("Longitude");
+                                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+
+                                        Log.d("BeautyAndroid", "longitude = " + String.valueOf(longitude));
+
+                                        // Due to Firestore query limitation, we need to filter the longitude on the
+                                        // device.
+                                        // TODO: add e.g.: the country or the continent to the query, to limit the
+                                        //  response result number.
+                                        if (longitude > minSearchLongitude && longitude < maxSearchLongitude) {
+                                            Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
+
+                                            final double latitude = (double)document.getData().get("Latitude");
+                                            final String pointName = (String)document.getData().get("PointName");
+                                            final String buildingName = (String)document.getData().get("BuildingName");
+                                            final String buildingNumber = (String)document.getData().get("BuildingNumber");
+                                            final String address = (String)document.getData().get("Address");
+                                            final String city = (String)document.getData().get("City");
+                                            final String postcode = (String)document.getData().get("Postcode");
+                                            final String recyclingProgram = (String)document.getData().get("RecyclingProgram");
+
+                                            final String itemTitle = (pointName.equals("?") ? "" : pointName);
+                                            final String itemSnippet =
+                                                (buildingName.equals("?")  ? "" : buildingName) + " " +
+                                                (buildingNumber.equals("?") ? "" : buildingNumber) + ", " +
+                                                (address.equals("?") ? "" : address) + " " +
+                                                (city.equals("?") ? "" : city) + " " +
+                                                (postcode.equals("?") ? "" : postcode) + "\n\nBrands: " +
+                                                (recyclingProgram.equals("?") ? "" : recyclingProgram);
+
+                                            Log.d("BeautyAndroid", "itemTitle = " + itemTitle +
+                                                ", latitude = " + latitude + ", itemSnippet = " + itemSnippet);
+
+                                            items.add(new OverlayItem(itemTitle, itemSnippet,
+                                                new GeoPoint(latitude,longitude)));
+                                        }
+
+                                        //the overlay
+                                        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                                                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                                                    @Override
+                                                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                                                        Log.i("BeautyAndroid", "Single tap");
+                                                        return true;
+                                                    }
+                                                    @Override
+                                                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+                                                        Log.i("BeautyAndroid", "Long press");
+                                                        return false;
+                                                    }
+                                                }, ctx);
+                                        mOverlay.setFocusItemsOnTap(true);
+
+                                        map.getOverlays().add(mOverlay);
+                                    }
+                                } else {
+                                    Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+                }
+                catch (Exception e) {}
+            }
+        });
+
+
     }
 
     @Override
