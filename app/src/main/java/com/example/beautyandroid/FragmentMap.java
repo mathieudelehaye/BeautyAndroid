@@ -145,9 +145,10 @@ public class FragmentMap extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
+                                    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         final double longitude = (double)document.getData().get("Longitude");
-                                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
                                         Log.d("BeautyAndroid", "longitude = " + String.valueOf(longitude));
 
@@ -173,8 +174,8 @@ public class FragmentMap extends Fragment {
                                                 (buildingNumber.equals("?") ? "" : buildingNumber) + ", " +
                                                 (address.equals("?") ? "" : address) + " " +
                                                 (city.equals("?") ? "" : city) + " " +
-                                                (postcode.equals("?") ? "" : postcode) + "\n\nBrands: " +
-                                                (recyclingProgram.equals("?") ? "" : recyclingProgram);
+                                                (postcode.equals("?") ? "" : postcode) +
+                                                (recyclingProgram.equals("?") ? "" : ("\n\nBrands: " + recyclingProgram));
 
                                             Log.d("BeautyAndroid", "itemTitle = " + itemTitle +
                                                 ", latitude = " + latitude + ", itemSnippet = " + itemSnippet);
@@ -182,25 +183,27 @@ public class FragmentMap extends Fragment {
                                             items.add(new OverlayItem(itemTitle, itemSnippet,
                                                 new GeoPoint(latitude,longitude)));
                                         }
-
-                                        //the overlay
-                                        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
-                                                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                                    @Override
-                                                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                                        Log.i("BeautyAndroid", "Single tap");
-                                                        return true;
-                                                    }
-                                                    @Override
-                                                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                                        Log.i("BeautyAndroid", "Long press");
-                                                        return false;
-                                                    }
-                                                }, ctx);
-                                        mOverlay.setFocusItemsOnTap(true);
-
-                                        map.getOverlays().add(mOverlay);
                                     }
+
+                                    //the overlay
+                                    ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                                        new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                                            @Override
+                                            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                                                Log.i("BeautyAndroid", "Single tap");
+                                                mapController.animateTo(item.getPoint());
+                                                return true;
+                                            }
+                                            @Override
+                                            public boolean onItemLongPress(final int index, final OverlayItem item) {
+                                                Log.i("BeautyAndroid", "Long press");
+                                                return false;
+                                            }
+                                        }, ctx);
+                                    mOverlay.setFocusItemsOnTap(true);
+
+                                    map.getOverlays().add(mOverlay);
+
                                 } else {
                                     Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
                                 }
@@ -210,8 +213,6 @@ public class FragmentMap extends Fragment {
                 catch (Exception e) {}
             }
         });
-
-
     }
 
     @Override
