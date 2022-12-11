@@ -26,10 +26,12 @@ import android.location.Address;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +49,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -220,6 +223,50 @@ public class FragmentMap extends Fragment {
 
                                                 Road road = roadManager.getRoad(waypoints);
 
+                                                // Generate the direction text
+                                                StringBuilder directionTextBuilder = new StringBuilder();
+                                                int directionItemIdx = 0;
+
+                                                for (RoadNode node: road.mNodes) {
+                                                    // There is no useful info in the node of index 0 ("You have
+                                                    // reached a waypoint of your trip")
+                                                    if (directionItemIdx > 0) {
+                                                        final String instructions = node.mInstructions;
+                                                        if (instructions == "null") {
+                                                            continue;
+                                                        }
+
+                                                        directionTextBuilder.append(directionItemIdx + ". ");
+                                                        directionTextBuilder.append(instructions);
+                                                        directionTextBuilder.append("\n");
+                                                    }
+
+                                                    directionItemIdx++;
+                                                }
+
+                                                final String directionText = directionTextBuilder.toString();
+                                                Log.d("BeautyAndroid", "Direction text: " +
+                                                    directionText);
+
+                                                TextView descriptionTextArea = (TextView) view.findViewById(R.id.textArea_mapDirectionText);
+                                                View descriptionTextAreaBackground = (View) view.findViewById(R.id.view_mapDirectionTextBackground);
+
+                                                if (directionText != "") {
+                                                    descriptionTextArea.setText(directionText);
+
+                                                    // Activate the scrollbar
+                                                    descriptionTextArea.setMovementMethod(new ScrollingMovementMethod());
+
+                                                    // Change background color
+                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.black));
+                                                } else {
+                                                    descriptionTextArea.setText("");
+
+                                                    // Remove background color
+                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.BgOrange));
+                                                }
+
+                                                // Display the road as a map overlay
                                                 roadOverlay[0] = RoadManager.buildRoadOverlay(road);
 
                                                 // Add the polyline to the overlays of your map
@@ -242,6 +289,8 @@ public class FragmentMap extends Fragment {
 
                                     map.getOverlays().add(mOverlay);
 
+                                    // Refresh the map
+                                    map.invalidate();
                                 } else {
                                     Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
                                 }
