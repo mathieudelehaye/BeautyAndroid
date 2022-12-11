@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,15 +42,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
-import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -70,6 +72,12 @@ public class FragmentMap extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentMapBinding.inflate(inflater, container, false);
+
+        // Disable StrictMode policy in onCreate, in order to make a network call in the main thread
+        // TODO: call the network from a child thread instead
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         return binding.getRoot();
     }
 
@@ -117,21 +125,26 @@ public class FragmentMap extends Fragment {
         mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
+        RoadManager roadManager = new OSRMRoadManager(ctx, "MyOwnUserAgent/1.0");
+
         mLocationOverlay.runOnFirstFix(new Runnable() {
             public void run() {
 
-                try {
-                    double userLatitude = mLocationOverlay.getMyLocation().getLatitude();
-                    double userLongitude = mLocationOverlay.getMyLocation().getLongitude();
-                    GeoPoint geopoint = new GeoPoint((double) (userLatitude), (double) (userLongitude));
+                // Overlay to display the road to a recycling point
+                final Polyline[] roadOverlay = {null};
 
+                try {
+                    final GeoPoint userLocation = mLocationOverlay.getMyLocation();
+                    final double userLatitude = userLocation.getLatitude();
+                    final double userLongitude = userLocation.getLongitude();
                     final String userLatitudeText = userLatitude+"";
                     final String userLongitudeText = userLongitude+"";
                     Log.d("BeautyAndroid", "user coordinates: latitude " + userLatitudeText + ", longitude "
                             + userLongitudeText);
 
-                    double truncatedLatitude = Math.floor(userLatitude * 100) / 100;
-                    double truncatedLongitude = Math.floor(userLongitude * 100) / 100;
+                    // Search for the recycling points
+                    final double truncatedLatitude = Math.floor(userLatitude * 100) / 100;
+                    final double truncatedLongitude = Math.floor(userLongitude * 100) / 100;
                     final double maxSearchLatitude = truncatedLatitude + 0.05;
                     final double minSearchLatitude = truncatedLatitude - 0.05;
                     final double maxSearchLongitude = truncatedLongitude + 0.05;
@@ -191,7 +204,32 @@ public class FragmentMap extends Fragment {
                                             @Override
                                             public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                                                 Log.i("BeautyAndroid", "Single tap");
+
+                                                // Remove the previous road overlay
+                                                if (roadOverlay[0] != null) {
+                                                    map.getOverlays().remove(roadOverlay[0]);
+                                                }
+
+                                                final IGeoPoint itemILocation = item.getPoint();
+                                                final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
+                                                    itemILocation.getLongitude());
+
+                                                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+                                                waypoints.add(userLocation);
+                                                waypoints.add(itemLocation);
+
+                                                Road road = roadManager.getRoad(waypoints);
+
+                                                roadOverlay[0] = RoadManager.buildRoadOverlay(road);
+
+                                                // Add the polyline to the overlays of your map
+                                                map.getOverlays().add(roadOverlay[0]);
+
+                                                // Refresh the map
+                                                map.invalidate();
+
                                                 mapController.animateTo(item.getPoint());
+
                                                 return true;
                                             }
                                             @Override
