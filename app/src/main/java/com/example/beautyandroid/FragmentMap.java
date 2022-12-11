@@ -111,10 +111,10 @@ public class FragmentMap extends Fragment {
                 Manifest.permission.ACCESS_FINE_LOCATION
         };
         requestPermissionsIfNecessary(
-                view.getContext(),
-                // if you need to show the current location, uncomment the line below
-                // WRITE_EXTERNAL_STORAGE is required in order to show the map
-                permissions
+            view.getContext(),
+            // if you need to show the current location, uncomment the line below
+            // WRITE_EXTERNAL_STORAGE is required in order to show the map
+            permissions
         );
 
         map.setBuiltInZoomControls(true);
@@ -300,6 +300,39 @@ public class FragmentMap extends Fragment {
                 catch (Exception e) {}
             }
         });
+
+        mDatabase.collection("userInfos")
+            .whereEqualTo("__name__", "mathieu.delehaye@gmail.com")
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    // Display score
+                    Integer userScore = 0;
+
+                    if (task.isSuccessful()) {
+                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
+
+                            userScore = Integer.parseInt(document.getData().get("score").toString());
+                        }
+                    } else {
+                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                    }
+
+                    Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
+
+                    TextView scoreTextArea = (TextView) view.findViewById(R.id.textArea_score);
+                    View scoreBackground = (View) view.findViewById(R.id.view_scoreBackground);
+
+                    scoreTextArea.setText(String.valueOf(userScore) + " pts");
+
+                    // Change background color
+                    scoreBackground.setBackgroundColor(getResources().getColor(R.color.black));
+                }
+            });
     }
 
     @Override
