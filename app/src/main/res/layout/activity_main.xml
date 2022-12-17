@@ -23,30 +23,30 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity" android:background="@color/BgOrange">
+        tools:context="com.example.beautyandroid.MainActivity" android:background="@color/BgOrange">
 
     <com.google.android.material.appbar.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:theme="@style/Theme.BeautyAndroid.AppBarOverlay">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/Theme.BeautyAndroid.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:background="@color/BarOrange"
-                app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
-                android:layout_height="?attr/actionBarSize"/>
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:background="@color/BarOrange"
+            app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
+            android:layout_height="?attr/actionBarSize"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main"/>
 
     <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabbar"
-            android:layout_width="match_parent"
-            android:background="@color/BarOrange"
-            app:popupTheme="@style/Theme.BeautyAndroid"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="bottom" android:contentDescription="@string/TabBarReadableLabel"/>
+        android:id="@+id/tabbar"
+        android:layout_width="match_parent"
+        android:background="@color/BarOrange"
+        app:popupTheme="@style/Theme.BeautyAndroid"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom" android:contentDescription="@string/TabBarReadableLabel"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

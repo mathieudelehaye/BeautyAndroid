@@ -199,7 +199,7 @@ public class FragmentRegister extends Fragment {
 
                                     // Navigate to the next fragment
                                     NavHostFragment.findNavController(FragmentRegister.this)
-                                        .navigate(R.id.action_RegisterFragment_to_MapFragment);
+                                        .navigate(R.id.action_RegisterFragment_to_CameraFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());
