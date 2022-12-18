@@ -99,7 +99,7 @@ public class FragmentRegister extends Fragment {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentRegister.this)
-                        .navigate(R.id.action_HomeFragment_to_HomeFragment);
+                        .navigate(R.id.action_RegisterFragment_to_HomeFragment);
             }
         });
 
@@ -199,7 +199,7 @@ public class FragmentRegister extends Fragment {
 
                                     // Navigate to the next fragment
                                     NavHostFragment.findNavController(FragmentRegister.this)
-                                        .navigate(R.id.action_RegisterFragment_to_CameraFragment);
+                                        .navigate(R.id.action_RegisterFragment_to_AppFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());

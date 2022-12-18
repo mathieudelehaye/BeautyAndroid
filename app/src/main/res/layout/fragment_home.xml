@@ -18,12 +18,12 @@
 -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".FragmentHome">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentHome">
 
     <TextView
         android:id="@+id/textview_home"
@@ -35,6 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/choice_1_home"
         android:textSize="24sp"/>
+
     <Button
         android:id="@+id/choice_1_home"
         android:layout_width="wrap_content"
@@ -45,6 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"/>
+
     <Button
         android:id="@+id/choice_2_home"
         android:layout_width="wrap_content"
@@ -54,5 +56,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintVertical_bias="0.656"/>
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.656"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

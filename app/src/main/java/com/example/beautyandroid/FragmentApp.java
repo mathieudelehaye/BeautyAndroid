@@ -1,7 +1,7 @@
 //
-//  FragmentHome.java
+//  FragmentApp.java
 //
-//  Created by Mathieu Delehaye on 1/12/2022.
+//  Created by Mathieu Delehaye on 17/12/2022.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -18,48 +18,41 @@
 
 package com.beautyorder.androidclient;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
+import com.beautyorder.androidclient.databinding.FragmentAppBinding;
+import org.osmdroid.config.Configuration;
 
-public class FragmentHome extends Fragment {
-
-    private FragmentHomeBinding binding;
+public class FragmentApp extends Fragment {
+    private FragmentAppBinding binding;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentAppBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.choice1Home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(FragmentHome.this)
-                    .navigate(R.id.action_HomeFragment_to_LoginFragment);
-            }
-        });
-
-        binding.choice2Home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(FragmentHome.this)
-                    .navigate(R.id.action_HomeFragment_to_RegisterFragment);
-            }
-        });
+        //load/initialize the osmdroid configuration, this can be done
+        Context ctx = view.getContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        //setting this before the layout is inflated is a good idea
+        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
+        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
+        //see also StorageUtils
+        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
+        //tile servers will get you banned based on this string
     }
 
     @Override
@@ -68,4 +61,13 @@ public class FragmentHome extends Fragment {
         binding = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 }

@@ -29,9 +29,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/Theme.BeautyAndroid.AppBarOverlay" android:id="@+id/appBarLayout">
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
+        android:id="@+id/appBarLayout">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -51,16 +50,8 @@
                 android:src="@drawable/brand_logo"/>
 
         </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main"/>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabbar"
-        android:layout_width="match_parent"
-        android:background="@color/white"
-        app:popupTheme="@style/Theme.BeautyAndroid"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="bottom"
-        android:contentDescription="@string/TabBarReadableLabel"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

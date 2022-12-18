@@ -110,7 +110,7 @@ public class FragmentLogin extends Fragment {
                                     Log.d("BeautyAndroid", "signInWithEmail:success");
 
                                     NavHostFragment.findNavController(FragmentLogin.this)
-                                        .navigate(R.id.action_LoginFragment_to_CameraFragment);
+                                        .navigate(R.id.action_LoginFragment_to_AppFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());

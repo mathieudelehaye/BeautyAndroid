@@ -47,7 +47,8 @@
         android:layout_height="140dp"
         android:background="@color/BgOrange"
         app:layout_constraintTop_toBottomOf="@id/map"
-        android:layout_marginTop="30dp" app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="28dp"/>
 
     <TextView
@@ -74,23 +75,28 @@
         android:background="@color/BgOrange"
         app:layout_constraintTop_toBottomOf="@id/map"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="28dp" app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/textArea_score"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@color/BgOrange"
-        android:gravity="top|left"
         android:inputType="textMultiLine"
         android:overScrollMode="always"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@id/map"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="30dp" app:layout_constraintEnd_toEndOf="parent"
-        android:paddingStart="5dp" android:paddingLeft="5dp"
-        android:paddingTop="5dp" android:paddingEnd="5dp" android:paddingRight="5dp" android:paddingBottom="5dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:textAlignment="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

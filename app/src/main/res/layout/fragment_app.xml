@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    fragment_app.xml
+
+    Created by Mathieu Delehaye on 17/12/2022.
+
+    BeautyAndroid: An Android app to order and recycle cosmetics.
+
+    Copyright © 2022 Mathieu Delehaye. All rights reserved.
+
+
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentApp">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/app_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/app_tabbar"
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+            app:popupTheme="@style/Theme.BeautyAndroid"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom"
+            android:contentDescription="@string/TabBarReadableLabel"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_height="72dp"
+                android:layout_width="match_parent"
+                android:icon="@drawable/home"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_height="72dp"
+                android:layout_width="match_parent"
+                android:icon="@drawable/camera"/>
+
+        </com.google.android.material.tabs.TabLayout>
+    </androidx.viewpager.widget.ViewPager>
+</androidx.constraintlayout.widget.ConstraintLayout>
