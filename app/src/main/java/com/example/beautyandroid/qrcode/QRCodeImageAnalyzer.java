@@ -1,13 +1,13 @@
-package com.example.beautyandroid;
+package com.example.beautyandroid.qrcode;
 
 import android.annotation.SuppressLint;
 import android.graphics.*;
 import android.media.Image;
-import android.os.Environment;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
+import com.example.beautyandroid.qrcode.QRCodeFoundListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -18,7 +18,6 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.demo.BitmapUtils;
 
-import java.io.File;
 import java.util.List;
 
 

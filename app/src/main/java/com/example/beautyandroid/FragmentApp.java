@@ -26,11 +26,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
+import com.example.beautyandroid.CollectionPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
 import org.osmdroid.config.Configuration;
 
 public class FragmentApp extends Fragment {
     private FragmentAppBinding binding;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(
@@ -44,15 +48,13 @@ public class FragmentApp extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //load/initialize the osmdroid configuration, this can be done
-        Context ctx = view.getContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        //setting this before the layout is inflated is a good idea
-        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
-        //see also StorageUtils
-        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
-        //tile servers will get you banned based on this string
+        viewPager = view.findViewById(R.id.app_pager);
+        TabLayout tabLayout = view.findViewById(R.id.app_tabbar);
+        tabLayout.getTabAt(0).setIcon(R.drawable.home);
+        tabLayout.getTabAt(1).setIcon(R.drawable.camera);
+        tabLayout.setupWithViewPager(viewPager);
+        CollectionPagerAdapter adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
+        viewPager.setAdapter(adapter);
     }
 
     @Override
