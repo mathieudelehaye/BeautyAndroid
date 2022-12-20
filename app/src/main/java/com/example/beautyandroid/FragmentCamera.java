@@ -24,10 +24,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
@@ -40,23 +41,26 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
-import com.example.beautyandroid.QRCodeFoundListener;
-import com.example.beautyandroid.QRCodeImageAnalyzer;
+import com.example.beautyandroid.qrcode.QRCodeFoundListener;
+import com.example.beautyandroid.qrcode.QRCodeImageAnalyzer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class FragmentCamera extends Fragment {
     private static final int PERMISSION_REQUEST_CAMERA = 1;
-//    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private FragmentCameraBinding binding;
     private Context mCtx;
     private Activity mActivity;
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    private Button mQRCodeFoundButton;
     private String mQRCode;
     private FirebaseFirestore mDatabase;
 
@@ -66,6 +70,7 @@ public class FragmentCamera extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentCameraBinding.inflate(inflater, container, false);
+        mQRCode = "";
         return binding.getRoot();
     }
 
@@ -76,16 +81,6 @@ public class FragmentCamera extends Fragment {
         mActivity = (Activity) mCtx;
 
         mPreviewView = view.findViewById(R.id.activity_main_previewView);
-
-        mQRCodeFoundButton = view.findViewById(R.id.activity_main_qrCodeFoundButton);
-        mQRCodeFoundButton.setVisibility(View.INVISIBLE);
-        mQRCodeFoundButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mCtx, mQRCode, Toast.LENGTH_SHORT).show();
-                Log.i("BeautyAndroid", "QR Code Found: " + mQRCode);
-            }
-        });
 
         Log.d("BeautyAndroid", "mdl onViewCreated 1");
         cameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
@@ -145,6 +140,23 @@ public class FragmentCamera extends Fragment {
         }
     }
 
+    void updateScore(String documentId, Integer newValue) {
+
+        // Get a new write batch
+        WriteBatch batch = mDatabase.batch();
+
+        DocumentReference ref = mDatabase.collection("userInfos").document(documentId);
+        batch.update(ref, "score", newValue);
+
+        // Commit the batch
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        });
+
+    }
+
     void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
         Log.d("BeautyAndroid", "mdl bindCameraPreview entered");
 
@@ -168,15 +180,65 @@ public class FragmentCamera extends Fragment {
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(mCtx), new QRCodeImageAnalyzer(new QRCodeFoundListener() {
             @Override
             public void onQRCodeFound(String _qrCode) {
+
+                Log.d("BeautyAndroid", "QR Code Found: " + _qrCode);
+
+                if (_qrCode.equals(mQRCode)) {
+                    Log.w("BeautyAndroid", "QR Code already scanned");
+                    return;
+                }
+
                 mQRCode = _qrCode;
-                Log.d("BeautyAndroid", "QR Code Found: " + mQRCode);
-                mQRCodeFoundButton.setVisibility(View.VISIBLE);
+
+                // Update user score
+                // TODO: create asynchronous process if no network is when while scanning the QR code
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser user = auth.getCurrentUser();
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+                Log.d("BeautyAndroid", "onQRCodeFound: user.getUid() = " + user.getUid().toString());
+
+                database.collection("userInfos")
+                    .whereEqualTo("__name__", "mathieu.delehaye@gmail.com")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            // Display score
+                            Integer userScore = 0;
+
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
+
+                                    userScore = Integer.parseInt(document.getData().get("score").toString());
+                                    Log.d("BeautyAndroid", "onQRCodeFound: userScore = " + String.valueOf(userScore));
+
+                                    userScore += 1;
+                                    updateScore(document.getId(), userScore);
+
+                                    Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                                    toast.show();
+
+                                    // Update the score in the map view
+                                    TextView scoreTextArea = (TextView) mActivity.findViewById(R.id.textArea_score);
+                                    scoreTextArea.setText(String.valueOf(userScore) + " pts");
+
+                                    Log.d("BeautyAndroid", "Score updated");
+
+                                    break;
+                                }
+                            } else {
+                                Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
             }
 
             @Override
             public void qrCodeNotFound() {
                 Log.d("BeautyAndroid", "QR Code Not Found");
-                mQRCodeFoundButton.setVisibility(View.INVISIBLE);
             }
         }));
 

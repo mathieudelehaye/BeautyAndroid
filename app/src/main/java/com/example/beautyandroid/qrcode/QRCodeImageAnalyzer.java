@@ -60,8 +60,6 @@ public class QRCodeImageAnalyzer implements ImageAnalysis.Analyzer {
                 .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barcodes) {
-                        Log.d("BeautyAndroid", "Image successfully processed by the scanner");
-
                         for (Barcode barcode: barcodes) {
                             Rect bounds = barcode.getBoundingBox();
                             Point[] corners = barcode.getCornerPoints();
