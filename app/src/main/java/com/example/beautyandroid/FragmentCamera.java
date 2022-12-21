@@ -66,8 +66,8 @@ public class FragmentCamera extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
+        LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState
     ) {
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         mQRCode = "";
@@ -84,7 +84,6 @@ public class FragmentCamera extends Fragment {
 
         Log.d("BeautyAndroid", "mdl onViewCreated 1");
         cameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
-        requestCamera();
 
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
@@ -112,6 +111,16 @@ public class FragmentCamera extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "mdl Camera view becomes visible");
+
+            requestCamera();
+        }
     }
 
     @Override

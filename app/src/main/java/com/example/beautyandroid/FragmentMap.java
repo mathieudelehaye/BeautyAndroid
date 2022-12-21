@@ -352,6 +352,14 @@ public class FragmentMap extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "mdl Map view becomes visible");
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         //this will refresh the osmdroid configuration on resuming.
