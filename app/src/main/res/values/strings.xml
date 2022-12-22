@@ -27,6 +27,7 @@
     <string name="register_fragment_label">Register Fragment</string>
     <string name="map_fragment_label">Map Fragment</string>
     <string name="back">Back</string>
+    <string name="no_login">Start</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="confirm">Confirm</string>

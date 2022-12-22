@@ -45,6 +45,14 @@ public class FragmentHome extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(FragmentHome.this)
+                    .navigate(R.id.action_HomeFragment_to_AppFragment);
+            }
+        });
+
         binding.choice1Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -30,6 +30,9 @@
         tools:layout="@layout/fragment_home">
 
         <action
+            android:id="@+id/action_HomeFragment_to_AppFragment"
+            app:destination="@id/FragmentApp"/>
+        <action
             android:id="@+id/action_HomeFragment_to_LoginFragment"
             app:destination="@id/FragmentLogin"/>
         <action
