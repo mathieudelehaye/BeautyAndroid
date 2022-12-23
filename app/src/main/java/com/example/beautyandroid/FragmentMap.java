@@ -302,7 +302,7 @@ public class FragmentMap extends Fragment {
         });
 
         mDatabase.collection("userInfos")
-            .whereEqualTo("__name__", "mathieu.delehaye@gmail.com")
+            .whereEqualTo("__name__", "renee@kyldigital.com")
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override

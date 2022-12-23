@@ -62,8 +62,8 @@
             android:id="@+id/action_RegisterFragment_to_HomeFragment"
             app:destination="@id/FragmentHome"/>
         <action
-            android:id="@+id/action_RegisterFragment_to_AppFragment"
-            app:destination="@id/FragmentApp"/>
+            android:id="@+id/action_RegisterFragment_to_LoginFragment"
+            app:destination="@id/FragmentLogin"/>
     </fragment>
 
     <fragment

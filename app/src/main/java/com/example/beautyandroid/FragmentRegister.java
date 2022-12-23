@@ -19,6 +19,7 @@
 package com.beautyorder.androidclient;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -197,9 +198,24 @@ public class FragmentRegister extends Fragment {
                                             }
                                         });
 
+                                    user.sendEmailVerification()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d("BeautyAndroid", "Verification email sent.");
+
+                                                    Toast toast = Toast.makeText(getContext(), "Verification email sent", Toast.LENGTH_SHORT);
+                                                    toast.show();
+                                                }
+                                            }
+                                        });
+
+                                    SystemClock.sleep(1000);
+
                                     // Navigate to the next fragment
                                     NavHostFragment.findNavController(FragmentRegister.this)
-                                        .navigate(R.id.action_RegisterFragment_to_AppFragment);
+                                        .navigate(R.id.action_RegisterFragment_to_LoginFragment);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());

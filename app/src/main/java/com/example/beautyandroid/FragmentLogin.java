@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class FragmentLogin extends Fragment {
 
@@ -109,12 +110,22 @@ public class FragmentLogin extends Fragment {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("BeautyAndroid", "signInWithEmail:success");
 
-                                    NavHostFragment.findNavController(FragmentLogin.this)
-                                        .navigate(R.id.action_LoginFragment_to_AppFragment);
+                                    // Check if the user email is verified
+                                    FirebaseUser user = mAuth.getCurrentUser();
+
+                                    if (user.isEmailVerified()) {
+                                        NavHostFragment.findNavController(FragmentLogin.this)
+                                            .navigate(R.id.action_LoginFragment_to_AppFragment);
+                                    } else {
+                                        Log.e("BeautyAndroid", "Email is not verified");
+
+                                        Toast.makeText(view.getContext(), "Email not verified",
+                                            Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(view.getContext(), "Authentication failed.",
+                                    Toast.makeText(view.getContext(), "Authentication failed",
                                         Toast.LENGTH_SHORT).show();
                                 }
                             }
