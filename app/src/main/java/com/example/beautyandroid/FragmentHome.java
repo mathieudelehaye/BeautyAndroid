@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
+import com.example.beautyandroid.model.AppUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,6 +42,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class FragmentHome extends Fragment {
 
@@ -63,11 +66,15 @@ public class FragmentHome extends Fragment {
         binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String autoUserId = getAutoUserId();
 
-                getAutoUserId();
+                if (!autoUserId.equals(""))
+                {
+                    AppUser.getInstance().authenticate(autoUserId, AppUser.AuthenticationType.NOT_REGISTERED);
 
-                NavHostFragment.findNavController(FragmentHome.this)
-                    .navigate(R.id.action_HomeFragment_to_AppFragment);
+                    NavHostFragment.findNavController(FragmentHome.this)
+                        .navigate(R.id.action_HomeFragment_to_AppFragment);
+                }
             }
         });
 
@@ -94,14 +101,15 @@ public class FragmentHome extends Fragment {
         binding = null;
     }
 
-    private void getAutoUserId() {
-        Context ctxt = getContext();
+    private String getAutoUserId() {
+        final Context ctxt = getContext();
 
         if (ctxt == null) {
-            return;
+            Log.w("BeautyAndroid", "Trying to get the id without application user");
+            return "";
         }
 
-        // Read the shared app preferences
+        // Read the app preferences
         SharedPreferences sharedPref = ctxt.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
@@ -110,10 +118,10 @@ public class FragmentHome extends Fragment {
 
         if (!userAutomaticId.toString().equals("")) {
             Log.d("BeautyAndroid", "The user automatic identifier was read: " + userAutomaticId.toString());
-            return;
+            return userAutomaticId.toString();
         }
 
-        // Get the phone uid
+        // Get the phone id
         StringBuilder deviceId = new StringBuilder("");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
@@ -150,7 +158,7 @@ public class FragmentHome extends Fragment {
                         userNumber =  snapshot.size();
                     }
 
-                    // Compute the user id hash
+                    // Compute the uid
                     String tmpId = deviceId + time + String.valueOf(userNumber);
 
                     byte[] hash = {};
@@ -159,19 +167,26 @@ public class FragmentHome extends Fragment {
 
                         hash = md.digest(tmpId.getBytes(StandardCharsets.UTF_8));
 
-                        // Store the hash in the app preferences
-                        userAutomaticId.append(hash.toString());
+                        // Store the uid in the app preferences
+                        userAutomaticId.append(UUID.nameUUIDFromBytes(hash).toString());
+
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString(getString(R.string.user_automatic_id), userAutomaticId.toString());
+                        editor.apply();
 
                         Log.d("BeautyAndroid", "The user automatic identifier was created: " + userAutomaticId.toString());
 
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString(getString(R.string.user_automatic_id), hash.toString());
-                        editor.apply();
+                        AppUser.getInstance().authenticate(userAutomaticId.toString(), AppUser.AuthenticationType.NOT_REGISTERED);
+
+                        NavHostFragment.findNavController(FragmentHome.this)
+                            .navigate(R.id.action_HomeFragment_to_AppFragment);
                     } catch (NoSuchAlgorithmException e) {
                         Log.e("BeautyAndroid", e.toString());
                         return;
                     }
                 }
             });
+
+        return userAutomaticId.toString();
     }
 }

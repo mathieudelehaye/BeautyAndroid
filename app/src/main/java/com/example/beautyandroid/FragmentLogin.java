@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
+import com.example.beautyandroid.model.AppUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -77,7 +78,7 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentLogin.this)
-                        .navigate(R.id.action_LoginFragment_to_HomeFragment);
+                    .navigate(R.id.action_LoginFragment_to_HomeFragment);
             }
         });
 
@@ -111,9 +112,11 @@ public class FragmentLogin extends Fragment {
                                     Log.d("BeautyAndroid", "signInWithEmail:success");
 
                                     // Check if the user email is verified
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    FirebaseUser dbUser = mAuth.getCurrentUser();
 
-                                    if (user.isEmailVerified()) {
+                                    if (dbUser.isEmailVerified()) {
+                                        AppUser.getInstance().authenticate(emailText, AppUser.AuthenticationType.REGISTERED);
+
                                         NavHostFragment.findNavController(FragmentLogin.this)
                                             .navigate(R.id.action_LoginFragment_to_AppFragment);
                                     } else {

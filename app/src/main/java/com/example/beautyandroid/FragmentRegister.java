@@ -182,6 +182,7 @@ public class FragmentRegister extends Fragment {
                                     userInfo.put("address", mAddress.getText().toString());
                                     userInfo.put("city", mCity.getText().toString());
                                     userInfo.put("post_code", mPostCode.getText().toString());
+                                    userInfo.put("score", 0);
 
                                     mDatabase.collection("userInfos").document(emailText)
                                         .set(userInfo)

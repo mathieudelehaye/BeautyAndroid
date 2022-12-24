@@ -21,6 +21,7 @@ package com.beautyorder.androidclient;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
 import com.example.beautyandroid.CollectionPagerAdapter;
+import com.example.beautyandroid.model.AppUser;
 import com.google.android.material.tabs.TabLayout;
 import org.osmdroid.config.Configuration;
 
