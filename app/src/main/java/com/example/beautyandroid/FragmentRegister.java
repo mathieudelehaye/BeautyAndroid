@@ -32,13 +32,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.databinding.FragmentRegisterBinding;
+import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.errorprone.annotations.Var;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -175,29 +178,17 @@ public class FragmentRegister extends Fragment {
 
                                     FirebaseUser user = mAuth.getCurrentUser();
 
-                                    // Add user infos to the database
-                                    Map<String, Object> userInfo = new HashMap<>();
-                                    userInfo.put("first_name", mFirstName.getText().toString());
-                                    userInfo.put("last_name", mLastName.getText().toString());
-                                    userInfo.put("address", mAddress.getText().toString());
-                                    userInfo.put("city", mCity.getText().toString());
-                                    userInfo.put("post_code", mPostCode.getText().toString());
-                                    userInfo.put("score", 0);
+                                    // Add userInfos table entry to the database matching the new user
+                                    Map<String, Object> userInfoMap = new HashMap<>();
+                                    userInfoMap.put("first_name", mFirstName.getText().toString());
+                                    userInfoMap.put("last_name", mLastName.getText().toString());
+                                    userInfoMap.put("address", mAddress.getText().toString());
+                                    userInfoMap.put("city", mCity.getText().toString());
+                                    userInfoMap.put("post_code", mPostCode.getText().toString());
+                                    userInfoMap.put("score", 0);
 
-                                    mDatabase.collection("userInfos").document(emailText)
-                                        .set(userInfo)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d("BeautyAndroid", "DocumentSnapshot successfully written!");
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("BeautyAndroid", "Error writing document", e);
-                                            }
-                                        });
+                                    UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
+                                    userInfo.writeToDatabase();
 
                                     user.sendEmailVerification()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -28,26 +28,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 import com.example.beautyandroid.model.AppUser;
+import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import org.checkerframework.checker.units.qual.A;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
 
 public class FragmentHome extends Fragment {
 
     private FragmentHomeBinding binding;
+    private FirebaseFirestore mDatabase;
 
     @Override
     public View onCreateView(
@@ -62,6 +66,8 @@ public class FragmentHome extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mDatabase = FirebaseFirestore.getInstance();
 
         binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +105,43 @@ public class FragmentHome extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private String tryAndCreateAutoUserId(String deviceId, int userNumber) {
+
+        // Get the timestamp
+        Date date = new Date();
+        String time = String.valueOf(date.getTime());
+
+        // Compute the uid
+        String tmpId = deviceId + time + String.valueOf(userNumber);
+
+        byte[] hash = {};
+        StringBuilder uid = new StringBuilder("");
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+
+            hash = md.digest(tmpId.getBytes(StandardCharsets.UTF_8));
+
+            uid.append(UUID.nameUUIDFromBytes(hash).toString());
+
+            // Add userInfos table entry to the database matching the anonymous user
+            Map<String, Object> userInfoMap = new HashMap<>();
+            userInfoMap.put("first_name", "");
+            userInfoMap.put("last_name", "");
+            userInfoMap.put("address", "");
+            userInfoMap.put("city", "");
+            userInfoMap.put("post_code", "");
+            userInfoMap.put("score", 0);
+
+            UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
+            userInfo.writeToDatabase();
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("BeautyAndroid", e.toString());
+        }
+
+        return uid.toString();
     }
 
     private String getAutoUserId() {
@@ -139,10 +182,6 @@ public class FragmentHome extends Fragment {
             }
         }
 
-        // Get the timestamp
-        Date date = new Date();
-        String time = String.valueOf(date.getTime());
-
         // Query the database
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection("userInfos")
@@ -150,43 +189,35 @@ public class FragmentHome extends Fragment {
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    // Get the user number already in the database
-                    int userNumber = 0;
-
-                    if (task.isSuccessful()) {
-                        QuerySnapshot snapshot = task.getResult();
-                        userNumber =  snapshot.size();
-                    }
-
-                    // Compute the uid
-                    String tmpId = deviceId + time + String.valueOf(userNumber);
-
-                    byte[] hash = {};
-                    try {
-                        MessageDigest md = MessageDigest.getInstance("SHA-1");
-
-                        hash = md.digest(tmpId.getBytes(StandardCharsets.UTF_8));
-
-                        // Store the uid in the app preferences
-                        userAutomaticId.append(UUID.nameUUIDFromBytes(hash).toString());
-
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString(getString(R.string.user_automatic_id), userAutomaticId.toString());
-                        editor.apply();
-
-                        Log.d("BeautyAndroid", "The user automatic identifier was created: " + userAutomaticId.toString());
-
-                        AppUser.getInstance().authenticate(userAutomaticId.toString(), AppUser.AuthenticationType.NOT_REGISTERED);
-
-                        NavHostFragment.findNavController(FragmentHome.this)
-                            .navigate(R.id.action_HomeFragment_to_AppFragment);
-                    } catch (NoSuchAlgorithmException e) {
-                        Log.e("BeautyAndroid", e.toString());
+                    if (!task.isSuccessful()) {
                         return;
                     }
+
+                    // Get the user number already in the database
+                    QuerySnapshot snapshot = task.getResult();
+                    int userNumber = snapshot.size();
+
+                    // TODO: read back the created auto user from the DB and try to recreate it until
+                    // it worked.
+
+                    String uid = tryAndCreateAutoUserId(deviceId.toString(), userNumber);
+
+                    // Store the uid in the app preferences
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(getString(R.string.user_automatic_id), uid);
+                    editor.apply();
+
+                    Log.d("BeautyAndroid", "The user automatic identifier was created: "
+                        + uid);
+
+                    // Update the app user
+                    AppUser.getInstance().authenticate(userAutomaticId.toString(), AppUser.AuthenticationType.NOT_REGISTERED);
+
+                    NavHostFragment.findNavController(FragmentHome.this)
+                        .navigate(R.id.action_HomeFragment_to_AppFragment);
                 }
             });
 
-        return userAutomaticId.toString();
+        return "";
     }
 }

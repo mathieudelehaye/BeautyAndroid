@@ -1,5 +1,5 @@
 //
-//  AppUser.java
+//  UserInfoEntry.java
 //
 //  Created by Mathieu Delehaye on 24/12/2022.
 //
@@ -26,37 +26,33 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 
-public class AppUser {
-    public enum AuthenticationType {
-        NONE,
-        NOT_REGISTERED,
-        REGISTERED
+public class UserInfoEntry {
+    private FirebaseFirestore mDatabase;
+    private String mKey;
+    private Map<String, Object> mData;
+
+    public UserInfoEntry(FirebaseFirestore _database, String _key, Map<String, Object> _data) {
+        mDatabase = _database;
+        mKey = _key;
+        mData = _data;
     }
 
-    private static final AppUser mInstance = new AppUser();
+    public void writeToDatabase() {
 
-    private AuthenticationType authenticationType = AuthenticationType.NONE;
-
-    private StringBuilder id = new StringBuilder("");
-
-    // private constructor to avoid client applications using it
-    private AppUser(){}
-
-    public static AppUser getInstance() {
-        return mInstance;
-    }
-
-    public AuthenticationType getAuthenticationType() {
-        return this.authenticationType;
-    }
-
-    public String getId() {
-        return this.id.toString();
-    }
-
-    public void authenticate(String _uid, AuthenticationType _type) {
-        this.authenticationType = _type;
-        this.id.setLength(0);
-        this.id.append(_uid);
+        // Add userInfos table entry to the database matching the app user
+        mDatabase.collection("userInfos").document(mKey)
+            .set(mData)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.i("BeautyAndroid", "New info successfully written to the database for user: " + mKey);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("BeautyAndroid", "Error writing to the database", e);
+                }
+            });
     }
 }
