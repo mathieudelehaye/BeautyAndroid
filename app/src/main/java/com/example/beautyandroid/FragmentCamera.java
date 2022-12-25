@@ -20,6 +20,7 @@ package com.beautyorder.androidclient;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +29,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
@@ -41,18 +41,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
-import com.example.beautyandroid.model.AppUser;
 import com.example.beautyandroid.qrcode.QRCodeFoundListener;
 import com.example.beautyandroid.qrcode.QRCodeImageAnalyzer;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.*;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 public class FragmentCamera extends Fragment {
@@ -63,7 +57,8 @@ public class FragmentCamera extends Fragment {
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private String mQRCode;
-    private FirebaseFirestore mDatabase;
+    private Boolean mCodeAlreadyScannedLogDisplayed = false;
+    private SharedPreferences mSharedPref;
 
     @Override
     public View onCreateView(
@@ -72,6 +67,7 @@ public class FragmentCamera extends Fragment {
     ) {
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         mQRCode = "";
+        mCodeAlreadyScannedLogDisplayed = false;
         return binding.getRoot();
     }
 
@@ -85,8 +81,9 @@ public class FragmentCamera extends Fragment {
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
 
-        // Get the DB
-        mDatabase = FirebaseFirestore.getInstance();
+        // Get the app preferences
+        mSharedPref = mCtx.getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE);
     }
 
     @Override
@@ -142,23 +139,6 @@ public class FragmentCamera extends Fragment {
         }
     }
 
-    void updateScore(String documentId, Integer newValue) {
-
-        // Get a new write batch
-        WriteBatch batch = mDatabase.batch();
-
-        DocumentReference ref = mDatabase.collection("userInfos").document(documentId);
-        batch.update(ref, "score", newValue);
-
-        // Commit the batch
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-            }
-        });
-
-    }
-
     void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
         mPreviewView.setPreferredImplementationMode(PreviewView.ImplementationMode.SURFACE_VIEW);
 
@@ -181,59 +161,41 @@ public class FragmentCamera extends Fragment {
             @Override
             public void onQRCodeFound(String _qrCode) {
 
-                Log.d("BeautyAndroid", "QR Code Found: " + _qrCode);
-
                 if (_qrCode.equals(mQRCode)) {
-                    Log.w("BeautyAndroid", "QR Code already scanned");
+                    if (!mCodeAlreadyScannedLogDisplayed) {
+                        Log.w("BeautyAndroid", "QR Code already scanned");
+                        mCodeAlreadyScannedLogDisplayed = true;
+                    }
                     return;
                 }
 
+                Log.d("BeautyAndroid", "New QR Code Found: " + _qrCode);
+
                 mQRCode = _qrCode;
+                mCodeAlreadyScannedLogDisplayed = false;
 
-                // Update user score
-                // TODO: create asynchronous process if no network is available when scanning the QR code
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseUser user = auth.getCurrentUser();
-                FirebaseFirestore database = FirebaseFirestore.getInstance();
+                // Check if no QR code scanning has already been sent for today. If no, add the scanning event
+                // to the queue, so it is sent later.
+                HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet("set",
+                    new HashSet<String>());
 
-                Log.d("BeautyAndroid", "onQRCodeFound: user.getUid() = " + user.getUid().toString());
+                HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
 
-                database.collection("userInfos")
-                    .whereEqualTo("__name__", AppUser.getInstance().getId())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            // Display score
-                            Integer userScore = 0;
+                String timeStamp = new SimpleDateFormat("yyyy.MM.dd").format(new java.util.Date());
 
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
+                if (!updatedQueue.contains(timeStamp)) {
+                    updatedQueue.add(timeStamp);
 
-                                    userScore = Integer.parseInt(document.getData().get("score").toString());
-                                    Log.d("BeautyAndroid", "onQRCodeFound: userScore = " + String.valueOf(userScore));
+                    // Write back the queue to the app preferences
+                    mSharedPref.edit().putStringSet(getString(R.string.scores_to_send), updatedQueue).commit();
 
-                                    userScore += 1;
-                                    updateScore(document.getId(), userScore);
+                    Log.i("BeautyAndroid", "Scanning event added to the queue for the timestamp: "
+                        + timeStamp);
 
-                                    Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
-                                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                                    toast.show();
-
-                                    // Update the score in the map view
-                                    TextView scoreTextArea = (TextView) mActivity.findViewById(R.id.textArea_score);
-                                    scoreTextArea.setText(String.valueOf(userScore) + " pts");
-
-                                    Log.d("BeautyAndroid", "Score updated");
-
-                                    break;
-                                }
-                            } else {
-                                Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });
+                    Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                    toast.show();
+                }
             }
 
             @Override

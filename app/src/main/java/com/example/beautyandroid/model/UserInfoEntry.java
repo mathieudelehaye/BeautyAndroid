@@ -20,10 +20,13 @@ package com.example.beautyandroid.model;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class UserInfoEntry {
@@ -39,6 +42,19 @@ public class UserInfoEntry {
         mDatabase = _database;
         mKey = _key;
         mData = _data;
+    }
+
+    public UserInfoEntry(FirebaseFirestore _database, String _key) {
+        mDatabase = _database;
+        mKey = _key;
+
+        mData = new HashMap<>();
+        mData.put("first_name", "");
+        mData.put("last_name", "");
+        mData.put("address", "");
+        mData.put("city", "");
+        mData.put("post_code", "");
+        mData.put("score", 0);
     }
 
     public void writeToDatabase(CallbackManager... cbManager) {
@@ -66,5 +82,57 @@ public class UserInfoEntry {
                     }
                 }
             });
+    }
+
+    public int readScoreField(CallbackManager... cbManager) {
+
+        mDatabase.collection("userInfos")
+            .whereEqualTo("__name__", mKey)
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    // Display score
+                    Integer userScore = 0;
+
+                    if (task.isSuccessful()) {
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("BeautyAndroid", mKey + " => " + document.getData());
+
+                            userScore = Integer.parseInt(document.getData().get("score").toString());
+
+                            mData.put("score", userScore);
+
+                            if (cbManager.length >= 1) {
+                                cbManager[0].onSuccess();
+                            }
+                        }
+                    } else {
+                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+
+                        if (cbManager.length >= 1) {
+                            cbManager[0].onFailure();
+                        }
+                    }
+                }
+            });
+
+        return 0;
+    }
+
+    public void incrementAndWriteScoreField() {
+        // Get a new write batch
+        WriteBatch batch = mDatabase.batch();
+
+        DocumentReference ref = mDatabase.collection("userInfos").document(mKey);
+        batch.update(ref, "score", (int)mData.get("score") + 1);
+
+        // Commit the batch
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        });
     }
 }
