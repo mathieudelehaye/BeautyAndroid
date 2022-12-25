@@ -41,12 +41,18 @@ import com.google.firebase.auth.FirebaseUser;
 public class FragmentLogin extends Fragment {
 
     private FragmentLoginBinding binding;
-    private EditText email;
-    private EditText password;
+    private EditText mEmail;
+    private EditText mPassword;
     private FirebaseAuth mAuth;
 
     // TODO: put those methods in a shared module
     boolean isEmail(EditText text) {
+
+        if (text == null) {
+            Log.e("BeautyAndroid", "Email format check on a null object");
+            return false;
+        }
+
         CharSequence email = text.getText().toString();
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
@@ -70,8 +76,8 @@ public class FragmentLogin extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        email = view.findViewById(R.id.signin_email);
-        password = view.findViewById(R.id.signin_password);
+        mEmail = view.findViewById(R.id.signin_email);
+        mPassword = view.findViewById(R.id.signin_password);
         mAuth = FirebaseAuth.getInstance();
 
         binding.backLogin.setOnClickListener(new View.OnClickListener() {
@@ -88,20 +94,20 @@ public class FragmentLogin extends Fragment {
 
                 Boolean navigate = true;
 
-                if (isEmail(email) == false) {
-                    email.setError("Enter valid email!");
+                if (isEmail(mEmail) == false) {
+                    mEmail.setError("Enter valid email!");
                     navigate = false;
                 }
 
-                if (isEmpty(password)) {
-                    password.setError("Password is required!");
+                if (isEmpty(mPassword)) {
+                    mPassword.setError("Password is required!");
                     navigate = false;
                 }
 
                 if (navigate) {
 
-                    String emailText = email.getText().toString();
-                    String passwordText = password.getText().toString();
+                    String emailText = mEmail.getText().toString();
+                    String passwordText = mPassword.getText().toString();
 
                     mAuth.signInWithEmailAndPassword(emailText, passwordText)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -132,6 +138,32 @@ public class FragmentLogin extends Fragment {
                                         Toast.LENGTH_SHORT).show();
                                 }
                             }
+                    });
+                }
+            }
+        });
+
+        binding.resetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            if (isEmail(mEmail)) {
+                String emailText = mEmail.getText().toString();
+
+                mAuth.sendPasswordResetEmail(emailText)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("BeautyAndroid", "Password reset email sent.");
+
+                                Toast toast = Toast.makeText(getContext(), "Password reset email sent",
+                                    Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
+                                Log.w("BeautyAndroid", "Password reset didn't work.");
+                            }
+                        }
                     });
                 }
             }
