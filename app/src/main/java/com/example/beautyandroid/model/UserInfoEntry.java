@@ -27,6 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Map;
 
 public class UserInfoEntry {
+    public interface CallbackManager {
+        void onSuccess();
+        void onFailure();
+    }
     private FirebaseFirestore mDatabase;
     private String mKey;
     private Map<String, Object> mData;
@@ -37,7 +41,7 @@ public class UserInfoEntry {
         mData = _data;
     }
 
-    public void writeToDatabase() {
+    public void writeToDatabase(CallbackManager... cbManager) {
 
         // Add userInfos table entry to the database matching the app user
         mDatabase.collection("userInfos").document(mKey)
@@ -46,12 +50,20 @@ public class UserInfoEntry {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.i("BeautyAndroid", "New info successfully written to the database for user: " + mKey);
+
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onSuccess();
+                    }
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e("BeautyAndroid", "Error writing to the database", e);
+                    Log.e("BeautyAndroid", "Error writing user info to the database: ", e);
+
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onFailure();
+                    }
                 }
             });
     }
