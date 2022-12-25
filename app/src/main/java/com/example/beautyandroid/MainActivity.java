@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-        Log.d("BeautyAndroid", "mdl MainActivity::onRequestPermissionsResult entered");
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

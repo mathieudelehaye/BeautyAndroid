@@ -39,6 +39,7 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import java.util.ArrayList;
 
+import com.example.beautyandroid.model.AppUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -302,7 +303,7 @@ public class FragmentMap extends Fragment {
         });
 
         mDatabase.collection("userInfos")
-            .whereEqualTo("__name__", "renee@kyldigital.com")
+            .whereEqualTo("__name__", AppUser.getInstance().getId())
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -355,7 +356,7 @@ public class FragmentMap extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Log.d("BeautyAndroid", "mdl Map view becomes visible");
+            Log.d("BeautyAndroid", "Map view becomes visible");
         }
     }
 

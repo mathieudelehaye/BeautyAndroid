@@ -41,6 +41,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
+import com.example.beautyandroid.model.AppUser;
 import com.example.beautyandroid.qrcode.QRCodeFoundListener;
 import com.example.beautyandroid.qrcode.QRCodeImageAnalyzer;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -82,7 +83,6 @@ public class FragmentCamera extends Fragment {
 
         mPreviewView = view.findViewById(R.id.activity_main_previewView);
 
-        Log.d("BeautyAndroid", "mdl onViewCreated 1");
         cameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
 
         // Get the DB
@@ -91,8 +91,6 @@ public class FragmentCamera extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d("BeautyAndroid", "mdl FragmentCamera::onRequestPermissionsResult entered");
-
         if (requestCode == PERMISSION_REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startCamera();
@@ -117,7 +115,7 @@ public class FragmentCamera extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Log.d("BeautyAndroid", "mdl Camera view becomes visible");
+            Log.d("BeautyAndroid", "Camera view becomes visible");
 
             requestCamera();
         }
@@ -129,12 +127,8 @@ public class FragmentCamera extends Fragment {
     }
 
     private void requestCamera() {
-        Log.d("BeautyAndroid", "mdl requestCamera entered");
-
         if (ContextCompat.checkSelfPermission(mCtx, Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED) {
-
-            Log.d("BeautyAndroid", "mdl requestCamera: camera permission not granted");
 
             // Permission is not granted
             ArrayList<String> permissionsToRequest = new ArrayList<>();
@@ -144,7 +138,6 @@ public class FragmentCamera extends Fragment {
                 permissionsToRequest.toArray(new String[0]),
                 PERMISSION_REQUEST_CAMERA);
         } else {
-            Log.d("BeautyAndroid", "mdl requestCamera: camera permission granted");
             startCamera();
         }
     }
@@ -167,8 +160,6 @@ public class FragmentCamera extends Fragment {
     }
 
     void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        Log.d("BeautyAndroid", "mdl bindCameraPreview entered");
-
         mPreviewView.setPreferredImplementationMode(PreviewView.ImplementationMode.SURFACE_VIEW);
 
         Preview preview = new Preview.Builder()
@@ -200,7 +191,7 @@ public class FragmentCamera extends Fragment {
                 mQRCode = _qrCode;
 
                 // Update user score
-                // TODO: create asynchronous process if no network is when while scanning the QR code
+                // TODO: create asynchronous process if no network is available when scanning the QR code
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser user = auth.getCurrentUser();
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -208,7 +199,7 @@ public class FragmentCamera extends Fragment {
                 Log.d("BeautyAndroid", "onQRCodeFound: user.getUid() = " + user.getUid().toString());
 
                 database.collection("userInfos")
-                    .whereEqualTo("__name__", "mathieu.delehaye@gmail.com")
+                    .whereEqualTo("__name__", AppUser.getInstance().getId())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -255,8 +246,6 @@ public class FragmentCamera extends Fragment {
     }
 
     public void startCamera() {
-        Log.d("BeautyAndroid", "mdl startCamera entered");
-
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
