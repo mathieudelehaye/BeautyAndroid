@@ -50,11 +50,11 @@ import java.util.Map;
 public class FragmentRegister extends Fragment {
     private FragmentRegisterBinding binding;
 
-    private EditText mFirstName;
+    /*private EditText mFirstName;
     private EditText mLastName;
     private EditText mAddress;
     private EditText mCity;
-    private EditText mPostCode;
+    private EditText mPostCode;*/
     private EditText mEmail;
     private EditText mPassword;
     private EditText mRepeatedPassword;
@@ -87,11 +87,11 @@ public class FragmentRegister extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mFirstName = view.findViewById(R.id.register_first_name);
+        /*mFirstName = view.findViewById(R.id.register_first_name);
         mLastName = view.findViewById(R.id.register_last_name);
         mAddress = view.findViewById(R.id.register_address);
         mCity = view.findViewById(R.id.register_city);
-        mPostCode = view.findViewById(R.id.register_post_code);
+        mPostCode = view.findViewById(R.id.register_post_code);*/
         mEmail = view.findViewById(R.id.register_email);
         mPassword = view.findViewById(R.id.register_password);
         mRepeatedPassword = view.findViewById(R.id.register_repeat_password);
@@ -113,7 +113,7 @@ public class FragmentRegister extends Fragment {
 
                 Boolean navigate = true;
 
-                if (isEmpty(mFirstName)) {
+                /*if (isEmpty(mFirstName)) {
                     mFirstName.setError("First name is required!");
                     navigate = false;
                 }
@@ -136,7 +136,7 @@ public class FragmentRegister extends Fragment {
                 if (isEmpty(mPostCode)) {
                     mPostCode.setError("Post code is required!");
                     navigate = false;
-                }
+                }*/
 
                 if (isEmail(mEmail) == false) {
                     mEmail.setError("Enter valid email!");
@@ -180,11 +180,11 @@ public class FragmentRegister extends Fragment {
 
                                     // Add userInfos table entry to the database matching the new user
                                     Map<String, Object> userInfoMap = new HashMap<>();
-                                    userInfoMap.put("first_name", mFirstName.getText().toString());
-                                    userInfoMap.put("last_name", mLastName.getText().toString());
-                                    userInfoMap.put("address", mAddress.getText().toString());
-                                    userInfoMap.put("city", mCity.getText().toString());
-                                    userInfoMap.put("post_code", mPostCode.getText().toString());
+                                    userInfoMap.put("first_name", "");
+                                    userInfoMap.put("last_name", "");
+                                    userInfoMap.put("address", "");
+                                    userInfoMap.put("city", "");
+                                    userInfoMap.put("post_code", "");
                                     userInfoMap.put("score", 0);
 
                                     UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
