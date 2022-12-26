@@ -25,8 +25,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Date;
 import java.util.Map;
 
 public class UserInfoEntry {
@@ -34,9 +36,11 @@ public class UserInfoEntry {
         void onSuccess();
         void onFailure();
     }
+    static public SimpleDateFormat scoreTimeFormat = new SimpleDateFormat("yyyy.MM.dd");
     private FirebaseFirestore mDatabase;
     private String mKey;
     private Map<String, Object> mData;
+    private Date mScoreTime;
 
     public UserInfoEntry(FirebaseFirestore _database, String _key, Map<String, Object> _data) {
         mDatabase = _database;
@@ -55,9 +59,27 @@ public class UserInfoEntry {
         mData.put("city", "");
         mData.put("post_code", "");
         mData.put("score", 0);
+        mData.put("score_time", "");
     }
 
-    public void writeToDatabase(CallbackManager... cbManager) {
+    public int getScore() {
+        return (int)mData.get("score");
+    }
+
+    public void setScore(int value) {
+        mData.put("score", value);
+    }
+
+    public Date getScoreTime() {
+        return mScoreTime;
+    }
+
+    public void setScoreTime(String value) {
+        mScoreTime = parseScoreTime(value);
+        mData.put("score_time", value);
+    }
+
+    public void createDBFields(CallbackManager... cbManager) {
 
         // Add userInfos table entry to the database matching the app user
         mDatabase.collection("userInfos").document(mKey)
@@ -84,7 +106,7 @@ public class UserInfoEntry {
             });
     }
 
-    public int readScoreField(CallbackManager... cbManager) {
+    public int readScoreDBFields(CallbackManager... cbManager) {
 
         mDatabase.collection("userInfos")
             .whereEqualTo("__name__", mKey)
@@ -94,15 +116,15 @@ public class UserInfoEntry {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     // Display score
                     Integer userScore = 0;
-
                     if (task.isSuccessful()) {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Log.d("BeautyAndroid", mKey + " => " + document.getData());
 
-                            userScore = Integer.parseInt(document.getData().get("score").toString());
-
-                            mData.put("score", userScore);
+                            String scoreTime = document.getData().get("score_time").toString();
+                            mData.put("score", Integer.parseInt(document.getData().get("score").toString()));
+                            mData.put("score_time", scoreTime);
+                            mScoreTime = parseScoreTime(scoreTime);
 
                             if (cbManager.length >= 1) {
                                 cbManager[0].onSuccess();
@@ -121,12 +143,13 @@ public class UserInfoEntry {
         return 0;
     }
 
-    public void incrementAndWriteScoreField() {
+    public void updateScoreDBFields() {
         // Get a new write batch
         WriteBatch batch = mDatabase.batch();
 
         DocumentReference ref = mDatabase.collection("userInfos").document(mKey);
-        batch.update(ref, "score", (int)mData.get("score") + 1);
+        batch.update(ref, "score", mData.get("score"));
+        batch.update(ref, "score_time", mData.get("score_time"));
 
         // Commit the batch
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -134,5 +157,16 @@ public class UserInfoEntry {
             public void onComplete(@NonNull Task<Void> task) {
             }
         });
+    }
+
+    static public Date parseScoreTime(String scoreTime) {
+        try {
+            return scoreTimeFormat.parse(scoreTime);
+        } catch (ParseException e) {
+            Log.e("BeautyAndroid", "Error while parsing the score date from database: "
+                    + e.toString());
+
+            return new Date();
+        }
     }
 }

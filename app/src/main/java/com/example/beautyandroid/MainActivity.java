@@ -33,7 +33,7 @@ import com.beautyorder.androidclient.R;
 import com.example.beautyandroid.model.AppUser;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import java.util.Date;
 import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            Log.d("BeautyAndroid", "mdl doInBackground entered");
+            //Log.d("BeautyAndroid", "doInBackground entered");
 
             publishProgress("Sleeping..."); // Calls onProgressUpdate()
             try {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             // Actions to execute after the background task
-            Log.d("BeautyAndroid", "mdl onPostExecute entered");
+            //Log.d("BeautyAndroid", "onPostExecute entered");
 
             // Return if there is no network available
             if (!isNetworkAvailable()) {
@@ -101,16 +101,24 @@ public class MainActivity extends AppCompatActivity {
             for(String event: scoreQueue) {
 
                 UserInfoEntry entry = new UserInfoEntry(mDatabase, uid);
-
-                entry.readScoreField(new UserInfoEntry.CallbackManager() {
+                entry.readScoreDBFields(new UserInfoEntry.CallbackManager() {
                     @Override
                     public void onSuccess() {
-                        entry.incrementAndWriteScoreField();
 
-                        Log.i("BeautyAndroid", "Scanning event sent and removed from the queue: " + event);
+                        Date eventDate = UserInfoEntry.parseScoreTime(event);
 
+                        // Only update the score if the event date is after the DB score time
+                        if (eventDate.compareTo(entry.getScoreTime()) > 0) {
+                            entry.setScore(entry.getScore() + 1);
+                            entry.setScoreTime(event);
+                            entry.updateScoreDBFields();
+                            Log.i("BeautyAndroid", "Scanning event sent to the database: " + event);
+                        } else {
+                            Log.w("BeautyAndroid", "Scanning event older than the latest in the database: " + event);
+                        }
+
+                        Log.d("BeautyAndroid", "Scanning event removed from the app queue: " + event);
                         updatedQueue.remove(event);
-
                         mSharedPref.edit().putStringSet(getString(R.string.scores_to_send), updatedQueue).commit();
                     }
 
@@ -128,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             // Actions to execute before the background task
-            Log.d("BeautyAndroid", "mdl onPreExecute entered");
+            //Log.d("BeautyAndroid", "onPreExecute entered");
         }
 
         @Override

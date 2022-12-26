@@ -41,10 +41,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
+import com.example.beautyandroid.model.UserInfoEntry;
 import com.example.beautyandroid.qrcode.QRCodeFoundListener;
 import com.example.beautyandroid.qrcode.QRCodeImageAnalyzer;
 import com.google.common.util.concurrent.ListenableFuture;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
@@ -53,11 +53,10 @@ public class FragmentCamera extends Fragment {
     private static final int PERMISSION_REQUEST_CAMERA = 1;
     private FragmentCameraBinding binding;
     private Context mCtx;
-    private Activity mActivity;
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private String mQRCode;
-    private Boolean mCodeAlreadyScannedLogDisplayed = false;
+    //private Boolean mCodeAlreadyScannedLogDisplayed = false;
     private SharedPreferences mSharedPref;
 
     @Override
@@ -67,7 +66,7 @@ public class FragmentCamera extends Fragment {
     ) {
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         mQRCode = "";
-        mCodeAlreadyScannedLogDisplayed = false;
+        //mCodeAlreadyScannedLogDisplayed = false;
         return binding.getRoot();
     }
 
@@ -75,7 +74,6 @@ public class FragmentCamera extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mCtx = view.getContext();
-        mActivity = (Activity) mCtx;
 
         mPreviewView = view.findViewById(R.id.activity_main_previewView);
 
@@ -162,17 +160,17 @@ public class FragmentCamera extends Fragment {
             public void onQRCodeFound(String _qrCode) {
 
                 if (_qrCode.equals(mQRCode)) {
-                    if (!mCodeAlreadyScannedLogDisplayed) {
+                    /*if (!mCodeAlreadyScannedLogDisplayed) {
                         Log.w("BeautyAndroid", "QR Code already scanned");
                         mCodeAlreadyScannedLogDisplayed = true;
-                    }
+                    }*/
                     return;
                 }
 
                 Log.d("BeautyAndroid", "New QR Code Found: " + _qrCode);
 
                 mQRCode = _qrCode;
-                mCodeAlreadyScannedLogDisplayed = false;
+                //mCodeAlreadyScannedLogDisplayed = false;
 
                 // Check if no QR code scanning has already been sent for today. If no, add the scanning event
                 // to the queue, so it is sent later.
@@ -181,7 +179,7 @@ public class FragmentCamera extends Fragment {
 
                 HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
 
-                String timeStamp = new SimpleDateFormat("yyyy.MM.dd").format(new java.util.Date());
+                String timeStamp = UserInfoEntry.scoreTimeFormat.format(new java.util.Date());
 
                 if (!updatedQueue.contains(timeStamp)) {
                     updatedQueue.add(timeStamp);

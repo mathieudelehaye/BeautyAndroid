@@ -147,9 +147,10 @@ public class FragmentHome extends Fragment {
                         userInfoMap.put("city", "");
                         userInfoMap.put("post_code", "");
                         userInfoMap.put("score", 0);
+                        userInfoMap.put("score_time", "");
 
                         UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
-                        userInfo.writeToDatabase(new UserInfoEntry.CallbackManager() {
+                        userInfo.createDBFields(new UserInfoEntry.CallbackManager() {
                             @Override
                             public void onSuccess() {
                                 // Store the uid in the app preferences

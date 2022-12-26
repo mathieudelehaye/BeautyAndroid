@@ -34,14 +34,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.databinding.FragmentRegisterBinding;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.errorprone.annotations.Var;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -186,9 +182,10 @@ public class FragmentRegister extends Fragment {
                                     userInfoMap.put("city", "");
                                     userInfoMap.put("post_code", "");
                                     userInfoMap.put("score", 0);
+                                    userInfoMap.put("score_time", "");
 
                                     UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
-                                    userInfo.writeToDatabase();
+                                    userInfo.createDBFields();
 
                                     user.sendEmailVerification()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
