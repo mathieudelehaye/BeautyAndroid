@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid;
+package com.example.beautyandroid.controller;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.beautyorder.androidclient.R;
+import com.example.beautyandroid.TaskCompletionManager;
 import com.example.beautyandroid.model.AppUser;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             for(String event: scoreQueue) {
 
                 UserInfoEntry entry = new UserInfoEntry(mDatabase, uid);
-                entry.readScoreDBFields(new UserInfoEntry.CallbackManager() {
+                entry.readScoreDBFields(new TaskCompletionManager() {
                     @Override
                     public void onSuccess() {
 

@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.example.beautyandroid.controller;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
 import com.example.beautyandroid.CollectionPagerAdapter;
 import com.google.android.material.tabs.TabLayout;

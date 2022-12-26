@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.example.beautyandroid.controller;
 
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,6 +31,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentRegisterBinding;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.android.gms.tasks.OnCompleteListener;

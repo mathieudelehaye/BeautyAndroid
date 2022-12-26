@@ -23,7 +23,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentApp">
+    tools:context="com.example.beautyandroid.controller.FragmentApp">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/app_pager"

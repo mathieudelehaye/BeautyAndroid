@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.example.beautyandroid.controller;
 
 import android.Manifest;
 import android.app.Activity;
@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import java.util.ArrayList;
 

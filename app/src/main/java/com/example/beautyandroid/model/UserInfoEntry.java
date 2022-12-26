@@ -20,6 +20,7 @@ package com.example.beautyandroid.model;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.example.beautyandroid.TaskCompletionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,10 +33,6 @@ import java.util.Date;
 import java.util.Map;
 
 public class UserInfoEntry {
-    public interface CallbackManager {
-        void onSuccess();
-        void onFailure();
-    }
     static public SimpleDateFormat scoreTimeFormat = new SimpleDateFormat("yyyy.MM.dd");
     private FirebaseFirestore mDatabase;
     private String mKey;
@@ -46,6 +43,7 @@ public class UserInfoEntry {
         mDatabase = _database;
         mKey = _key;
         mData = _data;
+        mScoreTime = parseScoreTime((String)_data.get("score_time"));
     }
 
     public UserInfoEntry(FirebaseFirestore _database, String _key) {
@@ -79,7 +77,7 @@ public class UserInfoEntry {
         mData.put("score_time", value);
     }
 
-    public void createDBFields(CallbackManager... cbManager) {
+    public void createDBFields(TaskCompletionManager... cbManager) {
 
         // Add userInfos table entry to the database matching the app user
         mDatabase.collection("userInfos").document(mKey)
@@ -106,7 +104,7 @@ public class UserInfoEntry {
             });
     }
 
-    public int readScoreDBFields(CallbackManager... cbManager) {
+    public int readScoreDBFields(TaskCompletionManager... cbManager) {
 
         mDatabase.collection("userInfos")
             .whereEqualTo("__name__", mKey)
@@ -164,7 +162,7 @@ public class UserInfoEntry {
             return scoreTimeFormat.parse(scoreTime);
         } catch (ParseException e) {
             Log.e("BeautyAndroid", "Error while parsing the score date from database: "
-                    + e.toString());
+                + e.toString());
 
             return new Date();
         }

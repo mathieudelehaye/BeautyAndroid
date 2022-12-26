@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.example.beautyandroid.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,7 +31,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
+import com.example.beautyandroid.TaskCompletionManager;
 import com.example.beautyandroid.model.AppUser;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -150,7 +152,7 @@ public class FragmentHome extends Fragment {
                         userInfoMap.put("score_time", "");
 
                         UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
-                        userInfo.createDBFields(new UserInfoEntry.CallbackManager() {
+                        userInfo.createDBFields(new TaskCompletionManager() {
                             @Override
                             public void onSuccess() {
                                 // Store the uid in the app preferences

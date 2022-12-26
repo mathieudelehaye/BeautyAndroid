@@ -19,20 +19,16 @@
 package com.example.beautyandroid;
 
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.beautyorder.androidclient.FragmentCamera;
-import com.beautyorder.androidclient.FragmentMap;
 import com.beautyorder.androidclient.R;
+import com.example.beautyandroid.controller.FragmentCamera;
+import com.example.beautyandroid.controller.FragmentMap;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     private FragmentActivity mActivity;

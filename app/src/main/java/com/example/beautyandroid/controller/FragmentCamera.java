@@ -15,7 +15,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.example.beautyandroid.controller;
 
 import android.Manifest;
 import android.app.Activity;
@@ -40,6 +40,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.example.beautyandroid.qrcode.QRCodeFoundListener;
