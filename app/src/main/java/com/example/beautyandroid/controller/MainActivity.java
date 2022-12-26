@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            //Log.d("BeautyAndroid", "doInBackground entered");
+            Log.v("BeautyAndroid", "doInBackground entered");
 
             publishProgress("Sleeping..."); // Calls onProgressUpdate()
             try {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             // Actions to execute after the background task
-            //Log.d("BeautyAndroid", "onPostExecute entered");
+            Log.v("BeautyAndroid", "onPostExecute entered");
 
             // Return if there is no network available
             if (!isNetworkAvailable()) {
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             // Actions to execute before the background task
-            //Log.d("BeautyAndroid", "onPreExecute entered");
+            Log.v("BeautyAndroid", "onPreExecute entered");
         }
 
         @Override

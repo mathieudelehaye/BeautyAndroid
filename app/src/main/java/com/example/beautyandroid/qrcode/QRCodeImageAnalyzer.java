@@ -65,7 +65,7 @@ public class QRCodeImageAnalyzer implements ImageAnalysis.Analyzer {
 
                             String rawValue = barcode.getRawValue();
 
-                            //Log.d("BeautyAndroid", "Bar code raw value: " + rawValue);
+                            Log.v("BeautyAndroid", "Bar code raw value: " + rawValue);
 
                             int valueType = barcode.getValueType();
                             // See API reference for complete list of supported types
@@ -73,7 +73,7 @@ public class QRCodeImageAnalyzer implements ImageAnalysis.Analyzer {
                                 case Barcode.TYPE_URL:
                                     String title = barcode.getUrl().getTitle();
                                     String url = barcode.getUrl().getUrl();
-                                    //Log.d("BeautyAndroid", "Bar code url: " + url);
+                                    Log.v("BeautyAndroid", "Bar code url: " + url);
                                     listener.onQRCodeFound(url);
                                     return;
                             }
