@@ -18,10 +18,11 @@
 
 package com.example.beautyandroid.controller;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
+import com.example.beautyandroid.Helpers;
 import com.example.beautyandroid.model.AppUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -45,6 +47,7 @@ public class FragmentLogin extends Fragment {
     private EditText mEmail;
     private EditText mPassword;
     private FirebaseAuth mAuth;
+    private SharedPreferences mSharedPref;
 
     // TODO: put those methods in a shared module
     boolean isEmail(EditText text) {
@@ -54,8 +57,7 @@ public class FragmentLogin extends Fragment {
             return false;
         }
 
-        CharSequence email = text.getText().toString();
-        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        return Helpers.isEmail(text.getText().toString());
     }
 
     boolean isEmpty(EditText text) {
@@ -76,6 +78,9 @@ public class FragmentLogin extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mSharedPref = getContext().getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE);
 
         mEmail = view.findViewById(R.id.signin_email);
         mPassword = view.findViewById(R.id.signin_password);
@@ -122,6 +127,10 @@ public class FragmentLogin extends Fragment {
                                     FirebaseUser dbUser = mAuth.getCurrentUser();
 
                                     if (dbUser.isEmailVerified()) {
+
+                                        // Store the uid in the app preferences
+                                        mSharedPref.edit().putString(getString(R.string.app_uid), emailText).commit();;
+
                                         AppUser.getInstance().authenticate(emailText, AppUser.AuthenticationType.REGISTERED);
 
                                         NavHostFragment.findNavController(FragmentLogin.this)

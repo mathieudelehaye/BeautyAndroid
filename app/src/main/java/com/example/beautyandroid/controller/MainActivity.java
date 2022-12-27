@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            Log.v("BeautyAndroid", "doInBackground entered");
-
             publishProgress("Sleeping..."); // Calls onProgressUpdate()
             try {
                 int time = Integer.parseInt(params[0])*1000;
@@ -66,18 +64,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             // Actions to execute after the background task
-            Log.v("BeautyAndroid", "onPostExecute entered");
-
             // Return if there is no network available
             if (!isNetworkAvailable()) {
-                Log.d("BeautyAndroid", "Try to write the scanning events but no network");
+                Log.v("BeautyAndroid", "Try to write the scanning events but no network");
                 restart();
                 return;
             }
 
             // Return if there is no app user yet
             if (AppUser.getInstance().getAuthenticationType() == AppUser.AuthenticationType.NONE) {
-                Log.d("BeautyAndroid", "Try to write the scanning events but no app user");
+                Log.v("BeautyAndroid", "Try to write the scanning events but no app user");
                 restart();
                 return;
             }
@@ -87,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 new HashSet<String>());
 
             if (scoreQueue.isEmpty()) {
-                Log.d("BeautyAndroid", "Try to write the scanning events but queue is empty");
+                Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
                 restart();
                 return;
             }
@@ -138,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             // Actions to execute before the background task
-            Log.v("BeautyAndroid", "onPreExecute entered");
         }
 
         @Override

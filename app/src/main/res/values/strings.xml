@@ -19,7 +19,8 @@
 
 <resources>
     <string name="app_name">Beauty-Android</string>
-    <string name="user_automatic_id">user-automatic-id</string>
+    <string name="app_uid">app-uid</string>
+    <string name="device_id">device-id</string>
     <string name="scores_to_send">scores-to-send</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->

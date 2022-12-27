@@ -33,6 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
+import com.example.beautyandroid.Helpers;
 import com.example.beautyandroid.TaskCompletionManager;
 import com.example.beautyandroid.model.AppUser;
 import com.example.beautyandroid.model.UserInfoEntry;
@@ -51,6 +52,7 @@ public class FragmentHome extends Fragment {
     private FragmentHomeBinding binding;
     private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;
+    private StringBuilder mPrefUserId;
     private StringBuilder mDeviceId;
 
     @Override
@@ -69,18 +71,25 @@ public class FragmentHome extends Fragment {
 
         mDatabase = FirebaseFirestore.getInstance();
 
+        // Navigate straightforward to the App screen if there is an uid in the app preferences
+        getPreferenceIds();
+        if (!mPrefUserId.toString().equals("")) {
+
+            String uid = mPrefUserId.toString();
+            AppUser.AuthenticationType type = Helpers.isEmail(uid) ? AppUser.AuthenticationType.REGISTERED
+                : AppUser.AuthenticationType.NOT_REGISTERED;
+
+            AppUser.getInstance().authenticate(uid, type);
+
+            NavHostFragment.findNavController(FragmentHome.this)
+                .navigate(R.id.action_HomeFragment_to_AppFragment);
+        }
+
         binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String autoUserId = getAutoUserId();
 
-                if (!autoUserId.equals(""))
-                {
-                    AppUser.getInstance().authenticate(autoUserId, AppUser.AuthenticationType.NOT_REGISTERED);
-
-                    NavHostFragment.findNavController(FragmentHome.this)
-                        .navigate(R.id.action_HomeFragment_to_AppFragment);
-                }
+                tryAndCreateAutoUserId();
             }
         });
 
@@ -149,19 +158,20 @@ public class FragmentHome extends Fragment {
                         userInfoMap.put("city", "");
                         userInfoMap.put("post_code", "");
                         userInfoMap.put("score", 0);
-                        userInfoMap.put("score_time", "");
+                        userInfoMap.put("score_time", UserInfoEntry.scoreTimeFormat.format(
+                            new java.util.Date(date.getTime() - 1000 * 60 * 60 * 24))); // ms in a day
 
                         UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
                         userInfo.createDBFields(new TaskCompletionManager() {
                             @Override
                             public void onSuccess() {
-                                // Store the uid in the app preferences
-                                SharedPreferences.Editor editor = mSharedPref.edit();
-                                editor.putString(getString(R.string.user_automatic_id), uid.toString());
-                                editor.apply();
 
                                 Log.d("BeautyAndroid", "The user automatic identifier was created: "
-                                    + uid);
+                                    + uid.toString());
+
+                                // Store the uid in the app preferences
+                                mSharedPref.edit().putString(getString(R.string.app_uid), uid.toString())
+                                    .commit();
 
                                 // Update the app user
                                 AppUser.getInstance().authenticate(uid.toString(), AppUser.AuthenticationType.NOT_REGISTERED);
@@ -184,11 +194,11 @@ public class FragmentHome extends Fragment {
             });
     }
 
-    private String getAutoUserId() {
+    private String getPreferenceIds() {
         final Context ctxt = getContext();
 
         if (ctxt == null) {
-            Log.w("BeautyAndroid", "Trying to get the id without application user");
+            Log.w("BeautyAndroid", "No context to get the app preferences");
             return "";
         }
 
@@ -196,33 +206,42 @@ public class FragmentHome extends Fragment {
         mSharedPref = ctxt.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        StringBuilder userAutomaticId = new StringBuilder();
-        userAutomaticId.append(mSharedPref.getString(getString(R.string.user_automatic_id), ""));
+        mPrefUserId = new StringBuilder();
+        mPrefUserId.append(mSharedPref.getString(getString(R.string.app_uid), ""));
 
-        if (!userAutomaticId.toString().equals("")) {
-            Log.d("BeautyAndroid", "The user automatic identifier was read: " + userAutomaticId.toString());
-            return userAutomaticId.toString();
+        if (!mPrefUserId.toString().equals("")) {
+            Log.d("BeautyAndroid", "The uid was read from app preferences: " + mPrefUserId.toString());
         }
 
-        // Get the phone id
+        // Get the device id
         mDeviceId = new StringBuilder("");
+        mDeviceId.append(mSharedPref.getString(getString(R.string.device_id), ""));
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
-            mDeviceId.append(Settings.Secure.getString(
-                ctxt.getContentResolver(),
-                Settings.Secure.ANDROID_ID));
+        if (!mDeviceId.toString().equals("")) {
+            Log.d("BeautyAndroid", "The device id was read from app preferences: " + mDeviceId.toString());
         } else {
-            TelephonyManager telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
-            if (telephonyManager.getDeviceId() != null) {
-                mDeviceId.append(telephonyManager.getDeviceId());
-            } else {
+            // If not found in the app preferences, read the device id and store it there
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
                 mDeviceId.append(Settings.Secure.getString(
                     ctxt.getContentResolver(),
                     Settings.Secure.ANDROID_ID));
+            } else {
+                TelephonyManager telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephonyManager.getDeviceId() != null) {
+                    mDeviceId.append(telephonyManager.getDeviceId());
+                } else {
+                    mDeviceId.append(Settings.Secure.getString(
+                        ctxt.getContentResolver(),
+                        Settings.Secure.ANDROID_ID));
+                }
+            }
+
+            if (mDeviceId.toString().equals("")) {
+                Log.e("BeautyAndroid", "Cannot determine the device id");
+            } else {
+                mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
             }
         }
-
-        tryAndCreateAutoUserId();
 
         return "";
     }
