@@ -32,6 +32,7 @@
     <string name="no_login">Start</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="logout">Log out</string>
     <string name="confirm">Confirm</string>
 
     <string name="title_home_fragment">Welcome to Beauty</string>

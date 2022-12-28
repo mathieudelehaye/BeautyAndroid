@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.example.beautyandroid.controller.FragmentCamera;
 import com.example.beautyandroid.controller.FragmentMap;
+import com.example.beautyandroid.controller.FragmentMenu;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     private FragmentActivity mActivity;
@@ -45,18 +46,22 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
         switch (i) {
             case 0:
                 fragment = new FragmentMap();
-                return fragment;
+                break;
             case 1:
                 fragment = new FragmentCamera();
-                return fragment;
+                break;
+            case 2:
             default:
-                return fragment;
+                fragment = new FragmentMenu();
+                break;
         }
+
+        return fragment;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -69,8 +74,11 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
                 image = mActivity.getResources().getDrawable(R.drawable.home);
                 break;
             case 1:
-            default:
                 image = mActivity.getResources().getDrawable(R.drawable.camera);
+                break;
+            case 2:
+            default:
+                image = mActivity.getResources().getDrawable(R.drawable.dots_horizontal);
                 break;
         }
 

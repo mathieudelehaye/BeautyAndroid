@@ -71,5 +71,9 @@
         android:name="com.example.beautyandroid.controller.FragmentApp"
         android:label="App Fragment"
         tools:layout="@layout/fragment_app">
+
+        <action
+            android:id="@+id/action_AppFragment_to_HomeFragment"
+            app:destination="@id/FragmentHome"/>
     </fragment>
 </navigation>

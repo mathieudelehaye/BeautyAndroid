@@ -129,7 +129,7 @@ public class FragmentLogin extends Fragment {
                                     if (dbUser.isEmailVerified()) {
 
                                         // Store the uid in the app preferences
-                                        mSharedPref.edit().putString(getString(R.string.app_uid), emailText).commit();;
+                                        mSharedPref.edit().putString(getString(R.string.app_uid), emailText).commit();
 
                                         AppUser.getInstance().authenticate(emailText, AppUser.AuthenticationType.REGISTERED);
 
