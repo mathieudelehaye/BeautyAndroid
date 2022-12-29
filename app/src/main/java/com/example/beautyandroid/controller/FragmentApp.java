@@ -18,10 +18,13 @@
 
 package com.example.beautyandroid.controller;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -33,6 +36,8 @@ import com.google.android.material.tabs.TabLayout;
 public class FragmentApp extends Fragment {
     private FragmentAppBinding binding;
     private ViewPager viewPager;
+
+    private Boolean keyboardDisplayed = false;
 
     @Override
     public View onCreateView(
@@ -46,13 +51,48 @@ public class FragmentApp extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = view.findViewById(R.id.app_pager);
-        TabLayout tabLayout = view.findViewById(R.id.app_tabbar);
+        viewPager = view.findViewById(R.id.appPager);
+        TabLayout tabLayout = view.findViewById(R.id.appTabbar);
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.camera);
         tabLayout.setupWithViewPager(viewPager);
         CollectionPagerAdapter adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
         viewPager.setAdapter(adapter);
+
+        Rect viewBorder = new Rect();
+        viewPager.getWindowVisibleDisplayFrame(viewBorder);
+
+        final int layoutBorderHeight = viewBorder.height();
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                Rect viewBorder = new Rect();
+
+                // border will be populated with the coordinates of your view that area still visible
+                viewPager.getWindowVisibleDisplayFrame(viewBorder);
+
+                final int viewBorderHeight = viewBorder.height();
+                final int viewPagerRootViewHeight = viewPager.getRootView().getHeight();
+
+                final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
+
+                if (heightDiff > 0.25*viewPagerRootViewHeight) { // if more than 25% of the screen, it's probably a keyboard
+                    if (!keyboardDisplayed) {
+                        keyboardDisplayed = true;
+
+                        Log.d("BeautyAndroid", "Keyboard displayed");
+                    }
+                } else {
+                    if (keyboardDisplayed) {
+                        keyboardDisplayed = false;
+
+                        Log.d("BeautyAndroid", "Keyboard hidden");
+                    }
+                }
+            }
+        });
     }
 
     @Override

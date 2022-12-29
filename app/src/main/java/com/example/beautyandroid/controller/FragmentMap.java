@@ -22,7 +22,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -92,8 +91,6 @@ public class FragmentMap extends Fragment {
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
 
-        //handle permissions first, before map is created. not depicted here
-
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = view.getContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -104,10 +101,11 @@ public class FragmentMap extends Fragment {
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
         //tile servers will get you banned based on this string
 
-        //inflate and create the map
+        // inflate and create the map
         map = (MapView) view.findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
 
+        // handle permissions
         String[] permissions = {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -145,7 +143,7 @@ public class FragmentMap extends Fragment {
                     final String userLatitudeText = userLatitude+"";
                     final String userLongitudeText = userLongitude+"";
                     Log.d("BeautyAndroid", "user coordinates: latitude " + userLatitudeText + ", longitude "
-                            + userLongitudeText);
+                        + userLongitudeText);
 
                     // Search for the recycling points
                     final double truncatedLatitude = Math.floor(userLatitude * 100) / 100;
@@ -250,8 +248,8 @@ public class FragmentMap extends Fragment {
                                                 Log.d("BeautyAndroid", "Direction text: " +
                                                     directionText);
 
-                                                TextView descriptionTextArea = (TextView) view.findViewById(R.id.textArea_mapDirectionText);
-                                                View descriptionTextAreaBackground = (View) view.findViewById(R.id.view_mapDirectionTextBackground);
+                                                TextView descriptionTextArea = (TextView) view.findViewById(R.id.mapDirection);
+                                                View descriptionTextAreaBackground = (View) view.findViewById(R.id.mapDirectionBackground);
 
                                                 if (directionText != "") {
                                                     descriptionTextArea.setText(directionText);
@@ -326,8 +324,8 @@ public class FragmentMap extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    TextView scoreTextArea = (TextView) view.findViewById(R.id.textArea_score);
-                    View scoreBackground = (View) view.findViewById(R.id.view_scoreBackground);
+                    TextView scoreTextArea = (TextView) view.findViewById(R.id.mapScore);
+                    View scoreBackground = (View) view.findViewById(R.id.mapScoreBackground);
 
                     scoreTextArea.setText(String.valueOf(userScore) + " pts");
 

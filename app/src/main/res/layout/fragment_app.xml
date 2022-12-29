@@ -26,13 +26,13 @@
     tools:context="com.example.beautyandroid.controller.FragmentApp">
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/app_pager"
+        android:id="@+id/appPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/app_tabbar"
+            android:id="@+id/appTabbar"
             android:layout_width="match_parent"
             android:background="@android:color/white"
             app:popupTheme="@style/Theme.BeautyAndroid"

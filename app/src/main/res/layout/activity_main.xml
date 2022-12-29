@@ -37,7 +37,8 @@
             android:layout_width="match_parent"
             android:background="@color/white"
             app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
-            android:layout_height="?attr/actionBarSize" app:layout_anchorGravity="center"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_anchorGravity="center"
             app:layout_anchor="@+id/appBarLayout">
 
             <ImageView
