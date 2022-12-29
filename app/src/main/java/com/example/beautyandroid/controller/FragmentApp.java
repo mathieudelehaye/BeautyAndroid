@@ -59,15 +59,13 @@ public class FragmentApp extends Fragment {
         CollectionPagerAdapter adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
         viewPager.setAdapter(adapter);
 
-        Rect viewBorder = new Rect();
-        viewPager.getWindowVisibleDisplayFrame(viewBorder);
-
-        final int layoutBorderHeight = viewBorder.height();
-
         view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
             @Override
             public void onGlobalLayout() {
+
+                View mapView = view.findViewById(R.id.map);
+
                 Rect viewBorder = new Rect();
 
                 // border will be populated with the coordinates of your view that area still visible
@@ -79,16 +77,24 @@ public class FragmentApp extends Fragment {
                 final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
 
                 if (heightDiff > 0.25*viewPagerRootViewHeight) { // if more than 25% of the screen, it's probably a keyboard
-                    if (!keyboardDisplayed) {
+                    if (!keyboardDisplayed && mapView != null) {
                         keyboardDisplayed = true;
 
                         Log.d("BeautyAndroid", "Keyboard displayed");
+
+                        ViewGroup.LayoutParams params = mapView.getLayoutParams();
+                        params.height = 540;
+                        mapView.requestLayout();
                     }
                 } else {
-                    if (keyboardDisplayed) {
+                    if (keyboardDisplayed && mapView != null) {
                         keyboardDisplayed = false;
 
                         Log.d("BeautyAndroid", "Keyboard hidden");
+
+                        ViewGroup.LayoutParams params = mapView.getLayoutParams();
+                        params.height = 788;
+                        mapView.requestLayout();
                     }
                 }
             }
