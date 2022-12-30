@@ -19,6 +19,7 @@
 package com.example.beautyandroid.controller;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -91,6 +92,7 @@ public class FragmentMap extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("ResourceAsColor")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -154,9 +156,10 @@ public class FragmentMap extends Fragment {
                 return false;
             }
         });
-        
+
         setupMap();
 
+        // Display the user score
         mDatabase.collection("userInfos")
             .whereEqualTo("__name__", AppUser.getInstance().getId())
             .get()
@@ -180,13 +183,8 @@ public class FragmentMap extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    TextView scoreTextArea = (TextView) view.findViewById(R.id.mapScore);
-                    View scoreBackground = (View) view.findViewById(R.id.mapScoreBackground);
-
-                    scoreTextArea.setText(String.valueOf(userScore) + " pts");
-
-                    // Change background color
-                    scoreBackground.setBackgroundColor(getResources().getColor(R.color.black));
+                    TextView score = (TextView) view.findViewById(R.id.mapScore);
+                    score.setText(String.valueOf(userScore) + " pts");
                 }
             });
 
@@ -351,6 +349,7 @@ public class FragmentMap extends Fragment {
                                     //the overlay
                                     ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
                                         new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                                            @SuppressLint("ResourceAsColor")
                                             @Override
                                             public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                                                 Log.i("BeautyAndroid", "Single tap");
@@ -395,22 +394,24 @@ public class FragmentMap extends Fragment {
                                                 Log.v("BeautyAndroid", "Direction text: " +
                                                     directionText);
 
-                                                TextView descriptionTextArea = (TextView) view.findViewById(R.id.mapDirection);
-                                                View descriptionTextAreaBackground = (View) view.findViewById(R.id.mapDirectionBackground);
+                                                TextView direction = (TextView) view.findViewById(R.id.mapDirection);
+                                                View directionBackground = (View) view.findViewById(R.id.mapDirectionBackground);
 
                                                 if (directionText != "") {
-                                                    descriptionTextArea.setText(directionText);
+                                                    direction.setText(directionText);
 
                                                     // Activate the scrollbar
-                                                    descriptionTextArea.setMovementMethod(new ScrollingMovementMethod());
+                                                    direction.setMovementMethod(new ScrollingMovementMethod());
 
-                                                    // Change background color
-                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.black));
+                                                    // Display view
+                                                    direction.setBackgroundResource(R.color.BgOrange);
+                                                    directionBackground.setBackgroundResource(R.color.black);
                                                 } else {
-                                                    descriptionTextArea.setText("");
+                                                    direction.setText("");
 
-                                                    // Remove background color
-                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.BgOrange));
+                                                    // Hide view
+                                                    direction.setBackgroundResource(R.color.Transparent);
+                                                    directionBackground.setBackgroundResource(R.color.Transparent);
                                                 }
 
                                                 // Display the road as a map overlay

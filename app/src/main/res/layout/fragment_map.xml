@@ -25,22 +25,42 @@
     android:layout_height="match_parent"
     tools:context="com.example.beautyandroid.controller.FragmentMap">
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/map"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mapLayout"
         android:layout_height="450dp"
         android:layout_width="fill_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-    />
+        tools:ignore="MissingConstraints">
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/map"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"/>
+
+        <Button
+            android:id="@+id/mapUserLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loc"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintHorizontal_bias="0.5"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mapInterfaceLayout"
         android:layout_height="280dp"
         android:layout_width="fill_parent"
-        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintTop_toBottomOf="@+id/mapLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,13 +68,13 @@
 
         <View
             android:id="@+id/mapSearchBoxBackground"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:background="@color/BgOrange"
+            android:layout_width="312.5dp"
+            android:layout_height="52.5dp"
+            android:background="@color/black"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="31dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="28dp"/>
+            android:layout_marginStart="29dp"/>
 
         <EditText
             android:id="@+id/mapSearchBox"
@@ -62,7 +82,7 @@
             android:inputType="text"
             android:hint="Search"
             android:textSize="20sp"
-            android:layout_width="250dp"
+            android:layout_width="310dp"
             android:layout_height="50dp"
             android:background="@color/BgOrange"
             android:gravity="top|left"
@@ -82,32 +102,21 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"/>
 
-        <Button
-            android:id="@+id/mapUserLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Loc"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="30dp"
-            app:layout_constraintStart_toEndOf="@id/mapSearchBox"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0.5"/>
-
         <View
             android:id="@+id/mapDirectionBackground"
-            android:layout_width="234dp"
-            android:layout_height="140dp"
-            android:background="@color/BgOrange"
+            android:layout_width="232.5dp"
+            android:layout_height="138dp"
+            android:background="@color/Transparent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="112dp"
+            android:layout_marginTop="113dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="28dp"/>
+            android:layout_marginStart="29dp"/>
 
         <TextView
             android:id="@+id/mapDirection"
             android:layout_width="230dp"
             android:layout_height="136dp"
-            android:background="@color/BgOrange"
+            android:background="@color/Transparent"
             android:gravity="top|left"
             android:inputType="textMultiLine"
             android:overScrollMode="always"
@@ -128,12 +137,12 @@
 
         <View
             android:id="@+id/mapScoreBackground"
-            android:layout_width="84dp"
-            android:layout_height="84dp"
-            android:background="@color/BgOrange"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:background="@color/black"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="112dp"
-            android:layout_marginEnd="28dp"
+            android:layout_marginTop="113dp"
+            android:layout_marginEnd="29dp"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
