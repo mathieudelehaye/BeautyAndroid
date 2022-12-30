@@ -58,13 +58,14 @@
 
         <EditText
             android:id="@+id/mapSearchBox"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             android:hint="Search"
             android:textSize="20sp"
             android:layout_width="250dp"
             android:layout_height="50dp"
             android:background="@color/BgOrange"
             android:gravity="top|left"
-            android:inputType="textMultiLine"
             android:overScrollMode="always"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
@@ -82,7 +83,7 @@
             android:paddingBottom="5dp"/>
 
         <Button
-            android:id="@+id/mapFindMyLocation"
+            android:id="@+id/mapUserLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loc"

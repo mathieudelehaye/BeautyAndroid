@@ -22,23 +22,28 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
-import java.util.ArrayList;
-
 import com.example.beautyandroid.model.AppUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,13 +67,14 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 public class FragmentMap extends Fragment {
 
     private FragmentMapBinding binding;
-
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
-
+    private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
-
+    private GeoPoint mUserLocation;
+    private GeoPoint mSearchStart;
     private FirebaseFirestore mDatabase;
+    private Context mCtx;
 
     @Override
     public View onCreateView(
@@ -92,8 +98,8 @@ public class FragmentMap extends Fragment {
         mDatabase = FirebaseFirestore.getInstance();
 
         //load/initialize the osmdroid configuration, this can be done
-        Context ctx = view.getContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        mCtx = view.getContext();
+        Configuration.getInstance().load(mCtx, PreferenceManager.getDefaultSharedPreferences(mCtx));
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
         //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
@@ -117,189 +123,39 @@ public class FragmentMap extends Fragment {
             permissions
         );
 
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
+        EditText editText = view.findViewById(R.id.mapSearchBox);
 
-        IMapController mapController = map.getController();
-        mapController.setZoom(14.0);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx),map);
-        mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
-        map.getOverlays().add(this.mLocationOverlay);
+                    Log.d("BeautyAndroid", "Search button pressed");
 
-        RoadManager roadManager = new OSRMRoadManager(ctx, "MyOwnUserAgent/1.0");
+                    editText.clearFocus();
 
-        mLocationOverlay.runOnFirstFix(new Runnable() {
-            public void run() {
+                    String query = editText.getText().toString();
 
-                // Overlay to display the road to a recycling point
-                final Polyline[] roadOverlay = {null};
+                    if (query != "") {
+                        GeoPoint location = getLocation(query);
 
-                try {
-                    final GeoPoint userLocation = mLocationOverlay.getMyLocation();
-                    final double userLatitude = userLocation.getLatitude();
-                    final double userLongitude = userLocation.getLongitude();
-                    final String userLatitudeText = userLatitude+"";
-                    final String userLongitudeText = userLongitude+"";
-                    Log.d("BeautyAndroid", "user coordinates: latitude " + userLatitudeText + ", longitude "
-                        + userLongitudeText);
+                        if (location != null) {
+                            mMapController.animateTo(location);
 
-                    // Search for the recycling points
-                    final double truncatedLatitude = Math.floor(userLatitude * 100) / 100;
-                    final double truncatedLongitude = Math.floor(userLongitude * 100) / 100;
-                    final double maxSearchLatitude = truncatedLatitude + 0.05;
-                    final double minSearchLatitude = truncatedLatitude - 0.05;
-                    final double maxSearchLongitude = truncatedLongitude + 0.05;
-                    final double minSearchLongitude = truncatedLongitude - 0.05;
+                            Log.d("BeautyAndroid", "Search start set to: (" + location.getLatitude()
+                                + ", " + location.getLongitude() + ")");
+                            mSearchStart = location;
 
-                    mDatabase.collection("recyclePointInfos")
-                        .whereLessThan("Latitude", maxSearchLatitude)
-                        .whereGreaterThan("Latitude", minSearchLatitude)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        final double longitude = (double)document.getData().get("Longitude");
-
-                                        Log.d("BeautyAndroid", "longitude = " + String.valueOf(longitude));
-
-                                        // Due to Firestore query limitation, we need to filter the longitude on the
-                                        // device.
-                                        // TODO: add e.g.: the country or the continent to the query, to limit the
-                                        //  response result number.
-                                        if (longitude > minSearchLongitude && longitude < maxSearchLongitude) {
-                                            Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
-
-                                            final double latitude = (double)document.getData().get("Latitude");
-                                            final String pointName = (String)document.getData().get("PointName");
-                                            final String buildingName = (String)document.getData().get("BuildingName");
-                                            final String buildingNumber = (String)document.getData().get("BuildingNumber");
-                                            final String address = (String)document.getData().get("Address");
-                                            final String city = (String)document.getData().get("City");
-                                            final String postcode = (String)document.getData().get("Postcode");
-                                            final String recyclingProgram = (String)document.getData().get("RecyclingProgram");
-
-                                            final String itemTitle = (pointName.equals("?") ? "" : pointName);
-                                            final String itemSnippet =
-                                                (buildingName.equals("?")  ? "" : buildingName) + " " +
-                                                (buildingNumber.equals("?") ? "" : buildingNumber) + ", " +
-                                                (address.equals("?") ? "" : address) + " " +
-                                                (city.equals("?") ? "" : city) + " " +
-                                                (postcode.equals("?") ? "" : postcode) +
-                                                (recyclingProgram.equals("?") ? "" : ("\n\nBrands: " + recyclingProgram));
-
-                                            Log.d("BeautyAndroid", "itemTitle = " + itemTitle +
-                                                ", latitude = " + latitude + ", itemSnippet = " + itemSnippet);
-
-                                            items.add(new OverlayItem(itemTitle, itemSnippet,
-                                                new GeoPoint(latitude,longitude)));
-                                        }
-                                    }
-
-                                    //the overlay
-                                    ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
-                                        new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                            @Override
-                                            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                                Log.i("BeautyAndroid", "Single tap");
-
-                                                // Remove the previous road overlay
-                                                if (roadOverlay[0] != null) {
-                                                    map.getOverlays().remove(roadOverlay[0]);
-                                                }
-
-                                                final IGeoPoint itemILocation = item.getPoint();
-                                                final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
-                                                    itemILocation.getLongitude());
-
-                                                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-                                                waypoints.add(userLocation);
-                                                waypoints.add(itemLocation);
-
-                                                Road road = roadManager.getRoad(waypoints);
-
-                                                // Generate the direction text
-                                                StringBuilder directionTextBuilder = new StringBuilder();
-                                                int directionItemIdx = 0;
-
-                                                for (RoadNode node: road.mNodes) {
-                                                    // There is no useful info in the node of index 0 ("You have
-                                                    // reached a waypoint of your trip")
-                                                    if (directionItemIdx > 0) {
-                                                        final String instructions = node.mInstructions;
-                                                        if (instructions == "null") {
-                                                            continue;
-                                                        }
-
-                                                        directionTextBuilder.append(directionItemIdx + ". ");
-                                                        directionTextBuilder.append(instructions);
-                                                        directionTextBuilder.append("\n");
-                                                    }
-
-                                                    directionItemIdx++;
-                                                }
-
-                                                final String directionText = directionTextBuilder.toString();
-                                                Log.d("BeautyAndroid", "Direction text: " +
-                                                    directionText);
-
-                                                TextView descriptionTextArea = (TextView) view.findViewById(R.id.mapDirection);
-                                                View descriptionTextAreaBackground = (View) view.findViewById(R.id.mapDirectionBackground);
-
-                                                if (directionText != "") {
-                                                    descriptionTextArea.setText(directionText);
-
-                                                    // Activate the scrollbar
-                                                    descriptionTextArea.setMovementMethod(new ScrollingMovementMethod());
-
-                                                    // Change background color
-                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.black));
-                                                } else {
-                                                    descriptionTextArea.setText("");
-
-                                                    // Remove background color
-                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.BgOrange));
-                                                }
-
-                                                // Display the road as a map overlay
-                                                roadOverlay[0] = RoadManager.buildRoadOverlay(road);
-
-                                                // Add the polyline to the overlays of your map
-                                                map.getOverlays().add(roadOverlay[0]);
-
-                                                // Refresh the map
-                                                map.invalidate();
-
-                                                mapController.animateTo(item.getPoint());
-
-                                                return true;
-                                            }
-                                            @Override
-                                            public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                                Log.i("BeautyAndroid", "Long press");
-                                                return false;
-                                            }
-                                        }, ctx);
-                                    mOverlay.setFocusItemsOnTap(true);
-
-                                    map.getOverlays().add(mOverlay);
-
-                                    // Refresh the map
-                                    map.invalidate();
-                                } else {
-                                    Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
+                            return true;
+                        }
+                    }
                 }
-                catch (Exception e) {}
+
+                return false;
             }
         });
+        
+        setupMap();
 
         mDatabase.collection("userInfos")
             .whereEqualTo("__name__", AppUser.getInstance().getId())
@@ -333,6 +189,17 @@ public class FragmentMap extends Fragment {
                     scoreBackground.setBackgroundColor(getResources().getColor(R.color.black));
                 }
             });
+
+        binding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Log.d("BeautyAndroid", "Search start set to user coordinates");
+                mSearchStart = mUserLocation;
+
+                mMapController.animateTo(mUserLocation);
+            }
+        });
     }
 
     @Override
@@ -384,5 +251,225 @@ public class FragmentMap extends Fragment {
                 permissionsToRequest.toArray(new String[0]),
                 REQUEST_PERMISSIONS_REQUEST_CODE);
         }
+    }
+    
+    private void setupMap() {
+
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+
+        mMapController = map.getController();
+        mMapController.setZoom(14.0);
+
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx),map);
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+        map.getOverlays().add(this.mLocationOverlay);
+
+        RoadManager roadManager = new OSRMRoadManager(mCtx, "MyOwnUserAgent/1.0");
+
+        mLocationOverlay.runOnFirstFix(new Runnable() {
+            public void run() {
+
+                // Overlay to display the road to a recycling point
+                final Polyline[] roadOverlay = {null};
+
+                final View view = getView();
+
+                try {
+                    // Update user coordinates
+                    mUserLocation = mLocationOverlay.getMyLocation();
+                    final double userLatitude = mUserLocation.getLatitude();
+                    final double userLongitude = mUserLocation.getLongitude();
+                    final String userLatitudeText = userLatitude+"";
+                    final String userLongitudeText = userLongitude+"";
+                    Log.d("BeautyAndroid", "user coordinates: latitude " + userLatitudeText + ", longitude "
+                        + userLongitudeText);
+
+                    // By default the search start location is the user one
+                    if (mSearchStart == null) {
+                        Log.d("BeautyAndroid", "Search start set to user coordinates");
+                        mSearchStart = mUserLocation;
+                    }
+
+                    // Search for the recycling points
+                    final double truncatedLatitude = Math.floor(userLatitude * 100) / 100;
+                    final double truncatedLongitude = Math.floor(userLongitude * 100) / 100;
+                    final double maxSearchLatitude = truncatedLatitude + 0.05;
+                    final double minSearchLatitude = truncatedLatitude - 0.05;
+                    final double maxSearchLongitude = truncatedLongitude + 0.05;
+                    final double minSearchLongitude = truncatedLongitude - 0.05;
+
+                    mDatabase.collection("recyclePointInfos")
+                        .whereLessThan("Latitude", maxSearchLatitude)
+                        .whereGreaterThan("Latitude", minSearchLatitude)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        final double longitude = (double)document.getData().get("Longitude");
+
+                                        Log.v("BeautyAndroid", "longitude = " + String.valueOf(longitude));
+
+                                        // Due to Firestore query limitation, we need to filter the longitude on the
+                                        // device.
+                                        // TODO: add e.g.: the country or the continent to the query, to limit the
+                                        //  response result number.
+                                        if (longitude > minSearchLongitude && longitude < maxSearchLongitude) {
+                                            Log.v("BeautyAndroid", document.getId() + " => " + document.getData());
+
+                                            final double latitude = (double)document.getData().get("Latitude");
+                                            final String pointName = (String)document.getData().get("PointName");
+                                            final String buildingName = (String)document.getData().get("BuildingName");
+                                            final String buildingNumber = (String)document.getData().get("BuildingNumber");
+                                            final String address = (String)document.getData().get("Address");
+                                            final String city = (String)document.getData().get("City");
+                                            final String postcode = (String)document.getData().get("Postcode");
+                                            final String recyclingProgram = (String)document.getData().get("RecyclingProgram");
+
+                                            final String itemTitle = (pointName.equals("?") ? "" : pointName);
+                                            final String itemSnippet =
+                                                (buildingName.equals("?")  ? "" : buildingName) + " " +
+                                                    (buildingNumber.equals("?") ? "" : buildingNumber) + ", " +
+                                                    (address.equals("?") ? "" : address) + " " +
+                                                    (city.equals("?") ? "" : city) + " " +
+                                                    (postcode.equals("?") ? "" : postcode) +
+                                                    (recyclingProgram.equals("?") ? "" : ("\n\nBrands: " + recyclingProgram));
+
+                                            Log.v("BeautyAndroid", "itemTitle = " + itemTitle +
+                                                ", latitude = " + latitude + ", itemSnippet = " + itemSnippet);
+
+                                            items.add(new OverlayItem(itemTitle, itemSnippet,
+                                                new GeoPoint(latitude,longitude)));
+                                        }
+                                    }
+
+                                    //the overlay
+                                    ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                                        new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                                            @Override
+                                            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                                                Log.i("BeautyAndroid", "Single tap");
+
+                                                // Remove the previous road overlay
+                                                if (roadOverlay[0] != null) {
+                                                    map.getOverlays().remove(roadOverlay[0]);
+                                                }
+
+                                                final IGeoPoint itemILocation = item.getPoint();
+                                                final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
+                                                    itemILocation.getLongitude());
+
+                                                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+                                                waypoints.add(mSearchStart);
+                                                waypoints.add(itemLocation);
+
+                                                Road road = roadManager.getRoad(waypoints);
+
+                                                // Generate the direction text
+                                                StringBuilder directionTextBuilder = new StringBuilder();
+                                                int directionItemIdx = 0;
+
+                                                for (RoadNode node: road.mNodes) {
+                                                    // There is no useful info in the node of index 0 ("You have
+                                                    // reached a waypoint of your trip")
+                                                    if (directionItemIdx > 0) {
+                                                        final String instructions = node.mInstructions;
+                                                        if (instructions == "null") {
+                                                            continue;
+                                                        }
+
+                                                        directionTextBuilder.append(directionItemIdx + ". ");
+                                                        directionTextBuilder.append(instructions);
+                                                        directionTextBuilder.append("\n");
+                                                    }
+
+                                                    directionItemIdx++;
+                                                }
+
+                                                final String directionText = directionTextBuilder.toString();
+                                                Log.v("BeautyAndroid", "Direction text: " +
+                                                    directionText);
+
+                                                TextView descriptionTextArea = (TextView) view.findViewById(R.id.mapDirection);
+                                                View descriptionTextAreaBackground = (View) view.findViewById(R.id.mapDirectionBackground);
+
+                                                if (directionText != "") {
+                                                    descriptionTextArea.setText(directionText);
+
+                                                    // Activate the scrollbar
+                                                    descriptionTextArea.setMovementMethod(new ScrollingMovementMethod());
+
+                                                    // Change background color
+                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.black));
+                                                } else {
+                                                    descriptionTextArea.setText("");
+
+                                                    // Remove background color
+                                                    descriptionTextAreaBackground.setBackgroundColor(getResources().getColor(R.color.BgOrange));
+                                                }
+
+                                                // Display the road as a map overlay
+                                                roadOverlay[0] = RoadManager.buildRoadOverlay(road);
+
+                                                // Add the polyline to the overlays of your map
+                                                map.getOverlays().add(roadOverlay[0]);
+
+                                                // Refresh the map
+                                                map.invalidate();
+
+                                                mMapController.animateTo(item.getPoint());
+
+                                                return true;
+                                            }
+
+                                            @Override
+                                            public boolean onItemLongPress(final int index, final OverlayItem item) {
+                                                return false;
+                                            }
+                                        }, mCtx);
+                                    mOverlay.setFocusItemsOnTap(true);
+
+                                    map.getOverlays().add(mOverlay);
+
+                                    // Refresh the map
+                                    map.invalidate();
+                                } else {
+                                    Log.e("BeautyAndroid", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+                }
+                catch (Exception e) {}
+            }
+        });
+    }
+
+    private GeoPoint getLocation(String locationName) {
+
+        try {
+            Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+
+            List<Address> geoResults = geocoder.getFromLocationName(locationName, 1);
+
+            if (!geoResults.isEmpty()) {
+                Address addr = geoResults.get(0);
+                GeoPoint location = new GeoPoint(addr.getLatitude(), addr.getLongitude());
+
+                return location;
+            } else {
+                Toast toast = Toast.makeText(requireContext(),"Location Not Found",Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+            }
+        } catch (IOException e) {
+            Log.e("BeautyAndroid", "Error getting a location: " + e.toString());
+        }
+
+        return null;
     }
 }
