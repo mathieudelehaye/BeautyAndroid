@@ -74,6 +74,8 @@ public class FragmentMap extends Fragment {
     private MyLocationNewOverlay mLocationOverlay;
     private GeoPoint mUserLocation;
     private GeoPoint mSearchStart;
+    private RoadManager mRoadManager;
+    private Polyline[] mRoadOverlay = {null};   // Overlay to display the road to a recycling point
     private FirebaseFirestore mDatabase;
     private Context mCtx;
 
@@ -159,34 +161,7 @@ public class FragmentMap extends Fragment {
 
         setupMap();
 
-        // Display the user score
-        mDatabase.collection("userInfos")
-            .whereEqualTo("__name__", AppUser.getInstance().getId())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    // Display score
-                    Integer userScore = 0;
-
-                    if (task.isSuccessful()) {
-                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
-
-                            userScore = Integer.parseInt(document.getData().get("score").toString());
-                        }
-                    } else {
-                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
-                    }
-
-                    Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
-
-                    TextView score = (TextView) view.findViewById(R.id.mapScore);
-                    score.setText(String.valueOf(userScore) + " pts");
-                }
-            });
+        updateUserScore();
 
         binding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,13 +239,10 @@ public class FragmentMap extends Fragment {
         mLocationOverlay.enableFollowLocation();
         map.getOverlays().add(this.mLocationOverlay);
 
-        RoadManager roadManager = new OSRMRoadManager(mCtx, "MyOwnUserAgent/1.0");
+        mRoadManager = new OSRMRoadManager(mCtx, "MyOwnUserAgent/1.0");
 
         mLocationOverlay.runOnFirstFix(new Runnable() {
             public void run() {
-
-                // Overlay to display the road to a recycling point
-                final Polyline[] roadOverlay = {null};
 
                 final View view = getView();
 
@@ -355,75 +327,15 @@ public class FragmentMap extends Fragment {
                                                 Log.i("BeautyAndroid", "Single tap");
 
                                                 // Remove the previous road overlay
-                                                if (roadOverlay[0] != null) {
-                                                    map.getOverlays().remove(roadOverlay[0]);
+                                                if (mRoadOverlay[0] != null) {
+                                                    map.getOverlays().remove(mRoadOverlay[0]);
                                                 }
 
                                                 final IGeoPoint itemILocation = item.getPoint();
                                                 final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
                                                     itemILocation.getLongitude());
 
-                                                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-                                                waypoints.add(mSearchStart);
-                                                waypoints.add(itemLocation);
-
-                                                Road road = roadManager.getRoad(waypoints);
-
-                                                // Generate the direction text
-                                                StringBuilder directionTextBuilder = new StringBuilder();
-                                                int directionItemIdx = 0;
-
-                                                for (RoadNode node: road.mNodes) {
-                                                    // There is no useful info in the node of index 0 ("You have
-                                                    // reached a waypoint of your trip")
-                                                    if (directionItemIdx > 0) {
-                                                        final String instructions = node.mInstructions;
-                                                        if (instructions == "null") {
-                                                            continue;
-                                                        }
-
-                                                        directionTextBuilder.append(directionItemIdx + ". ");
-                                                        directionTextBuilder.append(instructions);
-                                                        directionTextBuilder.append("\n");
-                                                    }
-
-                                                    directionItemIdx++;
-                                                }
-
-                                                final String directionText = directionTextBuilder.toString();
-                                                Log.v("BeautyAndroid", "Direction text: " +
-                                                    directionText);
-
-                                                TextView direction = (TextView) view.findViewById(R.id.mapDirection);
-                                                View directionBackground = (View) view.findViewById(R.id.mapDirectionBackground);
-
-                                                if (directionText != "") {
-                                                    direction.setText(directionText);
-
-                                                    // Activate the scrollbar
-                                                    direction.setMovementMethod(new ScrollingMovementMethod());
-
-                                                    // Display view
-                                                    direction.setBackgroundResource(R.color.BgOrange);
-                                                    directionBackground.setBackgroundResource(R.color.black);
-                                                } else {
-                                                    direction.setText("");
-
-                                                    // Hide view
-                                                    direction.setBackgroundResource(R.color.Transparent);
-                                                    directionBackground.setBackgroundResource(R.color.Transparent);
-                                                }
-
-                                                // Display the road as a map overlay
-                                                roadOverlay[0] = RoadManager.buildRoadOverlay(road);
-
-                                                // Add the polyline to the overlays of your map
-                                                map.getOverlays().add(roadOverlay[0]);
-
-                                                // Refresh the map
-                                                map.invalidate();
-
-                                                mMapController.animateTo(item.getPoint());
+                                                drawRoadToPoint(itemLocation);
 
                                                 return true;
                                             }
@@ -472,5 +384,101 @@ public class FragmentMap extends Fragment {
         }
 
         return null;
+    }
+
+    private void updateUserScore() {
+        // Display the user score
+        mDatabase.collection("userInfos")
+            .whereEqualTo("__name__", AppUser.getInstance().getId())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    // Display score
+                    Integer userScore = 0;
+
+                    if (task.isSuccessful()) {
+                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
+
+                            userScore = Integer.parseInt(document.getData().get("score").toString());
+                        }
+                    } else {
+                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                    }
+
+                    Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
+
+                    TextView score = (TextView) getView().findViewById(R.id.mapScore);
+                    score.setText(String.valueOf(userScore) + " pts");
+                }
+            });
+    }
+    
+    private void drawRoadToPoint(GeoPoint itemLocation) {
+
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+        waypoints.add(mSearchStart);
+        waypoints.add(itemLocation);
+
+        Road road = mRoadManager.getRoad(waypoints);
+
+        // Generate the direction text
+        StringBuilder directionTextBuilder = new StringBuilder();
+        int directionItemIdx = 0;
+
+        for (RoadNode node: road.mNodes) {
+            // There is no useful info in the node of index 0 ("You have
+            // reached a waypoint of your trip")
+            if (directionItemIdx > 0) {
+                final String instructions = node.mInstructions;
+                if (instructions == "null") {
+                    continue;
+                }
+
+                directionTextBuilder.append(directionItemIdx + ". ");
+                directionTextBuilder.append(instructions);
+                directionTextBuilder.append("\n");
+            }
+
+            directionItemIdx++;
+        }
+
+        final String directionText = directionTextBuilder.toString();
+        Log.v("BeautyAndroid", "Direction text: " +
+                directionText);
+
+        TextView direction = (TextView) getView().findViewById(R.id.mapDirection);
+        View directionBackground = (View) getView().findViewById(R.id.mapDirectionBackground);
+
+        if (directionText != "") {
+            direction.setText(directionText);
+
+            // Activate the scrollbar
+            direction.setMovementMethod(new ScrollingMovementMethod());
+
+            // Display view
+            direction.setBackgroundResource(R.color.BgOrange);
+            directionBackground.setBackgroundResource(R.color.black);
+        } else {
+            direction.setText("");
+
+            // Hide view
+            direction.setBackgroundResource(R.color.Transparent);
+            directionBackground.setBackgroundResource(R.color.Transparent);
+        }
+
+        // Display the road as a map overlay
+        mRoadOverlay[0] = RoadManager.buildRoadOverlay(road);
+
+        // Add the polyline to the overlays of your map
+        map.getOverlays().add(mRoadOverlay[0]);
+
+        // Refresh the map
+        map.invalidate();
+
+        mMapController.animateTo(itemLocation);
     }
 }
