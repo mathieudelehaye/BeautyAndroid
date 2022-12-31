@@ -69,7 +69,7 @@ public class FragmentMap extends Fragment {
 
     private FragmentMapBinding binding;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    private MapView map = null;
+    private MapView mMap = null;
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
     private GeoPoint mUserLocation;
@@ -101,8 +101,9 @@ public class FragmentMap extends Fragment {
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
 
-        //load/initialize the osmdroid configuration, this can be done
         mCtx = view.getContext();
+
+        //load/initialize the osmdroid configuration, this can be done
         Configuration.getInstance().load(mCtx, PreferenceManager.getDefaultSharedPreferences(mCtx));
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
@@ -112,13 +113,13 @@ public class FragmentMap extends Fragment {
         //tile servers will get you banned based on this string
 
         // inflate and create the map
-        map = (MapView) view.findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
+        mMap = (MapView) view.findViewById(R.id.map);
+        mMap.setTileSource(TileSourceFactory.MAPNIK);
 
         // handle permissions
         String[] permissions = {
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION
         };
         requestPermissionsIfNecessary(
             view.getContext(),
@@ -141,7 +142,7 @@ public class FragmentMap extends Fragment {
                     String query = editText.getText().toString();
 
                     if (query != "") {
-                        GeoPoint location = getLocation(query);
+                        GeoPoint location = getLocationCoordinates(query);
 
                         if (location != null) {
                             mMapController.animateTo(location);
@@ -188,7 +189,7 @@ public class FragmentMap extends Fragment {
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+        mMap.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
     @Override
@@ -206,7 +207,7 @@ public class FragmentMap extends Fragment {
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+        mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
     private void requestPermissionsIfNecessary(Context context, String[] permissions) {
@@ -228,18 +229,21 @@ public class FragmentMap extends Fragment {
     
     private void setupMap() {
 
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
+        mMap.setBuiltInZoomControls(true);
+        mMap.setMultiTouchControls(true);
 
-        mMapController = map.getController();
+        mMapController = mMap.getController();
         mMapController.setZoom(14.0);
 
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx),map);
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();
         mLocationOverlay.enableFollowLocation();
-        map.getOverlays().add(this.mLocationOverlay);
+        mUserLocation = mLocationOverlay.getMyLocation();
+        mMapController.animateTo(mUserLocation);
 
-        mRoadManager = new OSRMRoadManager(mCtx, "MyOwnUserAgent/1.0");
+        mMap.getOverlays().add(this.mLocationOverlay);
+
+        mRoadManager = new OSRMRoadManager(mCtx, getString(R.string.app_name)); // Initialize it later, whe/n needed
 
         mLocationOverlay.runOnFirstFix(new Runnable() {
             public void run() {
@@ -248,7 +252,6 @@ public class FragmentMap extends Fragment {
 
                 try {
                     // Update user coordinates
-                    mUserLocation = mLocationOverlay.getMyLocation();
                     final double userLatitude = mUserLocation.getLatitude();
                     final double userLongitude = mUserLocation.getLongitude();
                     final String userLatitudeText = userLatitude+"";
@@ -328,7 +331,7 @@ public class FragmentMap extends Fragment {
 
                                                 // Remove the previous road overlay
                                                 if (mRoadOverlay[0] != null) {
-                                                    map.getOverlays().remove(mRoadOverlay[0]);
+                                                    mMap.getOverlays().remove(mRoadOverlay[0]);
                                                 }
 
                                                 final IGeoPoint itemILocation = item.getPoint();
@@ -347,22 +350,23 @@ public class FragmentMap extends Fragment {
                                         }, mCtx);
                                     mOverlay.setFocusItemsOnTap(true);
 
-                                    map.getOverlays().add(mOverlay);
+                                    mMap.getOverlays().add(mOverlay);
 
                                     // Refresh the map
-                                    map.invalidate();
+                                    mMap.invalidate();
                                 } else {
                                     Log.e("BeautyAndroid", "Error getting documents: ", task.getException());
                                 }
                             }
                         });
+                } catch (Exception e) {
+                    Log.e("BeautyAndroid", "Error udating the map: " + e.toString());
                 }
-                catch (Exception e) {}
             }
         });
     }
 
-    private GeoPoint getLocation(String locationName) {
+    private GeoPoint getLocationCoordinates(String locationName) {
 
         try {
             Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
@@ -448,7 +452,7 @@ public class FragmentMap extends Fragment {
 
         final String directionText = directionTextBuilder.toString();
         Log.v("BeautyAndroid", "Direction text: " +
-                directionText);
+            directionText);
 
         TextView direction = (TextView) getView().findViewById(R.id.mapDirection);
         View directionBackground = (View) getView().findViewById(R.id.mapDirectionBackground);
@@ -474,10 +478,10 @@ public class FragmentMap extends Fragment {
         mRoadOverlay[0] = RoadManager.buildRoadOverlay(road);
 
         // Add the polyline to the overlays of your map
-        map.getOverlays().add(mRoadOverlay[0]);
+        mMap.getOverlays().add(mRoadOverlay[0]);
 
         // Refresh the map
-        map.invalidate();
+        mMap.invalidate();
 
         mMapController.animateTo(itemLocation);
     }
