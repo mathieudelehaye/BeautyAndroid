@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 new HashSet<String>());
 
             if (scoreQueue.isEmpty()) {
-                Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
+                //Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
                 restart();
                 return;
             }

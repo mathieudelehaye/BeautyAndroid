@@ -22,6 +22,7 @@
     <string name="app_uid">app-uid</string>
     <string name="device_id">device-id</string>
     <string name="scores_to_send">scores-to-send</string>
+    <string name="user_location">user-location</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="home_fragment_label">Home Fragment</string>
