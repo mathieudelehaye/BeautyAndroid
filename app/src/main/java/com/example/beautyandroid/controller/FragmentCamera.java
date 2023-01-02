@@ -138,7 +138,8 @@ public class FragmentCamera extends Fragment {
         }
     }
 
-    void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
+    private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
+
         mPreviewView.setPreferredImplementationMode(PreviewView.ImplementationMode.SURFACE_VIEW);
 
         Preview preview = new Preview.Builder()
@@ -156,54 +157,23 @@ public class FragmentCamera extends Fragment {
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build();
 
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(mCtx), new QRCodeImageAnalyzer(new QRCodeFoundListener() {
-            @Override
-            public void onQRCodeFound(String _qrCode) {
-
-                if (_qrCode.equals(mQRCode)) {
-                    /*if (!mCodeAlreadyScannedLogDisplayed) {
-                        Log.w("BeautyAndroid", "QR Code already scanned");
-                        mCodeAlreadyScannedLogDisplayed = true;
-                    }*/
-                    return;
+        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(mCtx), new QRCodeImageAnalyzer(
+            new QRCodeFoundListener() {
+                @Override
+                public void onQRCodeFound(String _qrCode) {
+                    processQRCode(_qrCode);
                 }
 
-                Log.d("BeautyAndroid", "New QR Code Found: " + _qrCode);
-
-                mQRCode = _qrCode;
-                //mCodeAlreadyScannedLogDisplayed = false;
-
-                // Check if no QR code scanning has already been sent for today. If no, add the scanning event
-                // to the queue, so it is sent later.
-                HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet("set",
-                    new HashSet<String>());
-
-                HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
-
-                String timeStamp = UserInfoEntry.scoreTimeFormat.format(new java.util.Date());
-
-                if (!updatedQueue.contains(timeStamp)) {
-                    updatedQueue.add(timeStamp);
-
-                    // Write back the queue to the app preferences
-                    mSharedPref.edit().putStringSet(getString(R.string.scores_to_send), updatedQueue).commit();
-
-                    Log.i("BeautyAndroid", "Scanning event added to the queue for the timestamp: "
-                        + timeStamp);
-
-                    Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                    toast.show();
+                @Override
+                public void qrCodeNotFound() {
+                    Log.d("BeautyAndroid", "QR Code Not Found");
                 }
-            }
-
-            @Override
-            public void qrCodeNotFound() {
-                Log.d("BeautyAndroid", "QR Code Not Found");
-            }
         }));
 
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
+        // avoid having too many use cases, when switching back to the camera screen
+        cameraProvider.unbindAll();
+
+        cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
     }
 
     public void startCamera() {
@@ -215,5 +185,44 @@ public class FragmentCamera extends Fragment {
                 Toast.makeText(mCtx, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(mCtx));
+    }
+
+    private void processQRCode(String _qrCode) {
+
+        if (_qrCode.equals(mQRCode)) {
+            /*if (!mCodeAlreadyScannedLogDisplayed) {
+                Log.w("BeautyAndroid", "QR Code already scanned");
+                mCodeAlreadyScannedLogDisplayed = true;
+            }*/
+            return;
+        }
+
+        Log.d("BeautyAndroid", "New QR Code Found: " + _qrCode);
+
+        mQRCode = _qrCode;
+        //mCodeAlreadyScannedLogDisplayed = false;
+
+        // Check if no QR code scanning has already been sent for today. If no, add the scanning event
+        // to the queue, so it is sent later.
+        HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet("set",
+                new HashSet<String>());
+
+        HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
+
+        String timeStamp = UserInfoEntry.scoreTimeFormat.format(new java.util.Date());
+
+        if (!updatedQueue.contains(timeStamp)) {
+            updatedQueue.add(timeStamp);
+
+            // Write back the queue to the app preferences
+            mSharedPref.edit().putStringSet(getString(R.string.scores_to_send), updatedQueue).commit();
+
+            Log.i("BeautyAndroid", "Scanning event added to the queue for the timestamp: "
+                + timeStamp);
+
+            Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.show();
+        }
     }
 }
