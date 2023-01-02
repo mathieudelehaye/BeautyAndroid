@@ -207,6 +207,8 @@ public class FragmentMap extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Map view becomes visible");
+
+            updateUserScore();
         }
     }
 
@@ -352,6 +354,11 @@ public class FragmentMap extends Fragment {
     }
 
     private void updateUserScore() {
+
+        if (mDatabase == null) {
+            return;
+        }
+
         // Display the user score
         mDatabase.collection("userInfos")
             .whereEqualTo("__name__", AppUser.getInstance().getId())

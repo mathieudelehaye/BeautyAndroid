@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
@@ -57,7 +56,6 @@ public class FragmentCamera extends Fragment {
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private String mQRCode;
-    //private Boolean mCodeAlreadyScannedLogDisplayed = false;
     private SharedPreferences mSharedPref;
 
     @Override
@@ -67,7 +65,6 @@ public class FragmentCamera extends Fragment {
     ) {
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         mQRCode = "";
-        //mCodeAlreadyScannedLogDisplayed = false;
         return binding.getRoot();
     }
 
@@ -190,22 +187,17 @@ public class FragmentCamera extends Fragment {
     private void processQRCode(String _qrCode) {
 
         if (_qrCode.equals(mQRCode)) {
-            /*if (!mCodeAlreadyScannedLogDisplayed) {
-                Log.w("BeautyAndroid", "QR Code already scanned");
-                mCodeAlreadyScannedLogDisplayed = true;
-            }*/
             return;
         }
 
         Log.d("BeautyAndroid", "New QR Code Found: " + _qrCode);
 
         mQRCode = _qrCode;
-        //mCodeAlreadyScannedLogDisplayed = false;
 
         // Check if no QR code scanning has already been sent for today. If no, add the scanning event
         // to the queue, so it is sent later.
         HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet("set",
-                new HashSet<String>());
+            new HashSet<String>());
 
         HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
 
