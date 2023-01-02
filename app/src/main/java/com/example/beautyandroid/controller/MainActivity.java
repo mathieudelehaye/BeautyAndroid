@@ -66,14 +66,14 @@ public class MainActivity extends AppCompatActivity {
             // Actions to execute after the background task
             // Return if there is no network available
             if (!isNetworkAvailable()) {
-                Log.v("BeautyAndroid", "Try to write the scanning events but no network");
+                //Log.v("BeautyAndroid", "Try to write the scanning events but no network");
                 restart();
                 return;
             }
 
             // Return if there is no app user yet
             if (AppUser.getInstance().getAuthenticationType() == AppUser.AuthenticationType.NONE) {
-                Log.v("BeautyAndroid", "Try to write the scanning events but no app user");
+                //Log.v("BeautyAndroid", "Try to write the scanning events but no app user");
                 restart();
                 return;
             }

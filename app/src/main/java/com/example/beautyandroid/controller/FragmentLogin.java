@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
@@ -41,7 +40,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class FragmentLogin extends Fragment {
+public class FragmentLogin extends FragmentWithStart {
 
     private FragmentLoginBinding binding;
     private EditText mEmail;
@@ -128,13 +127,8 @@ public class FragmentLogin extends Fragment {
 
                                     if (dbUser.isEmailVerified()) {
 
-                                        // Store the uid in the app preferences
-                                        mSharedPref.edit().putString(getString(R.string.app_uid), emailText).commit();
-
-                                        AppUser.getInstance().authenticate(emailText, AppUser.AuthenticationType.REGISTERED);
-
-                                        NavHostFragment.findNavController(FragmentLogin.this)
-                                            .navigate(R.id.action_LoginFragment_to_AppFragment);
+                                        startAppWithUser(mSharedPref, R.id.action_LoginFragment_to_AppFragment,
+                                            emailText, AppUser.AuthenticationType.REGISTERED);
                                     } else {
                                         Log.e("BeautyAndroid", "Email is not verified");
 

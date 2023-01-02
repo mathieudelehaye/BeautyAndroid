@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
@@ -47,7 +46,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class FragmentHome extends Fragment {
+public class FragmentHome extends FragmentWithStart {
 
     private FragmentHomeBinding binding;
     private FirebaseFirestore mDatabase;
@@ -71,7 +70,7 @@ public class FragmentHome extends Fragment {
 
         mDatabase = FirebaseFirestore.getInstance();
 
-        // Navigate straightforward to the App screen if there is an uid in the app preferences
+        // Navigate to the App screen if there is an uid in the app preferences
         getPreferenceIds();
         if (!mPrefUserId.toString().equals("")) {
 
@@ -79,17 +78,29 @@ public class FragmentHome extends Fragment {
             AppUser.AuthenticationType type = Helpers.isEmail(uid) ? AppUser.AuthenticationType.REGISTERED
                 : AppUser.AuthenticationType.NOT_REGISTERED;
 
-            AppUser.getInstance().authenticate(uid, type);
-
-            NavHostFragment.findNavController(FragmentHome.this)
-                .navigate(R.id.action_HomeFragment_to_AppFragment);
+            startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, uid, type);
         }
 
         binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                tryAndCreateAutoUserId();
+                StringBuilder anonymousUid = new StringBuilder();
+                anonymousUid.append(mSharedPref.getString(getString(R.string.anonymous_uid), ""));
+
+                if (!anonymousUid.toString().equals("")) {
+                    // Reuse the anonymous uid if it already exists in the app preferences
+                    String anonymousUidText = anonymousUid.toString();
+
+                    Log.v("BeautyAndroid", "Anonymous uid loaded from the app preferences and reused: "
+                        + anonymousUidText);
+
+                    startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, anonymousUidText,
+                        AppUser.AuthenticationType.NOT_REGISTERED);
+                } else {
+                    // Otherwise, create an anonymous uid
+                    tryAndCreateAutoUserId();
+                }
             }
         });
 
@@ -166,18 +177,19 @@ public class FragmentHome extends Fragment {
                             @Override
                             public void onSuccess() {
 
-                                Log.d("BeautyAndroid", "The user automatic identifier was created: "
-                                    + uid.toString());
+                                String uidText = uid.toString();
 
-                                // Store the uid in the app preferences
-                                mSharedPref.edit().putString(getString(R.string.app_uid), uid.toString())
+                                Log.d("BeautyAndroid", "The user automatic identifier was created: "
+                                    + uidText);
+
+                                // Store the created anonymous id to the app preferences
+                                Log.v("BeautyAndroid", "Anonymous uid stored to the app preferences: "
+                                    + uidText);
+                                mSharedPref.edit().putString(getString(R.string.anonymous_uid), uidText)
                                     .commit();
 
-                                // Update the app user
-                                AppUser.getInstance().authenticate(uid.toString(), AppUser.AuthenticationType.NOT_REGISTERED);
-
-                                NavHostFragment.findNavController(FragmentHome.this)
-                                    .navigate(R.id.action_HomeFragment_to_AppFragment);
+                                startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, uidText,
+                                    AppUser.AuthenticationType.NOT_REGISTERED);
                             }
 
                             @Override
@@ -210,7 +222,7 @@ public class FragmentHome extends Fragment {
         mPrefUserId.append(mSharedPref.getString(getString(R.string.app_uid), ""));
 
         if (!mPrefUserId.toString().equals("")) {
-            Log.d("BeautyAndroid", "The uid was read from app preferences: " + mPrefUserId.toString());
+            Log.v("BeautyAndroid", "Latest uid loaded from the app preferences: " + mPrefUserId.toString());
         }
 
         // Get the device id
@@ -218,7 +230,7 @@ public class FragmentHome extends Fragment {
         mDeviceId.append(mSharedPref.getString(getString(R.string.device_id), ""));
 
         if (!mDeviceId.toString().equals("")) {
-            Log.d("BeautyAndroid", "The device id was read from app preferences: " + mDeviceId.toString());
+            Log.d("BeautyAndroid", "The device id was read from the app preferences: " + mDeviceId.toString());
         } else {
             // If not found in the app preferences, read the device id and store it there
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
