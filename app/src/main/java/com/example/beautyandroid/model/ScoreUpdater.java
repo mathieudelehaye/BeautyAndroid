@@ -1,5 +1,5 @@
 //
-//  UserScoreTransferer.java
+//  ScoreUpdater.java
 //
 //  Created by Mathieu Delehaye on 3/01/2023.
 //
@@ -19,20 +19,37 @@
 package com.example.beautyandroid.model;
 
 import android.util.Log;
+import android.widget.TextView;
+import androidx.fragment.app.FragmentManager;
+import com.beautyorder.androidclient.R;
 import com.example.beautyandroid.TaskCompletionManager;
+import com.example.beautyandroid.controller.FragmentMap;
+import com.example.beautyandroid.controller.MainActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
-public class UserScoreTransferer {
+public class ScoreUpdater {
     private FirebaseFirestore mDatabase;
+    private MainActivity mActivity;
     private String mSourceUid;
     private String mDestinationUid;
 
-    public UserScoreTransferer(FirebaseFirestore _database, String _sourceUid, String _destinationUid) {
+    public ScoreUpdater(FirebaseFirestore _database, String _sourceUid, String _destinationUid,
+        MainActivity _activity) {
+
         mDatabase = _database;
         mSourceUid = _sourceUid;
         mDestinationUid = _destinationUid;
+        mActivity = _activity;
+    }
+
+    public ScoreUpdater(FirebaseFirestore _database, MainActivity _activity) {
+
+        mDatabase = _database;
+        mSourceUid = "";
+        mDestinationUid = "";
+        mActivity = _activity;
     }
 
     public void run() {
@@ -43,7 +60,7 @@ public class UserScoreTransferer {
 
         if (!mSourceUid.equals("")) {
             // An anonymous uid already was found in the app preferences
-            Log.v("BeautyAndroid", "Try to transfer score from the anonymous uid found in the app preferences: "
+            Log.d("BeautyAndroid", "Try to transfer score from the anonymous uid found in the app preferences: "
                 + mSourceUid);
 
             // Get the DB
@@ -55,8 +72,10 @@ public class UserScoreTransferer {
                 public void onSuccess() {
 
                     if (anonymousUserEntry.getScore() > 0) {
+                        Log.v("BeautyAndroid", "Anonymous user data read from the database: "
+                            + String.valueOf(anonymousUserEntry.getScore()));
 
-                        clearAndTransferFromAnonymousUser(anonymousUserEntry);
+                        clearAndTransferScoreFromAnonymousUser(anonymousUserEntry);
                     }
                 }
 
@@ -67,16 +86,22 @@ public class UserScoreTransferer {
         }
     }
 
-    private void clearAndTransferFromAnonymousUser(UserInfoEntry anonymousUserEntry) {
+    private void clearAndTransferScoreFromAnonymousUser(UserInfoEntry anonymousUserEntry) {
 
         // Clear the anonymous user score in the DB
+        final int anonymousUserScore = anonymousUserEntry.getScore();
+        final Date anonymousUserTimestamp = anonymousUserEntry.getScoreTime();
+
         anonymousUserEntry.setScore(0);
         anonymousUserEntry.setScoreTime(UserInfoEntry.scoreTimeFormat.format(
-                UserInfoEntry.getDayBeforeDate(new Date())));
+            UserInfoEntry.getDayBeforeDate(new Date())));
+
         anonymousUserEntry.updateScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
-                readAndAddToRegisteredUser(anonymousUserEntry.getScore(), anonymousUserEntry.getScoreTime());
+                Log.v("BeautyAndroid", "Anonymous user data cleared in the database");
+
+                readAndAddToRegisteredUserScore(anonymousUserScore, anonymousUserTimestamp);
             }
 
             @Override
@@ -85,25 +110,29 @@ public class UserScoreTransferer {
         });
     }
 
-    private void readAndAddToRegisteredUser(int scoreToAddValue, Date scoreToAddTimestamp) {
+    private void readAndAddToRegisteredUserScore(int scoreToAddValue, Date scoreToAddTimestamp) {
 
         // Read the registered user info from the DB
         UserInfoEntry registeredUserEntry = new UserInfoEntry(mDatabase, mDestinationUid.toString());
         registeredUserEntry.readScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
+                final int registeredUserScore = registeredUserEntry.getScore();
+
+                Log.v("BeautyAndroid", "Registered user data read from the database: "
+                    + String.valueOf(registeredUserScore));
 
                 if (scoreToAddTimestamp.compareTo(registeredUserEntry.getScoreTime()) < 0) {
                     // If the score to add date is older than the registered user score date, add the former to the
                     // registered user score.
 
-                    updateUserScore(registeredUserEntry,
-                            registeredUserEntry.getScore() + scoreToAddValue);
+                    updateUserScoreInDatabase(registeredUserEntry,
+                            registeredUserScore + scoreToAddValue);
                 } else {
                     // Otherwise, add the (anonymous score - 1) to the registered one
 
-                    updateUserScore(registeredUserEntry,
-                            registeredUserEntry.getScore() + scoreToAddValue - 1);
+                    updateUserScoreInDatabase(registeredUserEntry,
+                        registeredUserEntry.getScore() + scoreToAddValue);
                 }
             }
 
@@ -113,17 +142,33 @@ public class UserScoreTransferer {
         });
     }
 
-    private void updateUserScore(UserInfoEntry userEntry, int newScore) {
+    private void updateUserScoreInDatabase(UserInfoEntry userEntry, int newScore) {
         // Clear the anonymous user score in the DB
-        userEntry.setScore(0);
+        userEntry.setScore(newScore);
         userEntry.updateScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
+                Log.d("BeautyAndroid", "Registered user score updated in the database to: "
+                    + String.valueOf(newScore));
+
+                displayScoreOnScreen(newScore);
             }
 
             @Override
             public void onFailure() {
             }
         });
+    }
+
+    public void displayScoreOnScreen(int value) {
+        if (mActivity == null) {
+            return;
+        }
+
+        Log.v("BeautyAndroid", "Display score on screen: " + String.valueOf(value));
+        FragmentMap fragment =
+            (FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.mapScore));
+        TextView score = (TextView) fragment.getView().findViewById(R.id.mapScore);
+        score.setText(String.valueOf(value) + " pts");
     }
 }

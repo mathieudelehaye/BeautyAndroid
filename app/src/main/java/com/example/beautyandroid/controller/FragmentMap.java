@@ -47,6 +47,7 @@ import java.util.Locale;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.example.beautyandroid.model.AppUser;
+import com.example.beautyandroid.model.ScoreUpdater;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -208,7 +209,7 @@ public class FragmentMap extends Fragment {
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Map view becomes visible");
 
-            updateUserScore();
+            //updateUserScore();
         }
     }
 
@@ -383,8 +384,7 @@ public class FragmentMap extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    TextView score = (TextView) getView().findViewById(R.id.mapScore);
-                    score.setText(String.valueOf(userScore) + " pts");
+                    new ScoreUpdater(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
                 }
             });
     }

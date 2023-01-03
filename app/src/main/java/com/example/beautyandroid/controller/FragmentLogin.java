@@ -34,15 +34,13 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
 import com.example.beautyandroid.Helpers;
 import com.example.beautyandroid.model.AppUser;
-import com.example.beautyandroid.model.UserScoreTransferer;
+import com.example.beautyandroid.model.ScoreUpdater;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Date;
 
 public class FragmentLogin extends FragmentWithStart {
 
@@ -131,9 +129,12 @@ public class FragmentLogin extends FragmentWithStart {
 
                                     if (dbUser.isEmailVerified()) {
 
-                                        new UserScoreTransferer(FirebaseFirestore.getInstance(),
+                                        MainActivity activity = (MainActivity)getActivity();
+
+                                        new ScoreUpdater(FirebaseFirestore.getInstance(),
                                             getAnonymousUidFromPreferences(mSharedPref),
-                                            emailText).run();
+                                            emailText, activity)
+                                            .run();
 
                                         startAppWithUser(mSharedPref, R.id.action_LoginFragment_to_AppFragment,
                                             emailText, AppUser.AuthenticationType.REGISTERED);

@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import com.beautyorder.androidclient.R;
 import com.example.beautyandroid.TaskCompletionManager;
 import com.example.beautyandroid.model.AppUser;
+import com.example.beautyandroid.model.ScoreUpdater;
 import com.example.beautyandroid.model.UserInfoEntry;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
@@ -107,9 +108,24 @@ public class MainActivity extends AppCompatActivity {
 
                         // Only update the score if the event date is after the DB score time
                         if (eventDate.compareTo(entry.getScoreTime()) > 0) {
-                            entry.setScore(entry.getScore() + 1);
+                            final int newScore = entry.getScore() + 1;
+
+                            entry.setScore(newScore);
                             entry.setScoreTime(event);
-                            entry.updateScoreDBFields();
+                            entry.updateScoreDBFields(new TaskCompletionManager() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.v("BeautyAndroid", "Score written to the database and displayed "
+                                        + "on screen");
+
+                                    new ScoreUpdater(mDatabase, mSelfReference).displayScoreOnScreen(newScore);
+                                }
+
+                                @Override
+                                public void onFailure() {
+                                }
+                            });
+
                             Log.i("BeautyAndroid", "Scanning event sent to the database: " + event);
                         } else {
                             Log.w("BeautyAndroid", "Scanning event older than the latest in the database: " + event);
@@ -151,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences mSharedPref;
     private FirebaseFirestore mDatabase;
     private StringBuilder mRunnerSleepTime = new StringBuilder("");
+
+    // TODO: find another way to make `this` reference available to the nested async task class
+    private MainActivity mSelfReference;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     @Override
@@ -171,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
+
+        mSelfReference = this;
 
         mRunnerSleepTime.append(String.valueOf(mDelayBetweenScoreWritingsInSec));
         AsyncTaskRunner runner = new AsyncTaskRunner();
