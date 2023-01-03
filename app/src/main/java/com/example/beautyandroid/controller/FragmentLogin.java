@@ -33,9 +33,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
 import com.example.beautyandroid.Helpers;
-import com.example.beautyandroid.TaskCompletionManager;
 import com.example.beautyandroid.model.AppUser;
-import com.example.beautyandroid.model.UserInfoEntry;
+import com.example.beautyandroid.model.UserScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -51,9 +50,7 @@ public class FragmentLogin extends FragmentWithStart {
     private EditText mEmail;
     private EditText mPassword;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;
-    private StringBuilder mVerifiedRegisteredUid = new StringBuilder("");
 
     // TODO: put those methods in a shared module
     boolean isEmail(EditText text) {
@@ -134,9 +131,9 @@ public class FragmentLogin extends FragmentWithStart {
 
                                     if (dbUser.isEmailVerified()) {
 
-                                        mVerifiedRegisteredUid.append(emailText);
-
-                                        checkAndTransferScoreFromAnonymousUser();
+                                        new UserScoreTransferer(FirebaseFirestore.getInstance(),
+                                            getAnonymousUidFromPreferences(mSharedPref),
+                                            emailText).run();
 
                                         startAppWithUser(mSharedPref, R.id.action_LoginFragment_to_AppFragment,
                                             emailText, AppUser.AuthenticationType.REGISTERED);
@@ -189,94 +186,5 @@ public class FragmentLogin extends FragmentWithStart {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void checkAndTransferScoreFromAnonymousUser() {
-
-        String anonymousUid = getAnonymousUidFromPreferences(mSharedPref);
-        if (!anonymousUid.equals("")) {
-            // An anonymous uid already was found in the app preferences
-            Log.v("BeautyAndroid", "Try to transfer score from the anonymous uid found in the app preferences: "
-                    + anonymousUid);
-
-            // Get the DB
-            mDatabase = FirebaseFirestore.getInstance();
-
-            UserInfoEntry anonymousUserEntry = new UserInfoEntry(mDatabase, anonymousUid);
-            anonymousUserEntry.readScoreDBFields(new TaskCompletionManager() {
-                @Override
-                public void onSuccess() {
-
-                    if (anonymousUserEntry.getScore() > 0) {
-
-                        clearAndTransferFromAnonymousUser(anonymousUserEntry);
-                    }
-                }
-
-                @Override
-                public void onFailure() {
-                }
-            });
-        }
-    }
-    
-    private void clearAndTransferFromAnonymousUser(UserInfoEntry anonymousUserEntry) {
-
-        // Clear the anonymous user score in the DB
-        anonymousUserEntry.setScore(0);
-        anonymousUserEntry.setScoreTime(UserInfoEntry.scoreTimeFormat.format(
-            UserInfoEntry.getDayBeforeDate(new Date())));
-        anonymousUserEntry.updateScoreDBFields(new TaskCompletionManager() {
-            @Override
-            public void onSuccess() {
-                readAndAddToRegisteredUser(anonymousUserEntry.getScore(), anonymousUserEntry.getScoreTime());
-            }
-
-            @Override
-            public void onFailure() {
-            }
-        });
-    }
-    
-    private void readAndAddToRegisteredUser(int scoreToAddValue, Date scoreToAddTimestamp) {
-
-        // Read the registered user info from the DB
-        UserInfoEntry registeredUserEntry = new UserInfoEntry(mDatabase, mVerifiedRegisteredUid.toString());
-        registeredUserEntry.readScoreDBFields(new TaskCompletionManager() {
-            @Override
-            public void onSuccess() {
-
-                if (scoreToAddTimestamp.compareTo(registeredUserEntry.getScoreTime()) < 0) {
-                    // If the score to add date is older than the registered user score date, add the former to the
-                    // registered user score.
-
-                    updateUserScore(registeredUserEntry,
-                        registeredUserEntry.getScore() + scoreToAddValue);
-                } else {
-                    // Otherwise, add the (anonymous score - 1) to the registered one
-
-                    updateUserScore(registeredUserEntry,
-                        registeredUserEntry.getScore() + scoreToAddValue - 1);
-                }
-            }
-
-            @Override
-            public void onFailure() {
-            }
-        });
-    }
-
-    private void updateUserScore(UserInfoEntry userEntry, int newScore) {
-        // Clear the anonymous user score in the DB
-        userEntry.setScore(0);
-        userEntry.updateScoreDBFields(new TaskCompletionManager() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure() {
-            }
-        });
     }
 }
