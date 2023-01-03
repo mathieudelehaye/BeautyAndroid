@@ -129,7 +129,7 @@ public class UserInfoEntry {
                             }
                         }
                     } else {
-                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                        Log.e("BeautyAndroid", "Error reading documents: ", task.getException());
 
                         if (cbManager.length >= 1) {
                             cbManager[0].onFailure();
@@ -141,7 +141,7 @@ public class UserInfoEntry {
         return 0;
     }
 
-    public void updateScoreDBFields() {
+    public void updateScoreDBFields(TaskCompletionManager... cbManager) {
         // Get a new write batch
         WriteBatch batch = mDatabase.batch();
 
@@ -153,6 +153,18 @@ public class UserInfoEntry {
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onSuccess();
+                    }
+                } else {
+                    Log.e("BeautyAndroid", "Error updating documents: ", task.getException());
+
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onFailure();
+                    }
+                }
             }
         });
     }
@@ -166,5 +178,9 @@ public class UserInfoEntry {
 
             return new Date();
         }
+    }
+
+    static public Date getDayBeforeDate(Date date) {
+        return new java.util.Date(date.getTime() - 1000 * 60 * 60 * 24); // ms in 1 day
     }
 }

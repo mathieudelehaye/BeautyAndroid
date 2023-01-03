@@ -27,6 +27,18 @@ import com.example.beautyandroid.model.AppUser;
 
 public class FragmentWithStart extends Fragment {
 
+    public String getAnonymousUidFromPreferences(SharedPreferences _preferences) {
+        StringBuilder anonymousUid = new StringBuilder();
+        anonymousUid.append(_preferences.getString(getString(R.string.anonymous_uid), ""));
+
+        if (!anonymousUid.toString().equals("")) {
+            // Reuse the anonymous uid if it already exists in the app preferences
+            return anonymousUid.toString();
+        } else {
+            return "";
+        }
+    }
+
     public void startAppWithUser(SharedPreferences _preferences, int destination,
         String _uid, AppUser.AuthenticationType _userType) {
 

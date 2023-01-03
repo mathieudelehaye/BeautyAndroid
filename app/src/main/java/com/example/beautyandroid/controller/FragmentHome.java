@@ -85,17 +85,13 @@ public class FragmentHome extends FragmentWithStart {
             @Override
             public void onClick(View view) {
 
-                StringBuilder anonymousUid = new StringBuilder();
-                anonymousUid.append(mSharedPref.getString(getString(R.string.anonymous_uid), ""));
-
-                if (!anonymousUid.toString().equals("")) {
+                String anonymousUid = getAnonymousUidFromPreferences(mSharedPref);
+                if (!anonymousUid.equals("")) {
                     // Reuse the anonymous uid if it already exists in the app preferences
-                    String anonymousUidText = anonymousUid.toString();
-
                     Log.v("BeautyAndroid", "Anonymous uid loaded from the app preferences and reused: "
-                        + anonymousUidText);
+                        + anonymousUid);
 
-                    startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, anonymousUidText,
+                    startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, anonymousUid,
                         AppUser.AuthenticationType.NOT_REGISTERED);
                 } else {
                     // Otherwise, create an anonymous uid
@@ -161,7 +157,7 @@ public class FragmentHome extends FragmentWithStart {
 
                         uid.append(UUID.nameUUIDFromBytes(hash).toString());
 
-                        // Add userInfos table entry to the database matching the anonymous user
+                        // Add userInfos table entry to the database for the anonymous user
                         Map<String, Object> userInfoMap = new HashMap<>();
                         userInfoMap.put("first_name", "");
                         userInfoMap.put("last_name", "");
@@ -170,7 +166,7 @@ public class FragmentHome extends FragmentWithStart {
                         userInfoMap.put("post_code", "");
                         userInfoMap.put("score", 0);
                         userInfoMap.put("score_time", UserInfoEntry.scoreTimeFormat.format(
-                            new java.util.Date(date.getTime() - 1000 * 60 * 60 * 24))); // ms in a day
+                            UserInfoEntry.getDayBeforeDate(date)));
 
                         UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
                         userInfo.createDBFields(new TaskCompletionManager() {
@@ -230,7 +226,7 @@ public class FragmentHome extends FragmentWithStart {
         mDeviceId.append(mSharedPref.getString(getString(R.string.device_id), ""));
 
         if (!mDeviceId.toString().equals("")) {
-            Log.d("BeautyAndroid", "The device id was read from the app preferences: " + mDeviceId.toString());
+            Log.v("BeautyAndroid", "The device id was read from the app preferences: " + mDeviceId.toString());
         } else {
             // If not found in the app preferences, read the device id and store it there
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
