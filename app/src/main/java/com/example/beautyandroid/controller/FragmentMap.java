@@ -55,10 +55,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.bonuspack.routing.RoadNode;
+import org.osmdroid.bonuspack.routing.*;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -450,9 +447,6 @@ public class FragmentMap extends Fragment {
                                         (postcode.equals("?") ? "" : postcode) +
                                         (recyclingProgram.equals("?") ? "" : ("\n\nBrands: " + recyclingProgram));
 
-                                //Log.v("BeautyAndroid", "itemTitle = " + itemTitle +
-                                //    ", latitude = " + latitude + ", itemSnippet = " + itemSnippet);
-
                                 items.add(new OverlayItem(itemTitle, itemSnippet,
                                     new GeoPoint(latitude,longitude)));
                             }
@@ -516,17 +510,25 @@ public class FragmentMap extends Fragment {
         int directionItemIdx = 0;
 
         for (RoadNode node: road.mNodes) {
-            // There is no useful info in the node of index 0 ("You have
+            // There is no useful info in the first and last nodes ("You have
             // reached a waypoint of your trip")
-            if (directionItemIdx > 0) {
-                final String instructions = node.mInstructions;
-                if (instructions == "null") {
-                    continue;
-                }
+            if (directionItemIdx > 0 && directionItemIdx < road.mNodes.size() - 1) {
 
-                directionTextBuilder.append(directionItemIdx + ". ");
-                directionTextBuilder.append(instructions);
-                directionTextBuilder.append("\n");
+                if (node.mInstructions != null) {
+                    String instructions = node.mInstructions.trim().replaceAll(" +", " ");
+
+                    String distanceUnit = (node.mLength > 1) ? "km" : "m";
+                    String distance = (node.mLength > 1) ? String.valueOf((int)Math.floor(node.mLength))
+                        : String.valueOf((int)Math.floor(node.mLength * 1000));
+
+                    Log.v("BeautyAndroid", "mdl instructions = " +
+                        instructions);
+
+                    directionTextBuilder.append(directionItemIdx + ". ");
+                    directionTextBuilder.append(instructions);
+                    directionTextBuilder.append(" ("+distance+" " + distanceUnit + ")");
+                    directionTextBuilder.append("\n");
+                }
             }
 
             directionItemIdx++;
