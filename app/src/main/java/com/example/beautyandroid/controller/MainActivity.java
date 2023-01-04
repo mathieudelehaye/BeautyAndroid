@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.v("BeautyAndroid", "Score written to the database and displayed "
                                         + "on screen");
 
-                                    new ScoreUpdater(mDatabase, mSelfReference).displayScoreOnScreen(newScore);
+                                    new ScoreUpdater(mDatabase, mActivityInstance).displayScoreOnScreen(newScore);
                                 }
 
                                 @Override
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     private StringBuilder mRunnerSleepTime = new StringBuilder("");
 
     // TODO: find another way to make `this` reference available to the nested async task class
-    private MainActivity mSelfReference;
+    private MainActivity mActivityInstance;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     @Override
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
 
-        mSelfReference = this;
+        mActivityInstance = this;
 
         mRunnerSleepTime.append(String.valueOf(mDelayBetweenScoreWritingsInSec));
         AsyncTaskRunner runner = new AsyncTaskRunner();
