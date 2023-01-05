@@ -267,7 +267,7 @@ public class FragmentMap extends Fragment {
             @Override
             public void run() {
 
-                final View view = getView(); // mdl
+                final View view = getView();
 
                 try {
 
@@ -430,22 +430,31 @@ public class FragmentMap extends Fragment {
                                 //Log.v("BeautyAndroid", document.getId() + " => " + document.getData());
 
                                 final double latitude = (double)document.getData().get("Latitude");
-                                final String pointName = (String)document.getData().get("PointName");
-                                final String buildingName = (String)document.getData().get("BuildingName");
-                                final String buildingNumber = (String)document.getData().get("BuildingNumber");
-                                final String address = (String)document.getData().get("Address");
-                                final String city = (String)document.getData().get("City");
-                                final String postcode = (String)document.getData().get("Postcode");
-                                final String recyclingProgram = (String)document.getData().get("RecyclingProgram");
+                                String pointName = (String)document.getData().get("PointName");
+                                String buildingName = (String)document.getData().get("BuildingName");
+                                String buildingNumber = (String)document.getData().get("BuildingNumber");
+                                String address = (String)document.getData().get("Address");
+                                String city = (String)document.getData().get("City");
+                                String postcode = (String)document.getData().get("Postcode");
+                                String recyclingProgram = (String)document.getData().get("RecyclingProgram");
 
-                                final String itemTitle = (pointName.equals("?") ? "" : pointName);
-                                final String itemSnippet =
-                                    (buildingName.equals("?")  ? "" : buildingName) + " " +
-                                        (buildingNumber.equals("?") ? "" : buildingNumber) + ", " +
-                                        (address.equals("?") ? "" : address) + " " +
-                                        (city.equals("?") ? "" : city) + " " +
-                                        (postcode.equals("?") ? "" : postcode) +
-                                        (recyclingProgram.equals("?") ? "" : ("\n\nBrands: " + recyclingProgram));
+                                String itemTitle =
+                                    ((pointName != null)
+                                        && !pointName.equals("?") ? (pointName + " ") : "");
+
+                                String itemSnippet =
+                                    ((buildingName != null)
+                                        && !buildingName.equals("?")  ? (buildingName + " ") : "") +
+                                    ((buildingNumber != null)
+                                        && !buildingNumber.equals("?") ? (buildingNumber + ", ") : "") +
+                                    ((address != null)
+                                        && !address.equals("?") ? (address + " ") : "") +
+                                    ((city != null)
+                                        && !city.equals("?") ? (city + " ") : "") +
+                                    ((postcode != null)
+                                        && !postcode.equals("?") ? (postcode + " ") : "") +
+                                    ((recyclingProgram != null)
+                                        && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
 
                                 items.add(new OverlayItem(itemTitle, itemSnippet,
                                     new GeoPoint(latitude,longitude)));
@@ -520,9 +529,6 @@ public class FragmentMap extends Fragment {
                     String distanceUnit = (node.mLength > 1) ? "km" : "m";
                     String distance = (node.mLength > 1) ? String.valueOf((int)Math.floor(node.mLength))
                         : String.valueOf((int)Math.floor(node.mLength * 1000));
-
-                    Log.v("BeautyAndroid", "mdl instructions = " +
-                        instructions);
 
                     directionTextBuilder.append(directionItemIdx + ". ");
                     directionTextBuilder.append(instructions);
