@@ -157,7 +157,7 @@ public class FragmentMap extends Fragment {
                                 + ", " + mSearchResult.getLongitude() + ")");
 
                             Log.d("BeautyAndroid", "Change focus to search result");
-                            focusOnTarget(mSearchResult);
+                            focusOnTarget(mSearchResult, /*isUser=*/false);
 
                             return true;
                         }
@@ -179,7 +179,7 @@ public class FragmentMap extends Fragment {
                 updateUserLocation();
 
                 Log.d("BeautyAndroid", "Change focus to user location");
-                focusOnTarget(mUserLocation);
+                focusOnTarget(mUserLocation, /*isUser=*/true);
             }
         });
     }
@@ -247,16 +247,17 @@ public class FragmentMap extends Fragment {
 
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
 
-        // Before finding the user location, set the map to the cached value
+        // Check the last known location in cache
         String cacheLocation = mSharedPref.getString(getString(R.string.user_location), "");
-        if (cacheLocation != "") {
+
+        // If found, focus on it
+        if ((mSearchStart == null) && (cacheLocation != "")) {
             Log.d("BeautyAndroid", "User location read from cache: " + cacheLocation);
             mUserLocation = GeoPoint.fromDoubleString(cacheLocation, ',');
 
             Log.d("BeautyAndroid", "Change focus to user location");
-            focusOnTarget(mUserLocation);
+            focusOnTarget(mUserLocation, /*isUser=*/true);
         }
 
 
@@ -279,8 +280,11 @@ public class FragmentMap extends Fragment {
                         .commit();
                     Log.v("BeautyAndroid", "User location cached: " + cacheLocation);
 
-                    Log.d("BeautyAndroid", "Change focus to user location");
-                    focusOnTarget(mUserLocation);
+                    // Focus on the user only if a search has not been done yet
+                    if (mSearchStart == null) {
+                        Log.d("BeautyAndroid", "Change focus to user location");
+                        focusOnTarget(mUserLocation, /*isUser=*/true);
+                    }
 
                 } catch (Exception e) {
                     Log.e("BeautyAndroid", "Error udating the map: " + e.toString());
@@ -330,7 +334,7 @@ public class FragmentMap extends Fragment {
             + String.valueOf(mUserLocation.getLongitude()));
     }
 
-    private void focusOnTarget(GeoPoint _target) {
+    private void focusOnTarget(GeoPoint _target, Boolean isUser) {
         if (_target == null) {
             Log.w("BeautyAndroid", "Cannot focus on target because none available");
             return;
@@ -338,6 +342,16 @@ public class FragmentMap extends Fragment {
 
         Log.v("BeautyAndroid", "Search start set to target");
         mSearchStart = _target;
+
+        if (isUser) {
+            // If target is the user, follow its location
+            Log.v("BeautyAndroid", "Map starts to follow the user location");
+            mLocationOverlay.enableFollowLocation();
+        } else {
+            // Otherwise, stop following the user location
+            Log.v("BeautyAndroid", "Map stops to follow the user location");
+            mLocationOverlay.disableFollowLocation();
+        }
 
         // UI action (like the map animation) needs to be processed in a UI Thread
         getActivity().runOnUiThread(new Runnable() {
@@ -507,9 +521,13 @@ public class FragmentMap extends Fragment {
     }
     
     private void drawRoadToPoint(GeoPoint itemLocation) {
+        if (mUserLocation == null) {
+            Log.w("BeautyAndroid", "Cannot draw the road from the user location as not known yet");
+            return;
+        }
 
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-        waypoints.add(mSearchStart);
+        waypoints.add(mUserLocation); // search from the user current position
         waypoints.add(itemLocation);
 
         Road road = mRoadManager.getRoad(waypoints);
