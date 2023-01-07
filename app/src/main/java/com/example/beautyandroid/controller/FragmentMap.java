@@ -448,8 +448,9 @@ public class FragmentMap extends Fragment {
                                 String buildingName = (String)document.getData().get("BuildingName");
                                 String buildingNumber = (String)document.getData().get("BuildingNumber");
                                 String address = (String)document.getData().get("Address");
-                                String city = (String)document.getData().get("City");
                                 String postcode = (String)document.getData().get("Postcode");
+                                String city = (String)document.getData().get("City");
+                                String threeWords = (String)document.getData().get("3Words");
                                 String recyclingProgram = (String)document.getData().get("RecyclingProgram");
 
                                 String itemTitle =
@@ -463,10 +464,13 @@ public class FragmentMap extends Fragment {
                                         && !buildingNumber.equals("?") ? (buildingNumber + ", ") : "") +
                                     ((address != null)
                                         && !address.equals("?") ? (address + " ") : "") +
-                                    ((city != null)
-                                        && !city.equals("?") ? (city + " ") : "") +
                                     ((postcode != null)
                                         && !postcode.equals("?") ? (postcode + " ") : "") +
+                                    ((city != null)
+                                        && !city.equals("?") ? (city + " ") : "") +
+                                    ((threeWords != null)
+                                        && !threeWords.equals("?") ? ("\n(https://what3words.com/"
+                                        + threeWords + ")") : "") +
                                     ((recyclingProgram != null)
                                         && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
 
