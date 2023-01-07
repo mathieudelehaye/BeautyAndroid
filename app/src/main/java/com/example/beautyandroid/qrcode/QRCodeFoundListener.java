@@ -1,4 +1,4 @@
-package com.example.beautyandroid.qrcode;
+package com.beautyorder.androidclient.qrcode;
 
 public interface QRCodeFoundListener {
     void onQRCodeFound(String qrCode);

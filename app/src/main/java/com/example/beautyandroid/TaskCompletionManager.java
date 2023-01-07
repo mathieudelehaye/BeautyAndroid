@@ -1,4 +1,4 @@
-package com.example.beautyandroid;
+package com.beautyorder.androidclient;
 
 public interface TaskCompletionManager {
     // Callback function if the task is successful

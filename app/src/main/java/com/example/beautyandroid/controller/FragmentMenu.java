@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid.controller;
+package com.beautyorder.androidclient.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,7 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
-import com.example.beautyandroid.model.AppUser;
+import com.beautyorder.androidclient.model.AppUser;
 
 public class FragmentMenu extends Fragment {
 

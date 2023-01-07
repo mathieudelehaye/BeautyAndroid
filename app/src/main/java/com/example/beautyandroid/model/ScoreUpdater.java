@@ -16,15 +16,15 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid.model;
+package com.beautyorder.androidclient.model;
 
 import android.util.Log;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.R;
-import com.example.beautyandroid.TaskCompletionManager;
-import com.example.beautyandroid.controller.FragmentMap;
-import com.example.beautyandroid.controller.MainActivity;
+import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.controller.FragmentMap;
+import com.beautyorder.androidclient.controller.MainActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;

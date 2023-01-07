@@ -16,10 +16,10 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid;
+package com.beautyorder.androidclient;
 
 import android.util.Log;
-import com.example.beautyandroid.model.UserInfoEntry;
+import com.beautyorder.androidclient.model.UserInfoEntry;
 
 import java.util.Date;
 import java.util.HashMap;

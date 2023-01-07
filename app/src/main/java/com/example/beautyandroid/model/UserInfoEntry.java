@@ -16,11 +16,11 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid.model;
+package com.beautyorder.androidclient.model;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
-import com.example.beautyandroid.TaskCompletionManager;
+import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

@@ -23,7 +23,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.beautyandroid.controller.FragmentRegister">
+        tools:context="com.beautyorder.androidclient.controller.FragmentRegister">
     <TextView
         android:id="@+id/textview_register"
         android:layout_width="wrap_content"

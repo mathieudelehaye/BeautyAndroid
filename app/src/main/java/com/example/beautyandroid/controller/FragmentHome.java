@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid.controller;
+package com.beautyorder.androidclient.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,10 +32,10 @@ import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
-import com.example.beautyandroid.Helpers;
-import com.example.beautyandroid.TaskCompletionManager;
-import com.example.beautyandroid.model.AppUser;
-import com.example.beautyandroid.model.UserInfoEntry;
+import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.UserInfoEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +46,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class FragmentHome extends FragmentWithStart {
+public class FragmentHome extends com.beautyorder.androidclient.controller.FragmentWithStart {
 
     private FragmentHomeBinding binding;
     private FirebaseFirestore mDatabase;

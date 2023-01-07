@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid.controller;
+package com.beautyorder.androidclient.controller;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -31,10 +31,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.beautyorder.androidclient.R;
-import com.example.beautyandroid.TaskCompletionManager;
-import com.example.beautyandroid.model.AppUser;
-import com.example.beautyandroid.model.ScoreUpdater;
-import com.example.beautyandroid.model.UserInfoEntry;
+import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.ScoreUpdater;
+import com.beautyorder.androidclient.model.UserInfoEntry;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 import java.util.HashSet;

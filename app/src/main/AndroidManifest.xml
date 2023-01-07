@@ -22,7 +22,7 @@
             android:theme="@style/Theme.BeautyAndroid"
             tools:targetApi="31">
         <activity
-            android:name="com.example.beautyandroid.controller.MainActivity"
+            android:name="com.beautyorder.androidclient.controller.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

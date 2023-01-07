@@ -1,4 +1,4 @@
-package com.example.beautyandroid.qrcode;
+package com.beautyorder.androidclient.qrcode;
 
 import android.annotation.SuppressLint;
 import android.graphics.*;
