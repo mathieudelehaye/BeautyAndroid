@@ -3,6 +3,11 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+// Load keystore
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdk 32
 
@@ -18,10 +23,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('')
-            storePassword ''
-            keyAlias = ''
-            keyPassword ''
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
 
@@ -58,6 +63,7 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.14'
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.mockito:mockito-core:2.8.47"
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
