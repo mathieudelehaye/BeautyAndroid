@@ -57,7 +57,8 @@ public class UserInfoEntry {
         mData.put("city", "");
         mData.put("post_code", "");
         mData.put("score", 0);
-        mData.put("score_time", "");
+        mData.put("score_time", "1970.01.01");
+        mScoreTime = parseScoreTime("1970.01.01");
     }
 
     public int getScore() {

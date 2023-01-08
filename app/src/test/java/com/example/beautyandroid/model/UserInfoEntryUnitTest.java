@@ -16,23 +16,25 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.example.beautyandroid.model;
 
 import com.beautyorder.androidclient.model.UserInfoEntry;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.firebase.firestore.FirebaseFirestore;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class UserInfoEntryUnitTest {
-    private Map<String, Object> mUserInfoMap = new HashMap<>();
-
     String unitTestUser = "unit-test-user" ;
 
     public UserInfoEntryUnitTest() {
+    }
+
+    @Test
+    public void createUserInfo() {
+
+        Map<String, Object> mUserInfoMap = new HashMap<>();
         mUserInfoMap.put("first_name", "Mathieu");
         mUserInfoMap.put("last_name", "Delehaye");
         mUserInfoMap.put("address", "15, Granville street");
@@ -40,43 +42,48 @@ public class UserInfoEntryUnitTest {
         mUserInfoMap.put("post_code", "G3 7EE");
         mUserInfoMap.put("score", 10);
         mUserInfoMap.put("score_time", "2022.12.20");
+
+        var database = (new FirebaseFirestoreMockManager()).getDatabase();
+        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser, mUserInfoMap);
+
+        entry.createAllDBFields();
     }
 
     @Test
     public void updateScore() {
 
-        var database = mock(FirebaseFirestore.class);
-        when(database.length()).thenReturn(4);
-
-        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser, mUserInfoMap);
+        var database = (new FirebaseFirestoreMockManager()).getDatabase();
+        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser);
 
         {
             final int entryScore = entry.getScore();
-            assertEquals(10, entryScore);
+            assertEquals(0, entryScore);
         }
 
         {
             entry.setScore(15);
             final int entryScore = entry.getScore();
             assertEquals(15, entryScore);
+            entry.updateScoreDBFields();
         }
     }
 
     @Test
     public void updateScoreTime() {
 
-        // TODO: add a mock class to replace the Firebase DB
-        UserInfoEntry entry = new UserInfoEntry(null, unitTestUser, mUserInfoMap);
+        var database = (new FirebaseFirestoreMockManager()).getDatabase();
+        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser);
 
         {
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(UserInfoEntry.parseScoreTime("2022.12.20")));
+            assertEquals(true, entryScoreTime.equals(UserInfoEntry.parseScoreTime("1970.01.01")));
         }
 
         {
             entry.setScoreTime("2022.12.22");
             final Date entryScoreTime = entry.getScoreTime();
             assertEquals(true, entryScoreTime.equals(UserInfoEntry.parseScoreTime("2022.12.22")));
+            entry.updateScoreDBFields();
         }
     }
 }
