@@ -77,7 +77,7 @@ public class UserInfoEntry {
         mData.put("score_time", value);
     }
 
-    public void createDBFields(TaskCompletionManager... cbManager) {
+    public void createAllDBFields(TaskCompletionManager... cbManager) {
 
         // Add userInfos table entry to the database matching the app user
         mDatabase.collection("userInfos").document(mKey)

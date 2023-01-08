@@ -18,14 +18,14 @@
 
 package com.beautyorder.androidclient;
 
-import android.util.Log;
 import com.beautyorder.androidclient.model.UserInfoEntry;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.firebase.firestore.FirebaseFirestore;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class UserInfoEntryUnitTest {
     private Map<String, Object> mUserInfoMap = new HashMap<>();
@@ -45,8 +45,10 @@ public class UserInfoEntryUnitTest {
     @Test
     public void updateScore() {
 
-        // TODO: add a mock class to replace the Firebase DB
-        UserInfoEntry entry = new UserInfoEntry(null, unitTestUser, mUserInfoMap);
+        var database = mock(FirebaseFirestore.class);
+        when(database.length()).thenReturn(4);
+
+        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser, mUserInfoMap);
 
         {
             final int entryScore = entry.getScore();

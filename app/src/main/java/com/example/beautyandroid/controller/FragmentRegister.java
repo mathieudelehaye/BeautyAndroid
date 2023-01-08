@@ -186,7 +186,7 @@ public class FragmentRegister extends Fragment {
                                     userInfoMap.put("score_time", "");
 
                                     UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
-                                    userInfo.createDBFields();
+                                    userInfo.createAllDBFields();
 
                                     user.sendEmailVerification()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {

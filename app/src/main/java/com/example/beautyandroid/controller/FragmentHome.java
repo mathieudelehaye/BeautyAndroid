@@ -169,7 +169,7 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
                             UserInfoEntry.getDayBeforeDate(date)));
 
                         UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
-                        userInfo.createDBFields(new TaskCompletionManager() {
+                        userInfo.createAllDBFields(new TaskCompletionManager() {
                             @Override
                             public void onSuccess() {
 
