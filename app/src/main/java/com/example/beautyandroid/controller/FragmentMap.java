@@ -287,7 +287,7 @@ public class FragmentMap extends Fragment {
                     }
 
                 } catch (Exception e) {
-                    Log.e("BeautyAndroid", "Error udating the map: " + e.toString());
+                    Log.e("BeautyAndroid", "Error updating the map: " + e.toString());
                 }
             }
         });
@@ -343,20 +343,20 @@ public class FragmentMap extends Fragment {
         Log.v("BeautyAndroid", "Search start set to target");
         mSearchStart = _target;
 
-        if (isUser) {
-            // If target is the user, follow its location
-            Log.v("BeautyAndroid", "Map starts to follow the user location");
-            mLocationOverlay.enableFollowLocation();
-        } else {
-            // Otherwise, stop following the user location
-            Log.v("BeautyAndroid", "Map stops to follow the user location");
-            mLocationOverlay.disableFollowLocation();
-        }
-
         // UI action (like the map animation) needs to be processed in a UI Thread
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (isUser) {
+                    // If target is the user, follow its location
+                    Log.v("BeautyAndroid", "Map starts to follow the user location");
+                    mLocationOverlay.enableFollowLocation();
+                } else {
+                    // Otherwise, stop following the user location
+                    Log.v("BeautyAndroid", "Map stops to follow the user location");
+                    mLocationOverlay.disableFollowLocation();
+                }
+
                 Log.v("BeautyAndroid", "Map focus set on target");
                 mMapController.animateTo(_target);
 
@@ -395,7 +395,7 @@ public class FragmentMap extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    new ScoreUpdater(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
+                    new ScoreUpdater(mDatabase, (com.beautyorder.androidclient.controller.MainActivity)getActivity()).displayScoreOnScreen(userScore);
                 }
             });
     }
