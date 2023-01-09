@@ -66,7 +66,8 @@ public class ScoreUpdater {
             // Get the DB
             mDatabase = FirebaseFirestore.getInstance();
 
-            UserInfoEntry anonymousUserEntry = new UserInfoEntry(mDatabase, mSourceUid);
+            com.beautyorder.androidclient.model.UserInfoEntry anonymousUserEntry =
+                new com.beautyorder.androidclient.model.UserInfoEntry(mDatabase, mSourceUid);
             anonymousUserEntry.readScoreDBFields(new TaskCompletionManager() {
                 @Override
                 public void onSuccess() {
@@ -86,17 +87,18 @@ public class ScoreUpdater {
         }
     }
 
-    private void clearAndTransferScoreFromAnonymousUser(UserInfoEntry anonymousUserEntry) {
+    private void clearAndTransferScoreFromAnonymousUser(
+        com.beautyorder.androidclient.model.UserInfoEntry anonymousUserEntry) {
 
         // Clear the anonymous user score in the DB
         final int anonymousUserScore = anonymousUserEntry.getScore();
         final Date anonymousUserTimestamp = anonymousUserEntry.getScoreTime();
 
         anonymousUserEntry.setScore(0);
-        anonymousUserEntry.setScoreTime(UserInfoEntry.scoreTimeFormat.format(
-            UserInfoEntry.getDayBeforeDate(new Date())));
+        anonymousUserEntry.setScoreTime(com.beautyorder.androidclient.model.UserInfoEntry.scoreTimeFormat.format(
+            com.beautyorder.androidclient.model.UserInfoEntry.getDayBeforeDate(new Date())));
 
-        anonymousUserEntry.updateScoreDBFields(new TaskCompletionManager() {
+        anonymousUserEntry.updateDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
                 Log.v("BeautyAndroid", "Anonymous user data cleared in the database");
@@ -113,7 +115,8 @@ public class ScoreUpdater {
     private void readAndAddToRegisteredUserScore(int scoreToAddValue, Date scoreToAddTimestamp) {
 
         // Read the registered user info from the DB
-        UserInfoEntry registeredUserEntry = new UserInfoEntry(mDatabase, mDestinationUid.toString());
+        com.beautyorder.androidclient.model.UserInfoEntry registeredUserEntry =
+            new com.beautyorder.androidclient.model.UserInfoEntry(mDatabase, mDestinationUid.toString());
         registeredUserEntry.readScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
@@ -142,10 +145,10 @@ public class ScoreUpdater {
         });
     }
 
-    private void updateUserScoreInDatabase(UserInfoEntry userEntry, int newScore) {
+    private void updateUserScoreInDatabase(com.beautyorder.androidclient.model.UserInfoEntry userEntry, int newScore) {
         // Clear the anonymous user score in the DB
         userEntry.setScore(newScore);
-        userEntry.updateScoreDBFields(new TaskCompletionManager() {
+        userEntry.updateDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
                 Log.d("BeautyAndroid", "Registered user score updated in the database to: "

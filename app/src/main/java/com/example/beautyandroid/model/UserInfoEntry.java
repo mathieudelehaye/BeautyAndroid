@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class UserInfoEntry {
     private FirebaseFirestore mDatabase;
     private String mKey;
     private Map<String, Object> mData;
+    private Map<String, Boolean> mDataChanged;
     private Date mScoreTime;
 
     public UserInfoEntry(FirebaseFirestore _database, String _key, Map<String, Object> _data) {
@@ -44,6 +46,8 @@ public class UserInfoEntry {
         mKey = _key;
         mData = _data;
         mScoreTime = parseScoreTime((String)_data.get("score_time"));
+
+        initializeDataChange();
     }
 
     public UserInfoEntry(FirebaseFirestore _database, String _key) {
@@ -58,7 +62,22 @@ public class UserInfoEntry {
         mData.put("post_code", "");
         mData.put("score", 0);
         mData.put("score_time", "1970.01.01");
+        mData.put("device_id", "");
         mScoreTime = parseScoreTime("1970.01.01");
+
+        initializeDataChange();
+    }
+
+    private void initializeDataChange() {
+        mDataChanged = new HashMap<>();
+        mDataChanged.put("first_name", false);
+        mDataChanged.put("last_name", false);
+        mDataChanged.put("address", false);
+        mDataChanged.put("city", false);
+        mDataChanged.put("post_code", false);
+        mDataChanged.put("score", false);
+        mDataChanged.put("score_time", false);
+        mDataChanged.put("device_id", false);
     }
 
     public int getScore() {
@@ -67,6 +86,7 @@ public class UserInfoEntry {
 
     public void setScore(int value) {
         mData.put("score", value);
+        mDataChanged.put("score", true);
     }
 
     public Date getScoreTime() {
@@ -76,6 +96,16 @@ public class UserInfoEntry {
     public void setScoreTime(String value) {
         mScoreTime = parseScoreTime(value);
         mData.put("score_time", value);
+        mDataChanged.put("score_time", true);
+    }
+
+    public String getDeviceId() {
+        return (String)mData.get("device_id");
+    }
+
+    public void setDeviceId(String value) {
+        mData.put("device_id", value);
+        mDataChanged.put("device_id", true);
     }
 
     public void createAllDBFields(TaskCompletionManager... cbManager) {
@@ -124,6 +154,8 @@ public class UserInfoEntry {
                             mData.put("score", Integer.parseInt(document.getData().get("score").toString()));
                             mData.put("score_time", scoreTime);
                             mScoreTime = parseScoreTime(scoreTime);
+                            mDataChanged.put("score", false);
+                            mDataChanged.put("score_time", false);
 
                             if (cbManager.length >= 1) {
                                 cbManager[0].onSuccess();
@@ -142,19 +174,32 @@ public class UserInfoEntry {
         return 0;
     }
 
-    public void updateScoreDBFields(TaskCompletionManager... cbManager) {
+    public void updateDBFields(TaskCompletionManager... cbManager) {
         // Get a new write batch
         WriteBatch batch = mDatabase.batch();
 
         DocumentReference ref = mDatabase.collection("userInfos").document(mKey);
-        batch.update(ref, "score", mData.get("score"));
-        batch.update(ref, "score_time", mData.get("score_time"));
+
+        var changedKeys = new ArrayList<String>();
+
+        for (String key : mData.keySet()) {
+            if (mDataChanged.get(key)) {
+                // Data has changed and must be written back to the database
+                batch.update(ref, key, mData.get(key));
+                changedKeys.add(key);
+            }
+        }
 
         // Commit the batch
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+
+                    // Clear the update flag
+                    for (String key: changedKeys) {
+                        mDataChanged.put(key, false);
+                    }
 
                     if (cbManager.length >= 1) {
                         cbManager[0].onSuccess();

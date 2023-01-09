@@ -42,6 +42,7 @@ public class UserInfoEntryUnitTest {
         mUserInfoMap.put("post_code", "G3 7EE");
         mUserInfoMap.put("score", 10);
         mUserInfoMap.put("score_time", "2022.12.20");
+        mUserInfoMap.put("device_id", "5d944db5c143e59b");
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
         UserInfoEntry entry = new UserInfoEntry(database, unitTestUser, mUserInfoMap);
@@ -64,7 +65,7 @@ public class UserInfoEntryUnitTest {
             entry.setScore(15);
             final int entryScore = entry.getScore();
             assertEquals(15, entryScore);
-            entry.updateScoreDBFields();
+            entry.updateDBFields();
         }
     }
 
@@ -83,7 +84,7 @@ public class UserInfoEntryUnitTest {
             entry.setScoreTime("2022.12.22");
             final Date entryScoreTime = entry.getScoreTime();
             assertEquals(true, entryScoreTime.equals(UserInfoEntry.parseScoreTime("2022.12.22")));
-            entry.updateScoreDBFields();
+            entry.updateDBFields();
         }
     }
 }

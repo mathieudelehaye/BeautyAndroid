@@ -18,6 +18,7 @@
 
 package com.beautyorder.androidclient.controller;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -184,6 +185,9 @@ public class FragmentRegister extends Fragment {
                                     userInfoMap.put("post_code", "");
                                     userInfoMap.put("score", 0);
                                     userInfoMap.put("score_time", "");
+                                    userInfoMap.put("device_id", getContext().getSharedPreferences(
+                                        getString(R.string.app_name), Context.MODE_PRIVATE).getString(
+                                        getString(R.string.app_uid), ""));
 
                                     UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
                                     userInfo.createAllDBFields();

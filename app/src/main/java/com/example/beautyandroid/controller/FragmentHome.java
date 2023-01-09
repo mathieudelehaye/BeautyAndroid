@@ -59,10 +59,8 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -158,17 +156,11 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
                         uid.append(UUID.nameUUIDFromBytes(hash).toString());
 
                         // Add userInfos table entry to the database for the anonymous user
-                        Map<String, Object> userInfoMap = new HashMap<>();
-                        userInfoMap.put("first_name", "");
-                        userInfoMap.put("last_name", "");
-                        userInfoMap.put("address", "");
-                        userInfoMap.put("city", "");
-                        userInfoMap.put("post_code", "");
-                        userInfoMap.put("score", 0);
-                        userInfoMap.put("score_time", UserInfoEntry.scoreTimeFormat.format(
+                        UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString());
+                        userInfo.setScoreTime(UserInfoEntry.scoreTimeFormat.format(
                             UserInfoEntry.getDayBeforeDate(date)));
+                        userInfo.setDeviceId(mSharedPref.getString(getString(R.string.app_uid), ""));
 
-                        UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString(), userInfoMap);
                         userInfo.createAllDBFields(new TaskCompletionManager() {
                             @Override
                             public void onSuccess() {
@@ -248,6 +240,8 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
                 Log.e("BeautyAndroid", "Cannot determine the device id");
             } else {
                 mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
+                Log.v("BeautyAndroid", "The device id was found on the device and written to the app "
+                    + "preferences: " + mDeviceId.toString());
             }
         }
 

@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
                             entry.setScore(newScore);
                             entry.setScoreTime(event);
-                            entry.updateScoreDBFields(new TaskCompletionManager() {
+                            entry.updateDBFields(new TaskCompletionManager() {
                                 @Override
                                 public void onSuccess() {
                                     Log.v("BeautyAndroid", "Score written to the database and displayed "
