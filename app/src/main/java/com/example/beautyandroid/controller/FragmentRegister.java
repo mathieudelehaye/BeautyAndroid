@@ -187,7 +187,7 @@ public class FragmentRegister extends Fragment {
                                     userInfoMap.put("score_time", "");
                                     userInfoMap.put("device_id", getContext().getSharedPreferences(
                                         getString(R.string.app_name), Context.MODE_PRIVATE).getString(
-                                        getString(R.string.app_uid), ""));
+                                        getString(R.string.device_id), ""));
 
                                     UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
                                     userInfo.createAllDBFields();

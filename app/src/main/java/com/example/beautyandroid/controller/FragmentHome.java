@@ -159,7 +159,7 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
                         UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString());
                         userInfo.setScoreTime(UserInfoEntry.scoreTimeFormat.format(
                             UserInfoEntry.getDayBeforeDate(date)));
-                        userInfo.setDeviceId(mSharedPref.getString(getString(R.string.app_uid), ""));
+                        userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
 
                         userInfo.createAllDBFields(new TaskCompletionManager() {
                             @Override
