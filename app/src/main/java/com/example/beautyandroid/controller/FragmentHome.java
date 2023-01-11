@@ -19,7 +19,6 @@
 package com.beautyorder.androidclient.controller;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -50,7 +49,6 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
 
     private FragmentHomeBinding binding;
     private FirebaseFirestore mDatabase;
-    private SharedPreferences mSharedPref;
     private StringBuilder mPrefUserId;
     private StringBuilder mDeviceId;
 
@@ -76,20 +74,20 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
             AppUser.AuthenticationType type = Helpers.isEmail(uid) ? AppUser.AuthenticationType.REGISTERED
                 : AppUser.AuthenticationType.NOT_REGISTERED;
 
-            startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, uid, type);
+            startAppWithUser(R.id.action_HomeFragment_to_AppFragment, uid, type);
         }
 
         binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String anonymousUid = getAnonymousUidFromPreferences(mSharedPref);
+                String anonymousUid = getAnonymousUidFromPreferences();
                 if (!anonymousUid.equals("")) {
                     // Reuse the anonymous uid if it already exists in the app preferences
                     Log.v("BeautyAndroid", "Anonymous uid loaded from the app preferences and reused: "
                         + anonymousUid);
 
-                    startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, anonymousUid,
+                    startAppWithUser(R.id.action_HomeFragment_to_AppFragment, anonymousUid,
                         AppUser.AuthenticationType.NOT_REGISTERED);
                 } else {
                     // Otherwise, create an anonymous uid
@@ -170,13 +168,9 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
                                 Log.d("BeautyAndroid", "The user automatic identifier was created: "
                                     + uidText);
 
-                                // Store the created anonymous id to the app preferences
-                                Log.v("BeautyAndroid", "Anonymous uid stored to the app preferences: "
-                                    + uidText);
-                                mSharedPref.edit().putString(getString(R.string.anonymous_uid), uidText)
-                                    .commit();
+                                setAnonymousUidToPreferences(uidText);
 
-                                startAppWithUser(mSharedPref, R.id.action_HomeFragment_to_AppFragment, uidText,
+                                startAppWithUser(R.id.action_HomeFragment_to_AppFragment, uidText,
                                     AppUser.AuthenticationType.NOT_REGISTERED);
                             }
 
@@ -201,10 +195,6 @@ public class FragmentHome extends com.beautyorder.androidclient.controller.Fragm
             Log.w("BeautyAndroid", "No context to get the app preferences");
             return "";
         }
-
-        // Read the app preferences
-        mSharedPref = ctxt.getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
 
         mPrefUserId = new StringBuilder();
         mPrefUserId.append(mSharedPref.getString(getString(R.string.app_uid), ""));

@@ -18,8 +18,12 @@
 
 package com.beautyorder.androidclient.controller;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
@@ -27,23 +31,66 @@ import com.beautyorder.androidclient.model.AppUser;
 
 public class FragmentWithStart extends Fragment {
 
-    public String getAnonymousUidFromPreferences(SharedPreferences _preferences) {
+    protected SharedPreferences mSharedPref;
+
+    public FragmentWithStart() {
+        super();
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Read the app preferences
+        mSharedPref = view.getContext().getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE);
+    }
+
+    public String getAnonymousUidFromPreferences() {
+        if (mSharedPref == null) {
+            Log.w("BeautyAndroid", "Try to get the anonymous uid from the app preferences but "
+                + "view not created");
+            return "";
+        }
+
         StringBuilder anonymousUid = new StringBuilder();
-        anonymousUid.append(_preferences.getString(getString(R.string.anonymous_uid), ""));
+        anonymousUid.append(mSharedPref.getString(getString(R.string.anonymous_uid), ""));
 
         if (!anonymousUid.toString().equals("")) {
+            String uid = anonymousUid.toString();
+
             // Reuse the anonymous uid if it already exists in the app preferences
-            return anonymousUid.toString();
+            Log.v("BeautyAndroid", "Anonymous uid loaded from the app preferences: "
+                + uid);
+
+            return uid;
         } else {
             return "";
         }
     }
 
-    public void startAppWithUser(SharedPreferences _preferences, int destination,
-        String _uid, AppUser.AuthenticationType _userType) {
+    public void setAnonymousUidToPreferences(String value) {
+        if (mSharedPref == null) {
+            Log.w("BeautyAndroid", "Try to set the anonymous uid to the app preferences but "
+                + "view not created");
+            return;
+        }
+
+        Log.v("BeautyAndroid", "Anonymous uid stored to the app preferences: "
+            + value);
+
+        mSharedPref.edit().putString(getString(R.string.anonymous_uid), value)
+            .commit();
+    }
+
+    public void startAppWithUser(int _destination, String _uid, AppUser.AuthenticationType _userType) {
+
+        if (mSharedPref == null) {
+            Log.w("BeautyAndroid", "Try to start the app with a user but view not created");
+            return;
+        }
 
         // Store the uid in the app preferences
-        _preferences.edit().putString(getString(R.string.app_uid), _uid)
+        mSharedPref.edit().putString(getString(R.string.app_uid), _uid)
             .commit();
         Log.v("BeautyAndroid", "Latest uid stored to the app preferences: " + _uid);
 
@@ -51,6 +98,6 @@ public class FragmentWithStart extends Fragment {
         AppUser.getInstance().authenticate(_uid, _userType);
 
         NavHostFragment.findNavController(this)
-            .navigate(destination);
+            .navigate(_destination);
     }
 }

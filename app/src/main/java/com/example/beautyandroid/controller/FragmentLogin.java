@@ -18,8 +18,6 @@
 
 package com.beautyorder.androidclient.controller;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -42,13 +40,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class FragmentLogin extends FragmentWithStart {
+public class FragmentLogin extends com.beautyorder.androidclient.controller.FragmentWithStart {
 
     private FragmentLoginBinding binding;
     private EditText mEmail;
     private EditText mPassword;
     private FirebaseAuth mAuth;
-    private SharedPreferences mSharedPref;
 
     // TODO: put those methods in a shared module
     boolean isEmail(EditText text) {
@@ -79,9 +76,6 @@ public class FragmentLogin extends FragmentWithStart {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mSharedPref = getContext().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
 
         mEmail = view.findViewById(R.id.signin_email);
         mPassword = view.findViewById(R.id.signin_password);
@@ -129,14 +123,14 @@ public class FragmentLogin extends FragmentWithStart {
 
                                     if (dbUser.isEmailVerified()) {
 
-                                        MainActivity activity = (MainActivity)getActivity();
+                                        com.beautyorder.androidclient.controller.MainActivity activity = (com.beautyorder.androidclient.controller.MainActivity)getActivity();
 
                                         new ScoreUpdater(FirebaseFirestore.getInstance(),
-                                            getAnonymousUidFromPreferences(mSharedPref),
+                                            getAnonymousUidFromPreferences(),
                                             emailText, activity)
                                             .run();
 
-                                        startAppWithUser(mSharedPref, R.id.action_LoginFragment_to_AppFragment,
+                                        startAppWithUser(R.id.action_LoginFragment_to_AppFragment,
                                             emailText, AppUser.AuthenticationType.REGISTERED);
                                     } else {
                                         Log.e("BeautyAndroid", "Email is not verified");
