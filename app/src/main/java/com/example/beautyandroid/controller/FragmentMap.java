@@ -236,6 +236,22 @@ public class FragmentMap extends Fragment {
                 REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
+
+    private int computeZoomForRadius(double valueInMeter) {
+        return (16 - (int)(Math.log(valueInMeter / 500) / Math.log(2)));
+    }
+
+    private void setZoom(double radiusInKilometer) {
+        final int zoomLevel = computeZoomForRadius(radiusInKilometer * 1000);
+        Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(zoomLevel)
+            + " for radius of " + String.valueOf(radiusInKilometer) + " km");
+        mMapController.setZoom(zoomLevel);
+    }
+
+    private void setZoom(int level) {
+        Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(level));
+        mMapController.setZoom(level);
+    }
     
     private void setupMap() {
 
@@ -243,7 +259,7 @@ public class FragmentMap extends Fragment {
         mMap.setMultiTouchControls(true);
 
         mMapController = mMap.getController();
-        mMapController.setZoom(14.0);
+        setZoom(14);
 
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();
@@ -410,16 +426,17 @@ public class FragmentMap extends Fragment {
         final double startLongitude = mSearchStart.getLongitude();
         final String startLatitudeText = startLatitude+"";
         final String startLongitudeText = startLongitude+"";
-        Log.d("BeautyAndroid", "Display the recycling points around: latitude " + startLatitudeText + ", longitude "
-            + startLongitudeText);
+        Log.d("BeautyAndroid", "Display the recycling points around: latitude " + startLatitudeText
+            + ", longitude " + startLongitudeText);
 
         // Search for the recycling points (RP)
+        final double searchRadiusInCoordinate = 0.045;
         final double truncatedLatitude = Math.floor(startLatitude * 100) / 100;
         final double truncatedLongitude = Math.floor(startLongitude * 100) / 100;
-        final double maxSearchLatitude = truncatedLatitude + 0.05;
-        final double minSearchLatitude = truncatedLatitude - 0.05;
-        final double maxSearchLongitude = truncatedLongitude + 0.05;
-        final double minSearchLongitude = truncatedLongitude - 0.05;
+        final double maxSearchLatitude = truncatedLatitude + searchRadiusInCoordinate;
+        final double minSearchLatitude = truncatedLatitude - searchRadiusInCoordinate;
+        final double maxSearchLongitude = truncatedLongitude + searchRadiusInCoordinate;
+        final double minSearchLongitude = truncatedLongitude - searchRadiusInCoordinate;
 
         mDatabase.collection("recyclePointInfos")
             .whereLessThan("Latitude", maxSearchLatitude)
@@ -517,6 +534,8 @@ public class FragmentMap extends Fragment {
 
                         // Refresh the map
                         mMap.invalidate();
+
+                        setZoom(searchRadiusInCoordinate * 111);    // 111 km by latitude degree
                     } else {
                         Log.e("BeautyAndroid", "Error getting documents: ", task.getException());
                     }
