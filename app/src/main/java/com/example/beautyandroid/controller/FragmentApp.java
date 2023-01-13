@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import com.beautyorder.androidclient.NotSwipeableViewPager;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
 import com.beautyorder.androidclient.CollectionPagerAdapter;
@@ -35,7 +35,7 @@ import com.google.android.material.tabs.TabLayout;
 
 public class FragmentApp extends Fragment {
     private FragmentAppBinding binding;
-    private ViewPager viewPager;
+    private NotSwipeableViewPager viewPager;
 
     private Boolean keyboardDisplayed = false;
 
@@ -58,6 +58,10 @@ public class FragmentApp extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
         CollectionPagerAdapter adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
         viewPager.setAdapter(adapter);
+
+        // Disable the swiping gesture for the view pager
+        viewPager.setPagingEnabled(false);
+        viewPager.beginFakeDrag();
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 

@@ -25,7 +25,7 @@
     android:layout_height="match_parent"
     tools:context="com.beautyorder.androidclient.controller.FragmentApp">
 
-    <androidx.viewpager.widget.ViewPager
+    <com.beautyorder.androidclient.NotSwipeableViewPager
         android:id="@+id/appPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,5 +57,5 @@
                 android:icon="@drawable/dots_horizontal"/>
 
         </com.google.android.material.tabs.TabLayout>
-    </androidx.viewpager.widget.ViewPager>
+    </com.beautyorder.androidclient.NotSwipeableViewPager>
 </androidx.constraintlayout.widget.ConstraintLayout>
