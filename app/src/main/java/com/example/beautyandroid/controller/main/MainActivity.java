@@ -36,7 +36,7 @@ import com.beautyorder.androidclient.model.ScoreUpdater;
 import com.beautyorder.androidclient.model.UserInfoEntry;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.example.beautyandroid.controller.onboarding.OnboardingActivity;
+import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 import java.util.HashSet;
@@ -177,15 +177,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+
         if(this.getSupportActionBar()!=null) {
             this.getSupportActionBar().hide();
         }
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Only portrait orientation
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mSharedPref = this.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
@@ -194,9 +190,16 @@ public class MainActivity extends AppCompatActivity {
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
-            // The user hasn't seen the OnboardingSupportFragment yet, so show it
+            Log.d("BeautyAndroid", "Onboarding screen launched");
             startActivity(new Intent(this, OnboardingActivity.class));
+        } else {
+            Log.v("BeautyAndroid", "Onboarding screen skipped");
         }
+
+        setContentView(R.layout.activity_main);
+
+        // Only portrait orientation
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
