@@ -67,6 +67,6 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
 
     @Override
     public int onProvideTheme() {
-        return R.style.OnboardingTheme;
+        return androidx.leanback.R.style.Theme_Leanback_Onboarding;
     }
 }
