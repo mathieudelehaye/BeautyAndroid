@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller;
+package com.beautyorder.androidclient.controller.main;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -29,6 +29,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.main.FragmentWithStart;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.AppUser;
@@ -40,7 +42,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class FragmentLogin extends com.beautyorder.androidclient.controller.FragmentWithStart {
+public class FragmentLogin extends FragmentWithStart {
 
     private FragmentLoginBinding binding;
     private EditText mEmail;
@@ -123,7 +125,7 @@ public class FragmentLogin extends com.beautyorder.androidclient.controller.Frag
 
                                     if (dbUser.isEmailVerified()) {
 
-                                        com.beautyorder.androidclient.controller.MainActivity activity = (com.beautyorder.androidclient.controller.MainActivity)getActivity();
+                                        MainActivity activity = (MainActivity)getActivity();
 
                                         new ScoreUpdater(FirebaseFirestore.getInstance(),
                                             getAnonymousUidFromPreferences(),

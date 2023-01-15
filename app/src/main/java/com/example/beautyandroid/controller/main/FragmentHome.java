@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller;
+package com.beautyorder.androidclient.controller.main;
 
 import android.content.Context;
 import android.os.Build;
@@ -35,17 +35,17 @@ import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.UserInfoEntry;
+import com.beautyorder.androidclient.controller.main.FragmentWithStart;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class FragmentHome extends com.beautyorder.androidclient.controller.FragmentWithStart {
+public class FragmentHome extends FragmentWithStart {
 
     private FragmentHomeBinding binding;
     private FirebaseFirestore mDatabase;

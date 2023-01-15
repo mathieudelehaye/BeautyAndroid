@@ -26,9 +26,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.beautyorder.androidclient.controller.FragmentCamera;
-import com.beautyorder.androidclient.controller.FragmentMap;
-import com.beautyorder.androidclient.controller.FragmentMenu;
+import com.beautyorder.androidclient.controller.main.FragmentCamera;
+import com.beautyorder.androidclient.controller.main.FragmentMap;
+import com.beautyorder.androidclient.controller.main.FragmentMenu;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     private FragmentActivity mActivity;

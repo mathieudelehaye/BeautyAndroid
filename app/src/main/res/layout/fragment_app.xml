@@ -23,7 +23,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.beautyorder.androidclient.controller.FragmentApp">
+    tools:context="com.beautyorder.androidclient.controller.main.FragmentApp">
 
     <com.beautyorder.androidclient.NotSwipeableViewPager
         android:id="@+id/appPager"

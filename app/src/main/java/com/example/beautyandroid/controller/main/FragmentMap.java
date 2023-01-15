@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller;
+package com.beautyorder.androidclient.controller.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -48,6 +48,7 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreUpdater;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -411,7 +412,7 @@ public class FragmentMap extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    new ScoreUpdater(mDatabase, (com.beautyorder.androidclient.controller.MainActivity)getActivity()).displayScoreOnScreen(userScore);
+                    new ScoreUpdater(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
                 }
             });
     }
