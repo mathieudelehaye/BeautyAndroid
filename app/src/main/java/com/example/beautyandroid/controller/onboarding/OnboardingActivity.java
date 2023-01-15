@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.beautyorder.androidclient.controller.onboarding.FragmentOnboarding;
 
 public class OnboardingActivity extends AppCompatActivity {
-//    private SharedPreferences mSharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

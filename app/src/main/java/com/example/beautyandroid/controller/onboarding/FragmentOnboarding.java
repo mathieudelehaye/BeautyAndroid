@@ -18,11 +18,14 @@
 
 package com.beautyorder.androidclient.controller.onboarding;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.leanback.app.OnboardingSupportFragment;
+import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 
 public class FragmentOnboarding extends OnboardingSupportFragment {
 
@@ -60,5 +63,10 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
     @Override
     protected View onCreateForegroundView(LayoutInflater inflater, ViewGroup container) {
         return null;
+    }
+
+    @Override
+    public int onProvideTheme() {
+        return R.style.OnboardingTheme;
     }
 }
