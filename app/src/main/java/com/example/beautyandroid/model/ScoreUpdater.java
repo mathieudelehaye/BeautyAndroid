@@ -22,10 +22,10 @@ import android.util.Log;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.TaskCompletionManager;
-import com.beautyorder.androidclient.controller.FragmentMap;
-import com.beautyorder.androidclient.controller.MainActivity;
+import com.beautyorder.androidclient.controller.main.FragmentMap;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.beautyorder.androidclient.TaskCompletionManager;
 
 import java.util.Date;
 
@@ -169,8 +169,8 @@ public class ScoreUpdater {
         }
 
         Log.v("BeautyAndroid", "Display score on screen: " + String.valueOf(value));
-        FragmentMap fragment =
-            (FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.mapScore));
+        com.beautyorder.androidclient.controller.main.FragmentMap fragment =
+            (com.beautyorder.androidclient.controller.main.FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.mapScore));
         TextView score = (TextView) fragment.getView().findViewById(R.id.mapScore);
         score.setText(String.valueOf(value) + " pts");
     }
