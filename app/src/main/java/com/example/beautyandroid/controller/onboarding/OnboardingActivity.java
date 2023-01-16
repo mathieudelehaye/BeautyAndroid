@@ -19,26 +19,26 @@
 package com.beautyorder.androidclient.controller.onboarding;
 
 import android.os.Bundle;
-import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.beautyorder.androidclient.controller.onboarding.FragmentOnboarding;
+import com.beautyorder.androidclient.R;
 
 public class OnboardingActivity extends AppCompatActivity {
+
+    public OnboardingActivity() {
+        super(R.layout.activity_onboarding);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        var rowLayout = new LinearLayout(this);
-        rowLayout.setId(123);
-
-        // add rowLayout to the root layout
-        var fragMan = getSupportFragmentManager();
-        var fragTransaction = fragMan.beginTransaction();
-
-        var frag = new FragmentOnboarding();
-        fragTransaction.add(rowLayout.getId(), frag, "fragment0");
-        fragTransaction.commit();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_view, FragmentOnboarding.class, null)
+                .commit();
+        }
     }
 }

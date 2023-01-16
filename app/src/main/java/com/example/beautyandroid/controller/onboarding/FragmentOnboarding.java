@@ -18,30 +18,65 @@
 
 package com.beautyorder.androidclient.controller.onboarding;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.leanback.app.OnboardingSupportFragment;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 
 public class FragmentOnboarding extends OnboardingSupportFragment {
 
+    private SharedPreferences mSharedPref;
+
     @Override
     protected int getPageCount() {
-        return 0;
+        return 3;
     }
 
     @Override
     protected CharSequence getPageTitle(int pageIndex) {
-        return null;
+
+        CharSequence pageTitle = "";
+
+        switch (pageIndex) {
+            case 0:
+                pageTitle = "Page 1";
+                break;
+            case 1:
+                pageTitle = "Page 2";
+                break;
+            case 2:
+            default:
+                pageTitle = "Page 3";
+                break;
+        }
+
+        return pageTitle;
     }
 
     @Override
     protected CharSequence getPageDescription(int pageIndex) {
-        return null;
+
+        CharSequence pageDescr = "";
+
+        switch (pageIndex) {
+            case 0:
+                pageDescr = "This is the description of page 1";
+                break;
+            case 1:
+                pageDescr = "This is the description of page 2";
+                break;
+            case 2:
+            default:
+                pageDescr = "This is the description of page 3";
+                break;
+        }
+
+        return pageDescr;
     }
 
     @Nullable
@@ -55,7 +90,11 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
     @org.jetbrains.annotations.Nullable
     @Override
     protected View onCreateContentView(LayoutInflater inflater, ViewGroup container) {
-        return null;
+        var contentView = new ImageView(getContext());
+        contentView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        contentView.setImageResource(R.drawable.app_screenshot);
+        contentView.setPadding(0, 32, 0, 32);
+        return contentView;
     }
 
     @Nullable
@@ -68,5 +107,16 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
     @Override
     public int onProvideTheme() {
         return androidx.leanback.R.style.Theme_Leanback_Onboarding;
+    }
+
+    @Override
+    protected void onFinishFragment() {
+        super.onFinishFragment();
+
+        mSharedPref = getContext().getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE);
+        var editor = mSharedPref.edit();
+        editor.putBoolean(
+            getString(R.string.completed_onboarding), true).apply();
     }
 }
