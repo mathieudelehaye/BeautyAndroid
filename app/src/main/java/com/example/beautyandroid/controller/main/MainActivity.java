@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
-            Log.d("BeautyAndroid", "Onboarding screen launched");
+            Log.d("BeautyAndroid", "Onboarding launched");
             startActivity(new Intent(this, OnboardingActivity.class));
         } else {
             Log.v("BeautyAndroid", "Onboarding screen skipped");

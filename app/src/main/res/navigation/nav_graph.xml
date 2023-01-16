@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/FragmentLogin"
-        android:name="com.example.beautyandroid.controller.main.FragmentLogin"
+        android:name="com.beautyorder.androidclient.controller.main.FragmentLogin"
         android:label="@string/login_fragment_label"
         tools:layout="@layout/fragment_login">
 
@@ -54,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/FragmentRegister"
-        android:name="com.example.beautyandroid.controller.main.FragmentRegister"
+        android:name="com.beautyorder.androidclient.controller.main.FragmentRegister"
         android:label="@string/register_fragment_label"
         tools:layout="@layout/fragment_register">
 
@@ -68,7 +68,7 @@
 
     <fragment
         android:id="@+id/FragmentApp"
-        android:name="com.example.beautyandroid.controller.main.FragmentApp"
+        android:name="com.beautyorder.androidclient.controller.main.FragmentApp"
         android:label="App Fragment"
         tools:layout="@layout/fragment_app">
 
