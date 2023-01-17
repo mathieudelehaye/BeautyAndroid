@@ -104,7 +104,7 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
     @org.jetbrains.annotations.Nullable
     @Override
     protected View onCreateBackgroundView(LayoutInflater inflater, ViewGroup container) {
-        return null;
+        return inflater.inflate(R.layout.onboarding_background, container, false);
     }
 
     @Nullable
