@@ -70,14 +70,14 @@ public class FragmentOnboarding extends OnboardingFragment {
 
         switch (pageIndex) {
             case 0:
-                pageTitle = "Step 1";
+                pageTitle = "Search the map";
                 break;
             case 1:
-                pageTitle = "Step 2";
+                pageTitle = "Scan the QR code";
                 break;
             case 2:
             default:
-                pageTitle = "Step 3";
+                pageTitle = "Share the EB Points";
                 break;
         }
 
@@ -91,15 +91,14 @@ public class FragmentOnboarding extends OnboardingFragment {
 
         switch (pageIndex) {
             case 0:
-                pageDescr = "Use the map and search the directions for drop-off locations";
+                pageDescr = "For beauty drop-off locations";
                 break;
             case 1:
-                pageDescr = "When at a location, drop off your beauty and scan the QR code";
+                pageDescr = "At the location against EB points!";
                 break;
             case 2:
             default:
-                pageDescr = "Each day you drop a package earns you an EcoBeauty point! In the future, those points"
-                    + " will let you order free samples and so on from this app";
+                pageDescr = "Soon against free beauty samples!";
                 break;
         }
 

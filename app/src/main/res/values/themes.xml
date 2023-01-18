@@ -19,6 +19,17 @@
     </style>
     <style name="Theme.BeautyAndroid.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="Theme.BeautyAndroid.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="Widget.Leanback.OnboardingTitleStyle.Beauty" parent="Widget.Leanback.OnboardingTitleStyle">
+        <item name="android:textColor">#095507</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:lineSpacingExtra">14sp</item>
+    </style>
+    <style name="Widget.Leanback.OnboardingDescriptionStyle.Beauty" parent="Widget.Leanback.OnboardingDescriptionStyle">
+        <item name="android:textColor">#B39E0C0C</item>
+        <item name="android:textSize">20sp</item>
+    </style>
     <style name="Theme.Leanback.Onboarding.Beauty" parent="Theme.Leanback.Onboarding">
+        <item name="onboardingTitleStyle">@style/Widget.Leanback.OnboardingTitleStyle.Beauty</item>
+        <item name="onboardingDescriptionStyle">@style/Widget.Leanback.OnboardingDescriptionStyle.Beauty</item>
     </style>
 </resources>
