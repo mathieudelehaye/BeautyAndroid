@@ -187,14 +187,14 @@ public class MainActivity extends AppCompatActivity {
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
         // Check if we need to display our OnboardingSupportFragment
-        if (!mSharedPref.getBoolean(
-            getString(R.string.completed_onboarding), false)) {
+//        if (!mSharedPref.getBoolean(
+//            getString(R.string.completed_onboarding), false)) {
 
             Log.d("BeautyAndroid", "Onboarding launched");
             startActivity(new Intent(this, OnboardingActivity.class));
-        } else {
-            Log.v("BeautyAndroid", "Onboarding screen skipped");
-        }
+//        } else {
+//            Log.v("BeautyAndroid", "Onboarding screen skipped");
+//        }
 
         setContentView(R.layout.activity_main);
 

@@ -35,7 +35,8 @@
         <activity
             android:name="com.beautyorder.androidclient.controller.onboarding.OnboardingActivity"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Leanback.Onboarding.Beauty">
 
             <intent-filter>
                 <action android:name="android.intent.action.ONBOARDING" />

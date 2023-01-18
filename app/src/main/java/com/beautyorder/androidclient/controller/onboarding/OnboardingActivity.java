@@ -18,27 +18,15 @@
 
 package com.beautyorder.androidclient.controller.onboarding;
 
+import android.app.Activity;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import com.beautyorder.androidclient.controller.onboarding.FragmentOnboarding;
 import com.beautyorder.androidclient.R;
 
-public class OnboardingActivity extends AppCompatActivity {
-
-    public OnboardingActivity() {
-        super(R.layout.activity_onboarding);
-    }
+public class OnboardingActivity extends Activity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_view, FragmentOnboarding.class, null)
-                .commit();
-        }
+        setContentView(R.layout.onboarding);
     }
 }
