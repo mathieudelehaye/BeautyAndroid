@@ -22,6 +22,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,16 +33,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
-import androidx.leanback.app.OnboardingSupportFragment;
+import androidx.leanback.app.OnboardingFragment;
 import com.beautyorder.androidclient.R;
 import java.util.ArrayList;
 
-public class FragmentOnboarding extends OnboardingSupportFragment {
+public class FragmentOnboarding extends OnboardingFragment {
 
     private SharedPreferences mSharedPref;
     private ImageView mContentImage;
     private ArrayList<Integer> mPageImages = new ArrayList<Integer>();
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,10 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
         mPageImages.add(R.drawable.onboarding_picture_01);
         mPageImages.add(R.drawable.onboarding_picture_02);
         mPageImages.add(R.drawable.onboarding_picture_03);
+
+        // Fragment layout
+        setTitleViewTextColor(R.color.black);
+        setDescriptionViewTextColor(R.color.black);
     }
 
     @Override
@@ -151,11 +157,6 @@ public class FragmentOnboarding extends OnboardingSupportFragment {
         AnimatorSet set = new AnimatorSet();
         set.playSequentially(fadeOut, fadeIn);
         set.start();
-    }
-
-    @Override
-    public int onProvideTheme() {
-        return androidx.leanback.R.style.Theme_Leanback_Onboarding;
     }
 
     @Override
