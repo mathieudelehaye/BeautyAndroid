@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPref = this.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        // Check if we need to display our OnboardingSupportFragment
+        // Check if we need to display our OnboardingFragment
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
