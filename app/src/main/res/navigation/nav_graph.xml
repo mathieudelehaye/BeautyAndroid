@@ -73,7 +73,33 @@
         tools:layout="@layout/fragment_app">
 
         <action
+            android:id="@+id/action_AppFragment_to_HelpFragment"
+            app:destination="@id/FragmentHelp"/>
+        <action
+            android:id="@+id/action_AppFragment_to_TermsFragment"
+            app:destination="@id/FragmentTerms"/>
+        <action
             android:id="@+id/action_AppFragment_to_HomeFragment"
             app:destination="@id/FragmentHome"/>
+    </fragment>
+    <fragment
+        android:id="@+id/FragmentHelp"
+        android:name="com.beautyorder.androidclient.controller.main.FragmentHelp"
+        android:label="Help Fragment"
+        tools:layout="@layout/fragment_help">
+
+        <action
+            android:id="@+id/action_HelpFragment_to_AppFragment"
+            app:destination="@id/FragmentApp"/>
+    </fragment>
+    <fragment
+        android:id="@+id/FragmentTerms"
+        android:name="com.beautyorder.androidclient.controller.main.FragmentTerms"
+        android:label="Terms Fragment"
+        tools:layout="@layout/fragment_terms">
+
+        <action
+            android:id="@+id/action_TermsFragment_to_AppFragment"
+            app:destination="@id/FragmentApp"/>
     </fragment>
 </navigation>

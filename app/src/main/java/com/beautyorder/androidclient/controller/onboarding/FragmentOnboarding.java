@@ -94,7 +94,7 @@ public class FragmentOnboarding extends OnboardingFragment {
                 pageDescr = "For beauty drop-off locations";
                 break;
             case 1:
-                pageDescr = "At the location against EB points!";
+                pageDescr = "At the location against EB Points!";
                 break;
             case 2:
             default:

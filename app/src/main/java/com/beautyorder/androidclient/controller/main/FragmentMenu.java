@@ -33,7 +33,7 @@ import com.beautyorder.androidclient.model.AppUser;
 
 public class FragmentMenu extends Fragment {
 
-    private FragmentMenuBinding binding;
+    private FragmentMenuBinding mBinding;
     private SharedPreferences mSharedPref;
 
     @Override
@@ -44,15 +44,30 @@ public class FragmentMenu extends Fragment {
         mSharedPref = getContext().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        binding = FragmentMenuBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-
+        mBinding = FragmentMenuBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.logOutMenu.setOnClickListener(new View.OnClickListener() {
+        mBinding.helpMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(FragmentMenu.this)
+                    .navigate(R.id.action_AppFragment_to_HelpFragment);
+            }
+        });
+
+        mBinding.termsMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(FragmentMenu.this)
+                    .navigate(R.id.action_AppFragment_to_TermsFragment);
+            }
+        });
+
+        mBinding.logOutMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -70,6 +85,6 @@ public class FragmentMenu extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    fraglent_register.xml
+    fragment_register.xml
 
     Created by Mathieu Delehaye on 1/12/2022.
 
@@ -18,12 +18,13 @@
 -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.beautyorder.androidclient.controller.main.FragmentRegister">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.beautyorder.androidclient.controller.main.FragmentRegister">
+
     <TextView
         android:id="@+id/textview_register"
         android:layout_width="wrap_content"
@@ -31,8 +32,10 @@
         android:text="@string/title_register_fragment"
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="72dp" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="72dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"/>
 <!--    <EditText-->
 <!--        android:id="@+id/register_first_name"-->
 <!--        android:layout_width="165dp"-->
@@ -83,8 +86,10 @@
         android:hint="Email"
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/textview_register"
-        android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
         android:id="@+id/register_password"
         android:layout_width="350dp"
@@ -93,8 +98,10 @@
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/register_email"
         android:inputType="textPassword"
-        android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
         android:id="@+id/register_repeat_password"
         android:layout_width="350dp"
@@ -103,15 +110,18 @@
         android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/register_password"
         android:inputType="textPassword"
-        android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <Button
         android:id="@+id/back_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/register_repeat_password"
         android:text="@string/back"
-        android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="80dp"/>
     <Button
         android:id="@+id/confirm_register"
@@ -119,6 +129,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/register_repeat_password"
         android:text="@string/confirm"
-        android:layout_marginTop="32dp" android:layout_marginEnd="80dp" app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="80dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FragmentRegister extends Fragment {
-    private FragmentRegisterBinding binding;
+    private FragmentRegisterBinding mBinding;
 
     /*private EditText mFirstName;
     private EditText mLastName;
@@ -76,9 +76,9 @@ public class FragmentRegister extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentRegisterBinding.inflate(inflater, container, false);
+        mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
 
-        return binding.getRoot();
+        return mBinding.getRoot();
 
     }
 
@@ -97,7 +97,7 @@ public class FragmentRegister extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
 
-        binding.backRegister.setOnClickListener(new View.OnClickListener() {
+        mBinding.backRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentRegister.this)
@@ -105,7 +105,7 @@ public class FragmentRegister extends Fragment {
             }
         });
 
-        binding.confirmRegister.setOnClickListener(new View.OnClickListener() {
+        mBinding.confirmRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -226,7 +226,7 @@ public class FragmentRegister extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
 }
