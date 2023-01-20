@@ -47,6 +47,10 @@ public class FragmentTerms extends Fragment {
         mBinding.backTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Go back to the app Menu
+                var activity = (MainActivity)getActivity();
+                activity.setAppPage(2);
+
                 NavHostFragment.findNavController(FragmentTerms.this)
                     .navigate(R.id.action_TermsFragment_to_AppFragment);
             }

@@ -85,7 +85,7 @@ public class FragmentWithStart extends Fragment {
     public void startAppWithUser(int _destination, String _uid, AppUser.AuthenticationType _userType) {
 
         if (mSharedPref == null) {
-            Log.w("BeautyAndroid", "Try to start the app with a user but view not created");
+            Log.w("BeautyAndroid", "Try to start the app with a user but no preference loaded");
             return;
         }
 

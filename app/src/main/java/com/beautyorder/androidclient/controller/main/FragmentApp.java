@@ -34,34 +34,33 @@ import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class FragmentApp extends Fragment {
-    private FragmentAppBinding binding;
-    private NotSwipeableViewPager viewPager;
-
-    private Boolean keyboardDisplayed = false;
+    private FragmentAppBinding mBinding;
+    private NotSwipeableViewPager mViewPager;
+    private Boolean mKeyboardDisplayed = false;
 
     @Override
     public View onCreateView(
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        binding = FragmentAppBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = FragmentAppBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = view.findViewById(R.id.appPager);
+        mViewPager = view.findViewById(R.id.appPager);
         TabLayout tabLayout = view.findViewById(R.id.appTabbar);
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.camera);
-        tabLayout.setupWithViewPager(viewPager);
-        CollectionPagerAdapter adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
-        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(mViewPager);
+        var adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
+        mViewPager.setAdapter(adapter);
 
         // Disable the swiping gesture for the view pager
-        viewPager.setPagingEnabled(false);
-        viewPager.beginFakeDrag();
+        mViewPager.setPagingEnabled(false);
+        mViewPager.beginFakeDrag();
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
@@ -73,16 +72,16 @@ public class FragmentApp extends Fragment {
                 Rect viewBorder = new Rect();
 
                 // border will be populated with the coordinates of your view that area still visible
-                viewPager.getWindowVisibleDisplayFrame(viewBorder);
+                mViewPager.getWindowVisibleDisplayFrame(viewBorder);
 
                 final int viewBorderHeight = viewBorder.height();
-                final int viewPagerRootViewHeight = viewPager.getRootView().getHeight();
+                final int viewPagerRootViewHeight = mViewPager.getRootView().getHeight();
 
                 final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
 
                 if (heightDiff > 0.25*viewPagerRootViewHeight) { // if more than 25% of the screen, it's probably a keyboard
-                    if (!keyboardDisplayed && mapLayout != null) {
-                        keyboardDisplayed = true;
+                    if (!mKeyboardDisplayed && mapLayout != null) {
+                        mKeyboardDisplayed = true;
 
                         Log.d("BeautyAndroid", "Keyboard displayed");
 
@@ -91,8 +90,8 @@ public class FragmentApp extends Fragment {
                         mapLayout.requestLayout();
                     }
                 } else {
-                    if (keyboardDisplayed && mapLayout != null) {
-                        keyboardDisplayed = false;
+                    if (mKeyboardDisplayed && mapLayout != null) {
+                        mKeyboardDisplayed = false;
 
                         Log.d("BeautyAndroid", "Keyboard hidden");
 
@@ -108,12 +107,22 @@ public class FragmentApp extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
     @Override
     public void onResume() {
+        Log.v("BeautyAndroid", "App view resumed");
+
         super.onResume();
+
+        var activity = (MainActivity)getActivity();
+        final int pageToDisplay = activity.getAppPage();
+
+        // Reset the app page
+        activity.setAppPage(0);
+
+        mViewPager.setCurrentItem(pageToDisplay);
     }
 
     @Override

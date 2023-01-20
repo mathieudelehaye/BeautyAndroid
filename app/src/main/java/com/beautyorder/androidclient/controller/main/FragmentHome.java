@@ -35,7 +35,6 @@ import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.UserInfoEntry;
-import com.beautyorder.androidclient.controller.main.FragmentWithStart;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,7 +46,7 @@ import java.util.*;
 
 public class FragmentHome extends FragmentWithStart {
 
-    private FragmentHomeBinding binding;
+    private FragmentHomeBinding mBinding;
     private FirebaseFirestore mDatabase;
     private StringBuilder mPrefUserId;
     private StringBuilder mDeviceId;
@@ -57,8 +56,8 @@ public class FragmentHome extends FragmentWithStart {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = FragmentHomeBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -77,7 +76,7 @@ public class FragmentHome extends FragmentWithStart {
             startAppWithUser(R.id.action_HomeFragment_to_AppFragment, uid, type);
         }
 
-        binding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
+        mBinding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -96,7 +95,7 @@ public class FragmentHome extends FragmentWithStart {
             }
         });
 
-        binding.choice1Home.setOnClickListener(new View.OnClickListener() {
+        mBinding.choice1Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentHome.this)
@@ -104,7 +103,7 @@ public class FragmentHome extends FragmentWithStart {
             }
         });
 
-        binding.choice2Home.setOnClickListener(new View.OnClickListener() {
+        mBinding.choice2Home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentHome.this)
@@ -116,7 +115,7 @@ public class FragmentHome extends FragmentWithStart {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
     private void tryAndCreateAutoUserId() {

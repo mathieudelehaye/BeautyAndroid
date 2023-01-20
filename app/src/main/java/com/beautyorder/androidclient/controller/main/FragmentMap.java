@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreUpdater;
@@ -67,7 +66,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class FragmentMap extends Fragment {
 
-    private FragmentMapBinding binding;
+    private FragmentMapBinding mBinding;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView mMap = null;
     private IMapController mMapController;
@@ -87,14 +86,14 @@ public class FragmentMap extends Fragment {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        binding = FragmentMapBinding.inflate(inflater, container, false);
+        mBinding = FragmentMapBinding.inflate(inflater, container, false);
 
         // Disable StrictMode policy in onCreate, in order to make a network call in the main thread
         // TODO: call the network from a child thread instead
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        return binding.getRoot();
+        return mBinding.getRoot();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -173,7 +172,7 @@ public class FragmentMap extends Fragment {
 
         updateUserScore();
 
-        binding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
+        mBinding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -188,7 +187,7 @@ public class FragmentMap extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
     @Override

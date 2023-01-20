@@ -47,6 +47,10 @@ public class FragmentHelp extends Fragment {
         mBinding.backHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Go back to the app Menu
+                var activity = (MainActivity)getActivity();
+                activity.setAppPage(2);
+
                 NavHostFragment.findNavController(FragmentHelp.this)
                     .navigate(R.id.action_HelpFragment_to_AppFragment);
             }
