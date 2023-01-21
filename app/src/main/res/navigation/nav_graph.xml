@@ -21,7 +21,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FragmentHome">
+    app:startDestination="@id/FragmentResultList">
 
     <fragment
         android:id="@+id/FragmentHome"
@@ -65,7 +65,12 @@
             android:id="@+id/action_RegisterFragment_to_LoginFragment"
             app:destination="@id/FragmentLogin"/>
     </fragment>
-
+    <fragment
+        android:id="@+id/FragmentResultList"
+        android:name="com.beautyorder.androidclient.controller.main.FragmentResultList"
+        android:label="Result List Fragment"
+        tools:layout="@layout/fragment_result_list">
+    </fragment>
     <fragment
         android:id="@+id/FragmentApp"
         android:name="com.beautyorder.androidclient.controller.main.FragmentApp"
