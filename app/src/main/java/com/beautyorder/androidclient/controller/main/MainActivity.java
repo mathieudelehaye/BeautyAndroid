@@ -32,8 +32,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.beautyorder.androidclient.model.AppUser;
-import com.beautyorder.androidclient.model.ScoreUpdater;
-import com.beautyorder.androidclient.model.UserInfoEntry;
+import com.beautyorder.androidclient.model.ScoreTransferer;
+import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
@@ -101,12 +101,12 @@ public class MainActivity extends AppCompatActivity {
             // from the queue
             for(String event: scoreQueue) {
 
-                UserInfoEntry entry = new UserInfoEntry(mDatabase, uid);
+                UserInfoDBEntry entry = new UserInfoDBEntry(mDatabase, uid);
                 entry.readScoreDBFields(new TaskCompletionManager() {
                     @Override
                     public void onSuccess() {
 
-                        Date eventDate = UserInfoEntry.parseScoreTime(event);
+                        Date eventDate = UserInfoDBEntry.parseScoreTime(event);
 
                         // Only update the score if the event date is after the DB score time
                         if (eventDate.compareTo(entry.getScoreTime()) > 0) {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.v("BeautyAndroid", "Score written to the database and displayed "
                                         + "on screen");
 
-                                    new ScoreUpdater(mDatabase, mActivityInstance).displayScoreOnScreen(newScore);
+                                    new ScoreTransferer(mDatabase, mActivityInstance).displayScoreOnScreen(newScore);
                                 }
 
                                 @Override

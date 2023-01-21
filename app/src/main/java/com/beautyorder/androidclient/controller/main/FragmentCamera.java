@@ -41,7 +41,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
-import com.beautyorder.androidclient.model.UserInfoEntry;
+import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.qrcode.QRCodeFoundListener;
 import com.beautyorder.androidclient.qrcode.QRCodeImageAnalyzer;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -201,7 +201,7 @@ public class FragmentCamera extends Fragment {
 
         HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
 
-        String timeStamp = UserInfoEntry.scoreTimeFormat.format(new java.util.Date());
+        String timeStamp = UserInfoDBEntry.scoreTimeFormat.format(new java.util.Date());
 
         if (!updatedQueue.contains(timeStamp)) {
             updatedQueue.add(timeStamp);

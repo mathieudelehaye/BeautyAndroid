@@ -34,7 +34,7 @@ import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.model.AppUser;
-import com.beautyorder.androidclient.model.UserInfoEntry;
+import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -153,9 +153,9 @@ public class FragmentHome extends FragmentWithStart {
                         uid.append(UUID.nameUUIDFromBytes(hash).toString());
 
                         // Add userInfos table entry to the database for the anonymous user
-                        UserInfoEntry userInfo = new UserInfoEntry(mDatabase, uid.toString());
-                        userInfo.setScoreTime(UserInfoEntry.scoreTimeFormat.format(
-                            UserInfoEntry.getDayBeforeDate(date)));
+                        UserInfoDBEntry userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
+                        userInfo.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
+                            UserInfoDBEntry.getDayBeforeDate(date)));
                         userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
 
                         userInfo.createAllDBFields(new TaskCompletionManager() {

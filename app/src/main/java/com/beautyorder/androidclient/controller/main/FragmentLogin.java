@@ -29,12 +29,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.main.FragmentWithStart;
-import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.databinding.FragmentLoginBinding;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.AppUser;
-import com.beautyorder.androidclient.model.ScoreUpdater;
+import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -127,7 +125,7 @@ public class FragmentLogin extends FragmentWithStart {
 
                                         MainActivity activity = (MainActivity)getActivity();
 
-                                        new ScoreUpdater(FirebaseFirestore.getInstance(),
+                                        new ScoreTransferer(FirebaseFirestore.getInstance(),
                                             getAnonymousUidFromPreferences(),
                                             emailText, activity)
                                             .run();

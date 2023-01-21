@@ -18,7 +18,8 @@
 
 package com.example.beautyandroid.model;
 
-import com.beautyorder.androidclient.model.UserInfoEntry;
+import com.beautyorder.androidclient.model.UserInfoDBEntry;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class UserInfoEntryUnitTest {
         mUserInfoMap.put("device_id", "5d944db5c143e59b");
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser, mUserInfoMap);
+        UserInfoDBEntry entry = new UserInfoDBEntry(database, unitTestUser, mUserInfoMap);
 
         entry.createAllDBFields();
     }
@@ -54,7 +55,7 @@ public class UserInfoEntryUnitTest {
     public void updateScore() {
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser);
+        UserInfoDBEntry entry = new UserInfoDBEntry(database, unitTestUser);
 
         {
             final int entryScore = entry.getScore();
@@ -73,17 +74,17 @@ public class UserInfoEntryUnitTest {
     public void updateScoreTime() {
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        UserInfoEntry entry = new UserInfoEntry(database, unitTestUser);
+        UserInfoDBEntry entry = new UserInfoDBEntry(database, unitTestUser);
 
         {
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(UserInfoEntry.parseScoreTime("1970.01.01")));
+            assertEquals(true, entryScoreTime.equals(UserInfoDBEntry.parseScoreTime("1970.01.01")));
         }
 
         {
             entry.setScoreTime("2022.12.22");
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(UserInfoEntry.parseScoreTime("2022.12.22")));
+            assertEquals(true, entryScoreTime.equals(UserInfoDBEntry.parseScoreTime("2022.12.22")));
             entry.updateDBFields();
         }
     }

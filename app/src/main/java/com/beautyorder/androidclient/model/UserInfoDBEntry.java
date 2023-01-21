@@ -1,5 +1,5 @@
 //
-//  UserInfoEntry.java
+//  UserInfoDBEntry.java
 //
 //  Created by Mathieu Delehaye on 24/12/2022.
 //
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Date;
 import java.util.Map;
 
-public class UserInfoEntry {
+public class UserInfoDBEntry {
     static public SimpleDateFormat scoreTimeFormat = new SimpleDateFormat("yyyy.MM.dd");
     private FirebaseFirestore mDatabase;
     private String mKey;
@@ -41,7 +41,7 @@ public class UserInfoEntry {
     private Map<String, Boolean> mDataChanged;
     private Date mScoreTime;
 
-    public UserInfoEntry(FirebaseFirestore _database, String _key, Map<String, Object> _data) {
+    public UserInfoDBEntry(FirebaseFirestore _database, String _key, Map<String, Object> _data) {
         mDatabase = _database;
         mKey = _key;
         mData = _data;
@@ -50,7 +50,7 @@ public class UserInfoEntry {
         initializeDataChange();
     }
 
-    public UserInfoEntry(FirebaseFirestore _database, String _key) {
+    public UserInfoDBEntry(FirebaseFirestore _database, String _key) {
         mDatabase = _database;
         mKey = _key;
 

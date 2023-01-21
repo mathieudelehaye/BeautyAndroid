@@ -47,7 +47,7 @@ import java.util.Locale;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.AppUser;
-import com.beautyorder.androidclient.model.ScoreUpdater;
+import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -411,7 +411,7 @@ public class FragmentMap extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    new ScoreUpdater(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
+                    new ScoreTransferer(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
                 }
             });
     }

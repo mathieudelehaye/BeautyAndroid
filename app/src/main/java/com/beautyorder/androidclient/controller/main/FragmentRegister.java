@@ -34,7 +34,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentRegisterBinding;
-import com.beautyorder.androidclient.model.UserInfoEntry;
+import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -189,7 +189,7 @@ public class FragmentRegister extends Fragment {
                                         getString(R.string.app_name), Context.MODE_PRIVATE).getString(
                                         getString(R.string.device_id), ""));
 
-                                    UserInfoEntry userInfo = new UserInfoEntry(mDatabase, emailText, userInfoMap);
+                                    UserInfoDBEntry userInfo = new UserInfoDBEntry(mDatabase, emailText, userInfoMap);
                                     userInfo.createAllDBFields();
 
                                     user.sendEmailVerification()
