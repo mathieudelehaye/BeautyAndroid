@@ -83,14 +83,12 @@ public class FragmentHome extends FragmentWithStart {
                 String anonymousUid = getAnonymousUidFromPreferences();
                 if (!anonymousUid.equals("")) {
                     // Reuse the anonymous uid if it already exists in the app preferences
-                    Log.v("BeautyAndroid", "Anonymous uid loaded from the app preferences and reused: "
-                        + anonymousUid);
+                    Log.v("BeautyAndroid", "Anonymous uid reused: " + anonymousUid);
 
                     startAppWithUser(R.id.action_HomeFragment_to_AppFragment, anonymousUid,
                         AppUser.AuthenticationType.NOT_REGISTERED);
                 } else {
-                    // Otherwise, create an anonymous uid
-                    tryAndCreateAutoUserId();
+                    searchDBForAutoUserId();
                 }
             }
         });
@@ -116,6 +114,54 @@ public class FragmentHome extends FragmentWithStart {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
+    }
+
+    private void searchDBForAutoUserId() {
+
+        // Query the database for an anonymous user with the same device id
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection("userInfos")
+            .whereEqualTo("device_id", mDeviceId.toString())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("BeautyAndroid", "Unsuccessful search for a userInfos DB entry matching the "
+                            + "device");
+                    }
+
+                    QuerySnapshot snapshot = task.getResult();
+
+                    final var anonymousUId = new StringBuilder("");
+                    if (snapshot.size() != 0) {
+                        var userInfosEntry = snapshot.getDocuments().get(0);
+                        String uid = userInfosEntry.getId();
+
+                        if (!Helpers.isEmail(uid)) {
+                            anonymousUId.append(uid);
+                        }
+                    }
+
+                    if (anonymousUId.length() == 0) {
+                        Log.v("BeautyAndroid", "No userInfos entry found in the DB for the device: "
+                            + mDeviceId);
+
+                        // Create an anonymous user
+                        tryAndCreateAutoUserId();
+                        return;
+                    }
+
+                    final String anonymousUidText = anonymousUId.toString();
+                    Log.v("BeautyAndroid", "Anonymous uid read from the database: " + anonymousUidText
+                        + ", matching the device id: " + mDeviceId);
+
+                    setAnonymousUidToPreferences(anonymousUidText);
+
+                    startAppWithUser(R.id.action_HomeFragment_to_AppFragment, anonymousUidText,
+                        AppUser.AuthenticationType.NOT_REGISTERED);
+                }
+            });
     }
 
     private void tryAndCreateAutoUserId() {
@@ -210,30 +256,35 @@ public class FragmentHome extends FragmentWithStart {
             Log.v("BeautyAndroid", "The device id was read from the app preferences: " + mDeviceId.toString());
         } else {
             // If not found in the app preferences, read the device id and store it there
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
-                mDeviceId.append(Settings.Secure.getString(
-                    ctxt.getContentResolver(),
-                    Settings.Secure.ANDROID_ID));
-            } else {
-                var telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
-                if (telephonyManager.getDeviceId() != null) {
-                    mDeviceId.append(telephonyManager.getDeviceId());
-                } else {
-                    mDeviceId.append(Settings.Secure.getString(
-                        ctxt.getContentResolver(),
-                        Settings.Secure.ANDROID_ID));
-                }
-            }
-
-            if (mDeviceId.toString().equals("")) {
-                Log.e("BeautyAndroid", "Cannot determine the device id");
-            } else {
-                mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
-                Log.v("BeautyAndroid", "The device id was found on the device and written to the app "
-                    + "preferences: " + mDeviceId.toString());
-            }
+            readPhoneId(ctxt);
         }
 
         return "";
+    }
+
+    private void readPhoneId(Context ctxt) {
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
+            mDeviceId.append(Settings.Secure.getString(
+                ctxt.getContentResolver(),
+                Settings.Secure.ANDROID_ID));
+        } else {
+            var telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager.getDeviceId() != null) {
+                mDeviceId.append(telephonyManager.getDeviceId());
+            } else {
+                mDeviceId.append(Settings.Secure.getString(
+                    ctxt.getContentResolver(),
+                    Settings.Secure.ANDROID_ID));
+            }
+        }
+
+        if (mDeviceId.toString().equals("")) {
+            Log.e("BeautyAndroid", "Cannot determine the device id");
+        } else {
+            mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
+            Log.v("BeautyAndroid", "The device id was found on the device and written to the app "
+                + "preferences: " + mDeviceId.toString());
+        }
     }
 }
