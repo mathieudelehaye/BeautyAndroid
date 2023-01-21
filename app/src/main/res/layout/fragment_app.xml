@@ -38,7 +38,7 @@
             app:popupTheme="@style/Theme.BeautyAndroid"
             android:layout_height="72dp"
             android:layout_gravity="bottom"
-            android:contentDescription="@string/TabBarReadableLabel"
+            android:contentDescription="@string/tab_bar_readable_label"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.tabs.TabItem

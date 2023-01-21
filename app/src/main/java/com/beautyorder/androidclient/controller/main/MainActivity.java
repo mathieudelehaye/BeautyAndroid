@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Return of there is no scanning events to send in the app preferences
-            HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet(getString(R.string.scores_to_send),
+            HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet(getString(R.string.eb_points_to_send),
                 new HashSet<String>());
 
             if (scoreQueue.isEmpty()) {
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("BeautyAndroid", "Scanning event removed from the app queue: " + event);
                         updatedQueue.remove(event);
-                        mSharedPref.edit().putStringSet(getString(R.string.scores_to_send), updatedQueue).commit();
+                        mSharedPref.edit().putStringSet(getString(R.string.eb_points_to_send), updatedQueue).commit();
                     }
 
                     @Override

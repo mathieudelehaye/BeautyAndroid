@@ -207,7 +207,7 @@ public class FragmentCamera extends Fragment {
             updatedQueue.add(timeStamp);
 
             // Write back the queue to the app preferences
-            mSharedPref.edit().putStringSet(getString(R.string.scores_to_send), updatedQueue).commit();
+            mSharedPref.edit().putStringSet(getString(R.string.eb_points_to_send), updatedQueue).commit();
 
             Log.i("BeautyAndroid", "Scanning event added to the queue for the timestamp: "
                 + timeStamp);

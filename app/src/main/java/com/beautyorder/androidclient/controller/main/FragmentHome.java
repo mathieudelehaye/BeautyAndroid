@@ -215,7 +215,7 @@ public class FragmentHome extends FragmentWithStart {
                     ctxt.getContentResolver(),
                     Settings.Secure.ANDROID_ID));
             } else {
-                TelephonyManager telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
+                var telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
                 if (telephonyManager.getDeviceId() != null) {
                     mDeviceId.append(telephonyManager.getDeviceId());
                 } else {
