@@ -65,15 +65,11 @@ public class FragmentHome extends FragmentWithStart {
 
         mDatabase = FirebaseFirestore.getInstance();
 
-        // Navigate to the App screen if there is an uid in the app preferences
+        // Navigate to the App screen if there is a registered uid in the app preferences
         getPreferenceIds();
-        if (!mPrefUserId.toString().equals("")) {
-
-            String uid = mPrefUserId.toString();
-            AppUser.AuthenticationType type = Helpers.isEmail(uid) ? AppUser.AuthenticationType.REGISTERED
-                : AppUser.AuthenticationType.NOT_REGISTERED;
-
-            startAppWithUser(R.id.action_HomeFragment_to_AppFragment, uid, type);
+        String lastUId = mPrefUserId.toString();
+        if (!lastUId.equals("") && Helpers.isEmail(lastUId)) {
+            startAppWithUser(R.id.action_HomeFragment_to_AppFragment, lastUId, AppUser.AuthenticationType.REGISTERED);
         }
 
         mBinding.noChoiceHome.setOnClickListener(new View.OnClickListener() {

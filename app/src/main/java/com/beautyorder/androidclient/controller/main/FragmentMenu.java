@@ -21,9 +21,11 @@ package com.beautyorder.androidclient.controller.main;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -50,6 +52,8 @@ public class FragmentMenu extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        switchLogoutButtonVisibility();
 
         mBinding.helpMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,8 +87,41 @@ public class FragmentMenu extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "Menu view becomes visible");
+
+            switchLogoutButtonVisibility();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
+    }
+
+    private void switchLogoutButtonVisibility() {
+
+        final View fragmentRootView = getView();
+        if (fragmentRootView == null) {
+            return;
+        }
+
+        var logoutButton = (Button) fragmentRootView.findViewById(R.id.log_out_menu);
+        if (logoutButton == null) {
+            return;
+        }
+
+        // Show the logout button if the uid is a registered one. Hide the button otherwise
+        switch (AppUser.getInstance().getAuthenticationType()) {
+            case REGISTERED:
+                logoutButton.setVisibility(View.VISIBLE);
+                break;
+            default:
+                logoutButton.setVisibility(View.GONE);
+                break;
+        }
     }
 }
