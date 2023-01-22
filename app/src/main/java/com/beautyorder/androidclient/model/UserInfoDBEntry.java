@@ -42,7 +42,9 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
         super(database, "userInfos");
 
         mKey.append(key);
-        mData = data;
+        mData = new ArrayList<>();
+        mData.add(data);
+
         mScoreTime = parseScoreTime((String)data.get("score_time"));
 
         initializeDataChange();
@@ -54,59 +56,63 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
 
         mKey.append(key);
 
-        mData = new HashMap<>();
-        mData.put("first_name", "");
-        mData.put("last_name", "");
-        mData.put("address", "");
-        mData.put("city", "");
-        mData.put("post_code", "");
-        mData.put("score", "");
-        mData.put("score_time", "1970.01.01");
-        mData.put("device_id", "");
+        mData = new ArrayList<>();
+        var dataItem = new HashMap<String, String>();
+        mData.add(dataItem);
+        dataItem.put("first_name", "");
+        dataItem.put("last_name", "");
+        dataItem.put("address", "");
+        dataItem.put("city", "");
+        dataItem.put("post_code", "");
+        dataItem.put("score", "");
+        dataItem.put("score_time", "1970.01.01");
+        dataItem.put("device_id", "");
         mScoreTime = parseScoreTime("1970.01.01");
 
         initializeDataChange();
     }
 
     private void initializeDataChange() {
-        mDataChanged = new HashMap<>();
-        mDataChanged.put("first_name", false);
-        mDataChanged.put("last_name", false);
-        mDataChanged.put("address", false);
-        mDataChanged.put("city", false);
-        mDataChanged.put("post_code", false);
-        mDataChanged.put("score", false);
-        mDataChanged.put("score_time", false);
-        mDataChanged.put("device_id", false);
+        mDataChanged = new ArrayList<>();
+        var dataChangeItem = new HashMap<String, Boolean>();
+        mDataChanged.add(dataChangeItem);
+        dataChangeItem.put("first_name", false);
+        dataChangeItem.put("last_name", false);
+        dataChangeItem.put("address", false);
+        dataChangeItem.put("city", false);
+        dataChangeItem.put("post_code", false);
+        dataChangeItem.put("score", false);
+        dataChangeItem.put("score_time", false);
+        dataChangeItem.put("device_id", false);
     }
 
     public int getScore() {
-        String score = mData.get("score");
+        String score = mData.get(0).get("score");
         return (score != "") ? (int)Integer.parseInt(score) : 0;
     }
 
     public void setScore(int value) {
-        mData.put("score", String.valueOf(value));
-        mDataChanged.put("score", true);
+        mData.get(0).put("score", String.valueOf(value));
+        mDataChanged.get(0).put("score", true);
     }
 
     public Date getScoreTime() {
-        return parseScoreTime((String)mData.get("score_time"));
+        return parseScoreTime((String)mData.get(0).get("score_time"));
     }
 
     public void setScoreTime(String value) {
         mScoreTime = parseScoreTime(value);
-        mData.put("score_time", value);
-        mDataChanged.put("score_time", true);
+        mData.get(0).put("score_time", value);
+        mDataChanged.get(0).put("score_time", true);
     }
 
     public String getDeviceId() {
-        return (String)mData.get("device_id");
+        return (String)mData.get(0).get("device_id");
     }
 
     public void setDeviceId(String value) {
-        mData.put("device_id", value);
-        mDataChanged.put("device_id", true);
+        mData.get(0).put("device_id", value);
+        mDataChanged.get(0).put("device_id", true);
     }
 
     public void createAllDBFields(TaskCompletionManager... cbManager) {
@@ -150,10 +156,10 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
 
         var changedKeys = new ArrayList<String>();
 
-        for (String key : mData.keySet()) {
-            if (mDataChanged.get(key)) {
+        for (String key : mData.get(0).keySet()) {
+            if (mDataChanged.get(0).get(key)) {
                 // Data has changed and must be written back to the database
-                batch.update(ref, key, mData.get(key));
+                batch.update(ref, key, mData.get(0).get(key));
                 changedKeys.add(key);
             }
         }
@@ -166,7 +172,7 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
 
                     // Clear the update flag
                     for (String key: changedKeys) {
-                        mDataChanged.put(key, false);
+                        mDataChanged.get(0).put(key, false);
                     }
 
                     if (cbManager.length >= 1) {

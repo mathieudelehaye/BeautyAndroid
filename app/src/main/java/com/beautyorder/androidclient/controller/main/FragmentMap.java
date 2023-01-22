@@ -40,19 +40,22 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.*;
@@ -401,8 +404,6 @@ public class FragmentMap extends Fragment {
                         ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("BeautyAndroid", document.getId() + " => " + document.getData());
-
                             userScore = Integer.parseInt(document.getData().get("score").toString());
                         }
                     } else {
@@ -438,111 +439,106 @@ public class FragmentMap extends Fragment {
         final double maxSearchLongitude = truncatedLongitude + searchRadiusInCoordinate;
         final double minSearchLongitude = truncatedLongitude - searchRadiusInCoordinate;
 
-        mDatabase.collection("recyclePointInfos")
-            .whereLessThan("Latitude", maxSearchLatitude)
-            .whereGreaterThan("Latitude", minSearchLatitude)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        String[] outputFields = { "Latitude", "Longitude", "PointName", "BuildingName", "BuildingNumber",
+            "Address", "Postcode", "City", "3Words", "RecyclingProgram" };
+        String[] filterFields = { "Latitude", "Longitude" };
+        double[] filterMinRanges = { minSearchLatitude, minSearchLongitude };
+        double[] filterMaxRanges = { maxSearchLatitude, maxSearchLongitude };
 
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            final var longitude = (double)document.getData().get("Longitude");
+        var pointInfo = new RecyclePointInfo(mDatabase);
+        pointInfo.SetFilter(filterFields, filterMinRanges, filterMaxRanges);
+        pointInfo.readAllDBFields(outputFields, new TaskCompletionManager() {
+            @Override
+            public void onSuccess() {
 
-                            //Log.v("BeautyAndroid", "longitude = " + String.valueOf(longitude));
+                var items = new ArrayList<OverlayItem>();
 
-                            // Due to Firestore query limitation, we need to filter the longitude on the
-                            // device.
-                            // TODO: add e.g.: the country or the continent to the query, to limit the
-                            //  response result number.
-                            if (longitude > minSearchLongitude && longitude < maxSearchLongitude) {
-                                //Log.v("BeautyAndroid", document.getId() + " => " + document.getData());
+                for (Map<String, String> dataItem : pointInfo.getData()) {
 
-                                final double latitude = (double)document.getData().get("Latitude");
-                                var pointName = (String)document.getData().get("PointName");
-                                var buildingName = (String)document.getData().get("BuildingName");
-                                var buildingNumber = (String)document.getData().get("BuildingNumber");
-                                var address = (String)document.getData().get("Address");
-                                var postcode = (String)document.getData().get("Postcode");
-                                var city = (String)document.getData().get("City");
-                                var threeWords = (String)document.getData().get("3Words");
-                                var recyclingProgram = (String)document.getData().get("RecyclingProgram");
+                    final double latitude = (double)Double.parseDouble(dataItem.get("Latitude"));
+                    final double longitude = (double)Double.parseDouble(dataItem.get("Longitude"));
+                    String pointName = dataItem.get("PointName");
+                    String buildingName = dataItem.get("BuildingName");
+                    String buildingNumber = dataItem.get("BuildingNumber");
+                    String address = dataItem.get("Address");
+                    String postcode = dataItem.get("Postcode");
+                    String city = dataItem.get("City");
+                    String threeWords = dataItem.get(("3Words"));
+                    String recyclingProgram = dataItem.get("RecyclingProgram");
 
-                                String itemTitle =
-                                    ((pointName != null)
-                                        && !pointName.equals("?") ? (pointName + " ") : "");
+                    String itemTitle =
+                        ((pointName != null)
+                        && !pointName.equals("?") ? (pointName + " ") : "");
 
-                                String itemSnippet =
-                                    ((buildingName != null)
-                                        && !buildingName.equals("?")  ? (buildingName + " ") : "") +
-                                    ((buildingNumber != null)
-                                        && !buildingNumber.equals("?") ? (buildingNumber + ", ") : "") +
-                                    ((address != null)
-                                        && !address.equals("?") ? (address + " ") : "") +
-                                    ((postcode != null)
-                                        && !postcode.equals("?") ? (postcode + " ") : "") +
-                                    ((city != null)
-                                        && !city.equals("?") ? (city + " ") : "") +
-                                    ((threeWords != null)
-                                        && !threeWords.equals("?") ? ("\n(https://what3words.com/"
-                                        + threeWords + ")") : "") +
-                                    ((recyclingProgram != null)
-                                        && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
+                    String itemSnippet =
+                        ((buildingName != null)
+                        && !buildingName.equals("?")  ? (buildingName + " ") : "") +
+                        ((buildingNumber != null)
+                        && !buildingNumber.equals("?") ? (buildingNumber + ", ") : "") +
+                        ((address != null)
+                        && !address.equals("?") ? (address + " ") : "") +
+                        ((postcode != null)
+                        && !postcode.equals("?") ? (postcode + " ") : "") +
+                        ((city != null)
+                        && !city.equals("?") ? (city + " ") : "") +
+                        ((threeWords != null)
+                        && !threeWords.equals("?") ? ("\n(https://what3words.com/"
+                        + threeWords + ")") : "") +
+                        ((recyclingProgram != null)
+                        && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
 
-                                items.add(new OverlayItem(itemTitle, itemSnippet,
-                                    new GeoPoint(latitude,longitude)));
-                            }
-                        }
+                    items.add(new OverlayItem(itemTitle, itemSnippet,
+                        new GeoPoint(latitude,longitude)));
+                }
 
-                        // possibly remove the former RP overlay
-                        if (mRPOverlay != null) {
-                            mMap.getOverlays().remove(mRPOverlay);
-                        }
+                // possibly remove the former RP overlay
+                if (mRPOverlay != null) {
+                    mMap.getOverlays().remove(mRPOverlay);
+                }
 
-                        // display the overlay
-                        mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
-                            new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                                @SuppressLint("ResourceAsColor")
-                                @Override
-                                public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                    Log.i("BeautyAndroid", "Single tap");
+                // display the overlay
+                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                        new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                            @SuppressLint("ResourceAsColor")
+                            @Override
+                            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                                Log.i("BeautyAndroid", "Single tap");
 
-                                    // Remove the previous road overlay
-                                    if (mRoadOverlay[0] != null) {
-                                        mMap.getOverlays().remove(mRoadOverlay[0]);
-                                    }
+                                // Remove the previous road overlay
+                                if (mRoadOverlay[0] != null) {
+                                    mMap.getOverlays().remove(mRoadOverlay[0]);
+                                }
 
-                                    final IGeoPoint itemILocation = item.getPoint();
-                                    final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
+                                final IGeoPoint itemILocation = item.getPoint();
+                                final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
                                         itemILocation.getLongitude());
 
-                                    drawRoadToPoint(itemLocation);
+                                drawRoadToPoint(itemLocation);
 
-                                    return true;
-                                }
+                                return true;
+                            }
 
-                                @Override
-                                public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                    return false;
-                                }
-                            }, mCtx);
-                        mRPOverlay.setFocusItemsOnTap(true);
+                            @Override
+                            public boolean onItemLongPress(final int index, final OverlayItem item) {
+                                return false;
+                            }
+                        }, mCtx);
+                mRPOverlay.setFocusItemsOnTap(true);
 
-                        mMap.getOverlays().add(mRPOverlay);
+                mMap.getOverlays().add(mRPOverlay);
 
-                        // Refresh the map
-                        mMap.invalidate();
+                // Refresh the map
+                mMap.invalidate();
 
-                        setZoom(searchRadiusInCoordinate * 111);    // 111 km by latitude degree
-                    } else {
-                        Log.e("BeautyAndroid", "Error getting documents: ", task.getException());
-                    }
-                }
-            });
+                setZoom(searchRadiusInCoordinate * 111);    // 111 km by latitude degree
+            }
+
+            @Override
+            public void onFailure() {
+            }
+        });
     }
-    
+
     private void drawRoadToPoint(GeoPoint itemLocation) {
         if (mUserLocation == null) {
             Log.w("BeautyAndroid", "Cannot draw the road from the user location as not known yet");

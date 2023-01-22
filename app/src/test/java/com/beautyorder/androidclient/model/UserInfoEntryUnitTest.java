@@ -74,7 +74,7 @@ public class UserInfoEntryUnitTest {
     public void updateScoreTime() {
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        UserInfoDBEntry entry = new UserInfoDBEntry(database, unitTestUser);
+        var entry = new UserInfoDBEntry(database, unitTestUser);
 
         {
             final Date entryScoreTime = entry.getScoreTime();
