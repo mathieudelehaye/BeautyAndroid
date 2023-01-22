@@ -33,6 +33,46 @@ public class RecyclePointInfo extends DBCollectionAccessor {
         mDataChanged = new ArrayList<Map<String, Boolean>>();
     }
 
+    public String getTitleAtIndex(int i) {
+        String pointName = mData.get(i).get("PointName");
+        return ((pointName != null)
+            && !pointName.equals("?") ? (pointName + " ") : "");
+    }
+
+    public String getSnippetAtIndex(int i) {
+        String buildingName = mData.get(i).get("BuildingName");
+        String buildingNumber = mData.get(i).get("BuildingNumber");
+        String address = mData.get(i).get("Address");
+        String postcode = mData.get(i).get("Postcode");
+        String city = mData.get(i).get("City");
+        String threeWords = mData.get(i).get(("3Words"));
+        String recyclingProgram = mData.get(i).get("RecyclingProgram");
+
+        return ((buildingName != null)
+            && !buildingName.equals("?")  ? (buildingName + " ") : "") +
+            ((buildingNumber != null)
+                && !buildingNumber.equals("?") ? (buildingNumber + ", ") : "") +
+            ((address != null)
+                && !address.equals("?") ? (address + " ") : "") +
+            ((postcode != null)
+                && !postcode.equals("?") ? (postcode + " ") : "") +
+            ((city != null)
+                && !city.equals("?") ? (city + " ") : "") +
+            ((threeWords != null)
+                && !threeWords.equals("?") ? ("\n(https://what3words.com/"
+                + threeWords + ")") : "") +
+            ((recyclingProgram != null)
+                && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
+    }
+
+    public double getLatitudeAtIndex(int i) {
+        return (double)Double.parseDouble(mData.get(i).get("Latitude"));
+    }
+
+    public double getLongitudeAtIndex(int i) {
+        return (double)Double.parseDouble(mData.get(i).get("Longitude"));
+    }
+
     public boolean readAllDBFields(String[] outputFields, TaskCompletionManager... cbManager) {
         return readDBFieldsForCurrentFilter(outputFields, cbManager);
     }

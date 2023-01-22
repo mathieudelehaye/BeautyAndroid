@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.*;
@@ -453,39 +452,13 @@ public class FragmentMap extends Fragment {
 
                 var items = new ArrayList<OverlayItem>();
 
-                for (Map<String, String> dataItem : pointInfo.getData()) {
+                for (int i = 0; i < pointInfo.getData().size(); i++) {
 
-                    final double latitude = (double)Double.parseDouble(dataItem.get("Latitude"));
-                    final double longitude = (double)Double.parseDouble(dataItem.get("Longitude"));
-                    String pointName = dataItem.get("PointName");
-                    String buildingName = dataItem.get("BuildingName");
-                    String buildingNumber = dataItem.get("BuildingNumber");
-                    String address = dataItem.get("Address");
-                    String postcode = dataItem.get("Postcode");
-                    String city = dataItem.get("City");
-                    String threeWords = dataItem.get(("3Words"));
-                    String recyclingProgram = dataItem.get("RecyclingProgram");
+                    final double latitude = pointInfo.getLatitudeAtIndex(i);
+                    final double longitude = pointInfo.getLongitudeAtIndex(i);
 
-                    String itemTitle =
-                        ((pointName != null)
-                        && !pointName.equals("?") ? (pointName + " ") : "");
-
-                    String itemSnippet =
-                        ((buildingName != null)
-                        && !buildingName.equals("?")  ? (buildingName + " ") : "") +
-                        ((buildingNumber != null)
-                        && !buildingNumber.equals("?") ? (buildingNumber + ", ") : "") +
-                        ((address != null)
-                        && !address.equals("?") ? (address + " ") : "") +
-                        ((postcode != null)
-                        && !postcode.equals("?") ? (postcode + " ") : "") +
-                        ((city != null)
-                        && !city.equals("?") ? (city + " ") : "") +
-                        ((threeWords != null)
-                        && !threeWords.equals("?") ? ("\n(https://what3words.com/"
-                        + threeWords + ")") : "") +
-                        ((recyclingProgram != null)
-                        && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
+                    String itemTitle = pointInfo.getTitleAtIndex(i);
+                    String itemSnippet = pointInfo.getSnippetAtIndex(i);
 
                     items.add(new OverlayItem(itemTitle, itemSnippet,
                         new GeoPoint(latitude,longitude)));
@@ -498,31 +471,31 @@ public class FragmentMap extends Fragment {
 
                 // display the overlay
                 mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
-                        new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                            @SuppressLint("ResourceAsColor")
-                            @Override
-                            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                                Log.i("BeautyAndroid", "Single tap");
+                    new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                        @SuppressLint("ResourceAsColor")
+                        @Override
+                        public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                            Log.i("BeautyAndroid", "Single tap");
 
-                                // Remove the previous road overlay
-                                if (mRoadOverlay[0] != null) {
-                                    mMap.getOverlays().remove(mRoadOverlay[0]);
-                                }
-
-                                final IGeoPoint itemILocation = item.getPoint();
-                                final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
-                                        itemILocation.getLongitude());
-
-                                drawRoadToPoint(itemLocation);
-
-                                return true;
+                            // Remove the previous road overlay
+                            if (mRoadOverlay[0] != null) {
+                                mMap.getOverlays().remove(mRoadOverlay[0]);
                             }
 
-                            @Override
-                            public boolean onItemLongPress(final int index, final OverlayItem item) {
-                                return false;
-                            }
-                        }, mCtx);
+                            final IGeoPoint itemILocation = item.getPoint();
+                            final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
+                                    itemILocation.getLongitude());
+
+                            drawRoadToPoint(itemLocation);
+
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onItemLongPress(final int index, final OverlayItem item) {
+                            return false;
+                        }
+                    }, mCtx);
                 mRPOverlay.setFocusItemsOnTap(true);
 
                 mMap.getOverlays().add(mRPOverlay);
