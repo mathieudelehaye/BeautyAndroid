@@ -177,13 +177,13 @@ public class FragmentRegister extends Fragment {
                                     FirebaseUser user = mAuth.getCurrentUser();
 
                                     // Add userInfos table entry to the database matching the new user
-                                    Map<String, Object> userInfoMap = new HashMap<>();
+                                    Map<String, String> userInfoMap = new HashMap<>();
                                     userInfoMap.put("first_name", "");
                                     userInfoMap.put("last_name", "");
                                     userInfoMap.put("address", "");
                                     userInfoMap.put("city", "");
                                     userInfoMap.put("post_code", "");
-                                    userInfoMap.put("score", 0);
+                                    userInfoMap.put("score", "");
                                     userInfoMap.put("score_time", "");
                                     userInfoMap.put("device_id", getContext().getSharedPreferences(
                                         getString(R.string.app_name), Context.MODE_PRIVATE).getString(

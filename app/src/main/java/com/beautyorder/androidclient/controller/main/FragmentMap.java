@@ -449,7 +449,7 @@ public class FragmentMap extends Fragment {
                         ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            final double longitude = (double)document.getData().get("Longitude");
+                            final var longitude = (double)document.getData().get("Longitude");
 
                             //Log.v("BeautyAndroid", "longitude = " + String.valueOf(longitude));
 
@@ -461,14 +461,14 @@ public class FragmentMap extends Fragment {
                                 //Log.v("BeautyAndroid", document.getId() + " => " + document.getData());
 
                                 final double latitude = (double)document.getData().get("Latitude");
-                                String pointName = (String)document.getData().get("PointName");
-                                String buildingName = (String)document.getData().get("BuildingName");
-                                String buildingNumber = (String)document.getData().get("BuildingNumber");
-                                String address = (String)document.getData().get("Address");
-                                String postcode = (String)document.getData().get("Postcode");
-                                String city = (String)document.getData().get("City");
-                                String threeWords = (String)document.getData().get("3Words");
-                                String recyclingProgram = (String)document.getData().get("RecyclingProgram");
+                                var pointName = (String)document.getData().get("PointName");
+                                var buildingName = (String)document.getData().get("BuildingName");
+                                var buildingNumber = (String)document.getData().get("BuildingNumber");
+                                var address = (String)document.getData().get("Address");
+                                var postcode = (String)document.getData().get("Postcode");
+                                var city = (String)document.getData().get("City");
+                                var threeWords = (String)document.getData().get("3Words");
+                                var recyclingProgram = (String)document.getData().get("RecyclingProgram");
 
                                 String itemTitle =
                                     ((pointName != null)

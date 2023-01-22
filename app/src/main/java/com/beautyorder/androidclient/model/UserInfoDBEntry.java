@@ -33,26 +33,26 @@ import java.util.HashMap;
 import java.util.Date;
 import java.util.Map;
 
-public class UserInfoDBEntry {
+public class UserInfoDBEntry extends DBCollectionAccessor {
     static public SimpleDateFormat scoreTimeFormat = new SimpleDateFormat("yyyy.MM.dd");
-    private FirebaseFirestore mDatabase;
-    private String mKey;
-    private Map<String, Object> mData;
-    private Map<String, Boolean> mDataChanged;
     private Date mScoreTime;
 
-    public UserInfoDBEntry(FirebaseFirestore _database, String _key, Map<String, Object> _data) {
-        mDatabase = _database;
-        mKey = _key;
-        mData = _data;
-        mScoreTime = parseScoreTime((String)_data.get("score_time"));
+    public UserInfoDBEntry(FirebaseFirestore database, String key, Map<String, String> data) {
+
+        super(database, "userInfos");
+
+        mKey.append(key);
+        mData = data;
+        mScoreTime = parseScoreTime((String)data.get("score_time"));
 
         initializeDataChange();
     }
 
-    public UserInfoDBEntry(FirebaseFirestore _database, String _key) {
-        mDatabase = _database;
-        mKey = _key;
+    public UserInfoDBEntry(FirebaseFirestore database, String key) {
+
+        super(database, "userInfos");
+
+        mKey.append(key);
 
         mData = new HashMap<>();
         mData.put("first_name", "");
@@ -60,7 +60,7 @@ public class UserInfoDBEntry {
         mData.put("address", "");
         mData.put("city", "");
         mData.put("post_code", "");
-        mData.put("score", 0);
+        mData.put("score", "");
         mData.put("score_time", "1970.01.01");
         mData.put("device_id", "");
         mScoreTime = parseScoreTime("1970.01.01");
@@ -81,16 +81,17 @@ public class UserInfoDBEntry {
     }
 
     public int getScore() {
-        return (int)mData.get("score");
+        String score = mData.get("score");
+        return (score != "") ? (int)Integer.parseInt(score) : 0;
     }
 
     public void setScore(int value) {
-        mData.put("score", value);
+        mData.put("score", String.valueOf(value));
         mDataChanged.put("score", true);
     }
 
     public Date getScoreTime() {
-        return mScoreTime;
+        return parseScoreTime((String)mData.get("score_time"));
     }
 
     public void setScoreTime(String value) {
@@ -111,12 +112,13 @@ public class UserInfoDBEntry {
     public void createAllDBFields(TaskCompletionManager... cbManager) {
 
         // Add userInfos table entry to the database matching the app user
-        mDatabase.collection("userInfos").document(mKey)
+        mDatabase.collection("userInfos").document(mKey.toString())
             .set(mData)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Log.i("BeautyAndroid", "New info successfully written to the database for user: " + mKey);
+                    Log.i("BeautyAndroid", "New info successfully written to the database for user: "
+                        + mKey.toString());
 
                     if (cbManager.length >= 1) {
                         cbManager[0].onSuccess();
@@ -135,50 +137,16 @@ public class UserInfoDBEntry {
             });
     }
 
-    public int readScoreDBFields(TaskCompletionManager... cbManager) {
-
-        mDatabase.collection("userInfos")
-            .whereEqualTo("__name__", mKey)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    // Display score
-                    Integer userScore = 0;
-                    if (task.isSuccessful()) {
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d("BeautyAndroid", mKey + " => " + document.getData());
-
-                            String scoreTime = document.getData().get("score_time").toString();
-                            mData.put("score", Integer.parseInt(document.getData().get("score").toString()));
-                            mData.put("score_time", scoreTime);
-                            mScoreTime = parseScoreTime(scoreTime);
-                            mDataChanged.put("score", false);
-                            mDataChanged.put("score_time", false);
-
-                            if (cbManager.length >= 1) {
-                                cbManager[0].onSuccess();
-                            }
-                        }
-                    } else {
-                        Log.e("BeautyAndroid", "Error reading documents: ", task.getException());
-
-                        if (cbManager.length >= 1) {
-                            cbManager[0].onFailure();
-                        }
-                    }
-                }
-            });
-
-        return 0;
+    public boolean readScoreDBFields(TaskCompletionManager... cbManager) {
+        String[] fields = {"score", "score_time"};
+        return readDBFieldsForCurrentKey(fields, cbManager);
     }
 
     public void updateDBFields(TaskCompletionManager... cbManager) {
         // Get a new write batch
         WriteBatch batch = mDatabase.batch();
 
-        DocumentReference ref = mDatabase.collection("userInfos").document(mKey);
+        DocumentReference ref = mDatabase.collection("userInfos").document(mKey.toString());
 
         var changedKeys = new ArrayList<String>();
 

@@ -16,10 +16,10 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.example.beautyandroid.model;
+package com.beautyorder.androidclient.model;
 
+import com.beautyorder.androidclient.model.FirebaseFirestoreMockManager;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,13 +35,13 @@ public class UserInfoEntryUnitTest {
     @Test
     public void createUserInfo() {
 
-        Map<String, Object> mUserInfoMap = new HashMap<>();
+        Map<String, String> mUserInfoMap = new HashMap<>();
         mUserInfoMap.put("first_name", "Mathieu");
         mUserInfoMap.put("last_name", "Delehaye");
         mUserInfoMap.put("address", "15, Granville street");
         mUserInfoMap.put("city", "Glasgow");
         mUserInfoMap.put("post_code", "G3 7EE");
-        mUserInfoMap.put("score", 10);
+        mUserInfoMap.put("score", "10");
         mUserInfoMap.put("score_time", "2022.12.20");
         mUserInfoMap.put("device_id", "5d944db5c143e59b");
 
