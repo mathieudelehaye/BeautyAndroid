@@ -18,28 +18,16 @@
 
 package com.beautyorder.androidclient.controller.main;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
@@ -48,17 +36,12 @@ import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.*;
-import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -66,22 +49,14 @@ import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class FragmentMap extends Fragment {
-
+public class FragmentMap extends FragmentWithSearch {
     private FragmentMapBinding mBinding;
-    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView mMap = null;
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
-    private GeoPoint mUserLocation;
-    private GeoPoint mSearchResult;
-    private GeoPoint mSearchStart;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private RoadManager mRoadManager;
     private Polyline[] mRoadOverlay = {null};   // Overlay to display the road to a recycling point
-    private FirebaseFirestore mDatabase;
-    private SharedPreferences mSharedPref;
-    private Context mCtx;
 
     @Override
     public View onCreateView(
@@ -102,40 +77,11 @@ public class FragmentMap extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get the DB
-        mDatabase = FirebaseFirestore.getInstance();
-
-        mCtx = view.getContext();
-
-        // Get the app preferences
-        mSharedPref = mCtx.getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
-
-        //load/initialize the osmdroid configuration, this can be done
-        Configuration.getInstance().load(mCtx, PreferenceManager.getDefaultSharedPreferences(mCtx));
-        //setting this before the layout is inflated is a good idea
-        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
-        //see also StorageUtils
-        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
-        //tile servers will get you banned based on this string
-
         // inflate and create the map
         mMap = (MapView) view.findViewById(R.id.map);
         mMap.setTileSource(TileSourceFactory.MAPNIK);
 
-        // handle permissions
-        String[] permissions = {
-            Manifest.permission.ACCESS_FINE_LOCATION
-        };
-        requestPermissionsIfNecessary(
-            view.getContext(),
-            // if you need to show the current location, uncomment the line below
-            // WRITE_EXTERNAL_STORAGE is required in order to show the map
-            permissions
-        );
-
-        EditText editText = view.findViewById(R.id.mapSearchBox);
+        var editText = (EditText)view.findViewById(R.id.mapSearchBox);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -159,7 +105,7 @@ public class FragmentMap extends Fragment {
                                 + ", " + mSearchResult.getLongitude() + ")");
 
                             Log.d("BeautyAndroid", "Change focus to search result");
-                            focusOnTarget(mSearchResult, /*isUser=*/false);
+                            focusOnTargetAndUpdateMap(mSearchResult, /*isUser=*/false);
 
                             return true;
                         }
@@ -181,7 +127,7 @@ public class FragmentMap extends Fragment {
                 updateUserLocation();
 
                 Log.d("BeautyAndroid", "Change focus to user location");
-                focusOnTarget(mUserLocation, /*isUser=*/true);
+                focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
             }
         });
     }
@@ -222,23 +168,6 @@ public class FragmentMap extends Fragment {
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    private void requestPermissionsIfNecessary(Context context, String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(context, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                (Activity)context,
-                permissionsToRequest.toArray(new String[0]),
-                REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
-
     private int computeZoomForRadius(double valueInMeter) {
         return (16 - (int)(Math.log(valueInMeter / 500) / Math.log(2)));
     }
@@ -275,7 +204,7 @@ public class FragmentMap extends Fragment {
             mUserLocation = GeoPoint.fromDoubleString(cacheLocation, ',');
 
             Log.d("BeautyAndroid", "Change focus to user location");
-            focusOnTarget(mUserLocation, /*isUser=*/true);
+            focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
         }
 
 
@@ -301,7 +230,7 @@ public class FragmentMap extends Fragment {
                     // Focus on the user only if a search has not been done yet
                     if (mSearchStart == null) {
                         Log.d("BeautyAndroid", "Change focus to user location");
-                        focusOnTarget(mUserLocation, /*isUser=*/true);
+                        focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
                     }
 
                 } catch (Exception e) {
@@ -309,30 +238,6 @@ public class FragmentMap extends Fragment {
                 }
             }
         });
-    }
-
-    private GeoPoint getCoordinatesFromAddress(String locationName) {
-
-        try {
-            Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
-
-            List<Address> geoResults = geocoder.getFromLocationName(locationName, 1);
-
-            if (!geoResults.isEmpty()) {
-                final Address addr = geoResults.get(0);
-                GeoPoint location = new GeoPoint(addr.getLatitude(), addr.getLongitude());
-
-                return location;
-            } else {
-                Toast toast = Toast.makeText(requireContext(),"Location Not Found",Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.show();
-            }
-        } catch (IOException e) {
-            Log.e("BeautyAndroid", "Error getting a location: " + e.toString());
-        }
-
-        return null;
     }
 
     private void updateUserLocation() {
@@ -352,14 +257,13 @@ public class FragmentMap extends Fragment {
             + String.valueOf(mUserLocation.getLongitude()));
     }
 
-    private void focusOnTarget(GeoPoint _target, Boolean isUser) {
-        if (_target == null) {
+    private void focusOnTargetAndUpdateMap(GeoPoint target, Boolean isUser) {
+        if (target == null) {
             Log.w("BeautyAndroid", "Cannot focus on target because none available");
             return;
         }
 
-        Log.v("BeautyAndroid", "Search start set to target");
-        mSearchStart = _target;
+        super.setSearchStart(target);
 
         // UI action (like the map animation) needs to be processed in a UI Thread
         getActivity().runOnUiThread(new Runnable() {
@@ -376,9 +280,9 @@ public class FragmentMap extends Fragment {
                 }
 
                 Log.v("BeautyAndroid", "Map focus set on target");
-                mMapController.animateTo(_target);
+                mMapController.animateTo(target);
 
-                updateRecyclingPoints();
+                searchRecyclingPoints();
             }
         });
     }
@@ -416,7 +320,7 @@ public class FragmentMap extends Fragment {
             });
     }
 
-    private void updateRecyclingPoints() {
+    protected void searchRecyclingPoints() {
         if (mSearchStart == null) {
             Log.w("BeautyAndroid", "Cannot display the recycling points because no search start");
             return;
@@ -450,7 +354,7 @@ public class FragmentMap extends Fragment {
             @Override
             public void onSuccess() {
 
-                var items = new ArrayList<OverlayItem>();
+                mFoundResults = new ArrayList<OverlayItem>();
 
                 for (int i = 0; i < pointInfo.getData().size(); i++) {
 
@@ -460,7 +364,7 @@ public class FragmentMap extends Fragment {
                     String itemTitle = pointInfo.getTitleAtIndex(i);
                     String itemSnippet = pointInfo.getSnippetAtIndex(i);
 
-                    items.add(new OverlayItem(itemTitle, itemSnippet,
+                    mFoundResults.add(new OverlayItem(itemTitle, itemSnippet,
                         new GeoPoint(latitude,longitude)));
                 }
 
@@ -470,7 +374,7 @@ public class FragmentMap extends Fragment {
                 }
 
                 // display the overlay
-                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(items,
+                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mFoundResults,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @SuppressLint("ResourceAsColor")
                         @Override
