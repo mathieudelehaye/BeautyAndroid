@@ -18,18 +18,31 @@
 
 package com.beautyorder.androidclient.controller.main;
 
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
+import java.util.ArrayList;
 
-public class FragmentResultList extends Fragment {
+public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
+    private final GeoPoint mUserLocation = new GeoPoint(0, 0);
+    private ListView mListView;
+    private ArrayList<String> mListItems = new ArrayList<>();
 
     @Override
     public View onCreateView(
@@ -43,17 +56,55 @@ public class FragmentResultList extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        var resultList = (ListView) view.findViewById(R.id.listView);
-        String[] listItem = getResources().getStringArray(R.array.array_technology);
-        var adapter = new ArrayAdapter<String>(getContext(),
-            android.R.layout.simple_list_item_1, android.R.id.text1, listItem);
-        resultList.setAdapter(adapter);
-
-        resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Get the user geolocation
+        final boolean[] firstLocationReceived = {false};
+        var locationProvider = new GpsMyLocationProvider(mCtx);
+        locationProvider.startLocationProvider(new IMyLocationConsumer() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String value=adapter.getItem(position);
-                Toast.makeText(getContext(),value,Toast.LENGTH_SHORT).show();
+            public void onLocationChanged(Location location, IMyLocationProvider source) {
+
+                // TODO: improve the we we detect the first gps fix
+                if(!firstLocationReceived[0]) {
+                    firstLocationReceived[0] = true;
+
+                    Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
+                    mUserLocation.setCoords(location.getLatitude(), location.getLongitude());
+                    readItems();
+                }
+            }
+        });
+    }
+
+    private void readItems() {
+
+        // Set it as a search start
+        setSearchStart(mUserLocation);
+
+        // Search for the RP around the user
+        searchRecyclingPoints(new TaskCompletionManager() {
+            @Override
+            public void onSuccess() {
+                var resultList = (ListView) getView().findViewById(R.id.listView);
+
+                for (OverlayItem point : mCloseRecyclePoints) {
+                    mListItems.add(point.getTitle() + "\n\n" + point.getSnippet());
+                }
+
+                var adapter = new ArrayAdapter<String>(getContext(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, mListItems);
+                resultList.setAdapter(adapter);
+
+                resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        String value=adapter.getItem(position);
+                        Log.d("BeautyAndroid", "Tapped item: " + value);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure() {
             }
         });
     }

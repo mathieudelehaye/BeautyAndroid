@@ -51,11 +51,11 @@ import java.util.Locale;
 public class FragmentWithSearch extends Fragment {
     protected final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     protected final double mSearchRadiusInCoordinate = 0.045;
-    protected MyLocationNewOverlay mLocationOverlay;
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchResult;
     protected GeoPoint mSearchStart;
-    // TODO: do not use `OverlayItem`, as it belongs specifically to the map
+    // TODO: do not use classes that belongs specifically to the map, like `OverlayItem`
+    protected MyLocationNewOverlay mLocationOverlay;
     protected ArrayList<OverlayItem> mCloseRecyclePoints;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;

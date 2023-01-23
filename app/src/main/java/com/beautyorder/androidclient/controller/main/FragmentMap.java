@@ -203,7 +203,6 @@ public class FragmentMap extends FragmentWithSearch {
             focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
         }
 
-
         mMap.getOverlays().add(this.mLocationOverlay);
         mRoadManager = new OSRMRoadManager(mCtx, getString(R.string.app_name)); // Initialize it later, whe/n needed
 
