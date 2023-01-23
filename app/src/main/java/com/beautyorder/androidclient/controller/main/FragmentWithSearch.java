@@ -36,10 +36,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +50,13 @@ import java.util.Locale;
 
 public class FragmentWithSearch extends Fragment {
     protected final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    protected final double mSearchRadiusInCoordinate = 0.045;
+    protected MyLocationNewOverlay mLocationOverlay;
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchResult;
     protected GeoPoint mSearchStart;
-    // TODO: do not use `OverlayItem` here, as it belongs to the map
-    protected ArrayList<OverlayItem> mFoundResults;
+    // TODO: do not use `OverlayItem`, as it belongs specifically to the map
+    protected ArrayList<OverlayItem> mCloseRecyclePoints;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected Context mCtx;
@@ -79,7 +84,7 @@ public class FragmentWithSearch extends Fragment {
 
         // handle permissions
         String[] permissions = {
-                Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         };
         requestPermissionsIfNecessary(
             view.getContext(),
@@ -89,16 +94,33 @@ public class FragmentWithSearch extends Fragment {
         );
     }
 
+    protected void updateUserLocation() {
+        if (mLocationOverlay == null) {
+            Log.w("BeautyAndroid", "Cannot update user location because no overlay");
+            return;
+        }
+
+        mUserLocation = mLocationOverlay.getMyLocation();
+        if (mUserLocation == null) {
+            Log.w("BeautyAndroid", "Cannot update user location as not available");
+            return;
+        }
+
+        Log.d("BeautyAndroid", "User location updated: latitude "
+            + String.valueOf(mUserLocation.getLatitude()) + ", longitude "
+            + String.valueOf(mUserLocation.getLongitude()));
+    }
+
     protected GeoPoint getCoordinatesFromAddress(String locationName) {
 
         try {
-            Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+            var geocoder = new Geocoder(requireContext(), Locale.getDefault());
 
             List<Address> geoResults = geocoder.getFromLocationName(locationName, 1);
 
             if (!geoResults.isEmpty()) {
                 final Address addr = geoResults.get(0);
-                GeoPoint location = new GeoPoint(addr.getLatitude(), addr.getLongitude());
+                var location = new GeoPoint(addr.getLatitude(), addr.getLongitude());
 
                 return location;
             } else {
@@ -116,6 +138,67 @@ public class FragmentWithSearch extends Fragment {
     protected void setSearchStart(GeoPoint value) {
         Log.v("BeautyAndroid", "Search start set to: " + value.toString());
         mSearchStart = value;
+    }
+
+    protected void searchRecyclingPoints(TaskCompletionManager... cbManager) {
+        if (mSearchStart == null) {
+            Log.w("BeautyAndroid", "Cannot display the recycling points because no search start");
+            return;
+        }
+
+        final double startLatitude = mSearchStart.getLatitude();
+        final double startLongitude = mSearchStart.getLongitude();
+        final String startLatitudeText = startLatitude+"";
+        final String startLongitudeText = startLongitude+"";
+        Log.d("BeautyAndroid", "Display the recycling points around: latitude " + startLatitudeText
+            + ", longitude " + startLongitudeText);
+
+        // Search for the recycling points (RP)
+        final double truncatedLatitude = Math.floor(startLatitude * 100) / 100;
+        final double truncatedLongitude = Math.floor(startLongitude * 100) / 100;
+        final double maxSearchLatitude = truncatedLatitude + mSearchRadiusInCoordinate;
+        final double minSearchLatitude = truncatedLatitude - mSearchRadiusInCoordinate;
+        final double maxSearchLongitude = truncatedLongitude + mSearchRadiusInCoordinate;
+        final double minSearchLongitude = truncatedLongitude - mSearchRadiusInCoordinate;
+
+        String[] outputFields = { "Latitude", "Longitude", "PointName", "BuildingName", "BuildingNumber",
+            "Address", "Postcode", "City", "3Words", "RecyclingProgram" };
+        String[] filterFields = { "Latitude", "Longitude" };
+        double[] filterMinRanges = { minSearchLatitude, minSearchLongitude };
+        double[] filterMaxRanges = { maxSearchLatitude, maxSearchLongitude };
+
+        var pointInfo = new RecyclePointInfo(mDatabase);
+        pointInfo.SetFilter(filterFields, filterMinRanges, filterMaxRanges);
+        pointInfo.readAllDBFields(outputFields, new TaskCompletionManager() {
+            @Override
+            public void onSuccess() {
+
+                mCloseRecyclePoints = new ArrayList<OverlayItem>();
+
+                for (int i = 0; i < pointInfo.getData().size(); i++) {
+
+                    final double latitude = pointInfo.getLatitudeAtIndex(i);
+                    final double longitude = pointInfo.getLongitudeAtIndex(i);
+
+                    String itemTitle = pointInfo.getTitleAtIndex(i);
+                    String itemSnippet = pointInfo.getSnippetAtIndex(i);
+
+                    mCloseRecyclePoints.add(new OverlayItem(itemTitle, itemSnippet,
+                        new GeoPoint(latitude,longitude)));
+                }
+
+                if (cbManager.length >= 1) {
+                    cbManager[0].onSuccess();
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                if (cbManager.length >= 1) {
+                    cbManager[0].onFailure();
+                }
+            }
+        });
     }
 
     protected void requestPermissionsIfNecessary(Context context, String[] permissions) {

@@ -21,7 +21,6 @@ package com.beautyorder.androidclient.controller.main;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
@@ -32,14 +31,12 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.AppUser;
-import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.*;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -53,7 +50,6 @@ public class FragmentMap extends FragmentWithSearch {
     private FragmentMapBinding mBinding;
     private MapView mMap = null;
     private IMapController mMapController;
-    private MyLocationNewOverlay mLocationOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private RoadManager mRoadManager;
     private Polyline[] mRoadOverlay = {null};   // Overlay to display the road to a recycling point
@@ -240,23 +236,6 @@ public class FragmentMap extends FragmentWithSearch {
         });
     }
 
-    private void updateUserLocation() {
-        if (mLocationOverlay == null) {
-            Log.w("BeautyAndroid", "Cannot update user location because no overlay");
-            return;
-        }
-
-        mUserLocation = mLocationOverlay.getMyLocation();
-        if (mUserLocation == null) {
-            Log.w("BeautyAndroid", "Cannot update user location as not available");
-            return;
-        }
-
-        Log.d("BeautyAndroid", "User location updated: latitude "
-            + String.valueOf(mUserLocation.getLatitude()) + ", longitude "
-            + String.valueOf(mUserLocation.getLongitude()));
-    }
-
     private void focusOnTargetAndUpdateMap(GeoPoint target, Boolean isUser) {
         if (target == null) {
             Log.w("BeautyAndroid", "Cannot focus on target because none available");
@@ -282,7 +261,7 @@ public class FragmentMap extends FragmentWithSearch {
                 Log.v("BeautyAndroid", "Map focus set on target");
                 mMapController.animateTo(target);
 
-                searchRecyclingPoints();
+                searchAndDisplayOnMapRP();
             }
         });
     }
@@ -320,79 +299,24 @@ public class FragmentMap extends FragmentWithSearch {
             });
     }
 
-    protected void searchRecyclingPoints() {
-        if (mSearchStart == null) {
-            Log.w("BeautyAndroid", "Cannot display the recycling points because no search start");
-            return;
-        }
+    private void searchAndDisplayOnMapRP() {
 
-        final double startLatitude = mSearchStart.getLatitude();
-        final double startLongitude = mSearchStart.getLongitude();
-        final String startLatitudeText = startLatitude+"";
-        final String startLongitudeText = startLongitude+"";
-        Log.d("BeautyAndroid", "Display the recycling points around: latitude " + startLatitudeText
-            + ", longitude " + startLongitudeText);
-
-        // Search for the recycling points (RP)
-        final double searchRadiusInCoordinate = 0.045;
-        final double truncatedLatitude = Math.floor(startLatitude * 100) / 100;
-        final double truncatedLongitude = Math.floor(startLongitude * 100) / 100;
-        final double maxSearchLatitude = truncatedLatitude + searchRadiusInCoordinate;
-        final double minSearchLatitude = truncatedLatitude - searchRadiusInCoordinate;
-        final double maxSearchLongitude = truncatedLongitude + searchRadiusInCoordinate;
-        final double minSearchLongitude = truncatedLongitude - searchRadiusInCoordinate;
-
-        String[] outputFields = { "Latitude", "Longitude", "PointName", "BuildingName", "BuildingNumber",
-            "Address", "Postcode", "City", "3Words", "RecyclingProgram" };
-        String[] filterFields = { "Latitude", "Longitude" };
-        double[] filterMinRanges = { minSearchLatitude, minSearchLongitude };
-        double[] filterMaxRanges = { maxSearchLatitude, maxSearchLongitude };
-
-        var pointInfo = new RecyclePointInfo(mDatabase);
-        pointInfo.SetFilter(filterFields, filterMinRanges, filterMaxRanges);
-        pointInfo.readAllDBFields(outputFields, new TaskCompletionManager() {
+        searchRecyclingPoints(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
-
-                mFoundResults = new ArrayList<OverlayItem>();
-
-                for (int i = 0; i < pointInfo.getData().size(); i++) {
-
-                    final double latitude = pointInfo.getLatitudeAtIndex(i);
-                    final double longitude = pointInfo.getLongitudeAtIndex(i);
-
-                    String itemTitle = pointInfo.getTitleAtIndex(i);
-                    String itemSnippet = pointInfo.getSnippetAtIndex(i);
-
-                    mFoundResults.add(new OverlayItem(itemTitle, itemSnippet,
-                        new GeoPoint(latitude,longitude)));
-                }
-
                 // possibly remove the former RP overlay
                 if (mRPOverlay != null) {
                     mMap.getOverlays().remove(mRPOverlay);
                 }
 
                 // display the overlay
-                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mFoundResults,
+                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mCloseRecyclePoints,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @SuppressLint("ResourceAsColor")
                         @Override
                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                             Log.i("BeautyAndroid", "Single tap");
-
-                            // Remove the previous road overlay
-                            if (mRoadOverlay[0] != null) {
-                                mMap.getOverlays().remove(mRoadOverlay[0]);
-                            }
-
-                            final IGeoPoint itemILocation = item.getPoint();
-                            final GeoPoint itemLocation = new GeoPoint(itemILocation.getLatitude(),
-                                    itemILocation.getLongitude());
-
-                            drawRoadToPoint(itemLocation);
-
-                            return true;
+                            return false;
                         }
 
                         @Override
@@ -407,86 +331,12 @@ public class FragmentMap extends FragmentWithSearch {
                 // Refresh the map
                 mMap.invalidate();
 
-                setZoom(searchRadiusInCoordinate * 111);    // 111 km by latitude degree
+                setZoom(mSearchRadiusInCoordinate * 111);    // 111 km by latitude degree
             }
 
             @Override
             public void onFailure() {
             }
         });
-    }
-
-    private void drawRoadToPoint(GeoPoint itemLocation) {
-        if (mUserLocation == null) {
-            Log.w("BeautyAndroid", "Cannot draw the road from the user location as not known yet");
-            return;
-        }
-
-        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-        waypoints.add(mUserLocation); // search from the user current position
-        waypoints.add(itemLocation);
-
-        Road road = mRoadManager.getRoad(waypoints);
-
-        // Generate the direction text
-        StringBuilder directionTextBuilder = new StringBuilder();
-        int directionItemIdx = 0;
-
-        for (RoadNode node: road.mNodes) {
-            // There is no useful info in the first and last nodes ("You have
-            // reached a waypoint of your trip")
-            if (directionItemIdx > 0 && directionItemIdx < road.mNodes.size() - 1) {
-
-                if (node.mInstructions != null) {
-                    String instructions = node.mInstructions.trim().replaceAll(" +", " ");
-
-                    String distanceUnit = (node.mLength > 1) ? "km" : "m";
-                    String distance = (node.mLength > 1) ? String.valueOf((int)Math.floor(node.mLength))
-                        : String.valueOf((int)Math.floor(node.mLength * 1000));
-
-                    directionTextBuilder.append(directionItemIdx + ". ");
-                    directionTextBuilder.append(instructions);
-                    directionTextBuilder.append(" ("+distance+" " + distanceUnit + ")");
-                    directionTextBuilder.append("\n");
-                }
-            }
-
-            directionItemIdx++;
-        }
-
-        final String directionText = directionTextBuilder.toString();
-        //Log.v("BeautyAndroid", "Direction text: " +
-        //    directionText);
-
-        TextView direction = (TextView) getView().findViewById(R.id.mapDirection);
-        View directionBackground = (View) getView().findViewById(R.id.mapDirectionBackground);
-
-        if (directionText != "") {
-            direction.setText(directionText);
-
-            // Activate the scrollbar
-            direction.setMovementMethod(new ScrollingMovementMethod());
-
-            // Display view
-            direction.setBackgroundResource(R.color.BgOrange);
-            directionBackground.setBackgroundResource(R.color.black);
-        } else {
-            direction.setText("");
-
-            // Hide view
-            direction.setBackgroundResource(R.color.Transparent);
-            directionBackground.setBackgroundResource(R.color.Transparent);
-        }
-
-        // Display the road as a map overlay
-        mRoadOverlay[0] = RoadManager.buildRoadOverlay(road);
-
-        // Add the polyline to the overlays of your map
-        mMap.getOverlays().add(mRoadOverlay[0]);
-
-        // Refresh the map
-        mMap.invalidate();
-
-        mMapController.animateTo(itemLocation);
     }
 }
