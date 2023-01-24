@@ -309,7 +309,7 @@ public class FragmentMap extends FragmentWithSearch {
                 }
 
                 // display the overlay
-                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mCloseRecyclePoints,
+                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mFoundRecyclePoints,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @SuppressLint("ResourceAsColor")
                         @Override

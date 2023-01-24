@@ -56,7 +56,7 @@ public class FragmentWithSearch extends Fragment {
     protected GeoPoint mSearchStart;
     // TODO: do not use classes that belongs specifically to the map, like `OverlayItem`
     protected MyLocationNewOverlay mLocationOverlay;
-    protected ArrayList<OverlayItem> mCloseRecyclePoints;
+    protected ArrayList<OverlayItem> mFoundRecyclePoints;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected Context mCtx;
@@ -150,8 +150,8 @@ public class FragmentWithSearch extends Fragment {
         final double startLongitude = mSearchStart.getLongitude();
         final String startLatitudeText = startLatitude+"";
         final String startLongitudeText = startLongitude+"";
-        Log.d("BeautyAndroid", "Display the recycling points around: latitude " + startLatitudeText
-            + ", longitude " + startLongitudeText);
+        Log.d("BeautyAndroid", "Display the recycling points around the location (" + startLatitudeText
+            + ", " + startLongitudeText + ")");
 
         // Search for the recycling points (RP)
         final double truncatedLatitude = Math.floor(startLatitude * 100) / 100;
@@ -173,7 +173,7 @@ public class FragmentWithSearch extends Fragment {
             @Override
             public void onSuccess() {
 
-                mCloseRecyclePoints = new ArrayList<OverlayItem>();
+                mFoundRecyclePoints = new ArrayList<OverlayItem>();
 
                 for (int i = 0; i < pointInfo.getData().size(); i++) {
 
@@ -183,7 +183,7 @@ public class FragmentWithSearch extends Fragment {
                     String itemTitle = pointInfo.getTitleAtIndex(i);
                     String itemSnippet = pointInfo.getSnippetAtIndex(i);
 
-                    mCloseRecyclePoints.add(new OverlayItem(itemTitle, itemSnippet,
+                    mFoundRecyclePoints.add(new OverlayItem(itemTitle, itemSnippet,
                         new GeoPoint(latitude,longitude)));
                 }
 

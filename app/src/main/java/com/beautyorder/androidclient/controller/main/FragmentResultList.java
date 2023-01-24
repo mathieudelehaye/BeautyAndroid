@@ -25,24 +25,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.ResultListAdapter;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
+import com.beautyorder.androidclient.model.ResultItemInfo;
+import java.util.ArrayList;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
-import java.util.ArrayList;
 
 public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
     private final GeoPoint mUserLocation = new GeoPoint(0, 0);
     private ListView mListView;
-    private ArrayList<String> mListItems = new ArrayList<>();
+    private ArrayList<String> mListItemTitles = new ArrayList<>();
+    private ArrayList<Integer> mListItemImages = new ArrayList<>();
 
     @Override
     public View onCreateView(
@@ -63,41 +65,45 @@ public class FragmentResultList extends FragmentWithSearch {
             @Override
             public void onLocationChanged(Location location, IMyLocationProvider source) {
 
-                // TODO: improve the we we detect the first gps fix
+                // TODO: improve the way we detect the first gps position fix
                 if(!firstLocationReceived[0]) {
                     firstLocationReceived[0] = true;
 
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
                     mUserLocation.setCoords(location.getLatitude(), location.getLongitude());
-                    readItems();
+                    searchItemsToDisplay();
                 }
             }
         });
     }
 
-    private void readItems() {
+    private void searchItemsToDisplay() {
 
-        // Set it as a search start
         setSearchStart(mUserLocation);
 
         // Search for the RP around the user
         searchRecyclingPoints(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
-                var resultList = (ListView) getView().findViewById(R.id.listView);
+                var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
-                for (OverlayItem point : mCloseRecyclePoints) {
-                    mListItems.add(point.getTitle() + "\n\n" + point.getSnippet());
+                for (OverlayItem point : mFoundRecyclePoints) {
+                    mListItemTitles.add(point.getTitle() + "\n\n" + point.getSnippet());
+                    mListItemImages.add(R.drawable.brand_logo);  // placeholder image
                 }
 
-                var adapter = new ArrayAdapter<String>(getContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, mListItems);
+                ArrayList<ResultItemInfo> data = new ArrayList<>();
+                for (int i = 0; i< mListItemTitles.size(); i++) {
+                    data.add(new ResultItemInfo(mListItemTitles.get(i), mListItemImages.get(i)));
+                }
+
+                var adapter = new ResultListAdapter(getContext(), data);
                 resultList.setAdapter(adapter);
 
                 resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        String value=adapter.getItem(position);
+                        String value = ((ResultItemInfo)adapter.getItem(position)).getTitle();
                         Log.d("BeautyAndroid", "Tapped item: " + value);
                     }
                 });
@@ -114,5 +120,4 @@ public class FragmentResultList extends FragmentWithSearch {
         super.onDestroyView();
         mBinding = null;
     }
-
 }
