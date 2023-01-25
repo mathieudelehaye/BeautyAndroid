@@ -29,7 +29,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -109,6 +114,54 @@ public class FragmentWithSearch extends Fragment {
         Log.d("BeautyAndroid", "User location updated: latitude "
             + String.valueOf(mUserLocation.getLatitude()) + ", longitude "
             + String.valueOf(mUserLocation.getLongitude()));
+    }
+
+    protected void setupSearchBox(TaskCompletionManager... cbManager) {
+
+        var editText = (EditText) getView().findViewById(R.id.search_box);
+
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+                    Log.d("BeautyAndroid", "Search button pressed");
+
+                    editText.clearFocus();
+
+                    String query = editText.getText().toString();
+
+                    if (query != "") {
+                        mSearchResult = getCoordinatesFromAddress(query);
+
+                        Log.d("BeautyAndroid", "Search result set to: (" + mSearchResult.getLatitude()
+                            + ", " + mSearchResult.getLongitude() + ")");
+
+                        // Close the soft keyboard
+                        View containerView = getView();
+                        if (containerView != null) {
+                            var imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(containerView.getWindowToken(), 0);
+                        }
+
+                        if (mSearchResult != null) {
+
+                            if (cbManager.length >= 1) {
+                                cbManager[0].onSuccess();
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+
+                if (cbManager.length >= 1) {
+                    cbManager[0].onFailure();
+                }
+
+                return false;
+            }
+        });
     }
 
     protected GeoPoint getCoordinatesFromAddress(String locationName) {

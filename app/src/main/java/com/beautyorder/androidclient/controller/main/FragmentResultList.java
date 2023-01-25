@@ -58,6 +58,20 @@ public class FragmentResultList extends FragmentWithSearch {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupSearchBox(new TaskCompletionManager() {
+            @Override
+            public void onSuccess() {
+
+                Log.d("BeautyAndroid", "Change focus to search result");
+                setSearchStart(mSearchResult);
+                searchItemsToDisplay();
+            }
+
+            @Override
+            public void onFailure() {
+            }
+        });
+
         // Get the user geolocation
         final boolean[] firstLocationReceived = {false};
         var locationProvider = new GpsMyLocationProvider(mCtx);
@@ -71,6 +85,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
                     mUserLocation.setCoords(location.getLatitude(), location.getLongitude());
+                    setSearchStart(mUserLocation);
                     searchItemsToDisplay();
                 }
             }
@@ -79,17 +94,18 @@ public class FragmentResultList extends FragmentWithSearch {
 
     private void searchItemsToDisplay() {
 
-        setSearchStart(mUserLocation);
-
         // Search for the RP around the user
         searchRecyclingPoints(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
+                // Reset the item list if many search are done
+                mListItemTitles.clear();
+
                 for (OverlayItem point : mFoundRecyclePoints) {
                     mListItemTitles.add(point.getTitle() + "\n\n" + point.getSnippet());
-                    mListItemImages.add(R.drawable.brand_logo);  // placeholder image
+                    mListItemImages.add(R.drawable.camera);  // placeholder image
                 }
 
                 ArrayList<ResultItemInfo> data = new ArrayList<>();

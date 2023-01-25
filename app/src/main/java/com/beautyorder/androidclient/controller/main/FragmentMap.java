@@ -23,9 +23,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.*;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -77,38 +74,18 @@ public class FragmentMap extends FragmentWithSearch {
         mMap = (MapView) view.findViewById(R.id.map);
         mMap.setTileSource(TileSourceFactory.MAPNIK);
 
-        var editText = (EditText)view.findViewById(R.id.search_box);
-
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        setupSearchBox(new TaskCompletionManager() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            public void onSuccess() {
 
-                    Log.d("BeautyAndroid", "Search button pressed");
+                mMapController.animateTo(mSearchResult);
 
-                    editText.clearFocus();
+                Log.d("BeautyAndroid", "Change focus to search result");
+                focusOnTargetAndUpdateMap(mSearchResult, /*isUser=*/false);
+            }
 
-                    String query = editText.getText().toString();
-
-                    if (query != "") {
-                        GeoPoint location = getCoordinatesFromAddress(query);
-
-                        if (location != null) {
-                            mMapController.animateTo(location);
-
-                            mSearchResult = location;
-                            Log.d("BeautyAndroid", "Search result set to: (" + mSearchResult.getLatitude()
-                                + ", " + mSearchResult.getLongitude() + ")");
-
-                            Log.d("BeautyAndroid", "Change focus to search result");
-                            focusOnTargetAndUpdateMap(mSearchResult, /*isUser=*/false);
-
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
+            @Override
+            public void onFailure() {
             }
         });
 
@@ -241,7 +218,7 @@ public class FragmentMap extends FragmentWithSearch {
             return;
         }
 
-        super.setSearchStart(target);
+        setSearchStart(target);
 
         // UI action (like the map animation) needs to be processed in a UI Thread
         getActivity().runOnUiThread(new Runnable() {
