@@ -21,22 +21,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="360dp"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     app:layout_constraintStart_toStartOf="parent"
-    android:layout_marginTop="160dp"
-    tools:context="com.beautyorder.androidclient.controller.main.FragmentResultList">
-
-    <View
-        android:id="@+id/result_list_view_background"
-        android:layout_height="match_parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    tools:context="com.beautyorder.androidclient.controller.main.FragmentResultList"
+>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="52.5dp"
         android:layout_width="match_parent"
-        android:background="@color/white"
-    />
+        android:layout_marginTop="52.5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+    >
+        <include layout="@layout/fragment_search_box"/>
 
-    <ListView
-        android:id="@+id/result_list_view"
-        android:layout_height="match_parent"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="360dp"
         android:layout_width="match_parent"
-    />
+        android:layout_marginTop="160dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+    >
+
+        <View
+            android:id="@+id/result_list_view_background"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+        />
+
+        <ListView
+            android:id="@+id/result_list_view"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -77,7 +77,7 @@ public class FragmentMap extends FragmentWithSearch {
         mMap = (MapView) view.findViewById(R.id.map);
         mMap.setTileSource(TileSourceFactory.MAPNIK);
 
-        var editText = (EditText)view.findViewById(R.id.mapSearchBox);
+        var editText = (EditText)view.findViewById(R.id.search_box);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
