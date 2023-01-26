@@ -103,6 +103,8 @@ public class FragmentMap extends FragmentWithSearch {
                 focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
             }
         });
+
+        changeSearchSwitch(R.id.action_AppFragment_to_ResultFragment, -1, R.drawable.bullet_list);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class FragmentMap extends FragmentWithSearch {
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Map view becomes visible");
 
-            //updateUserScore();
+            changeSearchSwitch(R.id.action_AppFragment_to_ResultFragment, -1, R.drawable.bullet_list);
         }
     }
 

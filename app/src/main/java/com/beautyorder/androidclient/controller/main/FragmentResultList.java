@@ -93,18 +93,7 @@ public class FragmentResultList extends FragmentWithSearch {
             }
         });
 
-        var viewSwitch = (Button) getView().findViewById(R.id.search_view_switch);
-        viewSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Select the map page
-                var activity = (MainActivity)getActivity();
-                activity.setAppPage(0);
-
-                NavHostFragment.findNavController(FragmentResultList.this)
-                    .navigate(R.id.action_ResultFragment_to_AppFragment);
-            }
-        });
+        changeSearchSwitch(R.id.action_ResultFragment_to_AppFragment, 0, R.drawable.map);
     }
 
     private void searchItemsToDisplay() {
@@ -144,6 +133,16 @@ public class FragmentResultList extends FragmentWithSearch {
             public void onFailure() {
             }
         });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "Result list view becomes visible");
+
+            changeSearchSwitch(R.id.action_ResultFragment_to_AppFragment, 0, R.drawable.map);
+        }
     }
 
     @Override

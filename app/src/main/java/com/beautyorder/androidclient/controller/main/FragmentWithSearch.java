@@ -33,6 +33,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
@@ -131,7 +133,7 @@ public class FragmentWithSearch extends Fragment {
 
                     String query = editText.getText().toString();
 
-                    if (query != "") {
+                    if (!query.equals("")) {
                         mSearchResult = getCoordinatesFromAddress(query);
 
                         Log.d("BeautyAndroid", "Search result set to: (" + mSearchResult.getLatitude()
@@ -252,6 +254,40 @@ public class FragmentWithSearch extends Fragment {
                 }
             }
         });
+    }
+
+    protected void changeSearchSwitch(int destinationView, int destinationPage, int icon) {
+
+        View containerView = getView();
+
+        if (containerView == null) {
+            Log.w("BeautyAndroid", "No container view found when changing the search switch");
+            return;
+        }
+
+        var viewSwitch = (Button) containerView.findViewById(R.id.search_view_switch);
+
+        if (viewSwitch == null) {
+            Log.w("BeautyAndroid", "No view found when changing the search switch");
+            return;
+        }
+
+        viewSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Select the page if the destination is a view pager
+                if (destinationPage >= 0) {
+                    var activity = (MainActivity)getActivity();
+                    activity.setAppPage(destinationPage);
+                }
+
+                NavHostFragment.findNavController(FragmentWithSearch.this)
+                    .navigate(destinationView);
+            }
+        });
+
+        viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
     }
 
     protected void requestPermissionsIfNecessary(Context context, String[] permissions) {
