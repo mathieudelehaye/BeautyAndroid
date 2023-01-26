@@ -25,8 +25,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.ResultListAdapter;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -88,6 +90,19 @@ public class FragmentResultList extends FragmentWithSearch {
                     setSearchStart(mUserLocation);
                     searchItemsToDisplay();
                 }
+            }
+        });
+
+        var viewSwitch = (Button) getView().findViewById(R.id.search_view_switch);
+        viewSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Select the map page
+                var activity = (MainActivity)getActivity();
+                activity.setAppPage(0);
+
+                NavHostFragment.findNavController(FragmentResultList.this)
+                    .navigate(R.id.action_ResultFragment_to_AppFragment);
             }
         });
     }

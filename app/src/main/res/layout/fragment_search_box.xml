@@ -81,4 +81,34 @@
         app:layout_constraintStart_toStartOf="parent"
     />
 
+    <Button
+        android:id="@+id/search_filter"
+        android:backgroundTint="@color/white"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="52.5dp"
+        app:icon="@drawable/crosshairs_gps"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:iconTint="@color/Blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+    />
+
+    <Button
+        android:id="@+id/search_view_switch"
+        android:backgroundTint="@color/white"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="0.5dp"
+        app:icon="@drawable/map"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:iconTint="@color/Blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
