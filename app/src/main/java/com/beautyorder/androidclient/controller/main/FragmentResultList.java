@@ -165,8 +165,6 @@ public class FragmentResultList extends FragmentWithSearch {
             return;
         }
 
-        final int itemPosition = mResultItems.indexOf(itemInfo);
-
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         StorageReference gsReference =

@@ -38,6 +38,7 @@
         android:id="@+id/result_list_item_text"
         android:layout_height="match_parent"
         android:layout_width="271dp"
+        android:maxLines = "6"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
