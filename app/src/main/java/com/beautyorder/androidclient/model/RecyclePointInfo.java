@@ -36,7 +36,7 @@ public class RecyclePointInfo extends DBCollectionAccessor {
     public String getTitleAtIndex(int i) {
         String pointName = mData.get(i).get("PointName");
         return ((pointName != null)
-            && !pointName.equals("?") ? (pointName + " ") : "");
+            && !pointName.equals("?")) ? (pointName + " ") : "";
     }
 
     public String getSnippetAtIndex(int i) {
@@ -63,6 +63,12 @@ public class RecyclePointInfo extends DBCollectionAccessor {
                 + threeWords + ")") : "") +
             ((recyclingProgram != null)
                 && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
+    }
+
+    public String getImageUrlAtIndex(int i) {
+        String pointImage = mData.get(i).get("ImageUrl");
+        return ((pointImage != null)
+            && !pointImage.equals("?")) ? pointImage : "";
     }
 
     public double getLatitudeAtIndex(int i) {

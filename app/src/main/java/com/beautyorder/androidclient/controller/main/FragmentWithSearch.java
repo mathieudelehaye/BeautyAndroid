@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.OverlayItemWithImage;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
@@ -61,7 +62,6 @@ public class FragmentWithSearch extends Fragment {
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchResult;
     protected GeoPoint mSearchStart;
-    // TODO: do not use classes that belongs specifically to the map, like `OverlayItem`
     protected MyLocationNewOverlay mLocationOverlay;
     protected ArrayList<OverlayItem> mFoundRecyclePoints;
     protected FirebaseFirestore mDatabase;
@@ -217,7 +217,7 @@ public class FragmentWithSearch extends Fragment {
         final double minSearchLongitude = truncatedLongitude - mSearchRadiusInCoordinate;
 
         String[] outputFields = { "Latitude", "Longitude", "PointName", "BuildingName", "BuildingNumber",
-            "Address", "Postcode", "City", "3Words", "RecyclingProgram" };
+            "Address", "Postcode", "City", "3Words", "RecyclingProgram", "ImageUrl" };
         String[] filterFields = { "Latitude", "Longitude" };
         double[] filterMinRanges = { minSearchLatitude, minSearchLongitude };
         double[] filterMaxRanges = { maxSearchLatitude, maxSearchLongitude };
@@ -237,9 +237,10 @@ public class FragmentWithSearch extends Fragment {
 
                     String itemTitle = pointInfo.getTitleAtIndex(i);
                     String itemSnippet = pointInfo.getSnippetAtIndex(i);
+                    String itemImageUrl = pointInfo.getImageUrlAtIndex(i);
 
-                    mFoundRecyclePoints.add(new OverlayItem(itemTitle, itemSnippet,
-                        new GeoPoint(latitude,longitude)));
+                    mFoundRecyclePoints.add(new OverlayItemWithImage(itemTitle, itemSnippet,
+                        new GeoPoint(latitude,longitude), itemImageUrl));
                 }
 
                 if (cbManager.length >= 1) {

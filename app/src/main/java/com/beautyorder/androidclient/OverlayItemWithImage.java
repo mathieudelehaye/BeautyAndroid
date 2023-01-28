@@ -1,7 +1,7 @@
 //
-//  ResultItemInfo.java
+//  OverlayItemWithImage.java
 //
-//  Created by Mathieu Delehaye on 24/01/2023.
+//  Created by Mathieu Delehaye on 28/01/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -16,30 +16,22 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.model;
+package com.beautyorder.androidclient;
 
-public class ResultItemInfo {
-    private String mTitle;
-    private byte[] mImage;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
 
-    public ResultItemInfo(String title, byte[] image) {
-        mTitle = title;
-        mImage = image;
+public class OverlayItemWithImage extends OverlayItem {
+
+    private String mImage;
+
+    public OverlayItemWithImage(String aTitle, String aSnippet, IGeoPoint aGeoPoint, String anImage) {
+        super(aTitle, aSnippet, aGeoPoint);
+
+        mImage = anImage;
     }
 
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
-    public byte[] getImage() {
+    public String getImage() {
         return mImage;
-    }
-
-    public void setImage(byte[] image) {
-        mImage = image;
     }
 }

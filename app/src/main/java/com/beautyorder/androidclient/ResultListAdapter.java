@@ -19,6 +19,8 @@
 package com.beautyorder.androidclient;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -56,13 +58,24 @@ public class ResultListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View view = View.inflate(mContext, R.layout.result_list_item,null);
-        TextView text = view.findViewById(R.id.result_list_item_text);
-        ImageView image = view.findViewById(R.id.result_list_item_image);
+        TextView textView = view.findViewById(R.id.result_list_item_text);
+        ImageView imageView = view.findViewById(R.id.result_list_item_image);
 
         var itemInfo=(ResultItemInfo) getItem(position);
-        text.setText(itemInfo.getTitle());
-        image.setImageResource(itemInfo.getImageId());
-        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        textView.setText(itemInfo.getTitle());
+
+        final byte[] imageByte = itemInfo.getImage();
+
+        boolean isImageNull = (imageByte == null);
+
+        if (imageByte != null) {
+            Bitmap bmp = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
+            imageView.setImageBitmap(bmp);
+        } else {
+            // Use a placeholder if the image has not been set
+            imageView.setImageResource(R.drawable.camera);
+        }
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
         return view;
     }

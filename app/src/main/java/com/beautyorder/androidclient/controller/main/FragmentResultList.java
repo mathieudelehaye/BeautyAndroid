@@ -25,18 +25,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
-import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.OverlayItemWithImage;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.ResultListAdapter;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
@@ -44,9 +46,10 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
     private final GeoPoint mUserLocation = new GeoPoint(0, 0);
+    private ArrayList<String> mFoundRPImageUrls;
+    private final Object mImageUpdateLock = new Object();
+    private ArrayList<ResultItemInfo> mResultItems;
     private ListView mListView;
-    private ArrayList<String> mListItemTitles = new ArrayList<>();
-    private ArrayList<Integer> mListItemImages = new ArrayList<>();
 
     @Override
     public View onCreateView(
@@ -104,20 +107,19 @@ public class FragmentResultList extends FragmentWithSearch {
             public void onSuccess() {
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
-                // Reset the item list if many search are done
-                mListItemTitles.clear();
+                mResultItems = new ArrayList<>();
+                mFoundRPImageUrls = new ArrayList<>();
 
-                for (OverlayItem point : mFoundRecyclePoints) {
-                    mListItemTitles.add(point.getTitle() + "\n\n" + point.getSnippet());
-                    mListItemImages.add(R.drawable.camera);  // placeholder image
+                for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
+                    final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
+
+                    String title = point.getTitle() + "\n\n" + point.getSnippet();
+                    mResultItems.add(new ResultItemInfo(title, null));
+
+                    mFoundRPImageUrls.add(point.getImage());
                 }
 
-                ArrayList<ResultItemInfo> data = new ArrayList<>();
-                for (int i = 0; i< mListItemTitles.size(); i++) {
-                    data.add(new ResultItemInfo(mListItemTitles.get(i), mListItemImages.get(i)));
-                }
-
-                var adapter = new ResultListAdapter(getContext(), data);
+                var adapter = new ResultListAdapter(getContext(), mResultItems);
                 resultList.setAdapter(adapter);
 
                 resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,6 +129,11 @@ public class FragmentResultList extends FragmentWithSearch {
                         Log.d("BeautyAndroid", "Tapped item: " + value);
                     }
                 });
+
+                // Asynchronously download the images then update the view adapter
+                for (int i = 0; i < mFoundRPImageUrls.size(); i++) {
+                    downloadAndDisplayImage(mFoundRPImageUrls.get(i), mResultItems.get(i), adapter);
+                }
             }
 
             @Override
@@ -149,5 +156,39 @@ public class FragmentResultList extends FragmentWithSearch {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
+    }
+
+    private void downloadAndDisplayImage(String imageUrl, ResultItemInfo itemInfo, ResultListAdapter viewAdapter) {
+
+        if (imageUrl == null || imageUrl.equals("") || itemInfo == null || viewAdapter == null) {
+            Log.w("BeautyAndroid", "Try to download an image but one parameter is missing");
+            return;
+        }
+
+        final int itemPosition = mResultItems.indexOf(itemInfo);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        StorageReference gsReference =
+            storage.getReferenceFromUrl(imageUrl);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+
+        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new
+            OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+
+                    synchronized (mImageUpdateLock) {
+                        itemInfo.setImage(bytes);
+
+                        viewAdapter.notifyDataSetChanged();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+        });
     }
 }

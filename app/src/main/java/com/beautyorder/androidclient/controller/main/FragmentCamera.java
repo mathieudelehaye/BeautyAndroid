@@ -46,6 +46,7 @@ import com.beautyorder.androidclient.qrcode.QRCodeFoundListener;
 import com.beautyorder.androidclient.qrcode.QRCodeImageAnalyzer;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
@@ -201,7 +202,7 @@ public class FragmentCamera extends Fragment {
 
         HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
 
-        String timeStamp = UserInfoDBEntry.scoreTimeFormat.format(new java.util.Date());
+        String timeStamp = UserInfoDBEntry.scoreTimeFormat.format(new Date());
 
         if (!updatedQueue.contains(timeStamp)) {
             updatedQueue.add(timeStamp);
