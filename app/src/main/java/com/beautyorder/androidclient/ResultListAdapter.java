@@ -66,8 +66,6 @@ public class ResultListAdapter extends BaseAdapter {
 
         final byte[] imageByte = itemInfo.getImage();
 
-        boolean isImageNull = (imageByte == null);
-
         if (imageByte != null) {
             Bitmap bmp = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
             imageView.setImageBitmap(bmp);
