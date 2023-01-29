@@ -173,17 +173,7 @@ public class FragmentMap extends FragmentWithSearch {
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();
 
-        // Check the last known location in cache
-        String cacheLocation = mSharedPref.getString(getString(R.string.user_location), "");
-
-        // If found, focus on it
-        if ((mSearchStart == null) && (cacheLocation != "")) {
-            Log.d("BeautyAndroid", "User location read from cache: " + cacheLocation);
-            Log.v("BeautyAndroid", "User location read from cache at timestamp: "
-                + String.valueOf(Helpers.getTimestamp()));
-
-            mUserLocation = GeoPoint.fromDoubleString(cacheLocation, ',');
-
+        if ((mSearchStart == null) && readCachedUserLocation()) {
             Log.d("BeautyAndroid", "Change focus to user location");
             focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
         }
@@ -198,16 +188,9 @@ public class FragmentMap extends FragmentWithSearch {
                 final View view = getView();
 
                 try {
-
                     updateUserLocation();
 
-                    // Store in cache the location for the next startup
-                    String cacheLocation = mUserLocation.toDoubleString();
-                    mSharedPref.edit().putString(getString(R.string.user_location), cacheLocation)
-                        .commit();
-                    Log.d("BeautyAndroid", "User location cached: " + cacheLocation);
-                    Log.v("BeautyAndroid", "User location cached at timestamp: "
-                        + Helpers.getTimestamp());
+                    writeCachedUserLocation();
 
                     // Focus on the user only if a search has not been done yet
                     if (mSearchStart == null) {

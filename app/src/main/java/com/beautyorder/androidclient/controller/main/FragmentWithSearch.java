@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.OverlayItemWithImage;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -188,6 +189,32 @@ public class FragmentWithSearch extends Fragment {
         }
 
         return null;
+    }
+
+    protected boolean readCachedUserLocation() {
+        String cacheLocation = mSharedPref.getString(getString(R.string.user_location), "");
+
+        if (cacheLocation != "") {
+            Log.d("BeautyAndroid", "User location read from cache: " + cacheLocation);
+            Log.v("BeautyAndroid", "User location read from cache at timestamp: "
+                + String.valueOf(Helpers.getTimestamp()));
+
+            mUserLocation = GeoPoint.fromDoubleString(cacheLocation, ',');
+
+            return true;
+        }
+
+        return false;
+    }
+
+    protected void writeCachedUserLocation() {
+        // Store the user location for the next startup
+        String cacheLocation = mUserLocation.toDoubleString();
+        mSharedPref.edit().putString(getString(R.string.user_location), cacheLocation)
+            .commit();
+        Log.d("BeautyAndroid", "User location cached: " + cacheLocation);
+        Log.v("BeautyAndroid", "User location cached at timestamp: "
+            + Helpers.getTimestamp());
     }
 
     protected void setSearchStart(GeoPoint value) {
