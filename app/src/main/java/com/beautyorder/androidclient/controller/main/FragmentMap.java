@@ -24,6 +24,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.*;
 import androidx.annotation.NonNull;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
@@ -128,6 +129,8 @@ public class FragmentMap extends FragmentWithSearch {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Map view becomes visible");
+            Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
+                + String.valueOf(Helpers.getTimestamp()));
 
             changeSearchSwitch(R.id.action_AppFragment_to_ResultFragment, -1, R.drawable.bullet_list);
         }
@@ -176,6 +179,9 @@ public class FragmentMap extends FragmentWithSearch {
         // If found, focus on it
         if ((mSearchStart == null) && (cacheLocation != "")) {
             Log.d("BeautyAndroid", "User location read from cache: " + cacheLocation);
+            Log.v("BeautyAndroid", "User location read from cache at timestamp: "
+                + String.valueOf(Helpers.getTimestamp()));
+
             mUserLocation = GeoPoint.fromDoubleString(cacheLocation, ',');
 
             Log.d("BeautyAndroid", "Change focus to user location");
@@ -199,7 +205,9 @@ public class FragmentMap extends FragmentWithSearch {
                     String cacheLocation = mUserLocation.toDoubleString();
                     mSharedPref.edit().putString(getString(R.string.user_location), cacheLocation)
                         .commit();
-                    Log.v("BeautyAndroid", "User location cached: " + cacheLocation);
+                    Log.d("BeautyAndroid", "User location cached: " + cacheLocation);
+                    Log.v("BeautyAndroid", "User location cached at timestamp: "
+                        + Helpers.getTimestamp());
 
                     // Focus on the user only if a search has not been done yet
                     if (mSearchStart == null) {

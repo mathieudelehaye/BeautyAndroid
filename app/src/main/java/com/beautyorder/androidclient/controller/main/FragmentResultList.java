@@ -27,10 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
-import com.beautyorder.androidclient.OverlayItemWithImage;
-import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.ResultListAdapter;
-import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,6 +44,8 @@ public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
     private final GeoPoint mUserLocation = new GeoPoint(0, 0);
     private ArrayList<String> mFoundRPImageUrls;
+    private int mFoundRPNumber = 0;
+    private int mReceivedImageNumber = 0;
     private final Object mImageUpdateLock = new Object();
     private ArrayList<ResultItemInfo> mResultItems;
     private ListView mListView;
@@ -62,6 +61,9 @@ public class FragmentResultList extends FragmentWithSearch {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Log.v("BeautyAndroid", "Result list view created at timestamp: "
+            + String.valueOf(Helpers.getTimestamp()));
 
         setupSearchBox(new TaskCompletionManager() {
             @Override
@@ -90,6 +92,9 @@ public class FragmentResultList extends FragmentWithSearch {
 
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
                     mUserLocation.setCoords(location.getLatitude(), location.getLongitude());
+                    Log.v("BeautyAndroid", "First received location at timestamp: "
+                        + String.valueOf(Helpers.getTimestamp()));
+
                     setSearchStart(mUserLocation);
                     searchItemsToDisplay();
                 }
@@ -105,12 +110,17 @@ public class FragmentResultList extends FragmentWithSearch {
         searchRecyclingPoints(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
+                Log.v("BeautyAndroid", "Results received from database at timestamp: "
+                    + String.valueOf(Helpers.getTimestamp()));
+
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
+                mFoundRPNumber = mFoundRecyclePoints.size();
+                mReceivedImageNumber = 0;
                 mResultItems = new ArrayList<>();
                 mFoundRPImageUrls = new ArrayList<>();
 
-                for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
+                for (int i = 0; i < mFoundRPNumber; i++) {
                     final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
 
                     String title = point.getTitle() + "\n\n" + point.getSnippet();
@@ -181,6 +191,12 @@ public class FragmentResultList extends FragmentWithSearch {
                         itemInfo.setImage(bytes);
 
                         viewAdapter.notifyDataSetChanged();
+
+                        mReceivedImageNumber++;
+                        if (mReceivedImageNumber == mFoundRPNumber) {
+                            Log.v("BeautyAndroid", "Last result image received at timestamp: "
+                                + String.valueOf(Helpers.getTimestamp()));
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

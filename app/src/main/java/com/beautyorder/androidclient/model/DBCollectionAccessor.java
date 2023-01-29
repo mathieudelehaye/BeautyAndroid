@@ -166,7 +166,7 @@ public class DBCollectionAccessor {
                 continue;
             }
 
-            Log.v("BeautyAndroid", mKey.toString() + " => " + document.getData());
+            //Log.v("BeautyAndroid", document.getId() + " => " + document.getData());
 
             var dataItem = new HashMap<String, String>();
             var dataChangeItem = new HashMap<String, Boolean>();

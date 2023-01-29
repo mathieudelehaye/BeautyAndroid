@@ -20,11 +20,22 @@ package com.beautyorder.androidclient;
 
 import android.text.TextUtils;
 import android.util.Patterns;
+import java.util.Date;
 
 public class Helpers {
+
+    private static long mStartTimestamp = 0;
 
     public static boolean isEmail(String text) {
         CharSequence email = text;
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
+    public static void startTimestamp() {
+        mStartTimestamp = (new Date()).getTime();
+    }
+
+    public static long getTimestamp() {
+        return ((new Date()).getTime() - mStartTimestamp);
     }
 }

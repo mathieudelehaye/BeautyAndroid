@@ -31,6 +31,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
@@ -185,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Helpers.startTimestamp();
 
         super.onCreate(savedInstanceState);
 
