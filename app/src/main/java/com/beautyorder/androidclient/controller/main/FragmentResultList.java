@@ -42,7 +42,6 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
-    private final GeoPoint mUserLocation = new GeoPoint(0, 0);
     private ArrayList<String> mFoundRPImageUrls;
     private int mFoundRPNumber = 0;
     private int mReceivedImageNumber = 0;
@@ -79,7 +78,13 @@ public class FragmentResultList extends FragmentWithSearch {
             }
         });
 
-        // Get the user geolocation
+        // If the user geolocation is cached, run a search from it
+        if ((mSearchStart == null) && readCachedUserLocation()) {
+            setSearchStart(mUserLocation);
+            searchItemsToDisplay();
+        }
+
+        // Get the current user geolocation
         final boolean[] firstLocationReceived = {false};
         var locationProvider = new GpsMyLocationProvider(mCtx);
         locationProvider.startLocationProvider(new IMyLocationConsumer() {
@@ -94,6 +99,8 @@ public class FragmentResultList extends FragmentWithSearch {
                     mUserLocation.setCoords(location.getLatitude(), location.getLongitude());
                     Log.v("BeautyAndroid", "First received location at timestamp: "
                         + String.valueOf(Helpers.getTimestamp()));
+
+                    writeCachedUserLocation();
 
                     setSearchStart(mUserLocation);
                     searchItemsToDisplay();
