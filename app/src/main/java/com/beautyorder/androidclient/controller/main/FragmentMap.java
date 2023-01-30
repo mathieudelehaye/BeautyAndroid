@@ -24,6 +24,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.*;
 import androidx.annotation.NonNull;
+import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -131,6 +132,8 @@ public class FragmentMap extends FragmentWithSearch {
             Log.d("BeautyAndroid", "Map view becomes visible");
             Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
                 + String.valueOf(Helpers.getTimestamp()));
+
+            CollectionPagerAdapter.setAppPage(0);
 
             changeSearchSwitch(R.id.action_AppFragment_to_ResultFragment, -1, R.drawable.bullet_list);
         }

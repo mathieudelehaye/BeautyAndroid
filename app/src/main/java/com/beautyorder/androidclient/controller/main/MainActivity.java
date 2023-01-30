@@ -170,19 +170,10 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences mSharedPref;
     private FirebaseFirestore mDatabase;
     private StringBuilder mRunnerSleepTime = new StringBuilder("");
-    private int appPage = 0;    // current page of the app ViewPager
 
     // TODO: find another way to make `this` reference available to the nested async task class
     private MainActivity mActivityInstance;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
-
-    public int getAppPage() {
-        return appPage;
-    }
-
-    public void setAppPage(int value) {
-        appPage = value;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

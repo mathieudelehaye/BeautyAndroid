@@ -31,7 +31,17 @@ import com.beautyorder.androidclient.controller.main.FragmentMap;
 import com.beautyorder.androidclient.controller.main.FragmentMenu;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
+    // current page of the app ViewPager
+    private static int mCurrentPage = 0;
     private FragmentActivity mActivity;
+
+    public static int getAppPage() {
+        return mCurrentPage;
+    }
+
+    public static void setAppPage(int value) {
+        mCurrentPage = value;
+    }
 
     public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {
         super(fm);

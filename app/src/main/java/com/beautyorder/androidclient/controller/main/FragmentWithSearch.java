@@ -42,10 +42,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.OverlayItemWithImage;
-import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.config.Configuration;
@@ -307,7 +304,7 @@ public class FragmentWithSearch extends Fragment {
                 // Select the page if the destination is a view pager
                 if (destinationPage >= 0) {
                     var activity = (MainActivity)getActivity();
-                    activity.setAppPage(destinationPage);
+                    CollectionPagerAdapter.setAppPage(destinationPage);
                 }
 
                 NavHostFragment.findNavController(FragmentWithSearch.this)

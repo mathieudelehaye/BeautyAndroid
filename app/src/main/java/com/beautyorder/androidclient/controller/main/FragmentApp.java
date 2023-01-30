@@ -117,10 +117,9 @@ public class FragmentApp extends Fragment {
         super.onResume();
 
         var activity = (MainActivity)getActivity();
-        final int pageToDisplay = activity.getAppPage();
+        final int pageToDisplay = CollectionPagerAdapter.getAppPage();
 
-        // Reset the app page
-        activity.setAppPage(0);
+        Log.d("BeautyAndroid", "mdl pageToDisplay = " + String.valueOf(pageToDisplay));
 
         mViewPager.setCurrentItem(pageToDisplay);
     }

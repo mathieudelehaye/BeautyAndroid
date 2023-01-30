@@ -29,6 +29,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 import com.beautyorder.androidclient.model.AppUser;
@@ -91,6 +92,8 @@ public class FragmentMenu extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Menu view becomes visible");
+
+            CollectionPagerAdapter.setAppPage(2);
 
             switchLogoutButtonVisibility();
         }

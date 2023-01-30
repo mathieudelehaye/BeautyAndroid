@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentTermsBinding;
 
@@ -49,7 +50,7 @@ public class FragmentTerms extends Fragment {
             public void onClick(View view) {
                 // Go back to the app Menu
                 var activity = (MainActivity)getActivity();
-                activity.setAppPage(2);
+                CollectionPagerAdapter.setAppPage(2);
 
                 NavHostFragment.findNavController(FragmentTerms.this)
                     .navigate(R.id.action_TermsFragment_to_AppFragment);
