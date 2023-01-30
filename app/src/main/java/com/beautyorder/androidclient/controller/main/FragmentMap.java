@@ -49,6 +49,7 @@ public class FragmentMap extends FragmentWithSearch {
     private FragmentMapBinding mBinding;
     private MapView mMap = null;
     private IMapController mMapController;
+    private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private RoadManager mRoadManager;
     private Polyline[] mRoadOverlay = {null};   // Overlay to display the road to a recycling point
@@ -157,11 +158,13 @@ public class FragmentMap extends FragmentWithSearch {
         final int zoomLevel = computeZoomForRadius(radiusInKilometer * 1000);
         Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(zoomLevel)
             + " for radius of " + String.valueOf(radiusInKilometer) + " km");
+        mZoomInitialized = true;
         mMapController.setZoom(zoomLevel);
     }
 
     private void setZoom(int level) {
         Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(level));
+        mZoomInitialized = true;
         mMapController.setZoom(level);
     }
     
@@ -303,7 +306,9 @@ public class FragmentMap extends FragmentWithSearch {
                 // Refresh the map
                 mMap.invalidate();
 
-                setZoom(mSearchRadiusInCoordinate * 111);    // 111 km by latitude degree
+                if (!mZoomInitialized) {
+                    setZoom(mSearchRadiusInCoordinate * 111);    // 111 km by latitude degree
+                }
             }
 
             @Override

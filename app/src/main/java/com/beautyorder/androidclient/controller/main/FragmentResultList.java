@@ -35,7 +35,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
@@ -101,10 +100,15 @@ public class FragmentResultList extends FragmentWithSearch {
                         + String.valueOf(Helpers.getTimestamp()));
 
                     writeCachedUserLocation();
-
-                    setSearchStart(mUserLocation);
-                    searchItemsToDisplay();
                 }
+            }
+        });
+
+        mBinding.searchFromUserPosition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSearchStart(mUserLocation);
+                searchItemsToDisplay();
             }
         });
 
