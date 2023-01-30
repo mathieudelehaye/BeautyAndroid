@@ -81,6 +81,8 @@ public class FragmentMenu extends Fragment {
 
                 AppUser.getInstance().authenticate("", AppUser.AuthenticationType.NONE);
 
+                CollectionPagerAdapter.setAppPage(0);
+
                 NavHostFragment.findNavController(FragmentMenu.this)
                     .navigate(R.id.action_AppFragment_to_HomeFragment);
             }
