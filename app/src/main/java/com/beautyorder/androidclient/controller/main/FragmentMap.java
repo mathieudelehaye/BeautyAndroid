@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.*;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.CollectionPagerAdapter;
+import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -107,7 +108,7 @@ public class FragmentMap extends FragmentWithSearch {
             }
         });
 
-        changeSearchSwitch(R.id.action_AppFragment_to_ResultFragment, -1, R.drawable.bullet_list);
+        changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class FragmentMap extends FragmentWithSearch {
 
             CollectionPagerAdapter.setAppPage(0);
 
-            changeSearchSwitch(R.id.action_AppFragment_to_ResultFragment, -1, R.drawable.bullet_list);
+            changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
         }
     }
 

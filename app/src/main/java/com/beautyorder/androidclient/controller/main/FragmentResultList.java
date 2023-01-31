@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -112,7 +113,7 @@ public class FragmentResultList extends FragmentWithSearch {
             }
         });
 
-        changeSearchSwitch(R.id.action_ResultFragment_to_AppFragment, 0, R.drawable.map);
+        changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
     }
 
     private void searchItemsToDisplay() {
@@ -169,7 +170,7 @@ public class FragmentResultList extends FragmentWithSearch {
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
-            changeSearchSwitch(R.id.action_ResultFragment_to_AppFragment, 0, R.drawable.map);
+            changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
         }
     }
 

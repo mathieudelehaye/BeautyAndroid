@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.CollectionPagerAdapter;
+import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 import com.beautyorder.androidclient.model.AppUser;
@@ -81,7 +82,9 @@ public class FragmentMenu extends Fragment {
 
                 AppUser.getInstance().authenticate("", AppUser.AuthenticationType.NONE);
 
+                // Display the first page with the result list at next startup
                 CollectionPagerAdapter.setAppPage(0);
+                CollectionPagerAdapter.setFirstPageView(FirstPageView.LIST);
 
                 NavHostFragment.findNavController(FragmentMenu.this)
                     .navigate(R.id.action_AppFragment_to_HomeFragment);

@@ -66,24 +66,11 @@
             app:destination="@id/FragmentLogin"/>
     </fragment>
     <fragment
-        android:id="@+id/FragmentResultList"
-        android:name="com.beautyorder.androidclient.controller.main.FragmentResultList"
-        android:label="Result List Fragment"
-        tools:layout="@layout/fragment_result_list">
-
-        <action
-            android:id="@+id/action_ResultFragment_to_AppFragment"
-            app:destination="@id/FragmentApp"/>
-    </fragment>
-    <fragment
         android:id="@+id/FragmentApp"
         android:name="com.beautyorder.androidclient.controller.main.FragmentApp"
         android:label="App Fragment"
         tools:layout="@layout/fragment_app">
 
-        <action
-            android:id="@+id/action_AppFragment_to_ResultFragment"
-            app:destination="@id/FragmentResultList"/>
         <action
             android:id="@+id/action_AppFragment_to_HelpFragment"
             app:destination="@id/FragmentHelp"/>

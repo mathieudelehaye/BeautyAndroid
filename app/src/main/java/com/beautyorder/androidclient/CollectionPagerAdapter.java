@@ -29,10 +29,17 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.controller.main.FragmentCamera;
 import com.beautyorder.androidclient.controller.main.FragmentMap;
 import com.beautyorder.androidclient.controller.main.FragmentMenu;
+import com.beautyorder.androidclient.controller.main.FragmentResultList;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
+    public enum FirstPageView {
+        LIST,
+        MAP
+    }
+
     // current page of the app ViewPager
     private static int mCurrentPage = 0;
+    private static FirstPageView mFirstPageView = FirstPageView.LIST;
     private FragmentActivity mActivity;
 
     public static int getAppPage() {
@@ -41,6 +48,14 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
     public static void setAppPage(int value) {
         mCurrentPage = value;
+    }
+
+    public static FirstPageView getFirstPageView() {
+        return mFirstPageView;
+    }
+
+    public static void setFirstPageView(FirstPageView view) {
+        mFirstPageView = view;
     }
 
     public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {
@@ -54,7 +69,9 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (i) {
             case 0:
-                fragment = new FragmentMap();
+                fragment = (mFirstPageView == FirstPageView.LIST) ?
+                    new FragmentResultList() :
+                    new FragmentMap();
                 break;
             case 1:
                 fragment = new FragmentCamera();
@@ -97,5 +114,10 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
         sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return sb;
+    }
+
+    public int getItemPosition(Object object) {
+        // Ensure that the view pager is reloaded when `notifyDataSetChanged` is called:
+        return POSITION_NONE;
     }
 }

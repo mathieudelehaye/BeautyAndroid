@@ -42,7 +42,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.viewpager.widget.ViewPager;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.config.Configuration;
@@ -281,7 +283,7 @@ public class FragmentWithSearch extends Fragment {
         });
     }
 
-    protected void changeSearchSwitch(int destinationView, int destinationPage, int icon) {
+    protected void changeSearchSwitch(FirstPageView destinationView, int destinationPage, int icon) {
 
         View containerView = getView();
 
@@ -307,8 +309,11 @@ public class FragmentWithSearch extends Fragment {
                     CollectionPagerAdapter.setAppPage(destinationPage);
                 }
 
-                NavHostFragment.findNavController(FragmentWithSearch.this)
-                    .navigate(destinationView);
+                Log.w("BeautyAndroid", "View pager first page set to: " + destinationView.toString());
+                CollectionPagerAdapter.setFirstPageView(destinationView);
+
+                ViewPager pager = getActivity().findViewById(R.id.appPager);
+                pager.getAdapter().notifyDataSetChanged();
             }
         });
 
