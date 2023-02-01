@@ -25,28 +25,28 @@ import androidx.viewpager.widget.ViewPager;
 
 public class NotSwipeableViewPager extends ViewPager {
 
-    private boolean mEnabled;
+    private boolean mSwipingEnabled;
 
     public NotSwipeableViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mEnabled = true;
+        this.mSwipingEnabled = true;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mEnabled ? super.onTouchEvent(event) : false;
+        return mSwipingEnabled ? super.onTouchEvent(event) : false;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return mEnabled ? super.onInterceptTouchEvent(event) : false;
+        return mSwipingEnabled ? super.onInterceptTouchEvent(event) : false;
     }
 
-    public void setPagingEnabled(boolean enabled) {
-        this.mEnabled = enabled;
+    public void setSwipingEnabled(boolean enabled) {
+        this.mSwipingEnabled = enabled;
     }
 
-    public boolean isPagingEnabled() {
-        return mEnabled;
+    public boolean isSwipingEnabled() {
+        return mSwipingEnabled;
     }
 }

@@ -59,7 +59,7 @@ public class FragmentApp extends Fragment {
         mViewPager.setAdapter(adapter);
 
         // Disable the swiping gesture for the view pager
-        mViewPager.setPagingEnabled(false);
+        mViewPager.setSwipingEnabled(false);
         mViewPager.beginFakeDrag();
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -118,8 +118,6 @@ public class FragmentApp extends Fragment {
 
         var activity = (MainActivity)getActivity();
         final int pageToDisplay = CollectionPagerAdapter.getAppPage();
-
-        Log.d("BeautyAndroid", "mdl pageToDisplay = " + String.valueOf(pageToDisplay));
 
         mViewPager.setCurrentItem(pageToDisplay);
     }
