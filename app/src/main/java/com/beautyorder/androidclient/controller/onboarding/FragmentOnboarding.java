@@ -56,6 +56,18 @@ public class FragmentOnboarding extends OnboardingFragment {
         setDescriptionViewTextColor(R.color.black);
     }
 
+    public boolean isLastPageReached() {
+        return (getCurrentPageIndex() == (getPageCount() - 1));
+    }
+
+    public void moveToPreviousPage() {
+        super.moveToPreviousPage();
+    }
+
+    public void moveToNextPage() {
+        super.moveToNextPage();
+    }
+
     @Override
     protected int getPageCount() {
         return 3;

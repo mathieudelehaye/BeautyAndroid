@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         private void restart() {
             // Restart the asynchronous task
-            AsyncTaskRunner runner = new AsyncTaskRunner();
+            var runner = new AsyncTaskRunner();
             runner.execute(mRunnerSleepTime.toString());
         }
     }
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         mActivityInstance = this;
 
         mRunnerSleepTime.append(String.valueOf(mDelayBetweenScoreWritingsInSec));
-        AsyncTaskRunner runner = new AsyncTaskRunner();
+        var runner = new AsyncTaskRunner();
         runner.execute(mRunnerSleepTime.toString());
     }
 
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
+        var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();

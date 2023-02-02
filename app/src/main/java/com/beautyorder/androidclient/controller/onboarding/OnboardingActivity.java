@@ -19,6 +19,7 @@
 package com.beautyorder.androidclient.controller.onboarding;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -27,12 +28,19 @@ import com.beautyorder.androidclient.R;
 
 public class OnboardingActivity extends Activity implements GestureDetector.OnGestureListener {
 
+    private FragmentOnboarding mFragment;
     private GestureDetector mGestureDetector;
+    final private int mSwipeThreshold = 100;
+    final private int mSwipeVelocityThreshold = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.onboarding);
+
+        FragmentManager manager = getFragmentManager();
+        mFragment = (FragmentOnboarding) manager
+            .findFragmentById(R.id.main_onboarding_fragment);
 
         mGestureDetector = new GestureDetector(this);
     }
@@ -48,35 +56,58 @@ public class OnboardingActivity extends Activity implements GestureDetector.OnGe
 
     @Override
     public boolean onDown(MotionEvent motionEvent) {
-        Log.d("BeautyAndroid", "mdl onDown");
         return false;
     }
 
     @Override
     public void onShowPress(MotionEvent motionEvent) {
-        Log.d("BeautyAndroid", "mdl onShowPress");
     }
 
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
-        Log.d("BeautyAndroid", "mdl onSingleTapUp");
+        Log.v("BeautyAndroid", "Tap gesture on the onboarding screen");
+        if (mFragment.isLastPageReached()) {
+            mFragment.onFinishFragment();
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Log.d("BeautyAndroid", "mdl onScroll");
         return false;
     }
 
     @Override
     public void onLongPress(MotionEvent motionEvent) {
-        Log.d("BeautyAndroid", "mdl onLongPress");
+        return;
     }
 
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Log.d("BeautyAndroid", "mdl onFling");
-        return false;
+        try {
+            final float diffY = motionEvent.getY() - motionEvent1.getY();
+            final float diffX = motionEvent.getX() - motionEvent1.getX();
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+
+
+                if (Math.abs(diffX) > mSwipeThreshold && Math.abs(v) > mSwipeVelocityThreshold) {
+                    if (diffX > 0) {
+                        Log.v("BeautyAndroid", "Left to Right swipe gesture on the onboarding screen");
+                        mFragment.moveToNextPage();
+                    }
+                    else {
+                        Log.v("BeautyAndroid", "Right to Left swipe gesture on the onboarding screen");
+                        mFragment.moveToPreviousPage();
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            Log.e("BeautyAndroid", "An error occurred during the swipe gesture");
+            return false;
+        }
+        return true;
     }
 }
