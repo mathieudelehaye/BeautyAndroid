@@ -119,7 +119,7 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
 
         // Add userInfos table entry to the database matching the app user
         mDatabase.collection("userInfos").document(mKey.toString())
-            .set(mData)
+            .set(mData.get(0))
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {

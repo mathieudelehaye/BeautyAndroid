@@ -262,7 +262,8 @@ public class FragmentMap extends FragmentWithSearch {
                         ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            userScore = Integer.parseInt(document.getData().get("score").toString());
+                            String scoreData = document.getData().get("score").toString();
+                            userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
                         }
                     } else {
                         Log.d("BeautyAndroid", "Error getting documents: ", task.getException());

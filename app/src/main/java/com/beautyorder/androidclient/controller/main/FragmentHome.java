@@ -182,7 +182,7 @@ public class FragmentHome extends FragmentWithStart {
                     String time = String.valueOf(date.getTime());
 
                     // Compute the uid
-                    String tmpId = mDeviceId + time + String.valueOf(userNumber);
+                    String tmpId = mDeviceId.toString() + time + String.valueOf(userNumber);
 
                     byte[] hash = {};
                     StringBuilder uid = new StringBuilder("");
@@ -195,7 +195,7 @@ public class FragmentHome extends FragmentWithStart {
                         uid.append(UUID.nameUUIDFromBytes(hash).toString());
 
                         // Add userInfos table entry to the database for the anonymous user
-                        UserInfoDBEntry userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
+                        var userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
                         userInfo.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
                             UserInfoDBEntry.getDayBeforeDate(date)));
                         userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
@@ -229,14 +229,15 @@ public class FragmentHome extends FragmentWithStart {
             });
     }
 
-    private String getPreferenceIds() {
+    private void getPreferenceIds() {
         final Context ctxt = getContext();
 
         if (ctxt == null) {
             Log.w("BeautyAndroid", "No context to get the app preferences");
-            return "";
+            return;
         }
 
+        // Get the last uid
         mPrefUserId = new StringBuilder();
         mPrefUserId.append(mSharedPref.getString(getString(R.string.app_uid), ""));
 
@@ -254,8 +255,6 @@ public class FragmentHome extends FragmentWithStart {
             // If not found in the app preferences, read the device id and store it there
             readPhoneId(ctxt);
         }
-
-        return "";
     }
 
     private void readPhoneId(Context ctxt) {
@@ -276,7 +275,9 @@ public class FragmentHome extends FragmentWithStart {
         }
 
         if (mDeviceId.toString().equals("")) {
-            Log.e("BeautyAndroid", "Cannot determine the device id");
+            Log.e("BeautyAndroid", "Cannot determine the device id. Use a fake one instead");
+            mDeviceId.append("1234");
+            mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
         } else {
             mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
             Log.v("BeautyAndroid", "The device id was found on the device and written to the app "

@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
@@ -96,7 +97,7 @@ public class FragmentResultList extends FragmentWithSearch {
                     firstLocationReceived[0] = true;
 
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
-                    mUserLocation.setCoords(location.getLatitude(), location.getLongitude());
+                    mUserLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.v("BeautyAndroid", "First received location at timestamp: "
                         + String.valueOf(Helpers.getTimestamp()));
 
