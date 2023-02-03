@@ -101,7 +101,7 @@ public class FragmentRegister extends Fragment {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentRegister.this)
-                        .navigate(R.id.action_RegisterFragment_to_HomeFragment);
+                    .navigate(R.id.action_RegisterFragment_to_HomeFragment);
             }
         });
 

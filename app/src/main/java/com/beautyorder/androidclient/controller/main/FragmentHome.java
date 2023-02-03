@@ -63,6 +63,9 @@ public class FragmentHome extends FragmentWithStart {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        var dialog = new FragmentSignInDialog();
+        dialog.show(getFragmentManager(), "FragmentSignInDialog");
+
         mDatabase = FirebaseFirestore.getInstance();
 
         // Navigate to the App screen if there is a registered uid in the app preferences
