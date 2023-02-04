@@ -30,4 +30,7 @@
     <color name="BgOrange">#F7D2A0</color>
     <color name="Blue">#0077ff</color>
     <color name="Transparent">#00000000</color>
+    <color name="SignInGrey">#E6E6E6</color>
+    <color name="SignInGreen">#90B954</color>
+    <color name="SignInBlue">#3A4F8D</color>
 </resources>
