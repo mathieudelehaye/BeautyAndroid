@@ -1,5 +1,5 @@
 //
-//  FragmentWithStart.java
+//  ActivityWithStart.java
 //
 //  Created by Mathieu Delehaye on 2/01/2022.
 //
@@ -16,32 +16,25 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.signin;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.appcompat.app.AppCompatActivity;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.model.AppUser;
 
-public class FragmentWithStart extends Fragment {
+public class ActivityWithStart extends AppCompatActivity {
 
     protected SharedPreferences mSharedPref;
 
-    public FragmentWithStart() {
-        super();
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         // Read the app preferences
-        mSharedPref = view.getContext().getSharedPreferences(
+        mSharedPref = getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
     }
 
@@ -97,7 +90,9 @@ public class FragmentWithStart extends Fragment {
         // Update the current app user
         AppUser.getInstance().authenticate(_uid, _userType);
 
-        NavHostFragment.findNavController(this)
-            .navigate(_destination);
+//        startActivity();
+
+        /*NavHostFragment.findNavController(this)
+            .navigate(_destination);*/
     }
 }

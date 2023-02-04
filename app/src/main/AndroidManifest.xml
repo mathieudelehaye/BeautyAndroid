@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.beautyorder.androidclient">
 
@@ -10,6 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -23,11 +25,21 @@
         tools:targetApi="31">
 
         <activity
+            android:name="com.beautyorder.androidclient.controller.signin.SigninActivity"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.beautyorder.androidclient.controller.main.MainActivity"
             android:exported="true">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -39,20 +51,8 @@
             android:theme="@style/Theme.Leanback.Onboarding.Beauty">
 
             <intent-filter>
-                <action android:name="android.intent.action.ONBOARDING" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.beautyorder.androidclient.controller.signin.SigninActivity"
-            android:enabled="true"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.SIGNIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
