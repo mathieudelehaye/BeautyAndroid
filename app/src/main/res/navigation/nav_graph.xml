@@ -21,50 +21,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FragmentHome">
+    app:startDestination="@id/FragmentApp">
 
-    <fragment
-        android:id="@+id/FragmentHome"
-        android:name="com.beautyorder.androidclient.controller.main.FragmentHome"
-        android:label="@string/home_fragment_label"
-        tools:layout="@layout/fragment_home">
-
-        <action
-            android:id="@+id/action_HomeFragment_to_AppFragment"
-            app:destination="@id/FragmentApp"/>
-        <action
-            android:id="@+id/action_HomeFragment_to_LoginFragment"
-            app:destination="@id/FragmentLogin"/>
-        <action
-            android:id="@+id/action_HomeFragment_to_RegisterFragment"
-            app:destination="@id/FragmentRegister"/>
-    </fragment>
-    <fragment
-        android:id="@+id/FragmentLogin"
-        android:name="com.beautyorder.androidclient.controller.main.FragmentLogin"
-        android:label="@string/login_fragment_label"
-        tools:layout="@layout/fragment_login">
-
-        <action
-            android:id="@+id/action_LoginFragment_to_HomeFragment"
-            app:destination="@id/FragmentHome"/>
-        <action
-            android:id="@+id/action_LoginFragment_to_AppFragment"
-            app:destination="@id/FragmentApp"/>
-    </fragment>
-    <fragment
-        android:id="@+id/FragmentRegister"
-        android:name="com.beautyorder.androidclient.controller.main.FragmentRegister"
-        android:label="@string/register_fragment_label"
-        tools:layout="@layout/fragment_register">
-
-        <action
-            android:id="@+id/action_RegisterFragment_to_HomeFragment"
-            app:destination="@id/FragmentHome"/>
-        <action
-            android:id="@+id/action_RegisterFragment_to_LoginFragment"
-            app:destination="@id/FragmentLogin"/>
-    </fragment>
     <fragment
         android:id="@+id/FragmentApp"
         android:name="com.beautyorder.androidclient.controller.main.FragmentApp"
@@ -77,9 +35,6 @@
         <action
             android:id="@+id/action_AppFragment_to_TermsFragment"
             app:destination="@id/FragmentTerms"/>
-        <action
-            android:id="@+id/action_AppFragment_to_HomeFragment"
-            app:destination="@id/FragmentHome"/>
     </fragment>
     <fragment
         android:id="@+id/FragmentHelp"

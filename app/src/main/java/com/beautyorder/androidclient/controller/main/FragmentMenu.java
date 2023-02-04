@@ -86,8 +86,7 @@ public class FragmentMenu extends Fragment {
                 CollectionPagerAdapter.setAppPage(0);
                 CollectionPagerAdapter.setFirstPageView(FirstPageView.LIST);
 
-                NavHostFragment.findNavController(FragmentMenu.this)
-                    .navigate(R.id.action_AppFragment_to_HomeFragment);
+                /*startActivity(new Intent(this, SigninActivity.class));*/
             }
         });
     }

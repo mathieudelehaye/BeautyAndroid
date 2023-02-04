@@ -53,14 +53,14 @@ public class FragmentRegister extends Fragment {
     private EditText mAddress;
     private EditText mCity;
     private EditText mPostCode;*/
-    private EditText mEmail;
+   /* private EditText mEmail;
     private EditText mPassword;
     private EditText mRepeatedPassword;
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore mDatabase;
+    private FirebaseFirestore mDatabase;*/
 
-    boolean isEmail(EditText text) {
+    /*boolean isEmail(EditText text) {
         CharSequence email = text.getText().toString();
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
@@ -68,7 +68,7 @@ public class FragmentRegister extends Fragment {
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
-    }
+    }*/
 
     @Override
     public View onCreateView(
@@ -77,9 +77,7 @@ public class FragmentRegister extends Fragment {
     ) {
 
         mBinding = FragmentRegisterBinding.inflate(inflater, container, false);
-
         return mBinding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -90,7 +88,7 @@ public class FragmentRegister extends Fragment {
         mAddress = view.findViewById(R.id.register_address);
         mCity = view.findViewById(R.id.register_city);
         mPostCode = view.findViewById(R.id.register_post_code);*/
-        mEmail = view.findViewById(R.id.register_email);
+        /*mEmail = view.findViewById(R.id.register_email);
         mPassword = view.findViewById(R.id.register_password);
         mRepeatedPassword = view.findViewById(R.id.register_repeat_password);
 
@@ -111,7 +109,7 @@ public class FragmentRegister extends Fragment {
 
                 Boolean navigate = true;
 
-                /*if (isEmpty(mFirstName)) {
+                *//*if (isEmpty(mFirstName)) {
                     mFirstName.setError("First name is required!");
                     navigate = false;
                 }
@@ -134,7 +132,7 @@ public class FragmentRegister extends Fragment {
                 if (isEmpty(mPostCode)) {
                     mPostCode.setError("Post code is required!");
                     navigate = false;
-                }*/
+                }*//*
 
                 if (isEmail(mEmail) == false) {
                     mEmail.setError("Enter valid email!");
@@ -220,7 +218,7 @@ public class FragmentRegister extends Fragment {
                     });
                 }
             }
-        });
+        });*/
     }
 
     @Override

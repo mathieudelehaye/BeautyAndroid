@@ -19,11 +19,13 @@
 package com.beautyorder.androidclient.controller.signin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.model.AppUser;
 
 public class ActivityWithStart extends AppCompatActivity {
@@ -75,7 +77,7 @@ public class ActivityWithStart extends AppCompatActivity {
             .commit();
     }
 
-    public void startAppWithUser(int _destination, String _uid, AppUser.AuthenticationType _userType) {
+    public void startAppWithUser(String _uid, AppUser.AuthenticationType _userType) {
 
         if (mSharedPref == null) {
             Log.w("BeautyAndroid", "Try to start the app with a user but no preference loaded");
@@ -90,9 +92,6 @@ public class ActivityWithStart extends AppCompatActivity {
         // Update the current app user
         AppUser.getInstance().authenticate(_uid, _userType);
 
-//        startActivity();
-
-        /*NavHostFragment.findNavController(this)
-            .navigate(_destination);*/
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

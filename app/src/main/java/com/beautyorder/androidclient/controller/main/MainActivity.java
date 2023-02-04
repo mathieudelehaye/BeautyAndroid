@@ -20,7 +20,6 @@ package com.beautyorder.androidclient.controller.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
@@ -32,13 +31,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.controller.signin.SigninActivity;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 import java.util.HashSet;
@@ -190,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPref = this.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         // Only portrait orientation
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -198,17 +195,15 @@ public class MainActivity extends AppCompatActivity {
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
 
-        startActivity(new Intent(this, SigninActivity.class));
-
         // Check if we need to display our OnboardingFragment
-        if (!mSharedPref.getBoolean(
+        /*if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
             Log.d("BeautyAndroid", "Onboarding launched");
             startActivity(new Intent(this, OnboardingActivity.class));
         } else {
             Log.v("BeautyAndroid", "Onboarding screen skipped");
-        }
+        }*/
 
         mThis = this;
 

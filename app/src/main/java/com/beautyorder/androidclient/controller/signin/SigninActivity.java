@@ -59,7 +59,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
         getPreferenceIds();
         String lastUId = mPrefUserId.toString();
         if (!lastUId.equals("") && Helpers.isEmail(lastUId)) {
-            startAppWithUser(R.id.action_HomeFragment_to_AppFragment, lastUId, AppUser.AuthenticationType.REGISTERED);
+            startAppWithUser(lastUId, AppUser.AuthenticationType.REGISTERED);
         }
 
         DialogFragment newFragment = new FragmentStartDialog();
@@ -70,6 +70,16 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
     public void onDialogAnonymousSigninClick(DialogFragment dialog) {
         Log.v("BeautyAndroid", "Anonymous sign-in button pressed");
         dialog.dismiss();
+
+        String anonymousUid = getAnonymousUidFromPreferences();
+        if (!anonymousUid.equals("")) {
+            // Reuse the anonymous uid if it already exists in the app preferences
+            Log.v("BeautyAndroid", "Anonymous uid reused: " + anonymousUid);
+
+            startAppWithUser(anonymousUid, AppUser.AuthenticationType.NOT_REGISTERED);
+        } else {
+            searchDBForAutoUserId();
+        }
     }
 
     @Override
@@ -120,8 +130,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
                     setAnonymousUidToPreferences(anonymousUidText);
 
-                    startAppWithUser(R.id.action_HomeFragment_to_AppFragment, anonymousUidText,
-                            AppUser.AuthenticationType.NOT_REGISTERED);
+                    startAppWithUser(anonymousUidText, AppUser.AuthenticationType.NOT_REGISTERED);
                 }
             });
     }
@@ -177,8 +186,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
                                 setAnonymousUidToPreferences(uidText);
 
-                                startAppWithUser(R.id.action_HomeFragment_to_AppFragment, uidText,
-                                        AppUser.AuthenticationType.NOT_REGISTERED);
+                                startAppWithUser(uidText, AppUser.AuthenticationType.NOT_REGISTERED);
                             }
 
                             @Override
