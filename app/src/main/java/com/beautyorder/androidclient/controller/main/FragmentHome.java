@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.main.dialog.FragmentStartDialog;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;

@@ -1,7 +1,7 @@
 //
-//  FragmentStartDialog.java
+//  FragmentSigninDialog.java
 //
-//  Created by Mathieu Delehaye on 3/02/2023.
+//  Created by Mathieu Delehaye on 4/02/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.main.dialog;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -30,7 +30,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.R;
 
-public class FragmentStartDialog extends DialogFragment {
+public class FragmentSigninDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class FragmentStartDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
-        View containerView = inflater.inflate(R.layout.fragment_start_dialog, null);
+        View containerView = inflater.inflate(R.layout.fragment_signin_dialog, null);
         builder.setView(containerView);
 
         // Set the background as transparent and prevent the dialog from cancelling
@@ -49,21 +49,6 @@ public class FragmentStartDialog extends DialogFragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
-
-        Button anonymousSignIn = containerView.findViewById(R.id.anonymous_log_in_start);
-
-        if (anonymousSignIn == null) {
-            Log.e("BeautyAndroid", "No view found when setting the anonymous sign-in button");
-            return null;
-        }
-
-        anonymousSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dismiss();
-            }
-        });
 
         return dialog;
     }

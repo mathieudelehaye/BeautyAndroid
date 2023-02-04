@@ -126,7 +126,7 @@
         />
 
         <Button
-                android:id="@+id/already_registered_start"
+                android:id="@+id/registered_log_in_start"
                 android:text="Log in"
                 android:textSize="18sp"
                 android:textStyle="bold"
