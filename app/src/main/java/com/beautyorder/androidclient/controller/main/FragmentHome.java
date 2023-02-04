@@ -73,9 +73,6 @@ public class FragmentHome extends FragmentWithStart {
             startAppWithUser(R.id.action_HomeFragment_to_AppFragment, lastUId, AppUser.AuthenticationType.REGISTERED);
         }
 
-        var dialog = new FragmentStartDialog();
-        dialog.show(getFragmentManager(), "FragmentStartDialog");
-
         mBinding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

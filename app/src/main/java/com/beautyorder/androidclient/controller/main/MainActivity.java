@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.controller.signin.SigninActivity;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.v("BeautyAndroid", "Score written to the database and displayed "
                                         + "on screen");
 
-                                    new ScoreTransferer(mDatabase, mActivityInstance).displayScoreOnScreen(newScore);
+                                    new ScoreTransferer(mDatabase, mThis).displayScoreOnScreen(newScore);
                                 }
 
                                 @Override
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     private StringBuilder mRunnerSleepTime = new StringBuilder("");
 
     // TODO: find another way to make `this` reference available to the nested async task class
-    private MainActivity mActivityInstance;
+    private MainActivity mThis;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     @Override
@@ -189,6 +190,16 @@ public class MainActivity extends AppCompatActivity {
         mSharedPref = this.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
+        //setContentView(R.layout.activity_main);
+
+        // Only portrait orientation
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        // Get the DB
+        mDatabase = FirebaseFirestore.getInstance();
+
+        startActivity(new Intent(this, SigninActivity.class));
+
         // Check if we need to display our OnboardingFragment
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
@@ -199,15 +210,7 @@ public class MainActivity extends AppCompatActivity {
             Log.v("BeautyAndroid", "Onboarding screen skipped");
         }
 
-        setContentView(R.layout.activity_main);
-
-        // Only portrait orientation
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        // Get the DB
-        mDatabase = FirebaseFirestore.getInstance();
-
-        mActivityInstance = this;
+        mThis = this;
 
         mRunnerSleepTime.append(String.valueOf(mDelayBetweenScoreWritingsInSec));
         var runner = new AsyncTaskRunner();

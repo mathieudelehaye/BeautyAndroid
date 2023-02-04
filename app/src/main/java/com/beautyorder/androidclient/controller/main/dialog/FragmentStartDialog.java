@@ -19,6 +19,7 @@
 package com.beautyorder.androidclient.controller.main.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -28,11 +29,14 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.fragment.app.DialogFragment;
-import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.SigninDialogListener;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.main.FragmentHelp;
 
 public class FragmentStartDialog extends DialogFragment {
+
+    // Use this instance of the interface to deliver action events from the dialog modal
+    SigninDialogListener mListener;
+    FragmentStartDialog mThis;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -52,6 +56,8 @@ public class FragmentStartDialog extends DialogFragment {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
+        mThis = this;
+
         Button anonymousSignIn = containerView.findViewById(R.id.anonymous_log_in_start);
 
         if (anonymousSignIn == null) {
@@ -62,8 +68,7 @@ public class FragmentStartDialog extends DialogFragment {
         anonymousSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                dismiss();
+                mListener.onDialogAnonymousSigninClick(mThis);
             }
         });
 
@@ -77,7 +82,6 @@ public class FragmentStartDialog extends DialogFragment {
         registeredSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 dismiss();
                 var dialog = new FragmentSigninDialog();
                 dialog.show(getFragmentManager(), "FragmentSigninDialog");
@@ -85,5 +89,21 @@ public class FragmentStartDialog extends DialogFragment {
         });
 
         return dialog;
+    }
+
+    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Verify that the host activity implements the callback interface
+        try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            mListener = (SigninDialogListener) context;
+        } catch (ClassCastException e) {
+            // The activity doesn't implement the interface, throw exception
+            throw new ClassCastException(getActivity().toString()
+                + " must implement SigninDialogListener");
+        }
     }
 }

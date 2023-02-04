@@ -1,11 +1,11 @@
 //
-//  TaskCompletionManager.java
+//  SigninDialogListener.java
 //
-//  Created by Mathieu Delehaye on 15/12/2022.
+//  Created by Mathieu Delehaye on 4/03/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
 //  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
@@ -18,10 +18,12 @@
 
 package com.beautyorder.androidclient;
 
-public interface TaskCompletionManager {
-    // Callback function if the task is successful
-    void onSuccess();
+import androidx.fragment.app.DialogFragment;
 
-    // Callback function if the task is failing
-    void onFailure();
+/* The activity that creates an instance of this dialog fragment must
+ * implement this interface in order to receive event callbacks.
+ * Each method passes the DialogFragment in case the host needs to query it. */
+public interface SigninDialogListener {
+    public void onDialogAnonymousSigninClick(DialogFragment dialog);
+    public void onDialogRegisteredSigninClick(DialogFragment dialog);
 }

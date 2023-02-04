@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    activity_main.xml
+    activity_signing.xml
 
-    Created by Mathieu Delehaye on 1/12/2022.
+    Created by Mathieu Delehaye on 4/02/2023.
 
     BeautyAndroid: An Android app to order and recycle cosmetics.
 
-    Copyright © 2022 Mathieu Delehaye. All rights reserved.
+    Copyright © 2023 Mathieu Delehaye. All rights reserved.
 
 
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
@@ -52,8 +52,7 @@
                 android:src="@drawable/brand_logo"/>
 
         </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
