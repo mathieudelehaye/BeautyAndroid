@@ -64,9 +64,6 @@ public class FragmentHome extends FragmentWithStart {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        var dialog = new FragmentStartDialog();
-        dialog.show(getFragmentManager(), "FragmentStartDialog");
-
         mDatabase = FirebaseFirestore.getInstance();
 
         // Navigate to the App screen if there is a registered uid in the app preferences
@@ -75,6 +72,9 @@ public class FragmentHome extends FragmentWithStart {
         if (!lastUId.equals("") && Helpers.isEmail(lastUId)) {
             startAppWithUser(R.id.action_HomeFragment_to_AppFragment, lastUId, AppUser.AuthenticationType.REGISTERED);
         }
+
+        var dialog = new FragmentStartDialog();
+        dialog.show(getFragmentManager(), "FragmentStartDialog");
 
         mBinding.noChoiceHome.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -55,7 +55,7 @@ public class FragmentStartDialog extends DialogFragment {
         Button anonymousSignIn = containerView.findViewById(R.id.anonymous_log_in_start);
 
         if (anonymousSignIn == null) {
-            Log.e("BeautyAndroid", "No view found when setting the anonymous sign-in button");
+            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on start dialog");
             return null;
         }
 

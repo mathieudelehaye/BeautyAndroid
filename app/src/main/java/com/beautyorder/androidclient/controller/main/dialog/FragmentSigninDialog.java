@@ -50,6 +50,21 @@ public class FragmentSigninDialog extends DialogFragment {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
+        Button anonymousSignIn = containerView.findViewById(R.id.anonymous_log_in_signin);
+
+        if (anonymousSignIn == null) {
+            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on login dialog");
+            return null;
+        }
+
+        anonymousSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dismiss();
+            }
+        });
+
         return dialog;
     }
 }
