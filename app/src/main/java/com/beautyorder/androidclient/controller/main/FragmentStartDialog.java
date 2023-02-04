@@ -1,5 +1,5 @@
 //
-//  FragmentSignInDialog.java
+//  FragmentStartDialog.java
 //
 //  Created by Mathieu Delehaye on 3/02/2023.
 //
@@ -22,13 +22,15 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.R;
 
-public class FragmentSignInDialog extends DialogFragment {
+public class FragmentStartDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -39,12 +41,29 @@ public class FragmentSignInDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
-        builder.setView(inflater.inflate(R.layout.fragment_sign_in_dialog, null));
+        View containerView = inflater.inflate(R.layout.fragment_start_dialog, null);
+        builder.setView(containerView);
 
+        // Set the background as transparent and prevent the dialog from cancelling
         Dialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
+
+        Button anonymousSignIn = containerView.findViewById(R.id.anonymous_log_in_start);
+
+        if (anonymousSignIn == null) {
+            Log.e("BeautyAndroid", "No view found when setting the anonymous sign-in button");
+            return null;
+        }
+
+        anonymousSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dismiss();
+            }
+        });
 
         return dialog;
     }
