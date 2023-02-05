@@ -19,6 +19,7 @@
 package com.beautyorder.androidclient.controller.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.signin.SigninActivity;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 import com.beautyorder.androidclient.model.AppUser;
 
@@ -86,7 +88,7 @@ public class FragmentMenu extends Fragment {
                 CollectionPagerAdapter.setAppPage(0);
                 CollectionPagerAdapter.setFirstPageView(FirstPageView.LIST);
 
-                /*startActivity(new Intent(this, SigninActivity.class));*/
+                startActivity(new Intent(getContext(), SigninActivity.class));
             }
         });
     }
@@ -111,12 +113,12 @@ public class FragmentMenu extends Fragment {
 
     private void switchLogoutButtonVisibility() {
 
-        final View fragmentRootView = getView();
+        final var fragmentRootView = getView();
         if (fragmentRootView == null) {
             return;
         }
 
-        var logoutButton = (Button) fragmentRootView.findViewById(R.id.log_out_menu);
+        Button logoutButton = fragmentRootView.findViewById(R.id.log_out_menu);
         if (logoutButton == null) {
             return;
         }
