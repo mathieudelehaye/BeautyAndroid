@@ -19,46 +19,22 @@
 package com.beautyorder.androidclient.controller.signin.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.fragment.app.DialogFragment;
-import com.beautyorder.androidclient.SigninDialogListener;
 import com.beautyorder.androidclient.R;
 
-public class FragmentStartDialog extends DialogFragment {
-
-    // Use this instance of the interface to deliver action events from the dialog modal
-    SigninDialogListener mListener;
-    FragmentStartDialog mThis;
+public class FragmentStartDialog extends FragmentDialog {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        // Use the Builder class for convenient dialog construction
-        var builder = new Builder(getActivity());
+        super.onCreateDialog(savedInstanceState);
 
-        // Get the layout inflater
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        Dialog dialog = buildDialogFromLayout(R.layout.fragment_start_dialog);
 
-        View containerView = inflater.inflate(R.layout.fragment_start_dialog, null);
-        builder.setView(containerView);
-
-        // Set the background as transparent and prevent the dialog from cancelling
-        Dialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-
-        mThis = this;
-
-        Button anonymousSignIn = containerView.findViewById(R.id.anonymous_log_in_start);
+        Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_start);
 
         if (anonymousSignIn == null) {
             Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on start dialog");
@@ -72,7 +48,7 @@ public class FragmentStartDialog extends DialogFragment {
             }
         });
 
-        Button registeredSignIn = containerView.findViewById(R.id.registered_log_in_start);
+        Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
 
         if (registeredSignIn == null) {
             Log.e("BeautyAndroid", "No view found when setting the registered sign-in button");
@@ -89,21 +65,5 @@ public class FragmentStartDialog extends DialogFragment {
         });
 
         return dialog;
-    }
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (SigninDialogListener) context;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(getActivity().toString()
-                + " must implement SigninDialogListener");
-        }
     }
 }
