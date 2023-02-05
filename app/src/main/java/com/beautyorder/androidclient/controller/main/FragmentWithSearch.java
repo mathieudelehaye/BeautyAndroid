@@ -56,7 +56,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class FragmentWithSearch extends Fragment {
-    protected final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     protected final double mSearchRadiusInCoordinate = 0.045;
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchResult;
@@ -87,17 +86,6 @@ public class FragmentWithSearch extends Fragment {
         //see also StorageUtils
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
         //tile servers will get you banned based on this string
-
-        // handle permissions
-        String[] permissions = {
-            Manifest.permission.ACCESS_FINE_LOCATION
-        };
-        requestPermissionsIfNecessary(
-            view.getContext(),
-            // if you need to show the current location, uncomment the line below
-            // WRITE_EXTERNAL_STORAGE is required in order to show the map
-            permissions
-        );
     }
 
     protected void updateUserLocation() {
@@ -315,23 +303,5 @@ public class FragmentWithSearch extends Fragment {
         });
 
         viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
-    }
-
-    protected void requestPermissionsIfNecessary(Context context, String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(context, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-
-                // Permission is not granted
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                (Activity)context,
-                permissionsToRequest.toArray(new String[0]),
-                REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
     }
 }

@@ -18,7 +18,10 @@
 
 package com.beautyorder.androidclient.controller.signin;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -28,6 +31,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
@@ -48,10 +53,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class SigninActivity extends ActivityWithStart implements SigninDialogListener {
 
@@ -60,6 +62,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
     private StringBuilder mDeviceId;
     private StringBuilder mPrefUserId;
     private SigninActivity mThis;
+    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,8 +73,18 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
-
         mThis = this;
+
+        Log.d("BeautyAndroid", "Request permissions");
+        String[] permissions = {
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+        requestPermissionsIfNecessary(
+            this,
+            // if you need to show the current location, uncomment the line below
+            // WRITE_EXTERNAL_STORAGE is required in order to show the map
+            permissions
+        );
 
         // Navigate to the App screen if there is a registered uid in the app preferences
         getPreferenceIds();
@@ -448,6 +461,24 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
             mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
             Log.v("BeautyAndroid", "The device id was found on the device and written to the app "
                 + "preferences: " + mDeviceId.toString());
+        }
+    }
+
+    protected void requestPermissionsIfNecessary(Context context, String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                != PackageManager.PERMISSION_GRANTED) {
+
+                // Permission is not granted
+                permissionsToRequest.add(permission);
+            }
+        }
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(
+                (Activity)context,
+                permissionsToRequest.toArray(new String[0]),
+                REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
 }
