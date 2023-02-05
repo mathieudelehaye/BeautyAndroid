@@ -1,7 +1,7 @@
 //
-//  FragmentSigninDialog.java
+//  FragmentSignupDialog.java
 //
-//  Created by Mathieu Delehaye on 4/02/2023.
+//  Created by Mathieu Delehaye on 5/02/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -25,18 +25,18 @@ import android.view.View;
 import android.widget.Button;
 import com.beautyorder.androidclient.R;
 
-public class FragmentSigninDialog extends FragmentDialog {
+public class FragmentSignupDialog extends FragmentDialog {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         super.onCreateDialog(savedInstanceState);
 
-        Dialog dialog = buildDialogFromLayout(R.layout.fragment_signin_dialog);
+        Dialog dialog = buildDialogFromLayout(R.layout.fragment_signup_dialog);
 
-        Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signin);
+        Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signup);
         if (anonymousSignIn == null) {
-            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on login dialog");
+            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on signup dialog");
             return null;
         }
 
@@ -47,35 +47,34 @@ public class FragmentSigninDialog extends FragmentDialog {
             }
         });
 
-        Button confirm = mContainerView.findViewById(R.id.confirm_signin);
+        Button confirm = mContainerView.findViewById(R.id.confirm_signup);
         if (confirm == null) {
-            Log.e("BeautyAndroid", "No view found for the confirm button on login dialog");
+            Log.e("BeautyAndroid", "No view found for the confirm button on signup dialog");
             return null;
         }
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onDialogRegisteredSigninClick(mThis,
+                mListener.onDialogSignupClick(mThis,
                     new SigninDialogListener.SigninDialogCredentialViews(
-                        mContainerView.findViewById(R.id.registered_email_signin),
-                        mContainerView.findViewById(R.id.registered_password_signin)));
+                        mContainerView.findViewById(R.id.registered_email_signup),
+                        mContainerView.findViewById(R.id.registered_password_signup)));
             }
         });
 
-        Button resetPassword = mContainerView.findViewById(R.id.reset_password_signin);
-        if (resetPassword == null) {
-            Log.e("BeautyAndroid", "No view found for the reset password button on login dialog");
+        Button back = mContainerView.findViewById(R.id.back_signup);
+        if (back == null) {
+            Log.e("BeautyAndroid", "No view found for the back button on signup dialog");
             return null;
         }
 
-        resetPassword.setOnClickListener(new View.OnClickListener() {
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onDialogResetPasswordClick(mThis,
-                    new SigninDialogListener.SigninDialogCredentialViews(
-                        mContainerView.findViewById(R.id.registered_email_signin),
-                        mContainerView.findViewById(R.id.registered_password_signin)));
+                dismiss();
+                var dialog = new FragmentStartDialog();
+                dialog.show(getFragmentManager(), "FragmentStartDialog");
             }
         });
 

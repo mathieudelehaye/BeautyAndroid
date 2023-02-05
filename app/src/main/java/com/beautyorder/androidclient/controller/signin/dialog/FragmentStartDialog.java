@@ -35,7 +35,6 @@ public class FragmentStartDialog extends FragmentDialog {
         Dialog dialog = buildDialogFromLayout(R.layout.fragment_start_dialog);
 
         Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_start);
-
         if (anonymousSignIn == null) {
             Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on start dialog");
             return null;
@@ -48,8 +47,22 @@ public class FragmentStartDialog extends FragmentDialog {
             }
         });
 
-        Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
+        Button emailSignUp = mContainerView.findViewById(R.id.email_sign_up_start);
+        if (emailSignUp == null) {
+            Log.e("BeautyAndroid", "No view found when setting the email sign-up button");
+            return null;
+        }
 
+        emailSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                var dialog = new FragmentSignupDialog();
+                dialog.show(getFragmentManager(), "FragmentSignupDialog");
+            }
+        });
+
+        Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
         if (registeredSignIn == null) {
             Log.e("BeautyAndroid", "No view found when setting the registered sign-in button");
             return null;

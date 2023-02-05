@@ -156,6 +156,13 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
     }
 
     @Override
+    public void onDialogSignupClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
+        Log.d("BeautyAndroid", "mdl onDialogSignupClick: email: "
+            + credentials.getEmail().getText().toString() + ", password: "
+            + credentials.getPassword().getText().toString());
+    }
+
+    @Override
     public void onDialogResetPasswordClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
 
         EditText email = credentials.getEmail();
