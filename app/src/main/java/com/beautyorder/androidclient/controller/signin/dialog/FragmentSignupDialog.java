@@ -59,7 +59,8 @@ public class FragmentSignupDialog extends FragmentDialog {
                 mListener.onDialogSignupClick(mThis,
                     new SigninDialogListener.SigninDialogCredentialViews(
                         mContainerView.findViewById(R.id.registered_email_signup),
-                        mContainerView.findViewById(R.id.registered_password_signup)));
+                        mContainerView.findViewById(R.id.registered_password_signup),
+                        mContainerView.findViewById(R.id.repeated_password_signup)));
             }
         });
 

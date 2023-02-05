@@ -59,7 +59,8 @@ public class FragmentSigninDialog extends FragmentDialog {
                 mListener.onDialogRegisteredSigninClick(mThis,
                     new SigninDialogListener.SigninDialogCredentialViews(
                         mContainerView.findViewById(R.id.registered_email_signin),
-                        mContainerView.findViewById(R.id.registered_password_signin)));
+                        mContainerView.findViewById(R.id.registered_password_signin),
+                        null));
             }
         });
 
@@ -75,7 +76,8 @@ public class FragmentSigninDialog extends FragmentDialog {
                 mListener.onDialogResetPasswordClick(mThis,
                     new SigninDialogListener.SigninDialogCredentialViews(
                         mContainerView.findViewById(R.id.registered_email_signin),
-                        mContainerView.findViewById(R.id.registered_password_signin)));
+                        mContainerView.findViewById(R.id.registered_password_signin),
+                        null));
             }
         });
 

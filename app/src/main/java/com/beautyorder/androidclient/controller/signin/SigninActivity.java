@@ -21,6 +21,7 @@ package com.beautyorder.androidclient.controller.signin;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -31,6 +32,7 @@ import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.controller.signin.dialog.FragmentSigninDialog;
 import com.beautyorder.androidclient.controller.signin.dialog.FragmentStartDialog;
 import com.beautyorder.androidclient.controller.signin.dialog.SigninDialogListener;
 import com.beautyorder.androidclient.model.AppUser;
@@ -47,6 +49,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class SigninActivity extends ActivityWithStart implements SigninDialogListener {
@@ -131,22 +135,22 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
                             if (dbUser.isEmailVerified()) {
 
                                 new ScoreTransferer(FirebaseFirestore.getInstance(),
-                                        getAnonymousUidFromPreferences(),
-                                        emailText, mThis)
-                                        .run();
+                                    getAnonymousUidFromPreferences(),
+                                    emailText, mThis)
+                                    .run();
 
                                 startAppWithUser(emailText, AppUser.AuthenticationType.REGISTERED);
                             } else {
                                 Log.e("BeautyAndroid", "Email is not verified");
 
                                 Toast.makeText(mThis, "Email not verified",
-                                        Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());
                             Toast.makeText(mThis, "Authentication failed",
-                                    Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -157,9 +161,95 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
     @Override
     public void onDialogSignupClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
-        Log.d("BeautyAndroid", "mdl onDialogSignupClick: email: "
-            + credentials.getEmail().getText().toString() + ", password: "
-            + credentials.getPassword().getText().toString());
+        EditText email = credentials.getEmail();
+        String emailText = email.getText().toString();
+
+        EditText password = credentials.getPassword();
+        String passwordText = password.getText().toString();
+
+        EditText repeatPassword = credentials.getRepeatPassword();
+        String repeatPasswordText = repeatPassword.getText().toString();
+
+        boolean navigate = true;
+
+        if (!Helpers.isEmail(credentials.getEmail().getText().toString())) {
+            credentials.getEmail().setError("Enter valid email!");
+            navigate = false;
+        }
+
+        if (Helpers.isEmpty(passwordText)) {
+            password.setError("Password is required!");
+            navigate = false;
+        }
+
+        if (Helpers.isEmpty(repeatPasswordText)) {
+            repeatPassword.setError("Password is required!");
+            navigate = false;
+        } else {
+            if (!repeatPasswordText.equals(passwordText)) {
+                repeatPassword.setError("The two passwords are different!");
+                navigate = false;
+            }
+        }
+
+        if (navigate) {
+
+            // Create user
+            mAuth.createUserWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("BeautyAndroid", "createUserWithEmail:success");
+
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            // Add userInfos table entry to the database matching the new user
+                            Map<String, String> userInfoMap = new HashMap<>();
+                            userInfoMap.put("first_name", "");
+                            userInfoMap.put("last_name", "");
+                            userInfoMap.put("address", "");
+                            userInfoMap.put("city", "");
+                            userInfoMap.put("post_code", "");
+                            userInfoMap.put("score", "");
+                            userInfoMap.put("score_time", "");
+                            userInfoMap.put("device_id", mThis.getSharedPreferences(
+                                getString(R.string.app_name), Context.MODE_PRIVATE).getString(
+                                getString(R.string.device_id), ""));
+
+                            UserInfoDBEntry userInfo = new UserInfoDBEntry(mDatabase, emailText, userInfoMap);
+                            userInfo.createAllDBFields();
+
+                            user.sendEmailVerification()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("BeautyAndroid", "Verification email sent.");
+
+                                            Toast toast = Toast.makeText(mThis, "Verification email sent", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+                                });
+
+                            SystemClock.sleep(1000);
+
+                            // Navigate to the login dialog
+                            dialog.dismiss();
+                            var dialog = new FragmentSigninDialog();
+                            dialog.show(getSupportFragmentManager(), "FragmentSigninDialog");
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(mThis, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        }
     }
 
     @Override

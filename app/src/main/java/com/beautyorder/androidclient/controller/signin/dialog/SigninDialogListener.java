@@ -26,12 +26,15 @@ import androidx.fragment.app.DialogFragment;
  * Each method passes the DialogFragment in case the host needs to query it. */
 public interface SigninDialogListener {
     class SigninDialogCredentialViews {
-        EditText mEmail;
-        EditText mPassword;
+        private EditText mEmail;
+        private EditText mPassword;
 
-        public SigninDialogCredentialViews(EditText email, EditText password) {
+        private EditText mRepeatPassword;
+
+        public SigninDialogCredentialViews(EditText email, EditText password, EditText repeatPassword) {
             mEmail = email;
             mPassword = password;
+            mRepeatPassword = repeatPassword;
         }
 
         public EditText getEmail() {
@@ -40,6 +43,10 @@ public interface SigninDialogListener {
 
         public EditText getPassword() {
             return mPassword;
+        }
+
+        public EditText getRepeatPassword() {
+            return mRepeatPassword;
         }
     };
 
