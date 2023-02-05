@@ -16,14 +16,33 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.beautyorder.androidclient.controller.signin.dialog;
 
+import android.widget.EditText;
 import androidx.fragment.app.DialogFragment;
 
 /* The activity that creates an instance of this dialog fragment must
  * implement this interface in order to receive event callbacks.
  * Each method passes the DialogFragment in case the host needs to query it. */
 public interface SigninDialogListener {
-    public void onDialogAnonymousSigninClick(DialogFragment dialog);
-    public void onDialogRegisteredSigninClick(DialogFragment dialog);
+    class SigninDialogCredentialViews {
+        EditText mEmail;
+        EditText mPassword;
+
+        public SigninDialogCredentialViews(EditText email, EditText password) {
+            mEmail = email;
+            mPassword = password;
+        }
+
+        public EditText getEmail() {
+            return mEmail;
+        }
+
+        public EditText getPassword() {
+            return mPassword;
+        }
+    };
+
+    void onDialogAnonymousSigninClick(DialogFragment dialog);
+    void onDialogRegisteredSigninClick(DialogFragment dialog, SigninDialogCredentialViews credentials);
 }

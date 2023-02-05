@@ -18,6 +18,7 @@
 
 package com.beautyorder.androidclient.model;
 
+import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
@@ -30,12 +31,12 @@ import java.util.Date;
 
 public class ScoreTransferer {
     private FirebaseFirestore mDatabase;
-    private MainActivity mActivity;
+    private Activity mActivity;
     private String mSourceUid;
     private String mDestinationUid;
 
     public ScoreTransferer(FirebaseFirestore _database, String _sourceUid, String _destinationUid,
-                           MainActivity _activity) {
+       Activity _activity) {
 
         mDatabase = _database;
         mSourceUid = _sourceUid;

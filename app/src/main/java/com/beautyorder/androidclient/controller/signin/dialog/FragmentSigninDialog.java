@@ -34,8 +34,6 @@ public class FragmentSigninDialog extends FragmentDialog {
 
         Dialog dialog = buildDialogFromLayout(R.layout.fragment_signin_dialog);
 
-        mThis = this;
-
         Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signin);
 
         if (anonymousSignIn == null) {
@@ -47,6 +45,23 @@ public class FragmentSigninDialog extends FragmentDialog {
             @Override
             public void onClick(View view) {
                 mListener.onDialogAnonymousSigninClick(mThis);
+            }
+        });
+
+        Button confirmSignIn = mContainerView.findViewById(R.id.confirm_signin);
+
+        if (confirmSignIn == null) {
+            Log.e("BeautyAndroid", "No view found for the confirm sign-in button on login dialog");
+            return null;
+        }
+
+        confirmSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onDialogRegisteredSigninClick(mThis,
+                    new SigninDialogListener.SigninDialogCredentialViews(
+                        mContainerView.findViewById(R.id.registered_email_signin),
+                        mContainerView.findViewById(R.id.registered_password_signin)));
             }
         });
 

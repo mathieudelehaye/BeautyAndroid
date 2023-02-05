@@ -23,12 +23,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import androidx.annotation.Nullable;
 import android.view.View;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import com.beautyorder.androidclient.SigninDialogListener;
 import org.jetbrains.annotations.NotNull;
 
 public class FragmentDialog extends DialogFragment {

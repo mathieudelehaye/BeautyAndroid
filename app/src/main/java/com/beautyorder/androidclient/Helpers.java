@@ -20,6 +20,7 @@ package com.beautyorder.androidclient;
 
 import android.text.TextUtils;
 import android.util.Patterns;
+
 import java.util.Date;
 
 public class Helpers {
@@ -27,8 +28,12 @@ public class Helpers {
     private static long mStartTimestamp = 0;
 
     public static boolean isEmail(String text) {
-        CharSequence email = text;
-        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        return (!TextUtils.isEmpty((CharSequence) text) && Patterns.EMAIL_ADDRESS
+            .matcher((CharSequence) text).matches());
+    }
+
+    public static boolean isEmpty(String text) {
+        return TextUtils.isEmpty((CharSequence)text);
     }
 
     public static void startTimestamp() {

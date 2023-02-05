@@ -24,17 +24,23 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.SigninDialogListener;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.signin.dialog.FragmentStartDialog;
+import com.beautyorder.androidclient.controller.signin.dialog.SigninDialogListener;
 import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.nio.charset.StandardCharsets;
@@ -44,16 +50,22 @@ import java.util.Date;
 import java.util.UUID;
 
 public class SigninActivity extends ActivityWithStart implements SigninDialogListener {
+
+    private FirebaseAuth mAuth;
     private FirebaseFirestore mDatabase;
     private StringBuilder mDeviceId;
     private StringBuilder mPrefUserId;
+    private SigninActivity mThis;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
+
+        mThis = this;
 
         // Navigate to the App screen if there is a registered uid in the app preferences
         getPreferenceIds();
@@ -83,8 +95,63 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
     }
 
     @Override
-    public void onDialogRegisteredSigninClick(DialogFragment dialog) {
-        Log.v("BeautyAndroid", "Registered sign-in button pressed");
+    public void onDialogRegisteredSigninClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
+
+        boolean navigate = true;
+
+        EditText email = credentials.getEmail();
+        String emailText = email.getText().toString();
+
+        EditText password = credentials.getPassword();
+        String passwordText = password.getText().toString();
+
+        if (!Helpers.isEmail(emailText)) {
+            email.setError("Enter valid email!");
+            navigate = false;
+        }
+
+        if (Helpers.isEmpty(passwordText)) {
+            password.setError("Password is required!");
+            navigate = false;
+        }
+
+        if (navigate) {
+
+            mAuth.signInWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("BeautyAndroid", "signInWithEmail:success");
+
+                            // Check if the user email is verified
+                            FirebaseUser dbUser = mAuth.getCurrentUser();
+
+                            if (dbUser.isEmailVerified()) {
+
+                                new ScoreTransferer(FirebaseFirestore.getInstance(),
+                                        getAnonymousUidFromPreferences(),
+                                        emailText, mThis)
+                                        .run();
+
+                                startAppWithUser(emailText, AppUser.AuthenticationType.REGISTERED);
+                            } else {
+                                Log.e("BeautyAndroid", "Email is not verified");
+
+                                Toast.makeText(mThis, "Email not verified",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(mThis, "Authentication failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        }
+
         dialog.dismiss();
     }
 
@@ -227,23 +294,23 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
             Log.v("BeautyAndroid", "The device id was read from the app preferences: " + mDeviceId.toString());
         } else {
             // If not found in the app preferences, read the device id and store it there
-            readPhoneId(ctxt);
+            readPhoneId();
         }
     }
 
-    private void readPhoneId(Context ctxt) {
+    private void readPhoneId() {
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // From Android 10
             mDeviceId.append(Settings.Secure.getString(
-                ctxt.getContentResolver(),
+                mThis.getContentResolver(),
                 Settings.Secure.ANDROID_ID));
         } else {
-            var telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
+            var telephonyManager = (TelephonyManager) mThis.getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager.getDeviceId() != null) {
                 mDeviceId.append(telephonyManager.getDeviceId());
             } else {
                 mDeviceId.append(Settings.Secure.getString(
-                    ctxt.getContentResolver(),
+                    mThis.getContentResolver(),
                     Settings.Secure.ANDROID_ID));
             }
         }
