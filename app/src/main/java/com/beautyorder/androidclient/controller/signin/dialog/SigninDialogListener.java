@@ -45,4 +45,5 @@ public interface SigninDialogListener {
 
     void onDialogAnonymousSigninClick(DialogFragment dialog);
     void onDialogRegisteredSigninClick(DialogFragment dialog, SigninDialogCredentialViews credentials);
+    void onDialogResetPasswordClick(DialogFragment dialog, SigninDialogCredentialViews credentials);
 }

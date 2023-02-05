@@ -155,6 +155,32 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
         dialog.dismiss();
     }
 
+    @Override
+    public void onDialogResetPasswordClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
+
+        EditText email = credentials.getEmail();
+        String emailText = email.getText().toString();
+
+        if (Helpers.isEmail(emailText)) {
+
+            mAuth.sendPasswordResetEmail(emailText)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("BeautyAndroid", "Password reset email sent.");
+
+                            Toast toast = Toast.makeText(mThis, "Password reset email sent",
+                                Toast.LENGTH_SHORT);
+                            toast.show();
+                        } else {
+                            Log.w("BeautyAndroid", "Password reset didn't work.");
+                        }
+                    }
+                });
+        }
+    }
+
     private void searchDBForAutoUserId() {
 
         // Query the database for an anonymous user with the same device id
