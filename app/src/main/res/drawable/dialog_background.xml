@@ -25,7 +25,7 @@
     />
 
     <corners
-        android:radius="60dp"
+        android:radius="35dp"
     />
 
     <padding

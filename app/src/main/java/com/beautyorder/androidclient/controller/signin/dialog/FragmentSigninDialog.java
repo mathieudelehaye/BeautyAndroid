@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main.dialog;
+package com.beautyorder.androidclient.controller.signin.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -42,7 +42,7 @@ public class FragmentSigninDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         // Use the Builder class for convenient dialog construction
-        var builder = new Builder(getActivity());
+        var builder = new Builder(getActivity(), R.style.RoundedCornerDialog);
 
         // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();

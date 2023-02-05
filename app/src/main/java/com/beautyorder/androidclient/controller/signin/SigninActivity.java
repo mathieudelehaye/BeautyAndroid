@@ -30,7 +30,7 @@ import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.SigninDialogListener;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.beautyorder.androidclient.controller.main.dialog.FragmentStartDialog;
+import com.beautyorder.androidclient.controller.signin.dialog.FragmentStartDialog;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -100,7 +100,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (!task.isSuccessful()) {
                         Log.e("BeautyAndroid", "Unsuccessful search for a userInfos DB entry matching the "
-                                + "device");
+                            + "device");
                     }
 
                     QuerySnapshot snapshot = task.getResult();
@@ -117,7 +117,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
                     if (anonymousUId.length() == 0) {
                         Log.v("BeautyAndroid", "No userInfos entry found in the DB for the device: "
-                                + mDeviceId);
+                            + mDeviceId);
 
                         // Create an anonymous user
                         tryAndCreateAutoUserId();
@@ -126,7 +126,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
                     final String anonymousUidText = anonymousUId.toString();
                     Log.v("BeautyAndroid", "Anonymous uid read from the database: " + anonymousUidText
-                            + ", matching the device id: " + mDeviceId);
+                        + ", matching the device id: " + mDeviceId);
 
                     setAnonymousUidToPreferences(anonymousUidText);
 
@@ -172,7 +172,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
                         // Add userInfos table entry to the database for the anonymous user
                         var userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
                         userInfo.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
-                                UserInfoDBEntry.getDayBeforeDate(date)));
+                            UserInfoDBEntry.getDayBeforeDate(date)));
                         userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
 
                         userInfo.createAllDBFields(new TaskCompletionManager() {
@@ -243,8 +243,8 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
                 mDeviceId.append(telephonyManager.getDeviceId());
             } else {
                 mDeviceId.append(Settings.Secure.getString(
-                        ctxt.getContentResolver(),
-                        Settings.Secure.ANDROID_ID));
+                    ctxt.getContentResolver(),
+                    Settings.Secure.ANDROID_ID));
             }
         }
 
@@ -255,7 +255,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
         } else {
             mSharedPref.edit().putString(getString(R.string.device_id), mDeviceId.toString()).commit();
             Log.v("BeautyAndroid", "The device id was found on the device and written to the app "
-                    + "preferences: " + mDeviceId.toString());
+                + "preferences: " + mDeviceId.toString());
         }
     }
 }
