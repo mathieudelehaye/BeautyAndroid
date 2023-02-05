@@ -102,6 +102,12 @@ public class FragmentResultList extends FragmentWithSearch {
                         + String.valueOf(Helpers.getTimestamp()));
 
                     writeCachedUserLocation();
+
+                    // Start a search if none happened so far
+                    if (mSearchStart == null) {
+                        setSearchStart(mUserLocation);
+                        searchItemsToDisplay();
+                    }
                 }
             }
         });

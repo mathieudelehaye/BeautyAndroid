@@ -63,6 +63,8 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i("BeautyAndroid", "Sign-up screen started");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 

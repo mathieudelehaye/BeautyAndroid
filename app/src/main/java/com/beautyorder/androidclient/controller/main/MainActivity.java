@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("BeautyAndroid", "Main screen started");
 
         Helpers.startTimestamp();
 
@@ -194,16 +195,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
-
-        // Check if we need to display our OnboardingFragment
-        /*if (!mSharedPref.getBoolean(
-            getString(R.string.completed_onboarding), false)) {
-
-            Log.d("BeautyAndroid", "Onboarding launched");
-            startActivity(new Intent(this, OnboardingActivity.class));
-        } else {
-            Log.v("BeautyAndroid", "Onboarding screen skipped");
-        }*/
 
         mThis = this;
 

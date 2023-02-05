@@ -26,6 +26,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
 import com.beautyorder.androidclient.model.AppUser;
 
 public class ActivityWithStart extends AppCompatActivity {
@@ -92,6 +93,15 @@ public class ActivityWithStart extends AppCompatActivity {
         // Update the current app user
         AppUser.getInstance().authenticate(_uid, _userType);
 
-        startActivity(new Intent(this, MainActivity.class));
+        // Check if we need to display our OnboardingFragment
+        if (!mSharedPref.getBoolean(
+            getString(R.string.completed_onboarding), false)) {
+
+            Log.i("BeautyAndroid", "Onboarding started");
+            startActivity(new Intent(this, OnboardingActivity.class));
+        } else {
+            Log.i("BeautyAndroid", "Onboarding screen skipped");
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 }

@@ -41,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewpager.widget.ViewPager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
@@ -286,14 +285,12 @@ public class FragmentWithSearch extends Fragment {
     protected void changeSearchSwitch(FirstPageView destinationView, int destinationPage, int icon) {
 
         View containerView = getView();
-
         if (containerView == null) {
             Log.w("BeautyAndroid", "No container view found when changing the search switch");
             return;
         }
 
-        var viewSwitch = (Button) containerView.findViewById(R.id.search_view_switch);
-
+        Button viewSwitch = containerView.findViewById(R.id.search_view_switch);
         if (viewSwitch == null) {
             Log.w("BeautyAndroid", "No view found when changing the search switch");
             return;
@@ -309,7 +306,7 @@ public class FragmentWithSearch extends Fragment {
                     CollectionPagerAdapter.setAppPage(destinationPage);
                 }
 
-                Log.w("BeautyAndroid", "View pager first page set to: " + destinationView.toString());
+                Log.d("BeautyAndroid", "View pager first page set to: " + destinationView.toString());
                 CollectionPagerAdapter.setFirstPageView(destinationView);
 
                 ViewPager pager = getActivity().findViewById(R.id.appPager);
