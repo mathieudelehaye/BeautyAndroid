@@ -54,35 +54,4 @@
         Et minus laboriosam qui laborum voluptate aut doloribus soluta ex voluptatem amet. Sed quae voluptatum et
         velit quam et rerum asperiores! Aut quam dicta quo architecto corporis qui consequatur eveniet.
     </string>
-
-    <!-- Strings used for the list view tutorial -->
-    <string-array name="array_technology">
-        <item>Android</item>
-        <item>Java</item>
-        <item>Php</item>
-        <item>Hadoop</item>
-        <item>Sap</item>
-        <item>Python</item>
-        <item>Ajax</item>
-        <item>C++</item>
-        <item>Ruby</item>
-        <item>Rails</item>
-        <item>.Net</item>
-        <item>Perl</item>
-        <item>C++</item>
-        <item>Ruby</item>
-        <item>Rails</item>
-        <item>.Net</item>
-        <item>Perl</item>
-        <item>C++</item>
-        <item>Ruby</item>
-        <item>Rails</item>
-        <item>.Net</item>
-        <item>Perl</item>
-        <item>C++</item>
-        <item>Ruby</item>
-        <item>Rails</item>
-        <item>.Net</item>
-        <item>Perl</item>
-    </string-array>
 </resources>

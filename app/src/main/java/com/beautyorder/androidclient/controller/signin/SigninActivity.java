@@ -71,13 +71,12 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        mThis = this;
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
-        mThis = this;
 
-        Log.d("BeautyAndroid", "Request permissions");
         String[] permissions = {
-                Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         };
         requestPermissionsIfNecessary(
             this,
@@ -86,7 +85,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
             permissions
         );
 
-        // Navigate to the App screen if there is a registered uid in the app preferences
+        // Navigate to the app screen if there is a registered uid in the app preferences
         getPreferenceIds();
         String lastUId = mPrefUserId.toString();
         if (!lastUId.equals("") && Helpers.isEmail(lastUId)) {
@@ -475,6 +474,8 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
             }
         }
         if (permissionsToRequest.size() > 0) {
+            Log.d("BeautyAndroid", "Request permissions");
+
             ActivityCompat.requestPermissions(
                 (Activity)context,
                 permissionsToRequest.toArray(new String[0]),
