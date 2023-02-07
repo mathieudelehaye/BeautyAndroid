@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
     />
 
-    <EditText
+    <android.widget.SearchView
         android:id="@+id/search_box"
         android:imeOptions="actionSearch"
         android:inputType="text"

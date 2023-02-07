@@ -20,6 +20,7 @@ package com.beautyorder.androidclient.controller.main;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -33,10 +34,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -107,50 +105,17 @@ public class FragmentWithSearch extends Fragment {
 
     protected void setupSearchBox(TaskCompletionManager... cbManager) {
 
-        var editText = (EditText) getView().findViewById(R.id.search_box);
+        // Get the SearchView and set the searchable configuration
+        var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        var searchView = (SearchView) getView().findViewById(R.id.search_box);
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-
-                    Log.d("BeautyAndroid", "Search button pressed");
-
-                    editText.clearFocus();
-
-                    String query = editText.getText().toString();
-
-                    if (!query.equals("")) {
-                        mSearchResult = getCoordinatesFromAddress(query);
-
-                        Log.d("BeautyAndroid", "Search result set to: (" + mSearchResult.getLatitude()
-                            + ", " + mSearchResult.getLongitude() + ")");
-
-                        // Close the soft keyboard
-                        View containerView = getView();
-                        if (containerView != null) {
-                            var imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(containerView.getWindowToken(), 0);
-                        }
-
-                        if (mSearchResult != null) {
-
-                            if (cbManager.length >= 1) {
-                                cbManager[0].onSuccess();
-                            }
-
-                            return true;
-                        }
-                    }
-                }
-
-                if (cbManager.length >= 1) {
-                    cbManager[0].onFailure();
-                }
-
-                return false;
-            }
-        });
+        // Remove the magnifier icon from the search view
+        int magId = getResources().getIdentifier("android:id/search_mag_icon", null, null);
+        var magImage = (ImageView) searchView.findViewById(magId);
+        magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
     }
 
     protected GeoPoint getCoordinatesFromAddress(String locationName) {

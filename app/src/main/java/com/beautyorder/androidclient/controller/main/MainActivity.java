@@ -19,7 +19,9 @@
 package com.beautyorder.androidclient.controller.main;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
@@ -175,9 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("BeautyAndroid", "Main screen started");
 
         Helpers.startTimestamp();
+        Log.i("BeautyAndroid", "Main screen started");
 
         super.onCreate(savedInstanceState);
 
@@ -193,14 +195,19 @@ public class MainActivity extends AppCompatActivity {
         // Only portrait orientation
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        // Get the DB
-        mDatabase = FirebaseFirestore.getInstance();
-
         mThis = this;
+        mDatabase = FirebaseFirestore.getInstance();
 
         mRunnerSleepTime.append(String.valueOf(mDelayBetweenScoreWritingsInSec));
         var runner = new AsyncTaskRunner();
         runner.execute(mRunnerSleepTime.toString());
+
+        // Get the intent, verify the action and get the query
+        var intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.d("BeautyAndroid", "mdl MainActivity::onCreate: query = " + query);
+        }
     }
 
     @Override
