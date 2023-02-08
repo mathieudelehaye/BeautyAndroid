@@ -27,10 +27,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.beautyorder.androidclient.NotSwipeableViewPager;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
-import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class FragmentApp extends Fragment {

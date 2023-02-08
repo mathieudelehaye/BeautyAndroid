@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -202,12 +203,8 @@ public class MainActivity extends AppCompatActivity {
         var runner = new AsyncTaskRunner();
         runner.execute(mRunnerSleepTime.toString());
 
-        // Get the intent, verify the action and get the query
-        var intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("BeautyAndroid", "mdl MainActivity::onCreate: query = " + query);
-        }
+        // Get the intent, like a search, then verify the action and get the query
+        handleIntent(getIntent());
     }
 
     @Override
@@ -243,5 +240,22 @@ public class MainActivity extends AppCompatActivity {
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void handleIntent(Intent intent) {
+
+        Log.d("BeautyAndroid", "handleIntent: ");
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.d("BeautyAndroid", "mdl MainActivity::onCreate: query = " + query);
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Log.d("BeautyAndroid", "handleIntent: ACTION_VIEW");
+            Uri detailUri = intent.getData();
+            var id = Long.parseLong(detailUri.getLastPathSegment());
+            finish();
+        } else {
+            Log.d("BeautyAndroid", "handleIntent: " + intent.getAction());
+        }
     }
 }

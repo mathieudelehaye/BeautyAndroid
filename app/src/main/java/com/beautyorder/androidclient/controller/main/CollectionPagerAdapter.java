@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient;
+package com.beautyorder.androidclient.controller.main;
 
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -26,10 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.beautyorder.androidclient.controller.main.FragmentCamera;
-import com.beautyorder.androidclient.controller.main.FragmentMap;
-import com.beautyorder.androidclient.controller.main.FragmentMenu;
-import com.beautyorder.androidclient.controller.main.FragmentResultList;
+import com.beautyorder.androidclient.R;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     public enum FirstPageView {

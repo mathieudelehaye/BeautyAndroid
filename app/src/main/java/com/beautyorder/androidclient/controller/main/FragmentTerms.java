@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.CollectionPagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentTermsBinding;
 

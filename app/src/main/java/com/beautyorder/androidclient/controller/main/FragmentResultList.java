@@ -28,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.android.gms.tasks.OnFailureListener;
