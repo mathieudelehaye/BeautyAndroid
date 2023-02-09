@@ -54,16 +54,24 @@
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".controller.main.MainActivity"
+                android:value=".controller.main.SearchActivity"
             />
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"
             />
         </activity>
+
+        <provider
+            android:name=".controller.main.search.SearchSuggestionProvider"
+            android:authorities=".controller.main.search.SearchSuggestionProvider"
+        />
     </application>
 </manifest>

@@ -208,6 +208,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -244,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
 
-        Log.d("BeautyAndroid", "handleIntent: ");
+        Log.d("BeautyAndroid", "mdl handleIntent entered");
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);

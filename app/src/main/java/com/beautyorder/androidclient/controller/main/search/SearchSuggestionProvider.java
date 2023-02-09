@@ -32,20 +32,21 @@ public class SearchSuggestionProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.d("BeautyAndroid", "onCreate: ");
+        Log.d("BeautyAndroid", "SearchSuggestionProvider::onCreate entered");
         return false;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
-        Log.d("BeautyAndroid", "query: ");
+        Log.d("BeautyAndroid", "SearchSuggestionProvider::query entered");
 
         String[] columns = {"_ID", SearchManager.SUGGEST_COLUMN_TEXT_1};
         var matrixCursor = new MatrixCursor(columns);
 
         matrixCursor.addRow(new Object[] {1, "test"});
         matrixCursor.addRow(new Object[] {2, "test1"});
+
         return matrixCursor;
     }
 
