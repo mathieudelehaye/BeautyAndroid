@@ -103,11 +103,6 @@ public class FragmentWithSearch extends Fragment {
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
-        // Remove the magnifier icon from the search view
-        int magId = getResources().getIdentifier("android:id/search_mag_icon", null, null);
-        var magImage = (ImageView) searchView.findViewById(magId);
-        magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
     }
 
     protected GeoPoint getCoordinatesFromAddress(String locationName) {

@@ -112,14 +112,6 @@ public class FragmentResultList extends FragmentWithSearch {
             }
         });
 
-        mBinding.searchFromUserPosition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setSearchStart(mUserLocation);
-                searchItemsToDisplay();
-            }
-        });
-
         changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
     }
 

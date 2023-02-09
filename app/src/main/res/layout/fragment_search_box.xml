@@ -44,33 +44,19 @@
         app:layout_constraintStart_toStartOf="parent"
     />
 
-    <ImageView
-        android:id="@+id/search_box_icon"
-        android:src="@drawable/magnify"
-        android:layout_width="52.5dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-    />
-
     <android.widget.SearchView
         android:id="@+id/search_box"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:hint="Search"
         android:textSize="20sp"
-        android:layout_width="220dp"
+        android:layout_width="290dp"
         android:layout_height="50dp"
         android:background="@color/white"
         android:gravity="top|left"
-        android:overScrollMode="always"
-        android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical"
-        android:lines="6"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_marginTop="1dp"
-        android:layout_marginStart="53.5dp"
+        android:layout_marginStart="5dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:paddingLeft="5dp"

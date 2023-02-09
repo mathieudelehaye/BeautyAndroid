@@ -39,13 +39,12 @@ public class SearchSuggestionProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
-        Log.d("BeautyAndroid", "SearchSuggestionProvider::query entered");
+        Log.v("BeautyAndroid", "SearchSuggestionProvider::query entered");
 
         String[] columns = {"_ID", SearchManager.SUGGEST_COLUMN_TEXT_1};
         var matrixCursor = new MatrixCursor(columns);
 
-        matrixCursor.addRow(new Object[] {1, "test"});
-        matrixCursor.addRow(new Object[] {2, "test1"});
+        matrixCursor.addRow(new Object[] {1, "Around current location"});
 
         return matrixCursor;
     }
