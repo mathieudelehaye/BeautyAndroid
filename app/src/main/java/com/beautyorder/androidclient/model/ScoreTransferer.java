@@ -24,6 +24,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.main.map.FragmentMap;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.beautyorder.androidclient.TaskCompletionManager;
 
@@ -169,8 +170,8 @@ public class ScoreTransferer {
         }
 
         Log.v("BeautyAndroid", "Display score on screen: " + String.valueOf(value));
-        com.beautyorder.androidclient.controller.main.FragmentMap fragment =
-            (com.beautyorder.androidclient.controller.main.FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.mapScore));
+        FragmentMap fragment =
+            (FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.mapScore));
         TextView score = (TextView) fragment.getView().findViewById(R.id.mapScore);
         score.setText(String.valueOf(value) + " pts");
     }
