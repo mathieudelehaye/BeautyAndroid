@@ -227,7 +227,7 @@ public class FragmentWithSearch extends Fragment {
 
     protected void changeSearchSwitch(FirstPageView destinationView, int destinationPage, int icon) {
 
-        View containerView = getView();
+        var containerView = getView();
         if (containerView == null) {
             Log.w("BeautyAndroid", "No container view found when changing the search switch");
             return;

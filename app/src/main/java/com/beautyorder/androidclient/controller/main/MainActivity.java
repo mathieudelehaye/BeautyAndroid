@@ -168,19 +168,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private SharedPreferences mSharedPref;
-    private FirebaseFirestore mDatabase;
-    private StringBuilder mRunnerSleepTime = new StringBuilder("");
-
     // TODO: find another way to make `this` reference available to the nested async task class
     private MainActivity mThis;
+    private SharedPreferences mSharedPref;
+    private FirebaseFirestore mDatabase;
+    private StringBuilder mSearchQuery = new StringBuilder("");
+    private StringBuilder mRunnerSleepTime = new StringBuilder("");
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         Helpers.startTimestamp();
-        Log.i("BeautyAndroid", "Main screen started");
+        Log.i("BeautyAndroid", "Main activity started");
 
         super.onCreate(savedInstanceState);
 
@@ -243,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    public String getSearchQuery() {
+        return mSearchQuery.toString();
+    }
+
     private boolean isNetworkAvailable() {
         var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -252,18 +256,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
 
-        Log.d("BeautyAndroid", "mdl handleIntent entered");
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        String intentAction = intent.getAction();
+        if (Intent.ACTION_SEARCH.equals(intentAction)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("BeautyAndroid", "mdl MainActivity::onCreate: query = " + query);
-        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            Log.d("BeautyAndroid", "handleIntent: ACTION_VIEW");
+            Log.v("BeautyAndroid", "Intent ACTION_SEARCH received by the main activity with the query: "
+                + query);
+            mSearchQuery.append(query);
+        } else if (Intent.ACTION_VIEW.equals(intentAction)) {
+            Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
             Uri detailUri = intent.getData();
             var id = Long.parseLong(detailUri.getLastPathSegment());
-            finish();
+            mSearchQuery.append("usr");
         } else {
-            Log.d("BeautyAndroid", "handleIntent: " + intent.getAction());
+            Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
         }
     }
 }

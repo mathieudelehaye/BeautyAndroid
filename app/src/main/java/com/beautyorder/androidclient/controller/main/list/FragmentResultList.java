@@ -29,6 +29,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
@@ -81,9 +82,20 @@ public class FragmentResultList extends FragmentWithSearch {
             }
         });
 
-        // If the user geolocation is cached, run a search from it
-        if ((mSearchStart == null) && readCachedUserLocation()) {
-            setSearchStart(mUserLocation);
+        if (mSearchStart == null) {
+
+            String searchQuery = ((MainActivity)getContext()).getSearchQuery();
+
+            if (!searchQuery.equals("") && !searchQuery.equals("usr")) {
+                // If a query has been received by the activity, search and display the result
+                Log.v("BeautyAndroid", "Searching for the query: " + searchQuery);
+                setSearchStart(getCoordinatesFromAddress(searchQuery));
+            } else if (readCachedUserLocation()) {
+                // Otherwise, if the user location has been cached, search around it
+                Log.v("BeautyAndroid", "Searching around the user location from the cache");
+                setSearchStart(mUserLocation);
+            }
+
             searchItemsToDisplay();
         }
 

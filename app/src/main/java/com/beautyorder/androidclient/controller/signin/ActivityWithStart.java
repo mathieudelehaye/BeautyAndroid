@@ -97,10 +97,10 @@ public class ActivityWithStart extends AppCompatActivity {
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
-            Log.i("BeautyAndroid", "Onboarding started");
+            Log.i("BeautyAndroid", "Onboarding activity started");
             startActivity(new Intent(this, OnboardingActivity.class));
         } else {
-            Log.i("BeautyAndroid", "Onboarding screen skipped");
+            Log.i("BeautyAndroid", "Onboarding activity skipped");
             startActivity(new Intent(this, MainActivity.class));
         }
     }
