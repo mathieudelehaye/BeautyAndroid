@@ -29,7 +29,6 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
-import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
@@ -68,36 +67,11 @@ public class FragmentResultList extends FragmentWithSearch {
         Log.v("BeautyAndroid", "Result list view created at timestamp: "
             + String.valueOf(Helpers.getTimestamp()));
 
-        setupSearchBox(new TaskCompletionManager() {
-            @Override
-            public void onSuccess() {
+        setupSearchBox();
 
-                Log.d("BeautyAndroid", "Change focus to search result");
-                setSearchStart(mSearchResult);
-                searchItemsToDisplay();
-            }
-
-            @Override
-            public void onFailure() {
-            }
-        });
-
-        if (mSearchStart == null) {
-
-            String searchQuery = ((MainActivity)getContext()).getSearchQuery();
-
-            if (!searchQuery.equals("") && !searchQuery.equals("usr")) {
-                // If a query has been received by the activity, search and display the result
-                Log.v("BeautyAndroid", "Searching for the query: " + searchQuery);
-                setSearchStart(getCoordinatesFromAddress(searchQuery));
-            } else if (readCachedUserLocation()) {
-                // Otherwise, if the user location has been cached, search around it
-                Log.v("BeautyAndroid", "Searching around the user location from the cache");
-                setSearchStart(mUserLocation);
-            }
-
-            searchItemsToDisplay();
-        }
+        Log.d("BeautyAndroid", "Change focus to search result");
+        setSearchStart(mSearchStart);
+        searchAndDisplayItems();
 
         // Get the current user geolocation
         final boolean[] firstLocationReceived = {false};
@@ -120,7 +94,7 @@ public class FragmentResultList extends FragmentWithSearch {
                     // Start a search if none happened so far
                     if (mSearchStart == null) {
                         setSearchStart(mUserLocation);
-                        searchItemsToDisplay();
+                        searchAndDisplayItems();
                     }
                 }
             }
@@ -129,7 +103,7 @@ public class FragmentResultList extends FragmentWithSearch {
         changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
     }
 
-    private void searchItemsToDisplay() {
+    protected void searchAndDisplayItems() {
 
         // Search for the RP around the user
         searchRecyclingPoints(new TaskCompletionManager() {

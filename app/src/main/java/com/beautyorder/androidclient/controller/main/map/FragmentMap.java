@@ -80,20 +80,14 @@ public class FragmentMap extends FragmentWithSearch {
         mMap = (MapView) view.findViewById(R.id.map);
         mMap.setTileSource(TileSourceFactory.MAPNIK);
 
-        setupSearchBox(new TaskCompletionManager() {
-            @Override
-            public void onSuccess() {
+        setupSearchBox();
 
-                mMapController.animateTo(mSearchResult);
+        updateSearchResults();
 
-                Log.d("BeautyAndroid", "Change focus to search result");
-                focusOnTargetAndUpdateMap(mSearchResult, /*isUser=*/false);
-            }
+        mMapController.animateTo(mSearchStart);
 
-            @Override
-            public void onFailure() {
-            }
-        });
+        Log.d("BeautyAndroid", "Change focus to search result");
+        focusOnTargetAndUpdateMap(mSearchStart, /*isUser=*/false);
 
         setupMap();
 
@@ -239,7 +233,7 @@ public class FragmentMap extends FragmentWithSearch {
                 Log.v("BeautyAndroid", "Map focus set on target");
                 mMapController.animateTo(target);
 
-                searchAndDisplayOnMapRP();
+                searchAndDisplayItems();
             }
         });
     }
@@ -278,7 +272,8 @@ public class FragmentMap extends FragmentWithSearch {
             });
     }
 
-    private void searchAndDisplayOnMapRP() {
+    @Override
+    protected void searchAndDisplayItems() {
 
         searchRecyclingPoints(new TaskCompletionManager() {
             @Override

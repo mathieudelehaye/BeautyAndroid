@@ -48,16 +48,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class FragmentWithSearch extends Fragment {
+public abstract class FragmentWithSearch extends Fragment {
     protected final double mSearchRadiusInCoordinate = 0.045;
     protected GeoPoint mUserLocation;
-    protected GeoPoint mSearchResult;
     protected GeoPoint mSearchStart;
     protected MyLocationNewOverlay mLocationOverlay;
     protected ArrayList<OverlayItem> mFoundRecyclePoints;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected Context mCtx;
+
+    protected abstract void searchAndDisplayItems();
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -79,6 +80,30 @@ public class FragmentWithSearch extends Fragment {
         //see also StorageUtils
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
         //tile servers will get you banned based on this string
+
+        updateSearchResults();
+    }
+
+    protected void updateSearchResults() {
+
+        // If there is no search start yet, find it and get the items to display
+        if (mSearchStart == null) {
+            String searchQuery = ((MainActivity)getContext()).getSearchQuery();
+
+            if (!searchQuery.equals("") && !searchQuery.equals("usr")) {
+                // If a query has been received by the searchable activity, use it
+                // to find the search start
+                Log.v("BeautyAndroid", "Searching for the query: " + searchQuery);
+                setSearchStart(getCoordinatesFromAddress(searchQuery));
+            } else if (readCachedUserLocation()) {
+                // Otherwise, if the user location has been cached, search around it
+                Log.v("BeautyAndroid", "Searching around the user location from the cache");
+                setSearchStart(mUserLocation);
+            }
+
+            // Search and display the items in the child fragment
+            searchAndDisplayItems();
+        }
     }
 
     protected void updateUserLocation() {
@@ -98,7 +123,7 @@ public class FragmentWithSearch extends Fragment {
             + String.valueOf(mUserLocation.getLongitude()));
     }
 
-    protected void setupSearchBox(TaskCompletionManager... cbManager) {
+    protected void setupSearchBox() {
 
         // Get the SearchView and set the searchable configuration
         var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
