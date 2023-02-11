@@ -171,8 +171,8 @@ public class ScoreTransferer {
 
         Log.v("BeautyAndroid", "Display score on screen: " + String.valueOf(value));
         FragmentMap fragment =
-            (FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.mapScore));
-        TextView score = (TextView) fragment.getView().findViewById(R.id.mapScore);
+            (FragmentMap) FragmentManager.findFragment(mActivity.findViewById(R.id.score_text));
+        TextView score = (TextView) fragment.getView().findViewById(R.id.score_text);
         score.setText(String.valueOf(value) + " pts");
     }
 }
