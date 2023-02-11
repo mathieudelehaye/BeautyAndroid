@@ -264,8 +264,6 @@ public class MainActivity extends AppCompatActivity {
             mSearchQuery.append(query);
         } else if (Intent.ACTION_VIEW.equals(intentAction)) {
             Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
-            Uri detailUri = intent.getData();
-            var id = Long.parseLong(detailUri.getLastPathSegment());
             mSearchQuery.append("usr");
         } else {
             Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
