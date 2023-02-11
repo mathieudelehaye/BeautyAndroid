@@ -18,7 +18,6 @@
 
 package com.beautyorder.androidclient.controller.main.list;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,10 +37,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
-import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 
 public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
@@ -62,47 +57,15 @@ public class FragmentResultList extends FragmentWithSearch {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         Log.v("BeautyAndroid", "Result list view created at timestamp: "
             + String.valueOf(Helpers.getTimestamp()));
 
-        setupSearchBox();
-
-        Log.d("BeautyAndroid", "Change focus to search result");
-        setSearchStart(mSearchStart);
-        searchAndDisplayItems();
-
-        // Get the current user geolocation
-        final boolean[] firstLocationReceived = {false};
-        var locationProvider = new GpsMyLocationProvider(mCtx);
-        locationProvider.startLocationProvider(new IMyLocationConsumer() {
-            @Override
-            public void onLocationChanged(Location location, IMyLocationProvider source) {
-
-                // TODO: improve the way we detect the first gps position fix
-                if(!firstLocationReceived[0]) {
-                    firstLocationReceived[0] = true;
-
-                    Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
-                    mUserLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
-                    Log.v("BeautyAndroid", "First received location at timestamp: "
-                        + String.valueOf(Helpers.getTimestamp()));
-
-                    writeCachedUserLocation();
-
-                    // Start a search if none happened so far
-                    if (mSearchStart == null) {
-                        setSearchStart(mUserLocation);
-                        searchAndDisplayItems();
-                    }
-                }
-            }
-        });
+        super.onViewCreated(view, savedInstanceState);
 
         changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
     }
 
+    @Override
     protected void searchAndDisplayItems() {
 
         // Search for the RP around the user

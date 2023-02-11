@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -42,6 +43,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,7 +67,6 @@ public abstract class FragmentWithSearch extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get the DB
         mDatabase = FirebaseFirestore.getInstance();
 
         mCtx = view.getContext();
@@ -80,6 +83,35 @@ public abstract class FragmentWithSearch extends Fragment {
         //see also StorageUtils
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
         //tile servers will get you banned based on this string
+
+        setupSearchBox();
+
+        // Get the current user geolocation
+        final boolean[] firstLocationReceived = {false};
+        var locationProvider = new GpsMyLocationProvider(mCtx);
+        locationProvider.startLocationProvider(new IMyLocationConsumer() {
+            @Override
+            public void onLocationChanged(Location location, IMyLocationProvider source) {
+
+                // TODO: improve the way we detect the first gps position fix
+                if(!firstLocationReceived[0]) {
+                    firstLocationReceived[0] = true;
+
+                    Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
+                    mUserLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    Log.v("BeautyAndroid", "First received location at timestamp: "
+                        + String.valueOf(Helpers.getTimestamp()));
+
+                    writeCachedUserLocation();
+
+                    // Start a search if none happened so far
+                    if (mSearchStart == null) {
+                        setSearchStart(mUserLocation);
+                        searchAndDisplayItems();
+                    }
+                }
+            }
+        });
 
         updateSearchResults();
     }
@@ -106,28 +138,11 @@ public abstract class FragmentWithSearch extends Fragment {
         }
     }
 
-    protected void updateUserLocation() {
-        if (mLocationOverlay == null) {
-            Log.w("BeautyAndroid", "Cannot update user location because no overlay");
-            return;
-        }
-
-        mUserLocation = mLocationOverlay.getMyLocation();
-        if (mUserLocation == null) {
-            Log.w("BeautyAndroid", "Cannot update user location as not available");
-            return;
-        }
-
-        Log.d("BeautyAndroid", "User location updated: latitude "
-            + String.valueOf(mUserLocation.getLatitude()) + ", longitude "
-            + String.valueOf(mUserLocation.getLongitude()));
-    }
-
     protected void setupSearchBox() {
-
         // Get the SearchView and set the searchable configuration
         var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         var searchView = (SearchView) getView().findViewById(R.id.search_box);
+
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default

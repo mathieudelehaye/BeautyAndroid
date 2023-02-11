@@ -40,9 +40,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.*;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -54,8 +52,6 @@ public class FragmentMap extends FragmentWithSearch {
     private IMapController mMapController;
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
-    private RoadManager mRoadManager;
-    private Polyline[] mRoadOverlay = {null};   // Overlay to display the road to a recycling point
 
     @Override
     public View onCreateView(
@@ -76,35 +72,22 @@ public class FragmentMap extends FragmentWithSearch {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // inflate and create the map
-        mMap = (MapView) view.findViewById(R.id.map);
-        mMap.setTileSource(TileSourceFactory.MAPNIK);
-
-        setupSearchBox();
-
-        updateSearchResults();
-
-        mMapController.animateTo(mSearchStart);
-
-        Log.d("BeautyAndroid", "Change focus to search result");
-        focusOnTargetAndUpdateMap(mSearchStart, /*isUser=*/false);
-
-        setupMap();
-
+        setupMap(view);
+        changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
         updateUserScore();
 
         mBinding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                updateUserLocation();
+                if(mUserLocation != null) {
+                    Log.d("BeautyAndroid", "Change map focus to user location");
 
-                Log.d("BeautyAndroid", "Change focus to user location");
-                focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
+                    mMapController.animateTo(mUserLocation);
+                    // TODO: possibly change the zoom level
+                }
             }
         });
-
-        changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
     }
 
     @Override
@@ -165,7 +148,11 @@ public class FragmentMap extends FragmentWithSearch {
         mMapController.setZoom(level);
     }
     
-    private void setupMap() {
+    private void setupMap(View view) {
+
+        // inflate and create the map
+        mMap = (MapView) view.findViewById(R.id.map);
+        mMap.setTileSource(TileSourceFactory.MAPNIK);
 
         mMap.setBuiltInZoomControls(true);
         mMap.setMultiTouchControls(true);
@@ -176,66 +163,7 @@ public class FragmentMap extends FragmentWithSearch {
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();
 
-        if ((mSearchStart == null) && readCachedUserLocation()) {
-            Log.d("BeautyAndroid", "Change focus to user location");
-            focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
-        }
-
         mMap.getOverlays().add(this.mLocationOverlay);
-        mRoadManager = new OSRMRoadManager(mCtx, getString(R.string.app_name)); // Initialize it later, whe/n needed
-
-        mLocationOverlay.runOnFirstFix(new Runnable() {
-            @Override
-            public void run() {
-
-                final View view = getView();
-
-                try {
-                    updateUserLocation();
-
-                    writeCachedUserLocation();
-
-                    // Focus on the user only if a search has not been done yet
-                    if (mSearchStart == null) {
-                        Log.d("BeautyAndroid", "Change focus to user location");
-                        focusOnTargetAndUpdateMap(mUserLocation, /*isUser=*/true);
-                    }
-
-                } catch (Exception e) {
-                    Log.e("BeautyAndroid", "Error updating the map: " + e.toString());
-                }
-            }
-        });
-    }
-
-    private void focusOnTargetAndUpdateMap(GeoPoint target, Boolean isUser) {
-        if (target == null) {
-            Log.w("BeautyAndroid", "Cannot focus on target because none available");
-            return;
-        }
-
-        setSearchStart(target);
-
-        // UI action (like the map animation) needs to be processed in a UI Thread
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isUser) {
-                    // If target is the user, follow its location
-                    Log.v("BeautyAndroid", "Map starts to follow the user location");
-                    mLocationOverlay.enableFollowLocation();
-                } else {
-                    // Otherwise, stop following the user location
-                    Log.v("BeautyAndroid", "Map stops to follow the user location");
-                    mLocationOverlay.disableFollowLocation();
-                }
-
-                Log.v("BeautyAndroid", "Map focus set on target");
-                mMapController.animateTo(target);
-
-                searchAndDisplayItems();
-            }
-        });
     }
 
     private void updateUserScore() {
@@ -252,13 +180,13 @@ public class FragmentMap extends FragmentWithSearch {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     // Display score
-                    Integer userScore = 0;
+                    int userScore = 0;
 
                     if (task.isSuccessful()) {
-                        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+                        var items = new ArrayList<OverlayItem>();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            String scoreData = document.getData().get("score").toString();
+                            var scoreData = document.getData().get("score").toString();
                             userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
                         }
                     } else {
@@ -298,6 +226,7 @@ public class FragmentMap extends FragmentWithSearch {
                             return false;
                         }
                     }, mCtx);
+
                 mRPOverlay.setFocusItemsOnTap(true);
 
                 mMap.getOverlays().add(mRPOverlay);
@@ -308,6 +237,8 @@ public class FragmentMap extends FragmentWithSearch {
                 if (!mZoomInitialized) {
                     setZoom(mSearchRadiusInCoordinate * 111);    // 111 km by latitude degree
                 }
+
+                mMapController.animateTo(mSearchStart);
             }
 
             @Override
