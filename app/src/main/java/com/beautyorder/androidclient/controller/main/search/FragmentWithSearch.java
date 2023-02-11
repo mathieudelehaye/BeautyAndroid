@@ -38,8 +38,14 @@ import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
+import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
+import com.beautyorder.androidclient.model.ScoreTransferer;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -114,6 +120,8 @@ public abstract class FragmentWithSearch extends Fragment {
         });
 
         updateSearchResults();
+
+        updateUserScore();
     }
 
     protected void updateSearchResults() {
@@ -285,7 +293,6 @@ public abstract class FragmentWithSearch extends Fragment {
 
                 // Select the page if the destination is a view pager
                 if (destinationPage >= 0) {
-                    var activity = (MainActivity)getActivity();
                     CollectionPagerAdapter.setAppPage(destinationPage);
                 }
 
@@ -298,5 +305,39 @@ public abstract class FragmentWithSearch extends Fragment {
         });
 
         viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
+    }
+
+    private void updateUserScore() {
+
+        if (mDatabase == null) {
+            return;
+        }
+
+        // Display the user score
+        mDatabase.collection("userInfos")
+            .whereEqualTo("__name__", AppUser.getInstance().getId())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    // Display score
+                    int userScore = 0;
+
+                    if (task.isSuccessful()) {
+                        var items = new ArrayList<OverlayItem>();
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            var scoreData = document.getData().get("score").toString();
+                            userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
+                        }
+                    } else {
+                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                    }
+
+                    Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
+
+                    new ScoreTransferer(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
+                }
+            });
     }
 }
