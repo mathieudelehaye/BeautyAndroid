@@ -84,7 +84,7 @@ public class FragmentApp extends Fragment {
                         Log.v("BeautyAndroid", "Keyboard displayed");
 
                         ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                        params.height = 540;    // 309 dp
+                        params.height = 650;    // = 371 dp
                         mapLayout.requestLayout();
                     }
                 } else {
@@ -94,7 +94,7 @@ public class FragmentApp extends Fragment {
                         Log.v("BeautyAndroid", "Keyboard hidden");
 
                         ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                        params.height = 963;    // 550 dp
+                        params.height = 1190;    // = 680 dp
                         mapLayout.requestLayout();
                     }
                 }
