@@ -199,8 +199,14 @@ public abstract class FragmentWithSearch extends Fragment {
     protected void writeCachedUserLocation() {
         // Store the user location for the next startup
         String cacheLocation = mUserLocation.toDoubleString();
-        mSharedPref.edit().putString(getString(R.string.user_location), cacheLocation)
+
+        // Do not use an R.string resource here to store "user_location". As sometimes
+        // the context won't be available yet, when creating again the child view of
+        // the FragmentApp object (e.g.: after tapping the search view switch button).
+        // In such a case, `getString` will throw an exception.
+        mSharedPref.edit().putString("user_location", cacheLocation)
             .commit();
+
         Log.d("BeautyAndroid", "User location cached: " + cacheLocation);
         Log.v("BeautyAndroid", "User location cached at timestamp: "
             + Helpers.getTimestamp());
