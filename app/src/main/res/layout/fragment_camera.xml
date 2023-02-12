@@ -18,25 +18,34 @@
 -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.beautyorder.androidclient.controller.main.camera.FragmentCamera">
-
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/linearLayout"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.beautyorder.androidclient.controller.main.camera.FragmentCamera">
 
     <androidx.camera.view.PreviewView
-            android:id="@+id/activity_main_previewView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:id="@+id/preview_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    />
+
+    <Button
+        android:id="@+id/take_photo_camera"
+        android:backgroundTint="@color/white"
+        app:cornerRadius="150dp"
+        android:layout_height="72dp"
+        android:layout_width="60dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="180dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:iconTint="@color/Blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

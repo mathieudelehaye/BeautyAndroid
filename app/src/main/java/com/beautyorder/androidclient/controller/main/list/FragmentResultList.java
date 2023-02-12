@@ -137,7 +137,7 @@ public class FragmentResultList extends FragmentWithSearch {
             return;
         }
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        var storage = FirebaseStorage.getInstance();
 
         StorageReference gsReference =
             storage.getReferenceFromUrl(imageUrl);

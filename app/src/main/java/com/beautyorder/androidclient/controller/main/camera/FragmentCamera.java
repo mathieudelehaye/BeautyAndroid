@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.util.Size;
 import android.view.Gravity;
@@ -31,9 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.Preview;
+import androidx.camera.core.*;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -46,17 +45,20 @@ import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.controller.main.camera.qrcode.QRCodeFoundListener;
 import com.beautyorder.androidclient.controller.main.camera.qrcode.QRCodeImageAnalyzer;
 import com.google.common.util.concurrent.ListenableFuture;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 public class FragmentCamera extends Fragment {
     private static final int PERMISSION_REQUEST_CAMERA = 1;
-    private FragmentCameraBinding binding;
+    private FragmentCameraBinding mBinding;
     private Context mCtx;
     private PreviewView mPreviewView;
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
     private String mQRCode;
     private SharedPreferences mSharedPref;
 
@@ -65,9 +67,9 @@ public class FragmentCamera extends Fragment {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        binding = FragmentCameraBinding.inflate(inflater, container, false);
+        mBinding = FragmentCameraBinding.inflate(inflater, container, false);
         mQRCode = "";
-        return binding.getRoot();
+        return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -75,11 +77,10 @@ public class FragmentCamera extends Fragment {
 
         mCtx = view.getContext();
 
-        mPreviewView = view.findViewById(R.id.activity_main_previewView);
+        mPreviewView = view.findViewById(R.id.preview_camera);
 
-        cameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
+        mCameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
 
-        // Get the app preferences
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
     }
@@ -98,7 +99,7 @@ public class FragmentCamera extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
     @Override
@@ -128,7 +129,7 @@ public class FragmentCamera extends Fragment {
             != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
-            ArrayList<String> permissionsToRequest = new ArrayList<>();
+            var permissionsToRequest = new ArrayList<String>();
             permissionsToRequest.add(Manifest.permission.CAMERA);
 
             requestPermissions(
@@ -171,16 +172,53 @@ public class FragmentCamera extends Fragment {
                 }
         }));
 
+        var imageCapture =
+            new ImageCapture.Builder()
+                .setTargetRotation(mPreviewView.getDisplay().getRotation())
+                .build();
+
+        mBinding.takePhotoCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Log.d("BeautyAndroid", "Capturing an image with the camera");
+
+                String app_folder_path = "";
+                app_folder_path = Environment.getExternalStorageDirectory().toString() + "/Pictures";
+                var scoreTimeFormat = new SimpleDateFormat("yyyy.MM.dd");
+                var file = new File(app_folder_path, scoreTimeFormat.format(new Date())+ ".jpg");
+                Log.v("BeautyAndroid", "mdl file = "+ file);
+
+                ImageCapture.OutputFileOptions outputFileOptions =
+                    new ImageCapture.OutputFileOptions.Builder(file).build();
+
+                imageCapture.takePicture(outputFileOptions,
+                    Executors.newSingleThreadExecutor(),
+                    new ImageCapture.OnImageSavedCallback() {
+                        @Override
+                        public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                            Log.v("BeautyAndroid", "Image saved to file: "
+                                + outputFileResults.getSavedUri().toString());
+                        }
+                        @Override
+                        public void onError(ImageCaptureException error) {
+                            Log.e("BeautyAndroid", "Error while saving the image: " + error.toString());
+                        }
+                    }
+                );
+            }
+        });
+
         // avoid having too many use cases, when switching back to the camera screen
         cameraProvider.unbindAll();
 
-        cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
+        cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, preview);
     }
 
     public void startCamera() {
-        cameraProviderFuture.addListener(() -> {
+        mCameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                ProcessCameraProvider cameraProvider = mCameraProviderFuture.get();
                 bindCameraPreview(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 Toast.makeText(mCtx, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
