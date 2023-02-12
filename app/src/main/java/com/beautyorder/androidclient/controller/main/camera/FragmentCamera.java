@@ -143,10 +143,10 @@ public class FragmentCamera extends Fragment {
 
         mPreviewView.setPreferredImplementationMode(PreviewView.ImplementationMode.SURFACE_VIEW);
 
-        Preview preview = new Preview.Builder()
+        var preview = new Preview.Builder()
             .build();
 
-        CameraSelector cameraSelector = new CameraSelector.Builder()
+        var cameraSelector = new CameraSelector.Builder()
             .requireLensFacing(CameraSelector.LENS_FACING_BACK)
             .build();
 

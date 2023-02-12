@@ -38,7 +38,7 @@ public class OnboardingActivity extends Activity implements GestureDetector.OnGe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.onboarding);
 
-        FragmentManager manager = getFragmentManager();
+        var manager = getFragmentManager();
         mFragment = (FragmentOnboarding) manager
             .findFragmentById(R.id.main_onboarding_fragment);
 

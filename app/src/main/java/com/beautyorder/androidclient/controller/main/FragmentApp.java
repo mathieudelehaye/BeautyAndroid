@@ -53,8 +53,7 @@ public class FragmentApp extends Fragment {
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.camera);
         tabLayout.setupWithViewPager(mViewPager);
-        var adapter = new CollectionPagerAdapter(getChildFragmentManager(), getActivity());
-        mViewPager.setAdapter(adapter);
+        mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity()));
 
         // Disable the swiping gesture for the view pager
         mViewPager.setSwipingEnabled(false);
