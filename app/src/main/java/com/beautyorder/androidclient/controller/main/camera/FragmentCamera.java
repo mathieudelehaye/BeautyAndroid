@@ -15,7 +15,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.main.camera;
 
 import android.Manifest;
 import android.app.Activity;
@@ -40,10 +40,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
-import com.beautyorder.androidclient.controller.main.qrcode.QRCodeFoundListener;
-import com.beautyorder.androidclient.controller.main.qrcode.QRCodeImageAnalyzer;
+import com.beautyorder.androidclient.controller.main.camera.qrcode.QRCodeFoundListener;
+import com.beautyorder.androidclient.controller.main.camera.qrcode.QRCodeImageAnalyzer;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
 import java.util.Date;
@@ -151,7 +152,7 @@ public class FragmentCamera extends Fragment {
 
         preview.setSurfaceProvider(mPreviewView.createSurfaceProvider());
 
-        ImageAnalysis imageAnalysis =
+        var imageAnalysis =
             new ImageAnalysis.Builder()
                 .setTargetResolution(new Size(1280, 720))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -202,7 +203,7 @@ public class FragmentCamera extends Fragment {
         HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet("set",
             new HashSet<String>());
 
-        HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
+        var updatedQueue = (HashSet<String>)scoreQueue.clone();
 
         String timeStamp = UserInfoDBEntry.scoreTimeFormat.format(new Date());
 

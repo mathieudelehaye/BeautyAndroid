@@ -1,4 +1,4 @@
-package com.beautyorder.androidclient.controller.main.qrcode;
+package com.beautyorder.androidclient.controller.main.camera.qrcode;
 
 public interface QRCodeFoundListener {
     void onQRCodeFound(String qrCode);
