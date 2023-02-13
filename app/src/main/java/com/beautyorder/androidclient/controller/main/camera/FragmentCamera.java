@@ -18,12 +18,12 @@
 package com.beautyorder.androidclient.controller.main.camera;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,15 +34,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -52,7 +49,6 @@ public class FragmentCamera extends Fragment {
     private Context mCtx;
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
-    private String mQRCode;
     private SharedPreferences mSharedPref;
 
     @Override
@@ -61,7 +57,6 @@ public class FragmentCamera extends Fragment {
         Bundle savedInstanceState
     ) {
         mBinding = FragmentCameraBinding.inflate(inflater, container, false);
-        mQRCode = "";
         return mBinding.getRoot();
     }
 
@@ -151,6 +146,7 @@ public class FragmentCamera extends Fragment {
         var imageCapture =
             new ImageCapture.Builder()
                 .setTargetRotation(mPreviewView.getDisplay().getRotation())
+                .setTargetResolution(new Size(480, 640))
                 .build();
 
         mBinding.takePhotoCamera.setOnClickListener(new View.OnClickListener() {
@@ -158,11 +154,10 @@ public class FragmentCamera extends Fragment {
             public void onClick(View view) {
 
                 Log.d("BeautyAndroid", "Capturing an image with the camera");
+                Toast.makeText(mCtx, "Capturing image", Toast.LENGTH_SHORT).show();
 
                 String appFolderPath = "/storage/emulated/0/Android/data/com.beautyorder.androidclient/files";
-                var filePath = new File(appFolderPath, (new SimpleDateFormat("yyyy.MM.dd"))
-                    .format(new Date())+ ".jpg");
-                Log.v("BeautyAndroid", "mdl file = "+ filePath);
+                var filePath = new File(appFolderPath, "capture.jpg");
 
                 ImageCapture.OutputFileOptions outputFileOptions =
                     new ImageCapture.OutputFileOptions.Builder(filePath).build();
@@ -172,7 +167,7 @@ public class FragmentCamera extends Fragment {
                     new ImageCapture.OnImageSavedCallback() {
                         @Override
                         public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                            Log.v("BeautyAndroid", "Image saved to file");
+                            Log.v("BeautyAndroid", "Image saved to file: " + filePath);
                         }
                         @Override
                         public void onError(ImageCaptureException error) {
@@ -186,7 +181,7 @@ public class FragmentCamera extends Fragment {
         // avoid having too many use cases, when switching back to the camera screen
         cameraProvider.unbindAll();
 
-        cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageCapture, preview);
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
     }
 
     public void startCamera() {
