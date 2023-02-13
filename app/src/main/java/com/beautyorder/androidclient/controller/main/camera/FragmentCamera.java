@@ -21,6 +21,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
@@ -37,8 +38,15 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
+import com.beautyorder.androidclient.model.AppUser;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -156,8 +164,11 @@ public class FragmentCamera extends Fragment {
                 Log.d("BeautyAndroid", "Capturing an image with the camera");
                 Toast.makeText(mCtx, "Capturing image", Toast.LENGTH_SHORT).show();
 
+                String fileName = AppUser.getInstance().getId() + "-"
+                    + (new SimpleDateFormat("yyyy.MM.dd'T'HH:mm:ss").format(new java.util.Date()));
+
                 String appFolderPath = "/storage/emulated/0/Android/data/com.beautyorder.androidclient/files";
-                var filePath = new File(appFolderPath, "capture.jpg");
+                var filePath = new File(appFolderPath, fileName);
 
                 ImageCapture.OutputFileOptions outputFileOptions =
                     new ImageCapture.OutputFileOptions.Builder(filePath).build();
@@ -168,6 +179,30 @@ public class FragmentCamera extends Fragment {
                         @Override
                         public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
                             Log.v("BeautyAndroid", "Image saved to file: " + filePath);
+
+                            // Upload the file to the Cloud Storage for Firebase
+                            var file = Uri.fromFile(filePath);
+
+                            StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
+                                .child("user_images/"+file.getLastPathSegment());
+
+                            UploadTask uploadTask = riversRef.putFile(file);
+
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    Log.v("BeautyAndroid", "Image uploaded to the database");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    Log.v("BeautyAndroid", "Failed to upload the image with the error:"
+                                        + exception.toString());
+                                }
+                            });
                         }
                         @Override
                         public void onError(ImageCaptureException error) {
