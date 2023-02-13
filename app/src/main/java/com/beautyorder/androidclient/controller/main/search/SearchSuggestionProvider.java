@@ -32,7 +32,6 @@ public class SearchSuggestionProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.d("BeautyAndroid", "SearchSuggestionProvider::onCreate entered");
         return false;
     }
 

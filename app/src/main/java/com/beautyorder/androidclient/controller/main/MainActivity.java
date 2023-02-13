@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // Return of there is no scanning events to send in the app preferences
-            HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet(getString(R.string.eb_points_to_send),
+            // Return if there is no scanning events to send in the app preferences
+            var scoreQueue = (HashSet<String>) mSharedPref.getStringSet(getString(R.string.eb_points_to_send),
                 new HashSet<String>());
 
             if (scoreQueue.isEmpty()) {

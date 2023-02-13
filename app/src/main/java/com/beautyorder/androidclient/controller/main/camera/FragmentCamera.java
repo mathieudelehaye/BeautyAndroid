@@ -23,10 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
-import android.util.Size;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,15 +38,11 @@ import androidx.lifecycle.LifecycleOwner;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
-import com.beautyorder.androidclient.model.UserInfoDBEntry;
-import com.beautyorder.androidclient.controller.main.camera.qrcode.QRCodeFoundListener;
-import com.beautyorder.androidclient.controller.main.camera.qrcode.QRCodeImageAnalyzer;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -86,12 +79,14 @@ public class FragmentCamera extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+
         if (requestCode == PERMISSION_REQUEST_CAMERA) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startCamera();
             } else {
-                Toast.makeText((Activity) mCtx, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mCtx, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -153,25 +148,6 @@ public class FragmentCamera extends Fragment {
 
         preview.setSurfaceProvider(mPreviewView.createSurfaceProvider());
 
-        var imageAnalysis =
-            new ImageAnalysis.Builder()
-                .setTargetResolution(new Size(1280, 720))
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build();
-
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(mCtx), new QRCodeImageAnalyzer(
-            new QRCodeFoundListener() {
-                @Override
-                public void onQRCodeFound(String _qrCode) {
-                    processQRCode(_qrCode);
-                }
-
-                @Override
-                public void qrCodeNotFound() {
-                    Log.d("BeautyAndroid", "QR Code Not Found");
-                }
-        }));
-
         var imageCapture =
             new ImageCapture.Builder()
                 .setTargetRotation(mPreviewView.getDisplay().getRotation())
@@ -183,22 +159,20 @@ public class FragmentCamera extends Fragment {
 
                 Log.d("BeautyAndroid", "Capturing an image with the camera");
 
-                String app_folder_path = "";
-                app_folder_path = Environment.getExternalStorageDirectory().toString() + "/Pictures";
-                var scoreTimeFormat = new SimpleDateFormat("yyyy.MM.dd");
-                var file = new File(app_folder_path, scoreTimeFormat.format(new Date())+ ".jpg");
-                Log.v("BeautyAndroid", "mdl file = "+ file);
+                String appFolderPath = "/storage/emulated/0/Android/data/com.beautyorder.androidclient/files";
+                var filePath = new File(appFolderPath, (new SimpleDateFormat("yyyy.MM.dd"))
+                    .format(new Date())+ ".jpg");
+                Log.v("BeautyAndroid", "mdl file = "+ filePath);
 
                 ImageCapture.OutputFileOptions outputFileOptions =
-                    new ImageCapture.OutputFileOptions.Builder(file).build();
+                    new ImageCapture.OutputFileOptions.Builder(filePath).build();
 
                 imageCapture.takePicture(outputFileOptions,
                     Executors.newSingleThreadExecutor(),
                     new ImageCapture.OnImageSavedCallback() {
                         @Override
                         public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                            Log.v("BeautyAndroid", "Image saved to file: "
-                                + outputFileResults.getSavedUri().toString());
+                            Log.v("BeautyAndroid", "Image saved to file");
                         }
                         @Override
                         public void onError(ImageCaptureException error) {
@@ -224,39 +198,5 @@ public class FragmentCamera extends Fragment {
                 Toast.makeText(mCtx, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(mCtx));
-    }
-
-    private void processQRCode(String _qrCode) {
-
-        if (_qrCode.equals(mQRCode)) {
-            return;
-        }
-
-        Log.d("BeautyAndroid", "New QR Code Found: " + _qrCode);
-
-        mQRCode = _qrCode;
-
-        // Check if no QR code scanning has already been sent for today. If no, add the scanning event
-        // to the queue, so it is sent later.
-        HashSet<String> scoreQueue = (HashSet<String>) mSharedPref.getStringSet("set",
-            new HashSet<String>());
-
-        var updatedQueue = (HashSet<String>)scoreQueue.clone();
-
-        String timeStamp = UserInfoDBEntry.scoreTimeFormat.format(new Date());
-
-        if (!updatedQueue.contains(timeStamp)) {
-            updatedQueue.add(timeStamp);
-
-            // Write back the queue to the app preferences
-            mSharedPref.edit().putStringSet(getString(R.string.eb_points_to_send), updatedQueue).commit();
-
-            Log.i("BeautyAndroid", "Scanning event added to the queue for the timestamp: "
-                + timeStamp);
-
-            Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.show();
-        }
     }
 }
