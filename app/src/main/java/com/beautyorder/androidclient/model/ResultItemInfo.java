@@ -20,10 +20,12 @@ package com.beautyorder.androidclient.model;
 
 public class ResultItemInfo {
     private String mTitle;
+    private String mDescription;
     private byte[] mImage;
 
-    public ResultItemInfo(String title, byte[] image) {
+    public ResultItemInfo(String title, String description, byte[] image) {
         mTitle = title;
+        mDescription = description;
         mImage = image;
     }
 
@@ -33,6 +35,14 @@ public class ResultItemInfo {
 
     public void setTitle(String title) {
         mTitle = title;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
     }
 
     public byte[] getImage() {

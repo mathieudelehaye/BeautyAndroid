@@ -26,8 +26,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
@@ -85,8 +87,7 @@ public class FragmentResultList extends FragmentWithSearch {
                 for (int i = 0; i < mFoundRPNumber; i++) {
                     final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
 
-                    String title = point.getTitle() + "\n\n" + point.getSnippet();
-                    mResultItems.add(new ResultItemInfo(title, null));
+                    mResultItems.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null));
 
                     mFoundRPImageUrls.add(point.getImage());
                 }
@@ -97,8 +98,16 @@ public class FragmentResultList extends FragmentWithSearch {
                 resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        String value = ((ResultItemInfo)adapter.getItem(position)).getTitle();
-                        Log.d("BeautyAndroid", "Tapped item: " + value);
+                        String title = ((ResultItemInfo)adapter.getItem(position)).getTitle();
+                        Log.d("BeautyAndroid", "Tapped item: " + title);
+                        String description = ((ResultItemInfo)adapter.getItem(position)).getDescription();
+                        final byte[] imageBytes = ((ResultItemInfo)adapter.getItem(position)).getImage();
+
+                        var activity = (MainActivity) getActivity();
+                        activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes));
+
+                        NavHostFragment.findNavController(FragmentResultList.this)
+                            .navigate(R.id.action_AppFragment_to_ResultDetailFragment);
                     }
                 });
 

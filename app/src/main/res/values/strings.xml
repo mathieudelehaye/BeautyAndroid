@@ -24,7 +24,6 @@
     <string name="anonymous_uid">anonymous-uid</string>
     <string name="device_id">device-id</string>
     <string name="eb_points_to_send">eb-points-to-send</string>
-    <string name="user_location">user-location</string>
     <string name="completed_onboarding">completed-onboarding</string>
     <string name="last_scanning_date">last-scanning-date</string>
     <string name="action_settings">Settings</string>

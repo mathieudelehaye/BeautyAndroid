@@ -181,7 +181,7 @@ public abstract class FragmentWithSearch extends Fragment {
     }
 
     protected boolean readCachedUserLocation() {
-        String cacheLocation = mSharedPref.getString(getString(R.string.user_location), "");
+        String cacheLocation = mSharedPref.getString("user_location", "");
 
         if (cacheLocation != "") {
             Log.d("BeautyAndroid", "User location read from cache: " + cacheLocation);

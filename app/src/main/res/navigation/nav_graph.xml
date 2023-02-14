@@ -30,8 +30,8 @@
         tools:layout="@layout/fragment_app">
 
         <action
-            android:id="@+id/action_AppFragment_to_ResultFragment"
-            app:destination="@id/FragmentResult"
+            android:id="@+id/action_AppFragment_to_ResultDetailFragment"
+            app:destination="@id/FragmentResultDetail"
         />
 
         <action
@@ -46,13 +46,13 @@
     </fragment>
 
     <fragment
-        android:id="@+id/FragmentResult"
-        android:name="com.beautyorder.androidclient.controller.main.list.FragmentResult"
-        android:label="App Fragment"
+        android:id="@+id/FragmentResultDetail"
+        android:name="com.beautyorder.androidclient.controller.main.list.FragmentResultDetail"
+        android:label="Result Detail Fragment"
         tools:layout="@layout/fragment_result_detail">
 
         <action
-            android:id="@+id/action_ResultFragment_to_AppFragment"
+            android:id="@+id/action_ResultDetailFragment_to_AppFragment"
             app:destination="@id/FragmentApp"
         />
     </fragment>

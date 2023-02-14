@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.R;
@@ -172,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences mSharedPref;
     private FirebaseFirestore mDatabase;
     private StringBuilder mSearchQuery = new StringBuilder("");
+    private ResultItemInfo mSelectedRecyclePoint;
     private StringBuilder mRunnerSleepTime = new StringBuilder("");
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
@@ -244,6 +246,14 @@ public class MainActivity extends AppCompatActivity {
 
     public String getSearchQuery() {
         return mSearchQuery.toString();
+    }
+
+    public ResultItemInfo getSelectedRecyclePoint() {
+        return mSelectedRecyclePoint;
+    }
+
+    public void setSelectedRecyclePoint(ResultItemInfo value) {
+        mSelectedRecyclePoint = value;
     }
 
     private boolean isNetworkAvailable() {

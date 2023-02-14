@@ -54,7 +54,7 @@ public class FragmentMap extends FragmentWithSearch {
 
         // Disable StrictMode policy in onCreate, in order to make a network call in the main thread
         // TODO: call the network from a child thread instead
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        var policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         return mBinding.getRoot();
