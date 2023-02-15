@@ -47,6 +47,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,6 +55,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SigninActivity extends ActivityWithStart implements SigninDialogListener {
 
@@ -258,8 +261,20 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(mThis, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
+
+                            final var exception = (FirebaseAuthException)task.getException();
+                            String completeMessage = exception.getMessage();
+                            String error = exception.getErrorCode();
+
+                            Pattern pattern = Pattern.compile("(.*) \\[ (.*) \\]",
+                                Pattern.CASE_INSENSITIVE);
+
+                            Matcher matcher = pattern.matcher(completeMessage);
+
+                            String messageCause = matcher.find() ?
+                                matcher.group(2) : "Authentication failed.";
+
+                            Toast.makeText(mThis, messageCause, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
