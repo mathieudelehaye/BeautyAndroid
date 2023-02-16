@@ -101,6 +101,11 @@ public class FragmentMenu extends Fragment {
             CollectionPagerAdapter.setAppPage(2);
 
             switchLogoutButtonVisibility();
+
+            var activity = (MainActivity)getActivity();
+            if ((activity) != null) {
+                activity.enableTabSwiping();
+            }
         }
     }
 

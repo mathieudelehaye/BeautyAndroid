@@ -305,6 +305,21 @@ public abstract class FragmentWithSearch extends Fragment {
                 Log.d("BeautyAndroid", "View pager first page set to: " + destinationView.toString());
                 CollectionPagerAdapter.setFirstPageView(destinationView);
 
+                // Toggle the tab swiping according to the destination view
+                var activity = (MainActivity)getActivity();
+                if ((activity) != null) {
+
+                    switch (destinationView) {
+                        case MAP:
+                            activity.disableTabSwiping();
+                            break;
+                        case LIST:
+                        default:
+                            activity.enableTabSwiping();
+                            break;
+                    }
+                }
+
                 ViewPager pager = getActivity().findViewById(R.id.appPager);
                 pager.getAdapter().notifyDataSetChanged();
             }

@@ -29,6 +29,7 @@ import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.Firs
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import org.osmdroid.api.IMapController;
@@ -108,6 +109,11 @@ public class FragmentMap extends FragmentWithSearch {
             CollectionPagerAdapter.setAppPage(0);
 
             changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
+
+            var activity = (MainActivity)getActivity();
+            if ((activity) != null) {
+                activity.disableTabSwiping();
+            }
         }
     }
 

@@ -130,6 +130,11 @@ public class FragmentResultList extends FragmentWithSearch {
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
             changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
+
+            var activity = (MainActivity)getActivity();
+            if ((activity) != null) {
+                activity.enableTabSwiping();
+            }
         }
     }
 

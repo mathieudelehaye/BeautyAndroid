@@ -32,6 +32,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ResultItemInfo;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 resp = e.getMessage();
             }
+
             return resp;
         }
 
@@ -277,5 +279,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
         }
+    }
+
+    public void enableTabSwiping() {
+        // Enable swiping gesture for the view pager
+        var fragment =
+            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+        fragment.enableTabSwiping();
+    }
+
+    public void disableTabSwiping() {
+        // Disable the swiping gesture for the view pager
+        var fragment =
+            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+        fragment.disableTabSwiping();
     }
 }

@@ -55,10 +55,6 @@ public class FragmentApp extends Fragment {
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity()));
 
-        // Disable the swiping gesture for the view pager
-        mViewPager.setSwipingEnabled(false);
-        mViewPager.beginFakeDrag();
-
         view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
             @Override
@@ -122,5 +118,23 @@ public class FragmentApp extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    public void enableTabSwiping() {
+        // Enable swiping gesture for the view pager
+        if (mViewPager.isFakeDragging()) {
+            Log.v("BeautyAndroid", "Tab swiping enabled from the current page on");
+            mViewPager.setSwipingEnabled(true);
+            mViewPager.endFakeDrag();
+        }
+    }
+
+    public void disableTabSwiping() {
+        // Disable the swiping gesture for the view pager
+        if (!mViewPager.isFakeDragging()) {
+            Log.v("BeautyAndroid", "Tab swiping disabled from the current page on");
+            mViewPager.setSwipingEnabled(false);
+            mViewPager.beginFakeDrag();
+        }
     }
 }

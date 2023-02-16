@@ -37,6 +37,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
+import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -114,6 +115,11 @@ public class FragmentCamera extends Fragment {
             CollectionPagerAdapter.setAppPage(1);
 
             requestCamera();
+
+            var activity = (MainActivity)getActivity();
+            if ((activity) != null) {
+                activity.enableTabSwiping();
+            }
         }
     }
 
