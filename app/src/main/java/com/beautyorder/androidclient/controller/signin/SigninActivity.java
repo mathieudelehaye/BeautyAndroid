@@ -90,7 +90,7 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
         // Navigate to the app screen if there is a registered uid in the app preferences
         getPreferenceIds();
-        String lastUId = mPrefUserId.toString();
+        var lastUId = mPrefUserId.toString();
         if (!lastUId.equals("") && Helpers.isEmail(lastUId)) {
             startAppWithUser(lastUId, AppUser.AuthenticationType.REGISTERED);
         }
@@ -121,10 +121,10 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
         boolean navigate = true;
 
         EditText email = credentials.getEmail();
-        String emailText = email.getText().toString();
+        var emailText = email.getText().toString();
 
         EditText password = credentials.getPassword();
-        String passwordText = password.getText().toString();
+        var passwordText = password.getText().toString();
 
         if (!Helpers.isEmail(emailText)) {
             email.setError("Enter valid email!");

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import com.beautyorder.androidclient.R;
 
 public class FragmentStartDialog extends FragmentDialog {
@@ -59,6 +60,32 @@ public class FragmentStartDialog extends FragmentDialog {
                 dismiss();
                 var dialog = new FragmentSignupDialog();
                 dialog.show(getFragmentManager(), "FragmentSignupDialog");
+            }
+        });
+
+        Button facebookSignUp = mContainerView.findViewById(R.id.fb_log_in_start);
+        if (facebookSignUp == null) {
+            Log.e("BeautyAndroid", "No view found when setting the Facebook sign-up button");
+            return null;
+        }
+
+        facebookSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button googleSignUp = mContainerView.findViewById(R.id.google_log_in_start);
+        if (googleSignUp == null) {
+            Log.e("BeautyAndroid", "No view found when setting the Google sign-up button");
+            return null;
+        }
+
+        googleSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Google sign-up not yet available", Toast.LENGTH_SHORT).show();
             }
         });
 

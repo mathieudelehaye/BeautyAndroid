@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import com.beautyorder.androidclient.R;
 
 public class FragmentSigninDialog extends FragmentDialog {
@@ -44,6 +45,32 @@ public class FragmentSigninDialog extends FragmentDialog {
             @Override
             public void onClick(View view) {
                 mListener.onDialogAnonymousSigninClick(mThis);
+            }
+        });
+
+        Button facebookSignIn = mContainerView.findViewById(R.id.fb_log_in_signin);
+        if (facebookSignIn == null) {
+            Log.e("BeautyAndroid", "No view found when setting the Facebook sign-in button");
+            return null;
+        }
+
+        facebookSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Facebook sign-in not yet available", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button googleSignIn = mContainerView.findViewById(R.id.google_log_in_signin);
+        if (googleSignIn == null) {
+            Log.e("BeautyAndroid", "No view found when setting the Google sign-in button");
+            return null;
+        }
+
+        googleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Google sign-in not yet available", Toast.LENGTH_SHORT).show();
             }
         });
 
