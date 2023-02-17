@@ -22,16 +22,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import android.view.View;
-import com.beautyorder.androidclient.controller.FragmentDialogBase;
+import com.beautyorder.androidclient.controller.FragmentDialog;
 import org.jetbrains.annotations.NotNull;
 
-public class FragmentSigninDialogBase extends FragmentDialogBase {
+public class FragmentSigninDialogBase extends FragmentDialog {
 
     // Use this instance of the interface to deliver action events from the dialog modal
     protected SigninDialogListener mListener;
     protected FragmentSigninDialogBase mThis;
-    protected View mContainerView;
 
     @NotNull
     @Override

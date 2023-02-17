@@ -1,5 +1,5 @@
 //
-//  FragmentDialogBase.java
+//  FragmentDialog.java
 //
 //  Created by Mathieu Delehaye on 17/02/2023.
 //
@@ -28,9 +28,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import org.jetbrains.annotations.NotNull;
 
-public class FragmentDialogBase extends DialogFragment {
+public class FragmentDialog extends DialogFragment {
 
-    protected FragmentDialogBase mThis;
+    protected FragmentDialog mThis;
     protected View mContainerView;
 
     @NotNull
