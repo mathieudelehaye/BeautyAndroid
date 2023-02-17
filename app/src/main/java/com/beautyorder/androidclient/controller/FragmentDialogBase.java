@@ -1,7 +1,7 @@
 //
-//  FragmentDialog.java
+//  FragmentDialogBase.java
 //
-//  Created by Mathieu Delehaye on 5/02/2023.
+//  Created by Mathieu Delehaye on 17/02/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -16,24 +16,21 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.signin.dialog;
+package com.beautyorder.androidclient.controller;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.View;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import org.jetbrains.annotations.NotNull;
 
-public class FragmentDialog extends DialogFragment {
+public class FragmentDialogBase extends DialogFragment {
 
-    // Use this instance of the interface to deliver action events from the dialog modal
-    protected SigninDialogListener mListener;
-    protected FragmentDialog mThis;
+    protected FragmentDialogBase mThis;
     protected View mContainerView;
 
     @NotNull
@@ -60,21 +57,5 @@ public class FragmentDialog extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
 
         return dialog;
-    }
-
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (SigninDialogListener) context;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(getActivity().toString()
-                + " must implement SigninDialogListener");
-        }
     }
 }

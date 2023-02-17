@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.beautyorder.androidclient.R;
 
-public class FragmentStartDialog extends FragmentDialog {
+public class FragmentStartDialog extends FragmentSigninDialogBase {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -99,8 +99,8 @@ public class FragmentStartDialog extends FragmentDialog {
             @Override
             public void onClick(View view) {
                 dismiss();
-                var dialog = new FragmentSigninDialog();
-                dialog.show(getFragmentManager(), "FragmentSigninDialog");
+                var dialog = new FragmentLoginDialog();
+                dialog.show(getFragmentManager(), "FragmentLoginDialog");
             }
         });
 

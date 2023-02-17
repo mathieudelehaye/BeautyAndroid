@@ -37,7 +37,7 @@ import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.beautyorder.androidclient.controller.signin.dialog.FragmentSigninDialog;
+import com.beautyorder.androidclient.controller.signin.dialog.FragmentLoginDialog;
 import com.beautyorder.androidclient.controller.signin.dialog.FragmentStartDialog;
 import com.beautyorder.androidclient.controller.signin.dialog.SigninDialogListener;
 import com.beautyorder.androidclient.model.AppUser;
@@ -255,8 +255,8 @@ public class SigninActivity extends ActivityWithStart implements SigninDialogLis
 
                             // Navigate to the login dialog
                             dialog.dismiss();
-                            var dialog = new FragmentSigninDialog();
-                            dialog.show(getSupportFragmentManager(), "FragmentSigninDialog");
+                            var dialog = new FragmentLoginDialog();
+                            dialog.show(getSupportFragmentManager(), "FragmentLoginDialog");
 
                         } else {
                             // If sign in fails, display a message to the user.

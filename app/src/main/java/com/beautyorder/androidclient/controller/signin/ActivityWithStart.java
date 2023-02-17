@@ -48,11 +48,11 @@ public class ActivityWithStart extends AppCompatActivity {
             return "";
         }
 
-        StringBuilder anonymousUid = new StringBuilder();
+        var anonymousUid = new StringBuilder();
         anonymousUid.append(mSharedPref.getString(getString(R.string.anonymous_uid), ""));
 
         if (!anonymousUid.toString().equals("")) {
-            String uid = anonymousUid.toString();
+            var uid = anonymousUid.toString();
 
             // Reuse the anonymous uid if it already exists in the app preferences
             Log.v("BeautyAndroid", "Anonymous uid loaded from the app preferences: "

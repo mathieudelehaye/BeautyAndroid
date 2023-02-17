@@ -25,7 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import com.beautyorder.androidclient.R;
 
-public class FragmentSignupDialog extends FragmentDialog {
+public class FragmentSignupDialog extends FragmentSigninDialogBase {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

@@ -1,5 +1,5 @@
 //
-//  FragmentSigninDialog.java
+//  FragmentLoginDialog.java
 //
 //  Created by Mathieu Delehaye on 4/02/2023.
 //
@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.beautyorder.androidclient.R;
 
-public class FragmentSigninDialog extends FragmentDialog {
+public class FragmentLoginDialog extends FragmentSigninDialogBase {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
