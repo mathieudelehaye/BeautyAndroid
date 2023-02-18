@@ -1,5 +1,5 @@
 //
-//  FragmentDialog.java
+//  FragmentHelpDialog.java
 //
 //  Created by Mathieu Delehaye on 17/02/2023.
 //
@@ -16,45 +16,39 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller;
+package com.beautyorder.androidclient.controller.main.dialog;
 
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import org.jetbrains.annotations.NotNull;
+import com.beautyorder.androidclient.R;
 
-public class FragmentDialog extends DialogFragment {
+public class FragmentHelpDialog extends DialogFragment {
 
-    protected FragmentDialog mThis;
-    protected View mContainerView;
-
-    @NotNull
     @Override
-    public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        mThis = this;
-        return super.onCreateDialog(savedInstanceState);
-    }
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Log.w("BeautyAndroid", "mdl FragmentHelpDialog.onCreateDialog entered");
 
-    protected Dialog buildDialogFromLayout(int layout_id) {
+        super.onCreateDialog(savedInstanceState);
+
         // Use the Builder class for convenient dialog construction
         var builder = new AlertDialog.Builder(getActivity());
 
         // Get the layout inflater
         var inflater = requireActivity().getLayoutInflater();
+        View rootView = inflater.inflate(R.layout.fragment_help_dialog, null);
+        builder.setView(rootView);
 
-        mContainerView = inflater.inflate(layout_id, null);
-        builder.setView(mContainerView);
-
-        // Set the background as transparent and prevent the dialog from cancelling
         Dialog dialog = builder.create();
+
+        // Set the window background transparent, so the custom background is visible
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
 
         return dialog;
     }

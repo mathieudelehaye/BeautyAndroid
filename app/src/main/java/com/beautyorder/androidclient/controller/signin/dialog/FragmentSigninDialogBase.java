@@ -20,16 +20,21 @@ package com.beautyorder.androidclient.controller.signin.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 import androidx.annotation.Nullable;
-import com.beautyorder.androidclient.controller.FragmentDialog;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import org.jetbrains.annotations.NotNull;
 
-public class FragmentSigninDialogBase extends FragmentDialog {
+public abstract class FragmentSigninDialogBase extends DialogFragment {
 
     // Use this instance of the interface to deliver action events from the dialog modal
     protected SigninDialogListener mListener;
     protected FragmentSigninDialogBase mThis;
+    protected View mContainerView;
 
     @NotNull
     @Override
@@ -52,5 +57,24 @@ public class FragmentSigninDialogBase extends FragmentDialog {
             throw new ClassCastException(getActivity().toString()
                 + " must implement SigninDialogListener");
         }
+    }
+
+    protected Dialog buildDialogFromLayout(int layout_id) {
+        // Use the Builder class for convenient dialog construction
+        var builder = new AlertDialog.Builder(getActivity());
+
+        // Get the layout inflater
+        var inflater = requireActivity().getLayoutInflater();
+
+        mContainerView = inflater.inflate(layout_id, null);
+        builder.setView(mContainerView);
+
+        // Set the background as transparent and prevent the dialog from cancelling
+        Dialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        return dialog;
     }
 }
