@@ -30,6 +30,7 @@ import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import org.osmdroid.api.IMapController;
@@ -45,6 +46,7 @@ public class FragmentMap extends FragmentWithSearch {
     private IMapController mMapController;
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
+    private boolean mIsRootViewVisible = false;
 
     @Override
     public View onCreateView(
@@ -80,6 +82,8 @@ public class FragmentMap extends FragmentWithSearch {
                 }
             }
         });
+
+        showHelp();
     }
 
     @Override
@@ -101,7 +105,10 @@ public class FragmentMap extends FragmentWithSearch {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
         if (isVisibleToUser) {
+            mIsRootViewVisible = true;
+
             Log.d("BeautyAndroid", "Map view becomes visible");
             Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
                 + String.valueOf(Helpers.getTimestamp()));
@@ -114,6 +121,10 @@ public class FragmentMap extends FragmentWithSearch {
             if ((activity) != null) {
                 activity.disableTabSwiping();
             }
+
+            showHelp();
+        } else {
+            mIsRootViewVisible = false;
         }
     }
 
@@ -208,5 +219,17 @@ public class FragmentMap extends FragmentWithSearch {
             public void onFailure() {
             }
         });
+    }
+
+    private void showHelp() {
+
+        if (mIsRootViewVisible && mSharedPref != null) {
+            if (!Boolean.parseBoolean(mSharedPref.getString("map_help_displayed", "false"))) {
+                mSharedPref.edit().putString("map_help_displayed", "true").commit();
+                var dialogFragment = new FragmentHelpDialog("Click on a point on the map to find the " +
+                    " address of a drop-off location!");
+                dialogFragment.show(getChildFragmentManager(), "Map help dialog");
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
@@ -47,7 +48,7 @@ public class FragmentResultList extends FragmentWithSearch {
     private int mReceivedImageNumber = 0;
     private final Object mImageUpdateLock = new Object();
     private ArrayList<ResultItemInfo> mResultItems;
-    private ListView mListView;
+    private boolean mIsRootViewVisible = false;
 
     @Override
     public View onCreateView(
@@ -58,6 +59,7 @@ public class FragmentResultList extends FragmentWithSearch {
         return mBinding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v("BeautyAndroid", "Result list view created at timestamp: "
             + String.valueOf(Helpers.getTimestamp()));
@@ -65,6 +67,8 @@ public class FragmentResultList extends FragmentWithSearch {
         super.onViewCreated(view, savedInstanceState);
 
         changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
+
+        showHelp();
     }
 
     @Override
@@ -126,7 +130,10 @@ public class FragmentResultList extends FragmentWithSearch {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
         if (isVisibleToUser) {
+            mIsRootViewVisible = true;
+
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
             changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
@@ -135,6 +142,10 @@ public class FragmentResultList extends FragmentWithSearch {
             if ((activity) != null) {
                 activity.enableTabSwiping();
             }
+
+            showHelp();
+        } else {
+            mIsRootViewVisible = false;
         }
     }
 
@@ -180,5 +191,17 @@ public class FragmentResultList extends FragmentWithSearch {
                 public void onFailure(@NonNull Exception exception) {
                 }
         });
+    }
+
+    private void showHelp() {
+
+        if (mIsRootViewVisible && mSharedPref != null) {
+            if (!Boolean.parseBoolean(mSharedPref.getString("list_help_displayed", "false"))) {
+                mSharedPref.edit().putString("list_help_displayed", "true").commit();
+                var dialogFragment = new FragmentHelpDialog("Select an item in the list and display some "
+                    + " info about a drop-off location!");
+                dialogFragment.show(getChildFragmentManager(), "List help dialog");
+            }
+        }
     }
 }

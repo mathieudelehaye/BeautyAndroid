@@ -70,6 +70,7 @@ public abstract class FragmentWithSearch extends Fragment {
 
     protected abstract void searchAndDisplayItems();
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -77,7 +78,6 @@ public abstract class FragmentWithSearch extends Fragment {
 
         mCtx = view.getContext();
 
-        // Get the app preferences
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
@@ -345,8 +345,6 @@ public abstract class FragmentWithSearch extends Fragment {
                     int userScore = 0;
 
                     if (task.isSuccessful()) {
-                        var items = new ArrayList<OverlayItem>();
-
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             var scoreData = document.getData().get("score").toString();
                             userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;

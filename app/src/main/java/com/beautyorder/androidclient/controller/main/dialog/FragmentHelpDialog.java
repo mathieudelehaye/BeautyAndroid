@@ -24,6 +24,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -31,10 +33,14 @@ import com.beautyorder.androidclient.R;
 
 public class FragmentHelpDialog extends DialogFragment {
 
+    private String mTextToDisplay;
+
+    public FragmentHelpDialog(String text) {
+        mTextToDisplay = text;
+    }
+
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Log.w("BeautyAndroid", "mdl FragmentHelpDialog.onCreateDialog entered");
-
         super.onCreateDialog(savedInstanceState);
 
         // Use the Builder class for convenient dialog construction
@@ -46,6 +52,26 @@ public class FragmentHelpDialog extends DialogFragment {
         builder.setView(rootView);
 
         Dialog dialog = builder.create();
+
+        // Configure the dialog
+        Button closeHelpDialog = rootView.findViewById(R.id.close_help_dialog);
+        if (closeHelpDialog == null) {
+            Log.e("BeautyAndroid", "No view found for the close button on help dialog");
+            return null;
+        }
+        closeHelpDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        TextView dialogDescription = rootView.findViewById(R.id.description_help_dialog);
+        if (dialogDescription == null) {
+            Log.e("BeautyAndroid", "No view found for the description text on help dialog");
+            return null;
+        }
+        dialogDescription.setText(mTextToDisplay);
 
         // Set the window background transparent, so the custom background is visible
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

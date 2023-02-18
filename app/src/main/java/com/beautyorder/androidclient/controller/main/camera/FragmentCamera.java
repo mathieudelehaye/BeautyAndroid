@@ -38,6 +38,7 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,6 +60,7 @@ public class FragmentCamera extends Fragment {
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
     private SharedPreferences mSharedPref;
+    private boolean mIsRootViewVisible = false;
 
     @Override
     public View onCreateView(
@@ -80,6 +82,8 @@ public class FragmentCamera extends Fragment {
 
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        showHelp();
     }
 
     @Override
@@ -109,7 +113,10 @@ public class FragmentCamera extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
         if (isVisibleToUser) {
+            mIsRootViewVisible = true;
+
             Log.d("BeautyAndroid", "Camera view becomes visible");
 
             CollectionPagerAdapter.setAppPage(1);
@@ -120,6 +127,10 @@ public class FragmentCamera extends Fragment {
             if ((activity) != null) {
                 activity.enableTabSwiping();
             }
+
+            showHelp();
+        } else {
+            mIsRootViewVisible = false;
         }
     }
 
@@ -234,5 +245,17 @@ public class FragmentCamera extends Fragment {
                 Toast.makeText(mCtx, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(mCtx));
+    }
+
+    private void showHelp() {
+
+        if (mIsRootViewVisible && mSharedPref != null) {
+            if (!Boolean.parseBoolean(mSharedPref.getString("cam_help_displayed", "false"))) {
+                mSharedPref.edit().putString("cam_help_displayed", "true").commit();
+                var dialogFragment = new FragmentHelpDialog("Take photos of your empty beauty products on "
+                    + "the counter to get EBpoints!");
+                dialogFragment.show(getChildFragmentManager(), "Camera help dialog");
+            }
+        }
     }
 }
