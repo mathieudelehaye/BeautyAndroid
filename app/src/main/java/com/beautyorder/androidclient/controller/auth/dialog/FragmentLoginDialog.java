@@ -84,7 +84,7 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             @Override
             public void onClick(View view) {
                 mListener.onDialogRegisteredSigninClick(mThis,
-                    new SigninDialogListener.SigninDialogCredentialViews(
+                    new AuthenticateDialogListener.SigninDialogCredentialViews(
                         mContainerView.findViewById(R.id.registered_email_signin),
                         mContainerView.findViewById(R.id.registered_password_signin),
                         null));
@@ -101,7 +101,7 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             @Override
             public void onClick(View view) {
                 mListener.onDialogResetPasswordClick(mThis,
-                    new SigninDialogListener.SigninDialogCredentialViews(
+                    new AuthenticateDialogListener.SigninDialogCredentialViews(
                         mContainerView.findViewById(R.id.registered_email_signin),
                         mContainerView.findViewById(R.id.registered_password_signin),
                         null));

@@ -57,7 +57,7 @@ public class FragmentSignupDialog extends FragmentAuthenticateDialog {
             @Override
             public void onClick(View view) {
                 mListener.onDialogSignupClick(mThis,
-                    new SigninDialogListener.SigninDialogCredentialViews(
+                    new AuthenticateDialogListener.SigninDialogCredentialViews(
                         mContainerView.findViewById(R.id.registered_email_signup),
                         mContainerView.findViewById(R.id.registered_password_signup),
                         mContainerView.findViewById(R.id.repeated_password_signup)));

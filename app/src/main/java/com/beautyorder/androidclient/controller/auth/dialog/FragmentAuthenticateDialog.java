@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class FragmentAuthenticateDialog extends DialogFragment {
 
     // Use this instance of the interface to deliver action events from the dialog modal
-    protected SigninDialogListener mListener;
+    protected AuthenticateDialogListener mListener;
     protected FragmentAuthenticateDialog mThis;
     protected View mContainerView;
 
@@ -51,11 +51,11 @@ public abstract class FragmentAuthenticateDialog extends DialogFragment {
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (SigninDialogListener) context;
+            mListener = (AuthenticateDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(getActivity().toString()
-                + " must implement SigninDialogListener");
+                + " must implement AuthenticateDialogListener");
         }
     }
 

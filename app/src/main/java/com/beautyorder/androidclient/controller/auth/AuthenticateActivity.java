@@ -39,7 +39,7 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.auth.dialog.FragmentLoginDialog;
 import com.beautyorder.androidclient.controller.auth.dialog.FragmentStartDialog;
-import com.beautyorder.androidclient.controller.auth.dialog.SigninDialogListener;
+import com.beautyorder.androidclient.controller.auth.dialog.AuthenticateDialogListener;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
@@ -58,7 +58,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AuthenticateActivity extends ActivityWithStart implements SigninDialogListener {
+public class AuthenticateActivity extends ActivityWithStart implements AuthenticateDialogListener {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDatabase;
