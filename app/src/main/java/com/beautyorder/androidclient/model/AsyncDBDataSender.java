@@ -21,12 +21,21 @@ package com.beautyorder.androidclient.model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -54,6 +63,7 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
         var response = new StringBuilder();
 
         publishProgress("Sleeping..."); // Calls onProgressUpdate()
+
         try {
             int time = Integer.parseInt(params[0])*1000;
 
@@ -172,5 +182,41 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
         // Restart the asynchronous task
         var runner = new AsyncDBDataSender(mActivity, mDatabase, mSleepTime);
         runner.execute(String.valueOf(mSleepTime));
+    }
+
+    private void sendImage(File file) {
+
+        // Upload the file to the Cloud Storage for Firebase
+        final var fileURI = Uri.fromFile(file);
+
+        StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
+            .child("user_images/"+fileURI.getLastPathSegment());
+
+        UploadTask uploadTask = riversRef.putFile(fileURI);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                Log.d("BeautyAndroid", "Image uploaded to the database");
+                Log.v("BeautyAndroid", "Image uploaded to the database at timestamp: "
+                        + String.valueOf(Helpers.getTimestamp()));
+
+                if (!file.delete()) {
+                    Log.w("BeautyAndroid", "Unable to delete the local image: "
+                            + file);
+                } else {
+                    Log.v("BeautyAndroid", "Local image successfully deleted");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.e("BeautyAndroid", "Failed to upload the image with the error:"
+                    + exception.toString());
+            }
+        });
     }
 }

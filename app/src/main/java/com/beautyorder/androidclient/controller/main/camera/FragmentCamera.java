@@ -21,7 +21,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
@@ -42,12 +41,7 @@ import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.AppUser;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -198,40 +192,9 @@ public class FragmentCamera extends Fragment {
                         public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
                             Log.d("BeautyAndroid", "Image saved to file: " + file);
                             Log.v("BeautyAndroid", "Image saved to file at timestamp: "
-                                + String.valueOf(Helpers.getTimestamp()));
+                                + Helpers.getTimestamp());
 
-                            // Upload the file to the Cloud Storage for Firebase
-                            var fileURI = Uri.fromFile(file);
-
-                            StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
-                                .child("user_images/"+fileURI.getLastPathSegment());
-
-                            UploadTask uploadTask = riversRef.putFile(fileURI);
-
-                            // Register observers to listen for when the download is done or if it fails
-                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                    Log.d("BeautyAndroid", "Image uploaded to the database");
-                                    Log.v("BeautyAndroid", "Image uploaded to the database at timestamp: "
-                                        + String.valueOf(Helpers.getTimestamp()));
-
-                                    if (!file.delete()) {
-                                        Log.w("BeautyAndroid", "Unable to delete the local image: "
-                                            + file);
-                                    } else {
-                                        Log.v("BeautyAndroid", "Local image successfully deleted");
-                                    }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    Log.e("BeautyAndroid", "Failed to upload the image with the error:"
-                                        + exception.toString());
-                                }
-                            });
+                            // TODO: store the File object reference in a queue for sending
                         }
                         @Override
                         public void onError(ImageCaptureException error) {
