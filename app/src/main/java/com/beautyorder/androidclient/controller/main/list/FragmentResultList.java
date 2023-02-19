@@ -48,7 +48,7 @@ public class FragmentResultList extends FragmentWithSearch {
     private int mReceivedImageNumber = 0;
     private final Object mImageUpdateLock = new Object();
     private ArrayList<ResultItemInfo> mResultItems;
-    private boolean mIsRootViewVisible = false;
+    private boolean mIsViewVisible = false;
 
     @Override
     public View onCreateView(
@@ -132,7 +132,7 @@ public class FragmentResultList extends FragmentWithSearch {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            mIsRootViewVisible = true;
+            mIsViewVisible = true;
 
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
@@ -145,7 +145,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
             showHelp();
         } else {
-            mIsRootViewVisible = false;
+            mIsViewVisible = false;
         }
     }
 
@@ -195,7 +195,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
     private void showHelp() {
 
-        if (mIsRootViewVisible && mSharedPref != null) {
+        if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("list_help_displayed", "false"))) {
                 mSharedPref.edit().putString("list_help_displayed", "true").commit();
                 var dialogFragment = new FragmentHelpDialog("Select an item in the list and display some "

@@ -35,6 +35,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.MainActivity;
@@ -60,7 +61,7 @@ public class FragmentCamera extends Fragment {
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
     private SharedPreferences mSharedPref;
-    private boolean mIsRootViewVisible = false;
+    private boolean mIsViewVisible = false;
 
     @Override
     public View onCreateView(
@@ -115,7 +116,7 @@ public class FragmentCamera extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            mIsRootViewVisible = true;
+            mIsViewVisible = true;
 
             Log.d("BeautyAndroid", "Camera view becomes visible");
 
@@ -130,7 +131,7 @@ public class FragmentCamera extends Fragment {
 
             showHelp();
         } else {
-            mIsRootViewVisible = false;
+            mIsViewVisible = false;
         }
     }
 
@@ -178,45 +179,56 @@ public class FragmentCamera extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Log.d("BeautyAndroid", "Capturing an image with the camera");
+                Log.i("BeautyAndroid", "Capturing an image with the camera");
                 Toast.makeText(mCtx, "Capturing image", Toast.LENGTH_SHORT).show();
 
                 String fileName = AppUser.getInstance().getId() + "-"
                     + (new SimpleDateFormat("yyyy.MM.dd'T'HH:mm:ss").format(new java.util.Date()));
 
                 String appFolderPath = "/storage/emulated/0/Android/data/com.beautyorder.androidclient/files";
-                var filePath = new File(appFolderPath, fileName);
+                var file = new File(appFolderPath, fileName);
 
                 ImageCapture.OutputFileOptions outputFileOptions =
-                    new ImageCapture.OutputFileOptions.Builder(filePath).build();
+                    new ImageCapture.OutputFileOptions.Builder(file).build();
 
                 imageCapture.takePicture(outputFileOptions,
                     Executors.newSingleThreadExecutor(),
                     new ImageCapture.OnImageSavedCallback() {
                         @Override
                         public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                            Log.v("BeautyAndroid", "Image saved to file: " + filePath);
+                            Log.d("BeautyAndroid", "Image saved to file: " + file);
+                            Log.v("BeautyAndroid", "Image saved to file at timestamp: "
+                                + String.valueOf(Helpers.getTimestamp()));
 
                             // Upload the file to the Cloud Storage for Firebase
-                            var file = Uri.fromFile(filePath);
+                            var fileURI = Uri.fromFile(file);
 
                             StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
-                                .child("user_images/"+file.getLastPathSegment());
+                                .child("user_images/"+fileURI.getLastPathSegment());
 
-                            UploadTask uploadTask = riversRef.putFile(file);
+                            UploadTask uploadTask = riversRef.putFile(fileURI);
 
                             // Register observers to listen for when the download is done or if it fails
                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                    Log.v("BeautyAndroid", "Image uploaded to the database");
+                                    Log.d("BeautyAndroid", "Image uploaded to the database");
+                                    Log.v("BeautyAndroid", "Image uploaded to the database at timestamp: "
+                                        + String.valueOf(Helpers.getTimestamp()));
+
+                                    if (!file.delete()) {
+                                        Log.w("BeautyAndroid", "Unable to delete the local image: "
+                                            + file);
+                                    } else {
+                                        Log.v("BeautyAndroid", "Local image successfully deleted");
+                                    }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
                                     // Handle unsuccessful uploads
-                                    Log.v("BeautyAndroid", "Failed to upload the image with the error:"
+                                    Log.e("BeautyAndroid", "Failed to upload the image with the error:"
                                         + exception.toString());
                                 }
                             });
@@ -249,7 +261,7 @@ public class FragmentCamera extends Fragment {
 
     private void showHelp() {
 
-        if (mIsRootViewVisible && mSharedPref != null) {
+        if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("cam_help_displayed", "false"))) {
                 mSharedPref.edit().putString("cam_help_displayed", "true").commit();
                 var dialogFragment = new FragmentHelpDialog("Take photos of your empty beauty products on "

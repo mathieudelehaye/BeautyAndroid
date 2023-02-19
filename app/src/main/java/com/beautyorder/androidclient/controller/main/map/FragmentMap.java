@@ -46,7 +46,7 @@ public class FragmentMap extends FragmentWithSearch {
     private IMapController mMapController;
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
-    private boolean mIsRootViewVisible = false;
+    private boolean mIsViewVisible = false;
 
     @Override
     public View onCreateView(
@@ -107,7 +107,7 @@ public class FragmentMap extends FragmentWithSearch {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            mIsRootViewVisible = true;
+            mIsViewVisible = true;
 
             Log.d("BeautyAndroid", "Map view becomes visible");
             Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
@@ -124,7 +124,7 @@ public class FragmentMap extends FragmentWithSearch {
 
             showHelp();
         } else {
-            mIsRootViewVisible = false;
+            mIsViewVisible = false;
         }
     }
 
@@ -223,7 +223,7 @@ public class FragmentMap extends FragmentWithSearch {
 
     private void showHelp() {
 
-        if (mIsRootViewVisible && mSharedPref != null) {
+        if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("map_help_displayed", "false"))) {
                 mSharedPref.edit().putString("map_help_displayed", "true").commit();
                 var dialogFragment = new FragmentHelpDialog("Click on a point on the map to find the " +

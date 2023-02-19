@@ -294,7 +294,7 @@ public abstract class FragmentWithSearch extends Fragment {
         }
 
         Log.v("BeautyAndroid", "Changing the search switch to the page: " + String.valueOf(destinationPage)
-            + ", with the view: " + resultType.toString());
+            + ", with the type: " + resultType.toString());
 
         final int icon = (resultType == ResultPageType.LIST) ? R.drawable.bullet_list : R.drawable.map;
 
