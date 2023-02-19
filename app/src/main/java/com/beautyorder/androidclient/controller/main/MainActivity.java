@@ -18,7 +18,6 @@
 
 package com.beautyorder.androidclient.controller.main;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,141 +32,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.AsyncDBDataSender;
 import com.beautyorder.androidclient.model.ResultItemInfo;
-import com.beautyorder.androidclient.model.ScoreTransferer;
-import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.Date;
-import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
-    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
-        private String resp;
-        ProgressDialog progressDialog;
-
-        @Override
-        protected String doInBackground(String... params) {
-            publishProgress("Sleeping..."); // Calls onProgressUpdate()
-            try {
-                int time = Integer.parseInt(params[0])*1000;
-
-                Thread.sleep(time);
-                resp = "Slept for " + params[0] + " seconds";
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                resp = e.getMessage();
-            } catch (Exception e) {
-                e.printStackTrace();
-                resp = e.getMessage();
-            }
-
-            return resp;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // Actions to execute after the background task
-            // Return if there is no network available
-            if (!isNetworkAvailable()) {
-                //Log.v("BeautyAndroid", "Try to write the scanning events but no network");
-                restart();
-                return;
-            }
-
-            // Return if there is no app user yet
-            if (AppUser.getInstance().getAuthenticationType() == AppUser.AuthenticationType.NONE) {
-                //Log.v("BeautyAndroid", "Try to write the scanning events but no app user");
-                restart();
-                return;
-            }
-
-            // Return if there is no scanning events to send in the app preferences
-            var scoreQueue = (HashSet<String>) mSharedPref.getStringSet(getString(R.string.eb_points_to_send),
-                new HashSet<String>());
-
-            if (scoreQueue.isEmpty()) {
-                //Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
-                restart();
-                return;
-            }
-
-            Log.d("BeautyAndroid", "Number of events to send in the queue: " + scoreQueue.size());
-
-            HashSet<String> updatedQueue = (HashSet<String>)scoreQueue.clone();
-
-            String uid = AppUser.getInstance().getId();
-
-            // Process the first event in the queue: increment the score in the database then removing the event
-            // from the queue
-            for(String event: scoreQueue) {
-
-                UserInfoDBEntry entry = new UserInfoDBEntry(mDatabase, uid);
-                entry.readScoreDBFields(new TaskCompletionManager() {
-                    @Override
-                    public void onSuccess() {
-
-                        Date eventDate = UserInfoDBEntry.parseScoreTime(event);
-
-                        // Only update the score if the event date is after the DB score time
-                        if (eventDate.compareTo(entry.getScoreTime()) > 0) {
-                            final int newScore = entry.getScore() + 1;
-
-                            entry.setScore(newScore);
-                            entry.setScoreTime(event);
-                            entry.updateDBFields(new TaskCompletionManager() {
-                                @Override
-                                public void onSuccess() {
-                                    Log.v("BeautyAndroid", "Score written to the database and displayed "
-                                        + "on screen");
-
-                                    new ScoreTransferer(mDatabase, mThis).displayScoreOnScreen(newScore);
-                                }
-
-                                @Override
-                                public void onFailure() {
-                                }
-                            });
-
-                            Log.i("BeautyAndroid", "Scanning event sent to the database: " + event);
-                        } else {
-                            Log.w("BeautyAndroid", "Scanning event older than the latest in the database: " + event);
-                        }
-
-                        Log.d("BeautyAndroid", "Scanning event removed from the app queue: " + event);
-                        updatedQueue.remove(event);
-                        mSharedPref.edit().putStringSet(getString(R.string.eb_points_to_send), updatedQueue).commit();
-                    }
-
-                    @Override
-                    public void onFailure() {
-                    }
-                });
-
-                break;
-            }
-
-            restart();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            // Actions to execute before the background task
-        }
-
-        @Override
-        protected void onProgressUpdate(String... text) {
-            // Publish progress
-        }
-
-        private void restart() {
-            // Restart the asynchronous task
-            var runner = new AsyncTaskRunner();
-            runner.execute(mRunnerSleepTime.toString());
-        }
-    }
 
     // TODO: find another way to make `this` reference available to the nested async task class
     private MainActivity mThis;
@@ -176,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore mDatabase;
     private StringBuilder mSearchQuery = new StringBuilder("");
     private ResultItemInfo mSelectedRecyclePoint;
-    private StringBuilder mRunnerSleepTime = new StringBuilder("");
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     @Override
@@ -202,9 +70,8 @@ public class MainActivity extends AppCompatActivity {
         mThis = this;
         mDatabase = FirebaseFirestore.getInstance();
 
-        mRunnerSleepTime.append(String.valueOf(mDelayBetweenScoreWritingsInSec));
-        var runner = new AsyncTaskRunner();
-        runner.execute(mRunnerSleepTime.toString());
+        var runner = new AsyncDBDataSender(this, mDatabase, mDelayBetweenScoreWritingsInSec);
+        runner.execute(String.valueOf(mDelayBetweenScoreWritingsInSec));
 
         // Get the intent, like a search, then verify the action and get the query
         handleIntent(getIntent());
@@ -258,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         mSelectedRecyclePoint = value;
     }
 
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
