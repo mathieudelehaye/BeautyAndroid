@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.signin.dialog;
+package com.beautyorder.androidclient.controller.auth.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import com.beautyorder.androidclient.R;
 
-public class FragmentSignupDialog extends FragmentSigninDialogBase {
+public class FragmentSignupDialog extends FragmentAuthenticateDialog {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

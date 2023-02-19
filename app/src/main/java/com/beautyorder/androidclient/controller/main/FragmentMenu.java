@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.signin.SigninActivity;
+import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 import com.beautyorder.androidclient.model.AppUser;
 
@@ -87,7 +87,7 @@ public class FragmentMenu extends Fragment {
                 CollectionPagerAdapter.setAppPage(0);
                 CollectionPagerAdapter.setFirstPageView(FirstPageView.LIST);
 
-                startActivity(new Intent(getContext(), SigninActivity.class));
+                startActivity(new Intent(getContext(), AuthenticateActivity.class));
             }
         });
     }

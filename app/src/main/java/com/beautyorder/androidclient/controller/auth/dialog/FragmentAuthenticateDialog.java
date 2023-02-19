@@ -1,5 +1,5 @@
 //
-//  FragmentSigninDialogBase.java
+//  FragmentAuthenticateDialog.java
 //
 //  Created by Mathieu Delehaye on 5/02/2023.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.signin.dialog;
+package com.beautyorder.androidclient.controller.auth.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -29,11 +29,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class FragmentSigninDialogBase extends DialogFragment {
+public abstract class FragmentAuthenticateDialog extends DialogFragment {
 
     // Use this instance of the interface to deliver action events from the dialog modal
     protected SigninDialogListener mListener;
-    protected FragmentSigninDialogBase mThis;
+    protected FragmentAuthenticateDialog mThis;
     protected View mContainerView;
 
     @NotNull

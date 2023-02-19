@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.signin;
+package com.beautyorder.androidclient.controller.auth;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,9 +37,9 @@ import androidx.fragment.app.DialogFragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.beautyorder.androidclient.controller.signin.dialog.FragmentLoginDialog;
-import com.beautyorder.androidclient.controller.signin.dialog.FragmentStartDialog;
-import com.beautyorder.androidclient.controller.signin.dialog.SigninDialogListener;
+import com.beautyorder.androidclient.controller.auth.dialog.FragmentLoginDialog;
+import com.beautyorder.androidclient.controller.auth.dialog.FragmentStartDialog;
+import com.beautyorder.androidclient.controller.auth.dialog.SigninDialogListener;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
@@ -58,13 +58,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SigninActivity extends ActivityWithStart implements SigninDialogListener {
+public class AuthenticateActivity extends ActivityWithStart implements SigninDialogListener {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDatabase;
     private StringBuilder mDeviceId;
     private StringBuilder mPrefUserId;
-    private SigninActivity mThis;
+    private AuthenticateActivity mThis;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     @Override
