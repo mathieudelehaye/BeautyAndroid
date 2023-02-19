@@ -30,7 +30,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
@@ -84,8 +84,8 @@ public class FragmentMenu extends Fragment {
                 AppUser.getInstance().authenticate("", AppUser.AuthenticationType.NONE);
 
                 // Display the first page with the result list at next startup
-                CollectionPagerAdapter.setAppPage(0);
-                CollectionPagerAdapter.setFirstPageView(FirstPageView.LIST);
+                CollectionPagerAdapter.setPage(0);
+                CollectionPagerAdapter.setResultPage(ResultPageType.LIST);
 
                 startActivity(new Intent(getContext(), AuthenticateActivity.class));
             }
@@ -98,7 +98,7 @@ public class FragmentMenu extends Fragment {
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Menu view becomes visible");
 
-            CollectionPagerAdapter.setAppPage(2);
+            CollectionPagerAdapter.setPage(2);
 
             switchLogoutButtonVisibility();
 

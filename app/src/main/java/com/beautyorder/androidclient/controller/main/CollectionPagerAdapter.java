@@ -32,30 +32,30 @@ import com.beautyorder.androidclient.controller.main.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.main.map.FragmentMap;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
-    public enum FirstPageView {
+    public enum ResultPageType {
         LIST,
         MAP
     }
 
     // current page of the app ViewPager
     private static int mCurrentPage = 0;
-    private static FirstPageView mFirstPageView = FirstPageView.LIST;
+    private static ResultPageType mResultPage = ResultPageType.LIST;
     private FragmentActivity mActivity;
 
-    public static int getAppPage() {
+    public static int getPage() {
         return mCurrentPage;
     }
 
-    public static void setAppPage(int value) {
+    public static void setPage(int value) {
         mCurrentPage = value;
     }
 
-    public static FirstPageView getFirstPageView() {
-        return mFirstPageView;
+    public static ResultPageType getResultViewType() {
+        return mResultPage;
     }
 
-    public static void setFirstPageView(FirstPageView view) {
-        mFirstPageView = view;
+    public static void setResultPage(ResultPageType view) {
+        mResultPage = view;
     }
 
     public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {
@@ -69,7 +69,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (i) {
             case 0:
-                fragment = (mFirstPageView == FirstPageView.LIST) ?
+                fragment = (mResultPage == ResultPageType.LIST) ?
                     new FragmentResultList() :
                     new FragmentMap();
                 break;

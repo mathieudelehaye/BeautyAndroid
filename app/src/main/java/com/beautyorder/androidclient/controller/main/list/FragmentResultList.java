@@ -28,7 +28,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
@@ -66,7 +66,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
         super.onViewCreated(view, savedInstanceState);
 
-        changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
+        changeSearchSwitch(0, ResultPageType.MAP);
 
         showHelp();
     }
@@ -136,7 +136,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
-            changeSearchSwitch(FirstPageView.MAP, 0, R.drawable.map);
+            changeSearchSwitch(0, ResultPageType.MAP);
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {

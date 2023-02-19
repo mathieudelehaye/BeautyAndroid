@@ -25,7 +25,7 @@ import android.util.Log;
 import android.view.*;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -68,7 +68,7 @@ public class FragmentMap extends FragmentWithSearch {
         super.onViewCreated(view, savedInstanceState);
 
         setupMap(view);
-        changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
+        changeSearchSwitch(0, ResultPageType.LIST);
 
         mBinding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,9 +113,9 @@ public class FragmentMap extends FragmentWithSearch {
             Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
                 + String.valueOf(Helpers.getTimestamp()));
 
-            CollectionPagerAdapter.setAppPage(0);
+            CollectionPagerAdapter.setPage(0);
 
-            changeSearchSwitch(FirstPageView.LIST, -1, R.drawable.bullet_list);
+            changeSearchSwitch(0, ResultPageType.LIST);
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {

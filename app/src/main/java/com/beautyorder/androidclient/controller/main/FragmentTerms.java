@@ -49,7 +49,7 @@ public class FragmentTerms extends Fragment {
             public void onClick(View view) {
                 // Go back to the app Menu
                 var activity = (MainActivity)getActivity();
-                CollectionPagerAdapter.setAppPage(2);
+                CollectionPagerAdapter.setPage(2);
 
                 NavHostFragment.findNavController(FragmentTerms.this)
                     .navigate(R.id.action_TermsFragment_to_AppFragment);

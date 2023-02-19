@@ -35,7 +35,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.FirstPageView;
+import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.model.AppUser;
@@ -279,7 +279,7 @@ public abstract class FragmentWithSearch extends Fragment {
         });
     }
 
-    protected void changeSearchSwitch(FirstPageView destinationView, int destinationPage, int icon) {
+    protected void changeSearchSwitch(int destinationPage, ResultPageType resultType) {
 
         var containerView = getView();
         if (containerView == null) {
@@ -293,23 +293,28 @@ public abstract class FragmentWithSearch extends Fragment {
             return;
         }
 
+        Log.v("BeautyAndroid", "Changing the search switch to the page: " + String.valueOf(destinationPage)
+            + ", with the view: " + resultType.toString());
+
+        final int icon = (resultType == ResultPageType.LIST) ? R.drawable.bullet_list : R.drawable.map;
+
         viewSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // Select the page if the destination is a view pager
                 if (destinationPage >= 0) {
-                    CollectionPagerAdapter.setAppPage(destinationPage);
+                    CollectionPagerAdapter.setPage(destinationPage);
                 }
 
-                Log.d("BeautyAndroid", "View pager first page set to: " + destinationView.toString());
-                CollectionPagerAdapter.setFirstPageView(destinationView);
+                Log.d("BeautyAndroid", "Result page set to: " + resultType.toString());
+                CollectionPagerAdapter.setResultPage(resultType);
 
                 // Toggle the tab swiping according to the destination view
                 var activity = (MainActivity)getActivity();
                 if ((activity) != null) {
 
-                    switch (destinationView) {
+                    switch (resultType) {
                         case MAP:
                             activity.disableTabSwiping();
                             break;

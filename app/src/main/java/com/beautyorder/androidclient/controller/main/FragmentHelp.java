@@ -49,7 +49,7 @@ public class FragmentHelp extends Fragment {
             public void onClick(View view) {
                 // Go back to the app Menu
                 var activity = (MainActivity)getActivity();
-                CollectionPagerAdapter.setAppPage(2);
+                CollectionPagerAdapter.setPage(2);
 
                 NavHostFragment.findNavController(FragmentHelp.this)
                     .navigate(R.id.action_HelpFragment_to_AppFragment);

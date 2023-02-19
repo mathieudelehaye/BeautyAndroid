@@ -77,7 +77,7 @@ public class FragmentResultDetail extends Fragment {
             @Override
             public void onClick(View view) {
                 // Go back to the app Menu
-                CollectionPagerAdapter.setAppPage(0);
+                CollectionPagerAdapter.setPage(0);
 
                 NavHostFragment.findNavController(FragmentResultDetail.this)
                     .navigate(R.id.action_ResultDetailFragment_to_AppFragment);

@@ -110,7 +110,7 @@ public class FragmentApp extends Fragment {
         super.onResume();
 
         var activity = (MainActivity)getActivity();
-        final int pageToDisplay = CollectionPagerAdapter.getAppPage();
+        final int pageToDisplay = CollectionPagerAdapter.getPage();
 
         mViewPager.setCurrentItem(pageToDisplay);
     }

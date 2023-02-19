@@ -119,7 +119,7 @@ public class FragmentCamera extends Fragment {
 
             Log.d("BeautyAndroid", "Camera view becomes visible");
 
-            CollectionPagerAdapter.setAppPage(1);
+            CollectionPagerAdapter.setPage(1);
 
             requestCamera();
 
