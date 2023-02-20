@@ -391,7 +391,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
                         // Add userInfos table entry to the database for the anonymous user
                         var userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
                         userInfo.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
-                            UserInfoDBEntry.getDayBeforeDate(date)));
+                            Helpers.getDayBeforeDate(date)));
                         userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
 
                         userInfo.createAllDBFields(new TaskCompletionManager() {

@@ -123,7 +123,7 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
                 @Override
                 public void onSuccess() {
 
-                    Date eventDate = UserInfoDBEntry.parseScoreTime(event);
+                    Date eventDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat, event);
 
                     // Only update the score if the event date is after the DB score time
                     if (eventDate.compareTo(entry.getScoreTime()) > 0) {

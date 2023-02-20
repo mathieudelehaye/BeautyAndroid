@@ -19,14 +19,17 @@
 package com.beautyorder.androidclient;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Helpers {
 
     private static long mStartTimestamp = 0;
 
+    // String
     public static boolean isEmail(String text) {
         return (!TextUtils.isEmpty((CharSequence) text) && Patterns.EMAIL_ADDRESS
             .matcher((CharSequence) text).matches());
@@ -36,11 +39,27 @@ public class Helpers {
         return TextUtils.isEmpty((CharSequence)text);
     }
 
+    // Time
     public static void startTimestamp() {
         mStartTimestamp = (new Date()).getTime();
     }
 
     public static long getTimestamp() {
         return ((new Date()).getTime() - mStartTimestamp);
+    }
+
+    public static Date parseTime(SimpleDateFormat format, String time) {
+        try {
+            return format.parse(time);
+        } catch (ParseException e) {
+            Log.e("BeautyAndroid", "Error while parsing the time from database: "
+                + e.toString());
+
+            return new Date();
+        }
+    }
+
+    public static Date getDayBeforeDate(Date date) {
+        return new java.util.Date(date.getTime() - 1000 * 60 * 60 * 24);    // ms in 1 day
     }
 }

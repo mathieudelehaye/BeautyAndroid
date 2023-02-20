@@ -20,13 +20,13 @@ package com.beautyorder.androidclient.model;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
         mData = new ArrayList<>();
         mData.add(data);
 
-        mScoreTime = parseScoreTime((String)data.get("score_time"));
+        mScoreTime = Helpers.parseTime(scoreTimeFormat, (String)data.get("score_time"));
 
         initializeDataChange();
     }
@@ -67,7 +67,7 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
         dataItem.put("score", "");
         dataItem.put("score_time", "1970.01.01");
         dataItem.put("device_id", "");
-        mScoreTime = parseScoreTime("1970.01.01");
+        mScoreTime = Helpers.parseTime(scoreTimeFormat, "1970.01.01");
 
         initializeDataChange();
     }
@@ -97,11 +97,11 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
     }
 
     public Date getScoreTime() {
-        return parseScoreTime((String)mData.get(0).get("score_time"));
+        return Helpers.parseTime(scoreTimeFormat, (String)mData.get(0).get("score_time"));
     }
 
     public void setScoreTime(String value) {
-        mScoreTime = parseScoreTime(value);
+        mScoreTime = Helpers.parseTime(scoreTimeFormat, value);
         mData.get(0).put("score_time", value);
         mDataChanged.get(0).put("score_time", true);
     }
@@ -187,20 +187,5 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
                 }
             }
         });
-    }
-
-    static public Date parseScoreTime(String scoreTime) {
-        try {
-            return scoreTimeFormat.parse(scoreTime);
-        } catch (ParseException e) {
-            Log.e("BeautyAndroid", "Error while parsing the score date from database: "
-                + e.toString());
-
-            return new Date();
-        }
-    }
-
-    static public Date getDayBeforeDate(Date date) {
-        return new java.util.Date(date.getTime() - 1000 * 60 * 60 * 24); // ms in 1 day
     }
 }

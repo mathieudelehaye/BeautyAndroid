@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentManager;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
@@ -97,7 +98,7 @@ public class ScoreTransferer {
 
         anonymousUserEntry.setScore(0);
         anonymousUserEntry.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
-            UserInfoDBEntry.getDayBeforeDate(new Date())));
+            Helpers.getDayBeforeDate(new Date())));
 
         anonymousUserEntry.updateDBFields(new TaskCompletionManager() {
             @Override

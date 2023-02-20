@@ -41,10 +41,12 @@ import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -55,6 +57,7 @@ public class FragmentCamera extends Fragment {
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
     private SharedPreferences mSharedPref;
+    private Date mLastPhotoTaking;
     private boolean mIsViewVisible = false;
 
     @Override
@@ -77,6 +80,9 @@ public class FragmentCamera extends Fragment {
 
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        mLastPhotoTaking = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+            mSharedPref.getString("photo_taking_date", "1970.01.01"));
 
         showHelp();
     }
@@ -173,6 +179,12 @@ public class FragmentCamera extends Fragment {
             @Override
             public void onClick(View view) {
 
+                // If a picture has already been taken the same day, do nothing
+                final var currentDate = new java.util.Date();
+                if (mLastPhotoTaking.compareTo(currentDate) >= 0) {
+                    return;
+                }
+
                 Log.i("BeautyAndroid", "Capturing an image with the camera");
                 Toast.makeText(mCtx, "Capturing image", Toast.LENGTH_SHORT).show();
 
@@ -193,6 +205,8 @@ public class FragmentCamera extends Fragment {
                             Log.d("BeautyAndroid", "Image saved to file: " + file);
                             Log.v("BeautyAndroid", "Image saved to file at timestamp: "
                                 + Helpers.getTimestamp());
+
+                            var path = file.getPath();
 
                             // TODO: store the File object reference in a queue for sending
                         }

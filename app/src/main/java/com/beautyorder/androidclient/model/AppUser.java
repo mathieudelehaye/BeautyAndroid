@@ -18,6 +18,8 @@
 
 package com.beautyorder.androidclient.model;
 
+import androidx.annotation.NonNull;
+
 public class AppUser {
     public enum AuthenticationType {
         NONE,
@@ -43,12 +45,17 @@ public class AppUser {
     }
 
     public String getId() {
-        return this.id.toString();
+        return id.toString();
     }
 
-    public void authenticate(String _uid, AuthenticationType _type) {
-        this.authenticationType = _type;
-        this.id.setLength(0);
-        this.id.append(_uid);
+    public void authenticate(@NonNull String _uid, @NonNull AuthenticationType _type) {
+
+        if (_uid.equals("") || (_type == AuthenticationType.NONE)) {
+            return;
+        }
+
+        authenticationType = _type;
+        id.setLength(0);
+        id.append(_uid);
     }
 }
