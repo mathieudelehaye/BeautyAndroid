@@ -62,4 +62,12 @@ public class Helpers {
     public static Date getDayBeforeDate(Date date) {
         return new java.util.Date(date.getTime() - 1000 * 60 * 60 * 24);    // ms in 1 day
     }
+
+    public static int compareYearDays(Date d1, Date d2) {
+        if (d1.getYear() != d2.getYear())
+            return d1.getYear() - d2.getYear();
+        if (d1.getMonth() != d2.getMonth())
+            return d1.getMonth() - d2.getMonth();
+        return d1.getDate() - d2.getDate();
+    }
 }

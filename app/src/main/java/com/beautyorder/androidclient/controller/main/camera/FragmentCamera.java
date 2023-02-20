@@ -44,9 +44,7 @@ import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -57,7 +55,6 @@ public class FragmentCamera extends Fragment {
     private PreviewView mPreviewView;
     private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
     private SharedPreferences mSharedPref;
-    private Date mLastPhotoTaking;
     private boolean mIsViewVisible = false;
 
     @Override
@@ -80,9 +77,6 @@ public class FragmentCamera extends Fragment {
 
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
-
-        mLastPhotoTaking = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
-            mSharedPref.getString("photo_taking_date", "1970.01.01"));
 
         showHelp();
     }
@@ -181,15 +175,20 @@ public class FragmentCamera extends Fragment {
 
                 // If a picture has already been taken the same day, do nothing
                 final var currentDate = new java.util.Date();
-                if (mLastPhotoTaking.compareTo(currentDate) >= 0) {
+                final var lastPhotoDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+                    mSharedPref.getString("photo_taking_date", "1970.01.01"));
+
+                if (Helpers.compareYearDays(lastPhotoDate, currentDate) >= 0) {
+                    Log.d("BeautyAndroid", "A photo has already been taken today");
+                    Toast.makeText(mCtx, "You can only send one photo a day", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Log.i("BeautyAndroid", "Capturing an image with the camera");
-                Toast.makeText(mCtx, "Capturing image", Toast.LENGTH_SHORT).show();
+                Log.i("BeautyAndroid", "Capturing a photo with the camera");
+                Toast.makeText(mCtx, "Capturing photo", Toast.LENGTH_SHORT).show();
 
-                String fileName = AppUser.getInstance().getId() + "-"
-                    + (new SimpleDateFormat("yyyy.MM.dd'T'HH:mm:ss").format(new java.util.Date()));
+                String photoDate = UserInfoDBEntry.scoreTimeFormat.format(currentDate);
+                String fileName = AppUser.getInstance().getId() + "-" + photoDate;
 
                 String appFolderPath = "/storage/emulated/0/Android/data/com.beautyorder.androidclient/files";
                 var file = new File(appFolderPath, fileName);
@@ -202,13 +201,15 @@ public class FragmentCamera extends Fragment {
                     new ImageCapture.OnImageSavedCallback() {
                         @Override
                         public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                            Log.d("BeautyAndroid", "Image saved to file: " + file);
-                            Log.v("BeautyAndroid", "Image saved to file at timestamp: "
+                            Log.d("BeautyAndroid", "Photo saved to file: " + file);
+                            Log.v("BeautyAndroid", "Photo saved at timestamp: "
                                 + Helpers.getTimestamp());
+
+                            mSharedPref.edit().putString("photo_taking_date", photoDate).commit();
 
                             var path = file.getPath();
 
-                            // TODO: store the File object reference in a queue for sending
+                            // TODO: store the local file path in a queue to send the file to the DB
                         }
                         @Override
                         public void onError(ImageCaptureException error) {
