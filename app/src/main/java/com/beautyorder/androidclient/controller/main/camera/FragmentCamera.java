@@ -18,6 +18,7 @@
 package com.beautyorder.androidclient.controller.main.camera;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -45,6 +46,7 @@ import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -176,7 +178,7 @@ public class FragmentCamera extends Fragment {
                 // If a picture has already been taken the same day, do nothing
                 final var currentDate = new java.util.Date();
                 final var lastPhotoDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
-                    mSharedPref.getString("photo_taking_date", "1970.01.01"));
+                    mSharedPref.getString(getString(R.string.photo_date), "1970.01.01"));
 
                 if (Helpers.compareYearDays(lastPhotoDate, currentDate) >= 0) {
                     Log.d("BeautyAndroid", "A photo has already been taken today");
@@ -185,7 +187,6 @@ public class FragmentCamera extends Fragment {
                 }
 
                 Log.i("BeautyAndroid", "Capturing a photo with the camera");
-                Toast.makeText(mCtx, "Capturing photo", Toast.LENGTH_SHORT).show();
 
                 String photoDate = UserInfoDBEntry.scoreTimeFormat.format(currentDate);
                 String fileName = AppUser.getInstance().getId() + "-" + photoDate;
@@ -205,11 +206,31 @@ public class FragmentCamera extends Fragment {
                             Log.v("BeautyAndroid", "Photo saved at timestamp: "
                                 + Helpers.getTimestamp());
 
-                            mSharedPref.edit().putString("photo_taking_date", photoDate).commit();
+                            mSharedPref.edit().putString(getString(R.string.photo_date), photoDate).commit();
 
-                            var path = file.getPath();
+                            String filePath = file.getPath();
 
-                            // TODO: store the local file path in a queue to send the file to the DB
+                            // Store the local file path in a queue to send the file to the DB
+                            var photoQueue = (HashSet<String>) (mSharedPref.getStringSet(
+                                getString(R.string.photos_to_send), new HashSet<>()));
+
+                            if (!photoQueue.contains(filePath)) {
+                                photoQueue.add(filePath);
+
+                                // Write back the queue to the app preferences
+                                mSharedPref.edit().putStringSet(getString(R.string.photos_to_send), photoQueue)
+                                    .commit();
+
+                                Log.i("BeautyAndroid", "Photo added to the queue for sending");
+
+                                final Activity activity = getActivity();
+                                activity.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast toast = Toast.makeText(mCtx, "Thanks for recycling!", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                });
+                            }
                         }
                         @Override
                         public void onError(ImageCaptureException error) {

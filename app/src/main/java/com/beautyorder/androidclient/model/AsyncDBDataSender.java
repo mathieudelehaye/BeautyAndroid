@@ -98,24 +98,22 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
         }
 
         // Return if there is no scanning events to send in the app preferences
-        var scoreQueue = (HashSet<String>) mSharedPref.getStringSet(mActivity.getString(R.string.eb_points_to_send),
-            new HashSet<String>());
+        var photoQueue = (HashSet<String>) mSharedPref.getStringSet(mActivity.getString(R.string.photos_to_send),
+            new HashSet<>());
 
-        if (scoreQueue.isEmpty()) {
+        if (photoQueue.isEmpty()) {
             //Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
             restart();
             return;
         }
 
-        Log.d("BeautyAndroid", "Number of events to send in the queue: " + scoreQueue.size());
-
-        var updatedQueue = (HashSet<String>)scoreQueue.clone();
+        Log.d("BeautyAndroid", "Number of events to send in the queue: " + photoQueue.size());
 
         String uid = AppUser.getInstance().getId();
 
         // Process the first event in the queue: increment the score in the database then removing the event
         // from the queue
-        for(String event: scoreQueue) {
+        for(String photoPath: photoQueue) {
 
             var entry = new UserInfoDBEntry(mDatabase, uid);
 
@@ -123,38 +121,57 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
                 @Override
                 public void onSuccess() {
 
-                    Date eventDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat, event);
+                    // Get the date from the photo name
+                    Date photoDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+                        photoPath.substring(photoPath.lastIndexOf("-") + 1));
 
                     // Only update the score if the event date is after the DB score time
-                    if (eventDate.compareTo(entry.getScoreTime()) > 0) {
-                        final int newScore = entry.getScore() + 1;
+                    if (photoDate.compareTo(entry.getScoreTime()) > 0) {
 
-                        entry.setScore(newScore);
-                        entry.setScoreTime(event);
-                        entry.updateDBFields(new TaskCompletionManager() {
+                        // The app won't increase the score, as the photo must first be verified at the backend
+                        // server
+
+                        // Upload the photo to the Cloud Storage for Firebase
+                        var photoFile = new File(photoPath);
+                        final var photoURI = Uri.fromFile(photoFile);
+
+                        StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
+                            .child("user_images/"+photoURI.getLastPathSegment());
+
+                        UploadTask uploadTask = riversRef.putFile(photoURI);
+
+                        // Register observers to listen for when the download is done or if it fails
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onSuccess() {
-                                Log.v("BeautyAndroid", "Score written to the database and displayed "
-                                    + "on screen");
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                Log.i("BeautyAndroid", "Photo sent to the database");
+                                Log.v("BeautyAndroid", "Photo uploaded to the database at timestamp: "
+                                    + String.valueOf(Helpers.getTimestamp()));
 
-                                new ScoreTransferer(mDatabase, (MainActivity) mActivity)
-                                    .displayScoreOnScreen(newScore);
+                                if (!photoFile.delete()) {
+                                    Log.w("BeautyAndroid", "Unable to delete the local photo file: "
+                                        + photoPath);
+                                } else {
+                                    Log.v("BeautyAndroid", "Local image successfully deleted");
+                                }
                             }
-
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void onFailure() {
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Log.e("BeautyAndroid", "Failed to upload the image with the error:"
+                                        + exception.toString());
                             }
                         });
-
-                        Log.i("BeautyAndroid", "Scanning event sent to the database: " + event);
                     } else {
-                        Log.w("BeautyAndroid", "Scanning event older than the latest in the database: " + event);
+                        Log.w("BeautyAndroid", "Photo older than the latest in the database: " + photoPath);
                     }
 
-                    Log.d("BeautyAndroid", "Scanning event removed from the app queue: " + event);
-                    updatedQueue.remove(event);
-                    mSharedPref.edit().putStringSet(mActivity.getString(R.string.eb_points_to_send),
-                        updatedQueue).commit();
+                    Log.d("BeautyAndroid", "Photo removed from the app queue: " + photoPath);
+                    photoQueue.remove(photoPath);
+                    mSharedPref.edit().putStringSet(mActivity.getString(R.string.photos_to_send),
+                        photoQueue).commit();
                 }
 
                 @Override

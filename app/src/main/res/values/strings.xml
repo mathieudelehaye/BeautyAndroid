@@ -23,7 +23,8 @@
     <string name="app_uid">app-uid</string>
     <string name="anonymous_uid">anonymous-uid</string>
     <string name="device_id">device-id</string>
-    <string name="eb_points_to_send">eb-points-to-send</string>
+    <string name="photo_date">photo-date</string>
+    <string name="photos_to_send">photos-to-send</string>
     <string name="completed_onboarding">completed-onboarding</string>
     <string name="last_scanning_date">last-scanning-date</string>
     <string name="action_settings">Settings</string>
