@@ -127,7 +127,7 @@ public abstract class FragmentWithSearch extends Fragment {
     protected void updateSearchResults() {
 
         // If there is no search start yet, find it and get the items to display
-        if (mSearchStart == null) {
+        if (mSearchStart == null && getContext() != null) {
             String searchQuery = ((MainActivity)getContext()).getSearchQuery();
 
             if (!searchQuery.equals("") && !searchQuery.equals("usr")) {
@@ -140,7 +140,9 @@ public abstract class FragmentWithSearch extends Fragment {
                 Log.v("BeautyAndroid", "Searching around the user location from the cache");
                 setSearchStart(mUserLocation);
             }
+        }
 
+        if  (mSearchStart != null) {
             // Search and display the items in the child fragment
             searchAndDisplayItems();
         }

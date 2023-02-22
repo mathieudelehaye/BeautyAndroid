@@ -18,6 +18,7 @@
 
 package com.beautyorder.androidclient.model;
 
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.FirebaseFirestoreMockManager;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import java.util.Date;
@@ -78,13 +79,15 @@ public class UserInfoEntryUnitTest {
 
         {
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(UserInfoDBEntry.parseScoreTime("1970.01.01")));
+            assertEquals(true, entryScoreTime.equals(Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+                "1970.01.01")));
         }
 
         {
             entry.setScoreTime("2022.12.22");
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(UserInfoDBEntry.parseScoreTime("2022.12.22")));
+            assertEquals(true, entryScoreTime.equals(Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+                "2022.12.22")));
             entry.updateDBFields();
         }
     }

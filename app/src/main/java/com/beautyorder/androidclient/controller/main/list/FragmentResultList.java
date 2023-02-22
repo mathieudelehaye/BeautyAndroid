@@ -79,7 +79,7 @@ public class FragmentResultList extends FragmentWithSearch {
             @Override
             public void onSuccess() {
                 Log.v("BeautyAndroid", "Results received from database at timestamp: "
-                    + String.valueOf(Helpers.getTimestamp()));
+                    + Helpers.getTimestamp());
 
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
@@ -142,6 +142,8 @@ public class FragmentResultList extends FragmentWithSearch {
             if ((activity) != null) {
                 activity.enableTabSwiping();
             }
+
+            updateSearchResults();
 
             showHelp();
         } else {
