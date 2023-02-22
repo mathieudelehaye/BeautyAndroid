@@ -2,7 +2,8 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.beautyorder.androidclient">
+    package="com.beautyorder.androidclient"
+>
 
     <uses-feature android:name="android.hardware.camera.any" />
 
@@ -13,6 +14,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
 
+    <uses-sdk tools:overrideLibrary="androidx.core.core-splashscreen"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,13 +25,14 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.BeautyAndroid.NoActionBar"
-        tools:targetApi="31">
+        tools:targetApi="31"
+    >
 
         <activity
-            android:name=".controller.auth.AuthenticateActivity"
-            android:enabled="true"
-            android:exported="true">
-
+            android:name=".controller.splash.RoutingActivity"
+            android:theme="@style/Theme.App.Splash"
+            android:exported="true"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,10 +40,21 @@
         </activity>
 
         <activity
+            android:name=".controller.splash.SplashActivity"
+            android:theme="@style/Theme.App.Splash"
+        />
+
+        <activity
+            android:name=".controller.auth.AuthenticateActivity"
+            android:enabled="true"
+        />
+
+        <activity
             android:name=".controller.onboarding.OnboardingActivity"
             android:enabled="true"
+            android:theme="@style/Theme.Leanback.Onboarding.Beauty"
             android:exported="true"
-            android:theme="@style/Theme.Leanback.Onboarding.Beauty">
+        >
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,7 +64,8 @@
 
         <activity
             android:name=".controller.main.MainActivity"
-            android:exported="true">
+            android:exported="true"
+        >
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>

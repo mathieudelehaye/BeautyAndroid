@@ -72,7 +72,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
         Log.i("BeautyAndroid", "Sign-up activity started");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
+        setContentView(R.layout.activity_authenticate);
 
         mThis = this;
         mAuth = FirebaseAuth.getInstance();
@@ -235,7 +235,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
                                 getString(R.string.app_name), Context.MODE_PRIVATE).getString(
                                 getString(R.string.device_id), ""));
 
-                            UserInfoDBEntry userInfo = new UserInfoDBEntry(mDatabase, emailText, userInfoMap);
+                            var userInfo = new UserInfoDBEntry(mDatabase, emailText, userInfoMap);
                             userInfo.createAllDBFields();
 
                             user.sendEmailVerification()

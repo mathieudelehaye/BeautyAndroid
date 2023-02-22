@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    activity_signing.xml
+    activity_splash.xml
 
-    Created by Mathieu Delehaye on 4/02/2023.
+    Created by Mathieu Delehaye on 22/02/2023.
 
     BeautyAndroid: An Android app to order and recycle cosmetics.
 
@@ -19,7 +19,6 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,28 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
-        android:id="@+id/appBarLayout">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_anchorGravity="center"
-            app:layout_anchor="@+id/appBarLayout">
-
-            <ImageView
-                android:id="@+id/search_box_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX=".6"
-                android:scaleY=".6"
-                android:layout_gravity="center"
-                android:src="@drawable/brand_logo"/>
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:id="@+id/appBarLayout"
+    />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
