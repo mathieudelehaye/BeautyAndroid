@@ -102,10 +102,11 @@ public class FragmentResultList extends FragmentWithSearch {
                 resultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        String title = ((ResultItemInfo)adapter.getItem(position)).getTitle();
+                        final var itemInfo = ((ResultItemInfo)adapter.getItem(position));
+                        String title = itemInfo.getTitle();
                         Log.d("BeautyAndroid", "Tapped item: " + title);
-                        String description = ((ResultItemInfo)adapter.getItem(position)).getDescription();
-                        final byte[] imageBytes = ((ResultItemInfo)adapter.getItem(position)).getImage();
+                        String description = itemInfo.getDescription();
+                        final byte[] imageBytes = itemInfo.getImage();
 
                         var activity = (MainActivity) getActivity();
                         activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes));

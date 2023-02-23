@@ -54,6 +54,7 @@ public class FragmentApp extends Fragment {
         tabLayout.getTabAt(1).setIcon(R.drawable.camera);
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity()));
+        mViewPager.setOffscreenPageLimit(3);    // display up to 3 pages without recreating them at each swipe
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
