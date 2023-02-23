@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.mlkit.vision.demo;
+package com.beautyorder.androidclient.controller.main.camera.qrcode.mlkit;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
@@ -45,7 +45,7 @@ public class BitmapUtils {
 
     /** Converts NV21 format byte buffer to bitmap. */
     @Nullable
-    public static Bitmap getBitmap(ByteBuffer data, com.google.mlkit.vision.demo.FrameMetadata metadata) {
+    public static Bitmap getBitmap(ByteBuffer data, FrameMetadata metadata) {
         data.rewind();
         byte[] imageInBuffer = new byte[data.limit()];
         data.get(imageInBuffer, 0, imageInBuffer.length);
@@ -71,8 +71,8 @@ public class BitmapUtils {
     @Nullable
     @ExperimentalGetImage
     public static Bitmap getBitmap(ImageProxy image) {
-        com.google.mlkit.vision.demo.FrameMetadata frameMetadata =
-            new com.google.mlkit.vision.demo.FrameMetadata.Builder()
+        FrameMetadata frameMetadata =
+            new FrameMetadata.Builder()
                 .setWidth(image.getWidth())
                 .setHeight(image.getHeight())
                 .setRotation(image.getImageInfo().getRotationDegrees())

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.mlkit.vision.demo;
+package com.beautyorder.androidclient.controller.main.camera.qrcode.mlkit;
 
 /** Describing a frame info. */
 public class FrameMetadata {

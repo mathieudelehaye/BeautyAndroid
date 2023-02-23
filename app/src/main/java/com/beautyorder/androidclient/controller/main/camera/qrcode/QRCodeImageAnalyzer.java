@@ -15,7 +15,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.demo.BitmapUtils;
+import com.beautyorder.androidclient.controller.main.camera.qrcode.mlkit.BitmapUtils;
 
 import java.util.List;
 
