@@ -19,11 +19,15 @@
 package com.beautyorder.androidclient.controller.main.map;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.*;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
@@ -41,7 +45,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import java.util.ArrayList;
 
 public class FragmentMap extends FragmentWithSearch {
     private FragmentMapBinding mBinding;
@@ -49,7 +52,6 @@ public class FragmentMap extends FragmentWithSearch {
     private IMapController mMapController;
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
-    private ArrayList<ResultItemInfo> mResultItems;
     private boolean mIsViewVisible = false;
     private boolean mKeyboardDisplayed = false;
     private final int mMapInitialHeight = 1413;     // = 807 dp
@@ -136,6 +138,8 @@ public class FragmentMap extends FragmentWithSearch {
             }
         });
 
+        ToggleDetailsView(false);
+
         showHelp();
     }
 
@@ -176,6 +180,8 @@ public class FragmentMap extends FragmentWithSearch {
             }
 
             showHelp();
+
+            ToggleDetailsView(false);
         } else {
             mIsViewVisible = false;
         }
@@ -211,14 +217,30 @@ public class FragmentMap extends FragmentWithSearch {
                             Log.i("BeautyAndroid", "Single tap");
                             mMapController.animateTo(item.getPoint());
 
-                            // Todo: display the detail view
+                            var activity = (MainActivity) getActivity();
 
-                            return false;
+                            if (activity == null) {
+                                Log.w("BeautyAndroid", "Cannot show the result item, as no activity "
+                                    + "available");
+                                return false;
+                            }
+
+                            var result = activity.getSearchResult();
+
+                            if (result == null) {
+                                Log.w("BeautyAndroid", "Cannot show the result item, as no result "
+                                        + "available");
+                                return false;
+                            }
+
+                            showDetails(result.get(index));
+
+                            return true;
                         }
 
                         @Override
                         public boolean onItemLongPress(final int index, final OverlayItem item) {
-                            return false;
+                            return true;
                         }
                     }, mCtx);
 
@@ -286,5 +308,39 @@ public class FragmentMap extends FragmentWithSearch {
                 dialogFragment.show(getChildFragmentManager(), "Map help dialog");
             }
         }
+    }
+
+    private void showDetails(ResultItemInfo itemInfo) {
+
+        String itemTitle = itemInfo.getTitle();
+        String itemDescription = itemInfo.getDescription();
+        final byte[] itemImageBytes = itemInfo.getImage();
+
+        ImageView resultImage = getView().findViewById(R.id.detail_map_image);
+        if (itemImageBytes != null) {
+            Bitmap image = BitmapFactory.decodeByteArray(itemImageBytes, 0, itemImageBytes.length);
+            resultImage.setImageBitmap(image);
+        } else {
+            // Use a placeholder if the image has not been set
+            resultImage.setImageResource(R.drawable.camera);
+        }
+        resultImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        TextView resultDescription = getView().findViewById(R.id.detail_map_description);
+        resultDescription.setText(itemTitle + "\n\n" + itemDescription);
+
+        ToggleDetailsView(true);
+    }
+
+    private void ToggleDetailsView(boolean visible) {
+
+        View rootView = getView();
+
+        if (rootView == null) {
+            Log.w("BeautyAndroid", "Cannot toggle the details view, as no root view available");
+        }
+
+        View detailLayout = rootView.findViewById(R.id.detail_map_layout);
+        detailLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

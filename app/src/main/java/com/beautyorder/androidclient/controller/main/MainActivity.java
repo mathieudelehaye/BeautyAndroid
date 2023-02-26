@@ -37,6 +37,7 @@ import com.beautyorder.androidclient.controller.main.map.FragmentMap;
 import com.beautyorder.androidclient.model.AsyncDBDataSender;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.model.SearchResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private FirebaseFirestore mDatabase;
     private StringBuilder mSearchQuery = new StringBuilder("");
+    private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
     private FragmentApp mAppFragment = new FragmentApp();
     private FragmentHelp mHelpFragment = new FragmentHelp();
@@ -57,6 +59,26 @@ public class MainActivity extends AppCompatActivity {
     private FragmentMap mMapFragment = new FragmentMap();
     private Fragment mShownFragment = mAppFragment;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
+
+    public String getSearchQuery() {
+        return mSearchQuery.toString();
+    }
+
+    public ResultItemInfo getSelectedRecyclePoint() {
+        return mSelectedRecyclePoint;
+    }
+
+    public void setSelectedRecyclePoint(ResultItemInfo value) {
+        mSelectedRecyclePoint = value;
+    }
+
+    public SearchResult getSearchResult() {
+        return mSearchResult;
+    }
+
+    public void setSearchResult(SearchResult result) {
+        mSearchResult = result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,24 +151,40 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public String getSearchQuery() {
-        return mSearchQuery.toString();
-    }
-
-    public ResultItemInfo getSelectedRecyclePoint() {
-        return mSelectedRecyclePoint;
-    }
-
-    public void setSelectedRecyclePoint(ResultItemInfo value) {
-        mSelectedRecyclePoint = value;
-    }
-
     public boolean isNetworkAvailable() {
         var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
             connectivityManager.getActiveNetworkInfo() : null;
         return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
+    }
+
+    public void enableTabSwiping() {
+        // Enable swiping gesture for the view pager
+        var fragment =
+                (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+        fragment.enableTabSwiping();
+    }
+
+    public void disableTabSwiping() {
+        // Disable the swiping gesture for the view pager
+        var fragment =
+                (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+        fragment.disableTabSwiping();
+    }
+
+    public void showFragment(FragmentType type) {
+        Fragment fragment = findFragment(type);
+
+        hideFragment(mShownFragment);
+
+        getSupportFragmentManager().beginTransaction()
+                .show(fragment)
+                .commit();
+
+        mShownFragment = fragment;
+
+        fragment.setUserVisibleHint(true);
     }
 
     private void handleIntent(Intent intent) {
@@ -163,20 +201,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
         }
-    }
-
-    public void enableTabSwiping() {
-        // Enable swiping gesture for the view pager
-        var fragment =
-            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
-        fragment.enableTabSwiping();
-    }
-
-    public void disableTabSwiping() {
-        // Disable the swiping gesture for the view pager
-        var fragment =
-            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
-        fragment.disableTabSwiping();
     }
 
     private Fragment findFragment(FragmentType type) {
@@ -210,20 +234,6 @@ public class MainActivity extends AppCompatActivity {
             .add(R.id.mainActivityLayout, fragment)
             .hide(fragment)
             .commit();
-    }
-
-    public void showFragment(FragmentType type) {
-        Fragment fragment = findFragment(type);
-
-        hideFragment(mShownFragment);
-
-        getSupportFragmentManager().beginTransaction()
-            .show(fragment)
-            .commit();
-
-        mShownFragment = fragment;
-
-        fragment.setUserVisibleHint(true);
     }
 
     private void hideFragment(Fragment fragment){

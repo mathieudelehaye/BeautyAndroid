@@ -35,6 +35,10 @@ public class SearchResult {
         return mResultItems;
     }
 
+    public ResultItemInfo get(int index) {
+        return mResultItems.get(index);
+    }
+
     public void add(ResultItemInfo info, String imageURL) {
         mResultItems.add(info);
         mImageUrls.add(imageURL);

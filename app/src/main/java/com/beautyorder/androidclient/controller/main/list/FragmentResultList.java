@@ -37,7 +37,6 @@ import com.beautyorder.androidclient.model.SearchResult;
 
 public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
-    private SearchResult mSearchResult;
     private boolean mIsViewVisible = false;
 
     @Override
@@ -71,32 +70,39 @@ public class FragmentResultList extends FragmentWithSearch {
                 Log.v("BeautyAndroid", "Results received from database at timestamp: "
                     + Helpers.getTimestamp());
 
+                var activity = (MainActivity) getActivity();
+
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
-                mSearchResult = new SearchResult();
+                var result = new SearchResult();
 
                 for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
                     final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
-                    mSearchResult.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null),
+                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null),
                         point.getImage());
                 }
 
-                var adapter = new ResultListAdapter(getContext(), mSearchResult.getResultItems());
+                var adapter = new ResultListAdapter(getContext(), result.getResultItems());
                 resultList.setAdapter(adapter);
 
                 resultList.setOnItemClickListener((adapterView, view, position, l) -> {
+
+                    if (activity == null) {
+                        Log.w("BeautyAndroid", "List item tapped but activity not available");
+                        return;
+                    }
+
                     final var itemInfo = ((ResultItemInfo)adapter.getItem(position));
                     String title = itemInfo.getTitle();
                     Log.d("BeautyAndroid", "Tapped item: " + title);
                     String description = itemInfo.getDescription();
                     final byte[] imageBytes = itemInfo.getImage();
 
-                    var activity = (MainActivity) getActivity();
                     activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes));
                     activity.showFragment(MainActivity.FragmentType.DETAIL);
                 });
 
-                mSearchResult.downloadImages(new TaskCompletionManager() {
+                result.downloadImages(new TaskCompletionManager() {
 
                     @Override
                     public void onSuccess() {
@@ -107,6 +113,8 @@ public class FragmentResultList extends FragmentWithSearch {
                     public void onFailure() {
                     }
                 });
+
+                activity.setSearchResult(result);
             }
 
             @Override

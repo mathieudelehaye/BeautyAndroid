@@ -75,7 +75,7 @@
 
             <ImageView
                 android:id="@+id/detail_map_image"
-                android:layout_width="105dp"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:importantForAccessibility="no"
                 android:layout_marginStart="0dp"
@@ -94,8 +94,8 @@
                 android:paddingStart="?android:attr/listPreferredItemPaddingStart"
                 android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
                 android:paddingTop="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintStart_toEndOf="@id/detail_map_image"
