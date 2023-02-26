@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private StringBuilder mSearchQuery = new StringBuilder("");
     private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
+    private FragmentType mDetailsPrevFragment;
     private FragmentApp mAppFragment = new FragmentApp();
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
@@ -78,6 +79,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSearchResult(SearchResult result) {
         mSearchResult = result;
+    }
+
+    public FragmentType getDetailsPrevFragment() {
+        return mDetailsPrevFragment;
+    }
+
+    public void setDetailsPrevFragment(FragmentType type) {
+        mDetailsPrevFragment = type;
     }
 
     @Override
@@ -179,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
         hideFragment(mShownFragment);
 
         getSupportFragmentManager().beginTransaction()
-                .show(fragment)
-                .commit();
+            .show(fragment)
+            .commit();
 
         mShownFragment = fragment;
 

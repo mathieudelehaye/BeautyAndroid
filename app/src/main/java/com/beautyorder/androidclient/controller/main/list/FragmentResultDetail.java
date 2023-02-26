@@ -56,10 +56,13 @@ public class FragmentResultDetail extends Fragment {
 
         // Back button
         mBinding.backResultDetail.setOnClickListener(view1 -> {
-            // Go back to the app Menu
-            CollectionPagerAdapter.setPage(0);
+            // Go back to the previous fragment
             var activity = (MainActivity)getActivity();
-            activity.showFragment(MainActivity.FragmentType.APP);
+            MainActivity.FragmentType prevFragmentType = ((MainActivity) getActivity()).getDetailsPrevFragment();
+            if (prevFragmentType == MainActivity.FragmentType.APP) {
+                CollectionPagerAdapter.setPage(0);
+            }
+            activity.showFragment(prevFragmentType);
         });
     }
 

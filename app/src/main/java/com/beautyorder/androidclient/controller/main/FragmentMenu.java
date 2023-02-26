@@ -66,28 +66,22 @@ public class FragmentMenu extends Fragment {
             activity.showFragment(MainActivity.FragmentType.HELP);
         });
 
-        mBinding.termsMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                var activity = (MainActivity)getActivity();
-                activity.showFragment(MainActivity.FragmentType.TERMS);
-            }
+        mBinding.termsMenu.setOnClickListener(view12 -> {
+            var activity = (MainActivity)getActivity();
+            activity.showFragment(MainActivity.FragmentType.TERMS);
         });
 
-        mBinding.logOutMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mBinding.logOutMenu.setOnClickListener(view13 -> {
 
-                // Delete the app preferences, app user object and navigate to the Home page
-                mSharedPref.edit().putString(getString(R.string.app_uid), "").commit();
+            // Delete the app preferences, app user object and navigate to the Home page
+            mSharedPref.edit().putString(getString(R.string.app_uid), "").commit();
 
-                AppUser.getInstance().authenticate("", AppUser.AuthenticationType.NONE);
+            AppUser.getInstance().authenticate("", AppUser.AuthenticationType.NONE);
 
-                // Display the first page with the result list at next startup
-                CollectionPagerAdapter.setPage(0);
+            // Display the first page with the result list at next startup
+            CollectionPagerAdapter.setPage(0);
 
-                startActivity(new Intent(getContext(), AuthenticateActivity.class));
-            }
+            startActivity(new Intent(getContext(), AuthenticateActivity.class));
         });
     }
 
