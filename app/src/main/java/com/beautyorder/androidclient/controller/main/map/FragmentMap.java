@@ -329,6 +329,14 @@ public class FragmentMap extends FragmentWithSearch {
         TextView resultDescription = getView().findViewById(R.id.detail_map_description);
         resultDescription.setText(itemTitle + "\n\n" + itemDescription);
 
+        mBinding.detailMapLayout.setOnClickListener(view1 -> {
+            var activity = (MainActivity)getActivity();
+
+            activity.setSelectedRecyclePoint(itemInfo);
+            activity.setDetailsPrevFragment(MainActivity.FragmentType.MAP);
+            activity.showFragment(MainActivity.FragmentType.DETAIL);
+        });
+
         ToggleDetailsView(true);
     }
 
