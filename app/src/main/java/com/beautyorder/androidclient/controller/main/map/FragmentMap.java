@@ -19,6 +19,7 @@
 package com.beautyorder.androidclient.controller.main.map;
 
 import android.annotation.SuppressLint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -47,6 +48,10 @@ public class FragmentMap extends FragmentWithSearch {
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private boolean mIsViewVisible = false;
+    private Boolean mKeyboardDisplayed = false;
+    private final int mMapInitialHeight = 1413;     // = 807 dp
+    private final int mMapHeightDiff = 540; // = 309 dp
+    private final int mMapReducedHeight = mMapInitialHeight - mMapHeightDiff;
 
     @Override
     public View onCreateView(
@@ -73,16 +78,58 @@ public class FragmentMap extends FragmentWithSearch {
         setupMap(view);
         changeSearchSwitch(ResultPageType.LIST);
 
-        mBinding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 
-                if(mUserLocation != null) {
-                    Log.d("BeautyAndroid", "Change map focus to user location");
+            var viewBorder = new Rect();
 
-                    mMapController.animateTo(mUserLocation);
-                    // TODO: possibly change the zoom level
+            // border will be populated with the overall visible display size in which the window this view is
+            // attached to has been positioned in.
+            view.getWindowVisibleDisplayFrame(viewBorder);
+
+            final int viewBorderHeight = viewBorder.height();
+
+            // height of the fragment root view
+            View mapRootView = view.getRootView();
+            View mapLayout = view.findViewById(R.id.mapLayout);
+
+            if (mapRootView == null || mapLayout == null) {
+                return;
+            }
+
+            final int viewPagerRootViewHeight = mapRootView.getHeight();
+
+            final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
+
+            if (heightDiff > 0.25*viewPagerRootViewHeight) {
+                // if more than 25% of the screen, it's probably a keyboard
+                if (!mKeyboardDisplayed) {
+                    mKeyboardDisplayed = true;
+                    Log.v("BeautyAndroid", "Keyboard displayed");
+
+                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
+                    params.height = mMapReducedHeight;
+
+                    mapLayout.requestLayout();
                 }
+            } else {
+                if (mKeyboardDisplayed) {
+                    mKeyboardDisplayed = false;
+                    Log.v("BeautyAndroid", "Keyboard hidden");
+
+                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
+                    params.height = mMapInitialHeight;
+                    mapLayout.requestLayout();
+                }
+            }
+        });
+
+        mBinding.mapUserLocation.setOnClickListener(view1 -> {
+
+            if(mUserLocation != null) {
+                Log.d("BeautyAndroid", "Change map focus to user location");
+
+                mMapController.animateTo(mUserLocation);
+                // TODO: possibly change the zoom level
             }
         });
 
@@ -114,7 +161,7 @@ public class FragmentMap extends FragmentWithSearch {
 
             Log.d("BeautyAndroid", "Map view becomes visible");
             Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
-                + String.valueOf(Helpers.getTimestamp()));
+                + Helpers.getTimestamp());
 
             CollectionPagerAdapter.setPage(0);
 
@@ -162,7 +209,7 @@ public class FragmentMap extends FragmentWithSearch {
     private void setupMap(View view) {
 
         // inflate and create the map
-        mMap = (MapView) view.findViewById(R.id.map);
+        mMap = view.findViewById(R.id.map);
         mMap.setTileSource(TileSourceFactory.MAPNIK);
 
         mMap.setBuiltInZoomControls(true);

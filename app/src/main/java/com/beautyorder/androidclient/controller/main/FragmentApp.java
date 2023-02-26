@@ -18,7 +18,6 @@
 
 package com.beautyorder.androidclient.controller.main;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +33,6 @@ import com.google.android.material.tabs.TabLayout;
 public class FragmentApp extends Fragment {
     private FragmentAppBinding mBinding;
     private NotSwipeableViewPager mViewPager;
-    private Boolean mKeyboardDisplayed = false;
 
     @Override
     public View onCreateView(
@@ -58,43 +56,6 @@ public class FragmentApp extends Fragment {
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity()));
         mViewPager.setOffscreenPageLimit(3);    // display up to 3 pages without recreating them at each swipe
-
-        view.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-
-            View mapLayout = view.findViewById(R.id.mapLayout);
-
-            var viewBorder = new Rect();
-
-            // border will be populated with the coordinates of your view that area still visible
-            mViewPager.getWindowVisibleDisplayFrame(viewBorder);
-
-            final int viewBorderHeight = viewBorder.height();
-            final int viewPagerRootViewHeight = mViewPager.getRootView().getHeight();
-
-            final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
-
-            if (heightDiff > 0.25*viewPagerRootViewHeight) { // if more than 25% of the screen, it's probably a keyboard
-                if (!mKeyboardDisplayed && mapLayout != null) {
-                    mKeyboardDisplayed = true;
-
-                    Log.v("BeautyAndroid", "Keyboard displayed");
-
-                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                    params.height = 650;    // = 371 dp
-                    mapLayout.requestLayout();
-                }
-            } else {
-                if (mKeyboardDisplayed && mapLayout != null) {
-                    mKeyboardDisplayed = false;
-
-                    Log.v("BeautyAndroid", "Keyboard hidden");
-
-                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                    params.height = 1190;    // = 680 dp
-                    mapLayout.requestLayout();
-                }
-            }
-        });
     }
 
     @Override
