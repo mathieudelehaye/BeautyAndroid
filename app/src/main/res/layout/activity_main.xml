@@ -21,6 +21,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainActivityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
@@ -28,19 +29,21 @@
 >
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
-        android:id="@+id/appBarLayout">
+    >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:background="@color/white"
-            app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
             android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
             app:layout_anchorGravity="center"
-            app:layout_anchor="@+id/appBarLayout">
+            app:layout_anchor="@+id/appBarLayout"
+        >
 
             <ImageView
                 android:id="@+id/search_box_icon"
@@ -49,11 +52,9 @@
                 android:scaleX=".6"
                 android:scaleY=".6"
                 android:layout_gravity="center"
-                android:src="@drawable/brand_logo"/>
+                android:src="@drawable/brand_logo"
+            />
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-
-    <include layout="@layout/content_main"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

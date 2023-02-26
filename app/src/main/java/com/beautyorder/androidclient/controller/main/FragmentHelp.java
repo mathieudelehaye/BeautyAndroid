@@ -19,13 +19,13 @@
 package com.beautyorder.androidclient.controller.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.databinding.FragmentHelpBinding;
 
 public class FragmentHelp extends Fragment {
@@ -34,14 +34,17 @@ public class FragmentHelp extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
+        LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState
     ) {
         mBinding = FragmentHelpBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "Help view created at timestamp: "
+            + Helpers.getTimestamp());
+
         super.onViewCreated(view, savedInstanceState);
 
         mBinding.backHelp.setOnClickListener(new View.OnClickListener() {
@@ -51,8 +54,7 @@ public class FragmentHelp extends Fragment {
                 var activity = (MainActivity)getActivity();
                 CollectionPagerAdapter.setPage(2);
 
-                NavHostFragment.findNavController(FragmentHelp.this)
-                    .navigate(R.id.action_HelpFragment_to_AppFragment);
+                activity.showFragment(MainActivity.FragmentType.APP);
             }
         });
     }

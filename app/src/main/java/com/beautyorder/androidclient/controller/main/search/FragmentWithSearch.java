@@ -32,7 +32,6 @@ import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
@@ -281,7 +280,7 @@ public abstract class FragmentWithSearch extends Fragment {
         });
     }
 
-    protected void changeSearchSwitch(int destinationPage, ResultPageType resultType) {
+    protected void changeSearchSwitch(ResultPageType destination) {
 
         var containerView = getView();
         if (containerView == null) {
@@ -295,41 +294,39 @@ public abstract class FragmentWithSearch extends Fragment {
             return;
         }
 
-        Log.v("BeautyAndroid", "Changing the search switch to the page: " + String.valueOf(destinationPage)
-            + ", with the type: " + resultType.toString());
+        Log.v("BeautyAndroid", "Changing the search switch to the page: " + destination.toString());
 
-        final int icon = (resultType == ResultPageType.LIST) ? R.drawable.bullet_list : R.drawable.map;
+        final int icon = (destination == ResultPageType.LIST) ? R.drawable.bullet_list : R.drawable.map;
 
-        viewSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        viewSwitch.setOnClickListener(view -> {
 
-                // Select the page if the destination is a view pager
-                if (destinationPage >= 0) {
-                    CollectionPagerAdapter.setPage(destinationPage);
-                }
-
-                Log.d("BeautyAndroid", "Result page set to: " + resultType.toString());
-                CollectionPagerAdapter.setResultPage(resultType);
-
-                // Toggle the tab swiping according to the destination view
-                var activity = (MainActivity)getActivity();
-                if ((activity) != null) {
-
-                    switch (resultType) {
-                        case MAP:
-                            activity.disableTabSwiping();
-                            break;
-                        case LIST:
-                        default:
-                            activity.enableTabSwiping();
-                            break;
-                    }
-                }
-
-                ViewPager pager = getActivity().findViewById(R.id.appPager);
-                pager.getAdapter().notifyDataSetChanged();
+            // Select the page if the destination is a view pager
+            if (destination == ResultPageType.LIST) {
+                CollectionPagerAdapter.setPage(0);
             }
+
+            // Toggle the tab swiping according to the destination view
+            var activity = (MainActivity)getActivity();
+
+            if ((activity) != null) {
+
+                switch (destination) {
+                    case MAP:
+                        //activity.disableTabSwiping();
+                        break;
+                    case LIST:
+                    default:
+                        //activity.enableTabSwiping();
+                        break;
+                }
+            }
+
+            Log.d("BeautyAndroid", "Switch button pressed, navigate to: " + destination);
+
+            final MainActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
+                MainActivity.FragmentType.APP :
+                MainActivity.FragmentType.MAP;
+            activity.showFragment(destinationType);
         });
 
         viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);

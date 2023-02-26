@@ -21,6 +21,7 @@ package com.beautyorder.androidclient.controller.main.list;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.MainActivity;
@@ -49,8 +50,30 @@ public class FragmentResultDetail extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "Result detail view created at timestamp: "
+            + Helpers.getTimestamp());
+
         super.onViewCreated(view, savedInstanceState);
 
+        // Back button
+        mBinding.backResultDetail.setOnClickListener(view1 -> {
+            // Go back to the app Menu
+            CollectionPagerAdapter.setPage(0);
+            var activity = (MainActivity)getActivity();
+            activity.showFragment(MainActivity.FragmentType.APP);
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            updateDetails();
+        }
+    }
+
+    private void updateDetails() {
         // Description and image
         final var activity = (MainActivity) getActivity();
         final ResultItemInfo info = activity.getSelectedRecyclePoint();
@@ -59,10 +82,10 @@ public class FragmentResultDetail extends Fragment {
         String description = info.getDescription();
         final byte[] imageBytes = info.getImage();
 
-        TextView resultDescription = view.findViewById(R.id.description_result_detail);
+        TextView resultDescription = getView().findViewById(R.id.description_result_detail);
         resultDescription.setText(title + "\n\n" + description);
 
-        ImageView resultImage = view.findViewById(R.id.image_result_detail);
+        ImageView resultImage = getView().findViewById(R.id.image_result_detail);
         if (imageBytes != null) {
             Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             resultImage.setImageBitmap(image);
@@ -71,17 +94,5 @@ public class FragmentResultDetail extends Fragment {
             resultImage.setImageResource(R.drawable.camera);
         }
         resultImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-        // Back button
-        mBinding.backResultDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Go back to the app Menu
-                CollectionPagerAdapter.setPage(0);
-
-                NavHostFragment.findNavController(FragmentResultDetail.this)
-                    .navigate(R.id.action_ResultDetailFragment_to_AppFragment);
-            }
-        });
     }
 }

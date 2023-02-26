@@ -29,7 +29,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.camera.FragmentCamera;
 import com.beautyorder.androidclient.controller.main.list.FragmentResultList;
-import com.beautyorder.androidclient.controller.main.map.FragmentMap;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     public enum ResultPageType {
@@ -42,6 +41,11 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     private static ResultPageType mResultPage = ResultPageType.LIST;
     private FragmentActivity mActivity;
 
+    public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {
+        super(fm);
+        mActivity = fa;
+    }
+
     public static int getPage() {
         return mCurrentPage;
     }
@@ -50,28 +54,13 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
         mCurrentPage = value;
     }
 
-    public static ResultPageType getResultViewType() {
-        return mResultPage;
-    }
-
-    public static void setResultPage(ResultPageType view) {
-        mResultPage = view;
-    }
-
-    public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {
-        super(fm);
-        mActivity = fa;
-    }
-
     @Override
     public Fragment getItem(int i) {
         Fragment fragment = null;
 
         switch (i) {
             case 0:
-                fragment = (mResultPage == ResultPageType.LIST) ?
-                    new FragmentResultList() :
-                    new FragmentMap();
+                fragment = new FragmentResultList();
                 break;
             case 1:
                 fragment = new FragmentCamera();
@@ -116,6 +105,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
         return sb;
     }
 
+    @Override
     public int getItemPosition(Object object) {
         // Ensure that the view pager is reloaded when `notifyDataSetChanged` is called:
         return POSITION_NONE;

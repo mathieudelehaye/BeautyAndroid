@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
-import androidx.navigation.fragment.NavHostFragment;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.main.MainActivity;
@@ -62,11 +61,11 @@ public class FragmentResultList extends FragmentWithSearch {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v("BeautyAndroid", "Result list view created at timestamp: "
-            + String.valueOf(Helpers.getTimestamp()));
+            + Helpers.getTimestamp());
 
         super.onViewCreated(view, savedInstanceState);
 
-        changeSearchSwitch(0, ResultPageType.MAP);
+        changeSearchSwitch(ResultPageType.MAP);
 
         showHelp();
     }
@@ -110,9 +109,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
                         var activity = (MainActivity) getActivity();
                         activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes));
-
-                        NavHostFragment.findNavController(FragmentResultList.this)
-                            .navigate(R.id.action_AppFragment_to_ResultDetailFragment);
+                        activity.showFragment(MainActivity.FragmentType.DETAIL);
                     }
                 });
 
@@ -137,14 +134,14 @@ public class FragmentResultList extends FragmentWithSearch {
 
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
-            changeSearchSwitch(0, ResultPageType.MAP);
+            changeSearchSwitch(ResultPageType.MAP);
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {
                 activity.enableTabSwiping();
             }
 
-            updateSearchResults();
+            //updateSearchResults();
 
             showHelp();
         } else {

@@ -24,9 +24,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
 import com.google.android.material.tabs.TabLayout;
@@ -46,6 +46,9 @@ public class FragmentApp extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "App view created at timestamp: "
+            + Helpers.getTimestamp());
+
         super.onViewCreated(view, savedInstanceState);
 
         mViewPager = view.findViewById(R.id.appPager);
@@ -56,43 +59,39 @@ public class FragmentApp extends Fragment {
         mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity()));
         mViewPager.setOffscreenPageLimit(3);    // display up to 3 pages without recreating them at each swipe
 
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 
-            @Override
-            public void onGlobalLayout() {
+            View mapLayout = view.findViewById(R.id.mapLayout);
 
-                View mapLayout = view.findViewById(R.id.mapLayout);
+            var viewBorder = new Rect();
 
-                Rect viewBorder = new Rect();
+            // border will be populated with the coordinates of your view that area still visible
+            mViewPager.getWindowVisibleDisplayFrame(viewBorder);
 
-                // border will be populated with the coordinates of your view that area still visible
-                mViewPager.getWindowVisibleDisplayFrame(viewBorder);
+            final int viewBorderHeight = viewBorder.height();
+            final int viewPagerRootViewHeight = mViewPager.getRootView().getHeight();
 
-                final int viewBorderHeight = viewBorder.height();
-                final int viewPagerRootViewHeight = mViewPager.getRootView().getHeight();
+            final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
 
-                final int heightDiff = viewPagerRootViewHeight - viewBorderHeight;
+            if (heightDiff > 0.25*viewPagerRootViewHeight) { // if more than 25% of the screen, it's probably a keyboard
+                if (!mKeyboardDisplayed && mapLayout != null) {
+                    mKeyboardDisplayed = true;
 
-                if (heightDiff > 0.25*viewPagerRootViewHeight) { // if more than 25% of the screen, it's probably a keyboard
-                    if (!mKeyboardDisplayed && mapLayout != null) {
-                        mKeyboardDisplayed = true;
+                    Log.v("BeautyAndroid", "Keyboard displayed");
 
-                        Log.v("BeautyAndroid", "Keyboard displayed");
+                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
+                    params.height = 650;    // = 371 dp
+                    mapLayout.requestLayout();
+                }
+            } else {
+                if (mKeyboardDisplayed && mapLayout != null) {
+                    mKeyboardDisplayed = false;
 
-                        ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                        params.height = 650;    // = 371 dp
-                        mapLayout.requestLayout();
-                    }
-                } else {
-                    if (mKeyboardDisplayed && mapLayout != null) {
-                        mKeyboardDisplayed = false;
+                    Log.v("BeautyAndroid", "Keyboard hidden");
 
-                        Log.v("BeautyAndroid", "Keyboard hidden");
-
-                        ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                        params.height = 1190;    // = 680 dp
-                        mapLayout.requestLayout();
-                    }
+                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
+                    params.height = 1190;    // = 680 dp
+                    mapLayout.requestLayout();
                 }
             }
         });
@@ -106,11 +105,10 @@ public class FragmentApp extends Fragment {
 
     @Override
     public void onResume() {
-        Log.v("BeautyAndroid", "App view resumed");
+        Log.v("BeautyAndroid", "App fragment resumed");
 
         super.onResume();
 
-        var activity = (MainActivity)getActivity();
         final int pageToDisplay = CollectionPagerAdapter.getPage();
 
         mViewPager.setCurrentItem(pageToDisplay);

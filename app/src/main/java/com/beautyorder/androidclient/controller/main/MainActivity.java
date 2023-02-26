@@ -21,30 +21,41 @@ package com.beautyorder.androidclient.controller.main;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.controller.main.list.FragmentResultDetail;
+import com.beautyorder.androidclient.controller.main.map.FragmentMap;
 import com.beautyorder.androidclient.model.AsyncDBDataSender;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
-
-    // TODO: find another way to make `this` reference available to the nested async task class
-    private MainActivity mThis;
-    private SharedPreferences mSharedPref;
+    public enum FragmentType {
+        APP,
+        HELP,
+        TERMS,
+        DETAIL,
+        MAP
+    }
     private FirebaseFirestore mDatabase;
     private StringBuilder mSearchQuery = new StringBuilder("");
     private ResultItemInfo mSelectedRecyclePoint;
+    private FragmentApp mAppFragment = new FragmentApp();
+    private FragmentHelp mHelpFragment = new FragmentHelp();
+    private FragmentTerms mTermsFragment = new FragmentTerms();
+    private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
+    private FragmentMap mMapFragment = new FragmentMap();
+    private Fragment mShownFragment = mAppFragment;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     @Override
@@ -59,15 +70,11 @@ public class MainActivity extends AppCompatActivity {
             this.getSupportActionBar().hide();
         }
 
-        mSharedPref = this.getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
-
         setContentView(R.layout.activity_main);
 
         // Only portrait orientation
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        mThis = this;
         mDatabase = FirebaseFirestore.getInstance();
 
         var runner = new AsyncDBDataSender(this, mDatabase, mDelayBetweenScoreWritingsInSec);
@@ -75,6 +82,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Get the intent, like a search, then verify the action and get the query
         handleIntent(getIntent());
+
+        // Add to the fragment manager the fragments and select the first one to show
+        addFragment(mAppFragment);
+        addFragment(mHelpFragment);
+        addFragment(mTermsFragment);
+        addFragment(mDetailFragment);
+        addFragment(mMapFragment);
+
+        showFragment(FragmentType.APP);
     }
 
     @Override
@@ -128,8 +144,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean isNetworkAvailable() {
         var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
+            connectivityManager.getActiveNetworkInfo() : null;
+        return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
     }
 
     private void handleIntent(Intent intent) {
@@ -160,5 +177,58 @@ public class MainActivity extends AppCompatActivity {
         var fragment =
             (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
         fragment.disableTabSwiping();
+    }
+
+    private Fragment findFragment(FragmentType type) {
+        Fragment fragment = null;
+
+        switch (type) {
+            case APP:
+            default:
+                fragment = mAppFragment;
+                break;
+            case HELP:
+                fragment = mHelpFragment;
+                break;
+            case TERMS:
+                fragment = mTermsFragment;
+                break;
+            case DETAIL:
+                fragment = mDetailFragment;
+                break;
+            case MAP:
+                fragment = mMapFragment;
+                break;
+        }
+
+        return fragment;
+    }
+
+    private void addFragment(Fragment fragment) {
+
+        getSupportFragmentManager().beginTransaction()
+            .add(R.id.mainActivityLayout, fragment)
+            .hide(fragment)
+            .commit();
+    }
+
+    public void showFragment(FragmentType type) {
+        Fragment fragment = findFragment(type);
+
+        hideFragment(mShownFragment);
+
+        getSupportFragmentManager().beginTransaction()
+            .show(fragment)
+            .commit();
+
+        mShownFragment = fragment;
+    }
+
+    private void hideFragment(Fragment fragment){
+        getSupportFragmentManager().beginTransaction()
+            .hide(fragment)
+            .commit();
+
+        mShownFragment = null;
     }
 }

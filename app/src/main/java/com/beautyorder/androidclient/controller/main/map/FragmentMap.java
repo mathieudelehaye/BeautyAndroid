@@ -65,10 +65,13 @@ public class FragmentMap extends FragmentWithSearch {
 
     @SuppressLint("ResourceAsColor")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "Map view created at timestamp: "
+            + Helpers.getTimestamp());
+
         super.onViewCreated(view, savedInstanceState);
 
         setupMap(view);
-        changeSearchSwitch(0, ResultPageType.LIST);
+        changeSearchSwitch(ResultPageType.LIST);
 
         mBinding.mapUserLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +118,7 @@ public class FragmentMap extends FragmentWithSearch {
 
             CollectionPagerAdapter.setPage(0);
 
-            changeSearchSwitch(0, ResultPageType.LIST);
+            changeSearchSwitch(ResultPageType.LIST);
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {

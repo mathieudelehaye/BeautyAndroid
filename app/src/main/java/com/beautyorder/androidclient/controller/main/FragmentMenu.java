@@ -29,8 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
@@ -43,8 +42,8 @@ public class FragmentMenu extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
+        LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState
     ) {
         mSharedPref = getContext().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
@@ -54,23 +53,24 @@ public class FragmentMenu extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "Menu view created at timestamp: "
+            + Helpers.getTimestamp());
+
         super.onViewCreated(view, savedInstanceState);
 
         switchLogoutButtonVisibility();
 
-        mBinding.helpMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(FragmentMenu.this)
-                    .navigate(R.id.action_AppFragment_to_HelpFragment);
-            }
+        mBinding.helpMenu.setOnClickListener(view1 -> {
+            var activity = (MainActivity)getActivity();
+
+            activity.showFragment(MainActivity.FragmentType.HELP);
         });
 
         mBinding.termsMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FragmentMenu.this)
-                    .navigate(R.id.action_AppFragment_to_TermsFragment);
+                var activity = (MainActivity)getActivity();
+                activity.showFragment(MainActivity.FragmentType.TERMS);
             }
         });
 
@@ -85,7 +85,6 @@ public class FragmentMenu extends Fragment {
 
                 // Display the first page with the result list at next startup
                 CollectionPagerAdapter.setPage(0);
-                CollectionPagerAdapter.setResultPage(ResultPageType.LIST);
 
                 startActivity(new Intent(getContext(), AuthenticateActivity.class));
             }

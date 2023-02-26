@@ -19,13 +19,13 @@
 package com.beautyorder.androidclient.controller.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.databinding.FragmentTermsBinding;
 
 public class FragmentTerms extends Fragment {
@@ -42,6 +42,9 @@ public class FragmentTerms extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "Terms view created at timestamp: "
+            + Helpers.getTimestamp());
+
         super.onViewCreated(view, savedInstanceState);
 
         mBinding.backTerms.setOnClickListener(new View.OnClickListener() {
@@ -50,9 +53,7 @@ public class FragmentTerms extends Fragment {
                 // Go back to the app Menu
                 var activity = (MainActivity)getActivity();
                 CollectionPagerAdapter.setPage(2);
-
-                NavHostFragment.findNavController(FragmentTerms.this)
-                    .navigate(R.id.action_TermsFragment_to_AppFragment);
+                activity.showFragment(MainActivity.FragmentType.APP);
             }
         });
     }
