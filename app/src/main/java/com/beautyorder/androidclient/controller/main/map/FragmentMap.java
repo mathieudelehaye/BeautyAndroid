@@ -48,7 +48,7 @@ public class FragmentMap extends FragmentWithSearch {
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private boolean mIsViewVisible = false;
-    private Boolean mKeyboardDisplayed = false;
+    private boolean mKeyboardDisplayed = false;
     private final int mMapInitialHeight = 1413;     // = 807 dp
     private final int mMapHeightDiff = 540; // = 309 dp
     private final int mMapReducedHeight = mMapInitialHeight - mMapHeightDiff;
@@ -188,42 +188,6 @@ public class FragmentMap extends FragmentWithSearch {
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    private int computeZoomForRadius(double valueInMeter) {
-        return (16 - (int)(Math.log(valueInMeter / 500) / Math.log(2)));
-    }
-
-    private void setZoom(double radiusInKilometer) {
-        final int zoomLevel = computeZoomForRadius(radiusInKilometer * 1000);
-        Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(zoomLevel)
-            + " for radius of " + String.valueOf(radiusInKilometer) + " km");
-        mZoomInitialized = true;
-        mMapController.setZoom(zoomLevel);
-    }
-
-    private void setZoom(int level) {
-        Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(level));
-        mZoomInitialized = true;
-        mMapController.setZoom(level);
-    }
-    
-    private void setupMap(View view) {
-
-        // inflate and create the map
-        mMap = view.findViewById(R.id.map);
-        mMap.setTileSource(TileSourceFactory.MAPNIK);
-
-        mMap.setBuiltInZoomControls(true);
-        mMap.setMultiTouchControls(true);
-
-        mMapController = mMap.getController();
-        setZoom(14);
-
-        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
-        mLocationOverlay.enableMyLocation();
-
-        mMap.getOverlays().add(this.mLocationOverlay);
-    }
-
     @Override
     protected void searchAndDisplayItems() {
 
@@ -236,12 +200,13 @@ public class FragmentMap extends FragmentWithSearch {
                 }
 
                 // display the overlay
-                mRPOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mFoundRecyclePoints,
-                    new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                mRPOverlay = new ItemizedOverlayWithFocus<>(mFoundRecyclePoints,
+                    new ItemizedIconOverlay.OnItemGestureListener<>() {
                         @SuppressLint("ResourceAsColor")
                         @Override
                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                             Log.i("BeautyAndroid", "Single tap");
+                            mMapController.animateTo(item.getPoint());
                             return false;
                         }
 
@@ -269,6 +234,42 @@ public class FragmentMap extends FragmentWithSearch {
             public void onFailure() {
             }
         });
+    }
+
+    private int computeZoomForRadius(double valueInMeter) {
+        return (16 - (int)(Math.log(valueInMeter / 500) / Math.log(2)));
+    }
+
+    private void setZoom(double radiusInKilometer) {
+        final int zoomLevel = computeZoomForRadius(radiusInKilometer * 1000);
+        Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(zoomLevel)
+            + " for radius of " + String.valueOf(radiusInKilometer) + " km");
+        mZoomInitialized = true;
+        mMapController.setZoom(zoomLevel);
+    }
+
+    private void setZoom(int level) {
+        Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(level));
+        mZoomInitialized = true;
+        mMapController.setZoom(level);
+    }
+
+    private void setupMap(View view) {
+
+        // inflate and create the map
+        mMap = view.findViewById(R.id.map);
+        mMap.setTileSource(TileSourceFactory.MAPNIK);
+
+        mMap.setBuiltInZoomControls(true);
+        mMap.setMultiTouchControls(true);
+
+        mMapController = mMap.getController();
+        setZoom(14);
+
+        mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
+        mLocationOverlay.enableMyLocation();
+
+        mMap.getOverlays().add(this.mLocationOverlay);
     }
 
     private void showHelp() {
