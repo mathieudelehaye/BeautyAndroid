@@ -33,17 +33,11 @@ import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import java.util.ArrayList;
+import com.beautyorder.androidclient.model.SearchResult;
 
 public class FragmentResultList extends FragmentWithSearch {
     private FragmentResultListBinding mBinding;
-    private ArrayList<String> mFoundRPImageUrls;
-    private int mFoundRPNumber = 0;
-    private int mReceivedImageNumber = 0;
-    private final Object mImageUpdateLock = new Object();
-    private ArrayList<ResultItemInfo> mResultItems;
+    private SearchResult mSearchResult;
     private boolean mIsViewVisible = false;
 
     @Override
@@ -79,20 +73,15 @@ public class FragmentResultList extends FragmentWithSearch {
 
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
-                mFoundRPNumber = mFoundRecyclePoints.size();
-                mReceivedImageNumber = 0;
-                mResultItems = new ArrayList<>();
-                mFoundRPImageUrls = new ArrayList<>();
+                mSearchResult = new SearchResult();
 
-                for (int i = 0; i < mFoundRPNumber; i++) {
+                for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
                     final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
-
-                    mResultItems.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null));
-
-                    mFoundRPImageUrls.add(point.getImage());
+                    mSearchResult.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null),
+                        point.getImage());
                 }
 
-                var adapter = new ResultListAdapter(getContext(), mResultItems);
+                var adapter = new ResultListAdapter(getContext(), mSearchResult.getResultItems());
                 resultList.setAdapter(adapter);
 
                 resultList.setOnItemClickListener((adapterView, view, position, l) -> {
@@ -107,10 +96,17 @@ public class FragmentResultList extends FragmentWithSearch {
                     activity.showFragment(MainActivity.FragmentType.DETAIL);
                 });
 
-                // Asynchronously download the images then update the view adapter
-                for (int i = 0; i < mFoundRPImageUrls.size(); i++) {
-                    downloadAndDisplayImage(mFoundRPImageUrls.get(i), mResultItems.get(i), adapter);
-                }
+                mSearchResult.downloadImages(new TaskCompletionManager() {
+
+                    @Override
+                    public void onSuccess() {
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+                });
             }
 
             @Override
@@ -147,36 +143,6 @@ public class FragmentResultList extends FragmentWithSearch {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
-    }
-
-    private void downloadAndDisplayImage(String imageUrl, ResultItemInfo itemInfo, ResultListAdapter viewAdapter) {
-
-        if (imageUrl == null || imageUrl.equals("") || itemInfo == null || viewAdapter == null) {
-            Log.w("BeautyAndroid", "Try to download an image but one parameter is missing");
-            return;
-        }
-
-        var storage = FirebaseStorage.getInstance();
-
-        StorageReference gsReference = storage.getReferenceFromUrl(imageUrl);
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-
-        gsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-
-            synchronized (mImageUpdateLock) {
-                itemInfo.setImage(bytes);
-
-                viewAdapter.notifyDataSetChanged();
-
-                mReceivedImageNumber++;
-                if (mReceivedImageNumber == mFoundRPNumber) {
-                    Log.v("BeautyAndroid", "Last result image received at timestamp: "
-                        + Helpers.getTimestamp());
-                }
-            }
-        }).addOnFailureListener(exception -> {
-        });
     }
 
     private void showHelp() {

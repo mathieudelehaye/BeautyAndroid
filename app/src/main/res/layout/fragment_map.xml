@@ -52,12 +52,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="66dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
         >
 
             <include layout="@layout/fragment_score"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detail_map_layout"
+            android:layout_width="310dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginBottom="70dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/map"
+        >
+
+            <ImageView
+                android:id="@+id/detail_map_image"
+                android:layout_width="105dp"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+            />
+
+            <TextView
+                android:id="@+id/detail_map_description"
+                android:text="This is a placeholder"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:maxLines = "6"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:background="@color/white"
+                android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+                android:paddingTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintStart_toEndOf="@id/detail_map_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+            />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,7 +111,7 @@
             android:layout_width="50dp"
             android:layout_height="62dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="270dp"
             app:cornerRadius="100dp"
             app:icon="@drawable/crosshairs_gps"
             app:iconGravity="textStart"

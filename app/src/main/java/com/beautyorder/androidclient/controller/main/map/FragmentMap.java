@@ -34,12 +34,14 @@ import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
+import com.beautyorder.androidclient.model.ResultItemInfo;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import java.util.ArrayList;
 
 public class FragmentMap extends FragmentWithSearch {
     private FragmentMapBinding mBinding;
@@ -47,6 +49,7 @@ public class FragmentMap extends FragmentWithSearch {
     private IMapController mMapController;
     private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
+    private ArrayList<ResultItemInfo> mResultItems;
     private boolean mIsViewVisible = false;
     private boolean mKeyboardDisplayed = false;
     private final int mMapInitialHeight = 1413;     // = 807 dp
@@ -207,6 +210,9 @@ public class FragmentMap extends FragmentWithSearch {
                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                             Log.i("BeautyAndroid", "Single tap");
                             mMapController.animateTo(item.getPoint());
+
+                            // Todo: display the detail view
+
                             return false;
                         }
 
@@ -215,8 +221,6 @@ public class FragmentMap extends FragmentWithSearch {
                             return false;
                         }
                     }, mCtx);
-
-                mRPOverlay.setFocusItemsOnTap(true);
 
                 mMap.getOverlays().add(mRPOverlay);
 

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class ResultListAdapter extends BaseAdapter {
 
-    private ArrayList<ResultItemInfo> mResultItems = new ArrayList<>();
+    private ArrayList<ResultItemInfo> mResultItems;
     private Context mContext;
 
     public ResultListAdapter(Context ctxt, ArrayList<ResultItemInfo> items) {

@@ -105,7 +105,7 @@ public abstract class FragmentWithSearch extends Fragment {
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
                     mUserLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.v("BeautyAndroid", "First received location at timestamp: "
-                        + String.valueOf(Helpers.getTimestamp()));
+                        + Helpers.getTimestamp());
 
                     writeCachedUserLocation();
 
@@ -251,7 +251,7 @@ public abstract class FragmentWithSearch extends Fragment {
             @Override
             public void onSuccess() {
 
-                mFoundRecyclePoints = new ArrayList<OverlayItem>();
+                mFoundRecyclePoints = new ArrayList<>();
 
                 for (int i = 0; i < pointInfo.getData().size(); i++) {
 
