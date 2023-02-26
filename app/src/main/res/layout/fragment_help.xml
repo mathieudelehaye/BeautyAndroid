@@ -31,11 +31,12 @@
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="256dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="200dp"/>
+    />
 
     <TextView
         android:id="@+id/description_help"
@@ -45,26 +46,28 @@
         android:lines="10"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_help"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="32dp"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:paddingEnd="5dp"
         android:paddingRight="5dp"
-        android:paddingBottom="5dp"/>
+        android:paddingBottom="5dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_help"
+        app:layout_constraintHorizontal_bias="0.5"
+    />
 
     <Button
         android:id="@+id/back_help"
         android:text="@string/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/description_help"
-        android:layout_marginTop="32dp"/>
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

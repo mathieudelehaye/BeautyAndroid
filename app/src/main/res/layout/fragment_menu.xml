@@ -27,35 +27,37 @@
 
     <Button
         android:id="@+id/help_menu"
+        android:text="Help"
+        android:layout_marginTop="306dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Help"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="250dp" />
+    />
 
     <Button
         android:id="@+id/terms_menu"
+        android:text="Terms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Terms"
+        android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintTop_toBottomOf="@id/help_menu"
-        android:layout_marginTop="64dp" />
+    />
 
     <Button
         android:id="@+id/log_out_menu"
+        android:text="@string/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout_button"
+        android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintTop_toBottomOf="@id/terms_menu"
-        android:layout_marginTop="64dp" />
-
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

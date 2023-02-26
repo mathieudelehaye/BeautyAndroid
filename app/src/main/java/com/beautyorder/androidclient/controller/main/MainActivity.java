@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
             .commit();
 
         mShownFragment = fragment;
+
+        fragment.setUserVisibleHint(true);
     }
 
     private void hideFragment(Fragment fragment){
@@ -230,5 +232,7 @@ public class MainActivity extends AppCompatActivity {
             .commit();
 
         mShownFragment = null;
+
+        fragment.setUserVisibleHint(false);
     }
 }

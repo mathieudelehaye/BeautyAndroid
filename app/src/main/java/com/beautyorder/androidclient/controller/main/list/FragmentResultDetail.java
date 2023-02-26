@@ -37,7 +37,6 @@ import com.beautyorder.androidclient.databinding.FragmentResultDetailBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 
 public class FragmentResultDetail extends Fragment {
-
     private FragmentResultDetailBinding mBinding;
 
     @Override
@@ -69,6 +68,8 @@ public class FragmentResultDetail extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "Result detail view becomes visible");
+
             updateDetails();
         }
     }

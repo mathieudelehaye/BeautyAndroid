@@ -47,12 +47,12 @@
 
             <ImageView
                 android:id="@+id/search_box_icon"
+                android:src="@drawable/brand_logo"
+                android:scaleY=".6"
+                android:scaleX=".6"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleX=".6"
-                android:scaleY=".6"
-                android:layout_gravity="center"
-                android:src="@drawable/brand_logo"
             />
 
         </androidx.appcompat.widget.Toolbar>
