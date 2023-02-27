@@ -63,12 +63,12 @@ public class FragmentMenu extends Fragment {
         mBinding.helpMenu.setOnClickListener(view1 -> {
             var activity = (MainActivity)getActivity();
 
-            activity.showFragment(MainActivity.FragmentType.HELP);
+            activity.navigate(MainActivity.FragmentType.HELP);
         });
 
         mBinding.termsMenu.setOnClickListener(view12 -> {
             var activity = (MainActivity)getActivity();
-            activity.showFragment(MainActivity.FragmentType.TERMS);
+            activity.navigate(MainActivity.FragmentType.TERMS);
         });
 
         mBinding.logOutMenu.setOnClickListener(view13 -> {

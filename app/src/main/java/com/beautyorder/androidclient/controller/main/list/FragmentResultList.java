@@ -99,8 +99,7 @@ public class FragmentResultList extends FragmentWithSearch {
                     final byte[] imageBytes = itemInfo.getImage();
 
                     activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes));
-                    activity.setDetailsPrevFragment(MainActivity.FragmentType.APP);
-                    activity.showFragment(MainActivity.FragmentType.DETAIL);
+                    activity.navigate(MainActivity.FragmentType.DETAIL);
                 });
 
                 result.downloadImages(new TaskCompletionManager() {

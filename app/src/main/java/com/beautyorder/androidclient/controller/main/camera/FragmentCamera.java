@@ -140,7 +140,7 @@ public class FragmentCamera extends Fragment {
     }
 
     private void requestCamera() {
-        if (ContextCompat.checkSelfPermission(mCtx, Manifest.permission.CAMERA)
+        if (mCtx != null && ContextCompat.checkSelfPermission(mCtx, Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted

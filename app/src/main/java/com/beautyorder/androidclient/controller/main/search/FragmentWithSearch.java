@@ -326,7 +326,8 @@ public abstract class FragmentWithSearch extends Fragment {
             final MainActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
                 MainActivity.FragmentType.APP :
                 MainActivity.FragmentType.MAP;
-            activity.showFragment(destinationType);
+
+            activity.navigate(destinationType);
         });
 
         viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);

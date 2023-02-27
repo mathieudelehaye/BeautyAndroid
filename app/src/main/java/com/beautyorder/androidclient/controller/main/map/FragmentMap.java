@@ -180,8 +180,6 @@ public class FragmentMap extends FragmentWithSearch {
             }
 
             showHelp();
-
-            ToggleDetailsView(false);
         } else {
             mIsViewVisible = false;
         }
@@ -195,6 +193,18 @@ public class FragmentMap extends FragmentWithSearch {
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void ToggleDetailsView(boolean visible) {
+
+        View rootView = getView();
+
+        if (rootView == null) {
+            Log.w("BeautyAndroid", "Cannot toggle the details view, as no root view available");
+        }
+
+        View detailLayout = rootView.findViewById(R.id.detail_map_layout);
+        detailLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -333,22 +343,9 @@ public class FragmentMap extends FragmentWithSearch {
             var activity = (MainActivity)getActivity();
 
             activity.setSelectedRecyclePoint(itemInfo);
-            activity.setDetailsPrevFragment(MainActivity.FragmentType.MAP);
-            activity.showFragment(MainActivity.FragmentType.DETAIL);
+            activity.navigate(MainActivity.FragmentType.DETAIL);
         });
 
         ToggleDetailsView(true);
-    }
-
-    private void ToggleDetailsView(boolean visible) {
-
-        View rootView = getView();
-
-        if (rootView == null) {
-            Log.w("BeautyAndroid", "Cannot toggle the details view, as no root view available");
-        }
-
-        View detailLayout = rootView.findViewById(R.id.detail_map_layout);
-        detailLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

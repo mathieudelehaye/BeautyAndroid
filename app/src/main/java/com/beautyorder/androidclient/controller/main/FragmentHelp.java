@@ -52,9 +52,7 @@ public class FragmentHelp extends Fragment {
             public void onClick(View view) {
                 // Go back to the app Menu
                 var activity = (MainActivity)getActivity();
-                CollectionPagerAdapter.setPage(2);
-
-                activity.showFragment(MainActivity.FragmentType.APP);
+                activity.navigateBack();
             }
         });
     }

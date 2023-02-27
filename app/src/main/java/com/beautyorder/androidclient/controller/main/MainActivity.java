@@ -46,19 +46,22 @@ public class MainActivity extends AppCompatActivity {
         HELP,
         TERMS,
         DETAIL,
-        MAP
+        MAP,
+        NONE
     }
+
     private FirebaseFirestore mDatabase;
     private StringBuilder mSearchQuery = new StringBuilder("");
     private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
-    private FragmentType mDetailsPrevFragment;
+    private Navigator mNavigator = new Navigator(this);
     private FragmentApp mAppFragment = new FragmentApp();
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
     private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
     private FragmentMap mMapFragment = new FragmentMap();
-    private Fragment mShownFragment = mAppFragment;
+    private FragmentType mShownFragmentType = FragmentType.NONE;
+    private FragmentType mPrevFragmentType = FragmentType.NONE;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
 
     public String getSearchQuery() {
@@ -79,14 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSearchResult(SearchResult result) {
         mSearchResult = result;
-    }
-
-    public FragmentType getDetailsPrevFragment() {
-        return mDetailsPrevFragment;
-    }
-
-    public void setDetailsPrevFragment(FragmentType type) {
-        mDetailsPrevFragment = type;
     }
 
     @Override
@@ -114,14 +109,15 @@ public class MainActivity extends AppCompatActivity {
         // Get the intent, like a search, then verify the action and get the query
         handleIntent(getIntent());
 
-        // Add to the fragment manager the fragments and select the first one to show
-        addFragment(mAppFragment);
-        addFragment(mHelpFragment);
-        addFragment(mTermsFragment);
-        addFragment(mDetailFragment);
-        addFragment(mMapFragment);
+        // Add to the navigator the fragments and select the first one to show
+        mNavigator.addFragment(mAppFragment);
+        mNavigator.addFragment(mHelpFragment);
+        mNavigator.addFragment(mTermsFragment);
+        mNavigator.addFragment(mDetailFragment);
+        mNavigator.addFragment(mMapFragment);
 
-        showFragment(FragmentType.APP);
+        mNavigator.showFragment(mAppFragment);
+        mShownFragmentType = FragmentType.APP;
     }
 
     @Override
@@ -168,32 +164,39 @@ public class MainActivity extends AppCompatActivity {
         return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
     }
 
+    public void navigate(FragmentType dest) {
+        mPrevFragmentType = mShownFragmentType;
+        mShownFragmentType = dest;
+        onNavigation();
+        mNavigator.showFragment(findFragment(dest));
+    }
+
+    public void navigateBack() {
+
+        if (mPrevFragmentType == FragmentType.NONE) {
+            Log.w("BeautyAndroid", "Cannot navigate back, as the previous fragment type is unknown");
+            return;
+        }
+
+        FragmentType tmp = mPrevFragmentType;
+        mPrevFragmentType = mShownFragmentType;
+        mShownFragmentType = tmp;
+        onNavigation();
+        mNavigator.showFragment(findFragment(mShownFragmentType));
+    }
+
     public void enableTabSwiping() {
         // Enable swiping gesture for the view pager
         var fragment =
-                (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
         fragment.enableTabSwiping();
     }
 
     public void disableTabSwiping() {
         // Disable the swiping gesture for the view pager
         var fragment =
-                (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
         fragment.disableTabSwiping();
-    }
-
-    public void showFragment(FragmentType type) {
-        Fragment fragment = findFragment(type);
-
-        hideFragment(mShownFragment);
-
-        getSupportFragmentManager().beginTransaction()
-            .show(fragment)
-            .commit();
-
-        mShownFragment = fragment;
-
-        fragment.setUserVisibleHint(true);
     }
 
     private void handleIntent(Intent intent) {
@@ -213,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Fragment findFragment(FragmentType type) {
-        Fragment fragment = null;
+        Fragment fragment;
 
         switch (type) {
             case APP:
@@ -237,21 +240,37 @@ public class MainActivity extends AppCompatActivity {
         return fragment;
     }
 
-    private void addFragment(Fragment fragment) {
-
-        getSupportFragmentManager().beginTransaction()
-            .add(R.id.mainActivityLayout, fragment)
-            .hide(fragment)
-            .commit();
-    }
-
-    private void hideFragment(Fragment fragment){
-        getSupportFragmentManager().beginTransaction()
-            .hide(fragment)
-            .commit();
-
-        mShownFragment = null;
-
-        fragment.setUserVisibleHint(false);
+    private void onNavigation() {
+        switch (mShownFragmentType) {
+            case APP:
+                switch (mPrevFragmentType) {
+                    case DETAIL:
+                        CollectionPagerAdapter.setPage(0);
+                        break;
+                    case HELP:
+                    case TERMS:
+                        CollectionPagerAdapter.setPage(2);
+                        break;
+                    case APP:
+                    case MAP:
+                    default:
+                        break;
+                }
+            case MAP:
+                switch (mPrevFragmentType) {
+                    case APP:
+                        mMapFragment.ToggleDetailsView(false);
+                        break;
+                    case DETAIL:
+                    case HELP:
+                    case TERMS:
+                    case MAP:
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

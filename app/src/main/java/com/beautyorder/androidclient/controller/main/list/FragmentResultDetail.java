@@ -31,7 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.databinding.FragmentResultDetailBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
@@ -58,11 +57,7 @@ public class FragmentResultDetail extends Fragment {
         mBinding.backResultDetail.setOnClickListener(view1 -> {
             // Go back to the previous fragment
             var activity = (MainActivity)getActivity();
-            MainActivity.FragmentType prevFragmentType = ((MainActivity) getActivity()).getDetailsPrevFragment();
-            if (prevFragmentType == MainActivity.FragmentType.APP) {
-                CollectionPagerAdapter.setPage(0);
-            }
-            activity.showFragment(prevFragmentType);
+            activity.navigateBack();
         });
     }
 
