@@ -58,14 +58,14 @@ import java.util.List;
 import java.util.Locale;
 
 public abstract class FragmentWithSearch extends Fragment {
-    protected final double mSearchRadiusInCoordinate = 0.045;
+    protected FirebaseFirestore mDatabase;
+    protected SharedPreferences mSharedPref;
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchStart;
     protected MyLocationNewOverlay mLocationOverlay;
     protected ArrayList<OverlayItem> mFoundRecyclePoints;
-    protected FirebaseFirestore mDatabase;
-    protected SharedPreferences mSharedPref;
     protected Context mCtx;
+    protected final double mSearchRadiusInCoordinate = 0.045;
 
     protected abstract void searchAndDisplayItems();
 
@@ -151,6 +151,32 @@ public abstract class FragmentWithSearch extends Fragment {
         // Get the SearchView and set the searchable configuration
         var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         var searchView = (SearchView) getView().findViewById(R.id.search_box);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                saveShownFragmentBeforeSearch();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int i) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int i) {
+                saveShownFragmentBeforeSearch();
+                return false;
+            }
+        });
 
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -331,6 +357,18 @@ public abstract class FragmentWithSearch extends Fragment {
         });
 
         viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
+    }
+
+    private void saveShownFragmentBeforeSearch() {
+        var activity = (MainActivity)getActivity();
+        if (activity == null) {
+            Log.w("BeautyAndroid", "No activity so cannot save the shown fragment before sending "
+                    + "the intent");
+            return;
+        }
+
+        Log.v("BeautyAndroid", "Search intent sent, save the shown fragment");
+        activity.saveSearchFragment();
     }
 
     private void updateUserScore() {

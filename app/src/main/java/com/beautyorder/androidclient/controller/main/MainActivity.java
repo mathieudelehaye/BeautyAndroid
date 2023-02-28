@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentType mShownFragmentType = FragmentType.NONE;
     private FragmentType mPrevFragmentType = FragmentType.NONE;
     final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
+    private static FragmentType mSavedSearchFragment = FragmentType.NONE;
 
     public String getSearchQuery() {
         return mSearchQuery.toString();
@@ -82,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSearchResult(SearchResult result) {
         mSearchResult = result;
+    }
+
+    public void saveSearchFragment() {
+        mSavedSearchFragment = mShownFragmentType;
     }
 
     @Override
@@ -106,9 +111,6 @@ public class MainActivity extends AppCompatActivity {
         var runner = new AsyncDBDataSender(this, mDatabase, mDelayBetweenScoreWritingsInSec);
         runner.execute(String.valueOf(mDelayBetweenScoreWritingsInSec));
 
-        // Get the intent, like a search, then verify the action and get the query
-        handleIntent(getIntent());
-
         // Add to the navigator the fragments and select the first one to show
         mNavigator.addFragment(mAppFragment);
         mNavigator.addFragment(mHelpFragment);
@@ -116,8 +118,19 @@ public class MainActivity extends AppCompatActivity {
         mNavigator.addFragment(mDetailFragment);
         mNavigator.addFragment(mMapFragment);
 
-        mNavigator.showFragment(mAppFragment);
-        mShownFragmentType = FragmentType.APP;
+        // Get the intent, like a search, then verify the action and get the query
+        handleIntent(getIntent());
+
+        if (!mSearchQuery.toString().equals("")
+            && mSavedSearchFragment == FragmentType.MAP) {
+            Log.v("BeautyAndroid", "Show the map, as intent received from there");
+            mNavigator.showFragment(mMapFragment);
+            mShownFragmentType = FragmentType.MAP;
+        } else {
+            Log.v("BeautyAndroid", "Show the list, as no intent or one from another fragment than the map");
+            mNavigator.showFragment(mAppFragment);
+            mShownFragmentType = FragmentType.APP;
+        }
     }
 
     @Override

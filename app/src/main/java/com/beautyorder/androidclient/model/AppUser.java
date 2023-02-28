@@ -29,9 +29,9 @@ public class AppUser {
 
     private static final AppUser mInstance = new AppUser();
 
-    private AuthenticationType authenticationType = AuthenticationType.NONE;
+    private AuthenticationType mAuthenticationType = AuthenticationType.NONE;
 
-    private StringBuilder id = new StringBuilder("");
+    private StringBuilder mId = new StringBuilder("");
 
     // private constructor to avoid client applications using it
     private AppUser(){}
@@ -41,11 +41,11 @@ public class AppUser {
     }
 
     public AuthenticationType getAuthenticationType() {
-        return this.authenticationType;
+        return this.mAuthenticationType;
     }
 
     public String getId() {
-        return id.toString();
+        return mId.toString();
     }
 
     public void authenticate(@NonNull String _uid, @NonNull AuthenticationType _type) {
@@ -54,8 +54,8 @@ public class AppUser {
             return;
         }
 
-        authenticationType = _type;
-        id.setLength(0);
-        id.append(_uid);
+        mAuthenticationType = _type;
+        mId.setLength(0);
+        mId.append(_uid);
     }
 }
