@@ -57,6 +57,7 @@ public class FragmentMap extends FragmentWithSearch {
     private final int mMapInitialHeight = 1413;     // = 807 dp
     private final int mMapHeightDiff = 540; // = 309 dp
     private final int mMapReducedHeight = mMapInitialHeight - mMapHeightDiff;
+    private final int mKilomterByCoordinateDeg = 111;   // # km by latitude degree
 
     @Override
     public View onCreateView(
@@ -133,7 +134,7 @@ public class FragmentMap extends FragmentWithSearch {
                 Log.d("BeautyAndroid", "Change map focus to user location");
 
                 mMapController.animateTo(mUserLocation);
-                // TODO: possibly change the zoom level
+                setZoomLevel(14);
             }
         });
 
@@ -258,9 +259,7 @@ public class FragmentMap extends FragmentWithSearch {
                 // Refresh the map
                 mMap.invalidate();
 
-                if (!mZoomInitialized) {
-                    setZoom(mSearchRadiusInCoordinate * 111);    // 111 km by latitude degree
-                }
+                setZoomInKilometer(mSearchRadiusInCoordinate * mKilomterByCoordinateDeg);
 
                 mMapController.animateTo(mSearchStart);
             }
@@ -271,19 +270,19 @@ public class FragmentMap extends FragmentWithSearch {
         });
     }
 
-    private int computeZoomForRadius(double valueInMeter) {
+    private int computeZoomLevelForRadius(double valueInMeter) {
         return (16 - (int)(Math.log(valueInMeter / 500) / Math.log(2)));
     }
 
-    private void setZoom(double radiusInKilometer) {
-        final int zoomLevel = computeZoomForRadius(radiusInKilometer * 1000);
+    private void setZoomInKilometer(double radiusInKilometer) {
+        final int zoomLevel = computeZoomLevelForRadius(radiusInKilometer * 1000);
         Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(zoomLevel)
             + " for radius of " + String.valueOf(radiusInKilometer) + " km");
         mZoomInitialized = true;
         mMapController.setZoom(zoomLevel);
     }
 
-    private void setZoom(int level) {
+    private void setZoomLevel(int level) {
         Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(level));
         mZoomInitialized = true;
         mMapController.setZoom(level);
@@ -299,7 +298,7 @@ public class FragmentMap extends FragmentWithSearch {
         mMap.setMultiTouchControls(true);
 
         mMapController = mMap.getController();
-        setZoom(14);
+        setZoomInKilometer(mSearchRadiusInCoordinate * mKilomterByCoordinateDeg);
 
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();
