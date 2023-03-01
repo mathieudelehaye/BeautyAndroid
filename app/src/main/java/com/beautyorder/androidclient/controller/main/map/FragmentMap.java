@@ -50,7 +50,6 @@ public class FragmentMap extends FragmentWithSearch {
     private FragmentMapBinding mBinding;
     private MapView mMap = null;
     private IMapController mMapController;
-    private boolean mZoomInitialized = false;
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private boolean mIsViewVisible = false;
     private boolean mKeyboardDisplayed = false;
@@ -278,13 +277,11 @@ public class FragmentMap extends FragmentWithSearch {
         final int zoomLevel = computeZoomLevelForRadius(radiusInKilometer * 1000);
         Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(zoomLevel)
             + " for radius of " + String.valueOf(radiusInKilometer) + " km");
-        mZoomInitialized = true;
         mMapController.setZoom(zoomLevel);
     }
 
     private void setZoomLevel(int level) {
         Log.v("BeautyAndroid", "Map zoom set to level " + String.valueOf(level));
-        mZoomInitialized = true;
         mMapController.setZoom(level);
     }
 

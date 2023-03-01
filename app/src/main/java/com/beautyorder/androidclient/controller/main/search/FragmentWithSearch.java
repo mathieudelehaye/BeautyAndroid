@@ -128,12 +128,14 @@ public abstract class FragmentWithSearch extends Fragment {
         if (mSearchStart == null && getContext() != null) {
             String searchQuery = ((MainActivity)getContext()).getSearchQuery();
 
+            boolean userLocationReadFromCache = readCachedUserLocation();
+
             if (!searchQuery.equals("") && !searchQuery.equals("usr")) {
                 // If a query has been received by the searchable activity, use it
                 // to find the search start
                 Log.v("BeautyAndroid", "Searching for the query: " + searchQuery);
                 setSearchStart(getCoordinatesFromAddress(searchQuery));
-            } else if (readCachedUserLocation()) {
+            } else if (userLocationReadFromCache) {
                 // Otherwise, if the user location has been cached, search around it
                 Log.v("BeautyAndroid", "Searching around the user location from the cache");
                 setSearchStart(mUserLocation);
@@ -212,7 +214,7 @@ public abstract class FragmentWithSearch extends Fragment {
         if (cacheLocation != "") {
             Log.d("BeautyAndroid", "User location read from cache: " + cacheLocation);
             Log.v("BeautyAndroid", "User location read from cache at timestamp: "
-                + String.valueOf(Helpers.getTimestamp()));
+                + Helpers.getTimestamp());
 
             mUserLocation = GeoPoint.fromDoubleString(cacheLocation, ',');
 
