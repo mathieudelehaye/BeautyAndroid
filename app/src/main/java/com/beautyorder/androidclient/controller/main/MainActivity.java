@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -196,6 +197,20 @@ public class MainActivity extends AppCompatActivity {
         mShownFragmentType = tmp;
         onNavigation();
         mNavigator.showFragment(findFragment(mShownFragmentType));
+    }
+
+    public void showScore(int value) {
+        Log.v("BeautyAndroid", "Show score: " + value);
+
+        TextView appScore = mAppFragment.getView().findViewById(R.id.score_text);
+        if (appScore != null) {
+            appScore.setText(value + " pts");
+        }
+
+        TextView mapScore = mMapFragment.getView().findViewById(R.id.score_text);
+        if (mapScore != null) {
+            mapScore.setText(value + " pts");
+        }
     }
 
     public void enableTabSwiping() {

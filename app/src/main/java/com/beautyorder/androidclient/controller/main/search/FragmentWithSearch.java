@@ -39,7 +39,6 @@ import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
-import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -398,7 +397,13 @@ public abstract class FragmentWithSearch extends Fragment {
 
                     Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
 
-                    new ScoreTransferer(mDatabase, (MainActivity)getActivity()).displayScoreOnScreen(userScore);
+
+                    var mainActivity = (MainActivity) getActivity();
+                    if (mainActivity == null) {
+                        Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
+                        return;
+                    }
+                    mainActivity.showScore(userScore);
                 }
             });
     }

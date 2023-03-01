@@ -111,9 +111,8 @@ public class FragmentMap extends FragmentWithSearch {
                     mKeyboardDisplayed = true;
                     Log.v("BeautyAndroid", "Keyboard displayed");
 
-                    ViewGroup.LayoutParams params = mapLayout.getLayoutParams();
-                    params.height = mMapReducedHeight;
-
+                    ViewGroup.LayoutParams mapLayoutParams = mapLayout.getLayoutParams();
+                    mapLayoutParams.height = mMapReducedHeight;
                     mapLayout.requestLayout();
                 }
             } else {

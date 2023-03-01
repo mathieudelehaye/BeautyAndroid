@@ -20,12 +20,8 @@ package com.beautyorder.androidclient.model;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.TextView;
-import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.MainActivity;
-import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.beautyorder.androidclient.TaskCompletionManager;
 
@@ -156,24 +152,17 @@ public class ScoreTransferer {
                 Log.d("BeautyAndroid", "Registered user score updated in the database to: "
                     + String.valueOf(newScore));
 
-                displayScoreOnScreen(newScore);
+                var mainActivity = (MainActivity) mActivity;
+                if (mainActivity == null) {
+                    Log.w("BeautyAndroid", "Cannot show the score, as no main activity found");
+                    return;
+                }
+                mainActivity.showScore(newScore);
             }
 
             @Override
             public void onFailure() {
             }
         });
-    }
-
-    public void displayScoreOnScreen(int value) {
-        if (mActivity == null) {
-            return;
-        }
-
-        Log.v("BeautyAndroid", "Display score on screen: " + String.valueOf(value));
-        var fragment =
-            (FragmentWithSearch) FragmentManager.findFragment(mActivity.findViewById(R.id.score_text));
-        TextView score = (TextView) fragment.getView().findViewById(R.id.score_text);
-        score.setText(String.valueOf(value) + " pts");
     }
 }
