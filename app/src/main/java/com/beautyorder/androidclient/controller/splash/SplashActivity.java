@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+            SplashScreen.installSplashScreen(this);
             super.onCreate(savedInstanceState);
 
             var intent = new Intent(getBaseContext(), MainActivity.class);
@@ -48,14 +48,10 @@ public class SplashActivity extends AppCompatActivity {
             setContentView(R.layout.activity_splash);
 
             var handler = new Handler();
-            handler.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    var intent = new Intent(getBaseContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+            handler.postDelayed(() -> {
+                var intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }, 1999);
         }
 
