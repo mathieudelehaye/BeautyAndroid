@@ -23,8 +23,6 @@ import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
 import java.text.SimpleDateFormat;
@@ -88,7 +86,7 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
 
     public int getScore() {
         String score = mData.get(0).get("score");
-        return (score != "") ? (int)Integer.parseInt(score) : 0;
+        return (score != "") ? Integer.parseInt(score) : 0;
     }
 
     public void setScore(int value) {
@@ -120,25 +118,19 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
         // Add userInfos table entry to the database matching the app user
         mDatabase.collection("userInfos").document(mKey.toString())
             .set(mData.get(0))
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.i("BeautyAndroid", "New info successfully written to the database for user: "
+            .addOnSuccessListener(aVoid -> {
+                Log.i("BeautyAndroid", "New info successfully written to the database for user: "
                         + mKey.toString());
 
-                    if (cbManager.length >= 1) {
-                        cbManager[0].onSuccess();
-                    }
+                if (cbManager.length >= 1) {
+                    cbManager[0].onSuccess();
                 }
             })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e("BeautyAndroid", "Error writing user info to the database: ", e);
+            .addOnFailureListener(e -> {
+                Log.e("BeautyAndroid", "Error writing user info to the database: ", e);
 
-                    if (cbManager.length >= 1) {
-                        cbManager[0].onFailure();
-                    }
+                if (cbManager.length >= 1) {
+                    cbManager[0].onFailure();
                 }
             });
     }

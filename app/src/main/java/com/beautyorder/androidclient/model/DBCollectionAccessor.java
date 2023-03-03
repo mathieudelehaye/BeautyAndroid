@@ -19,10 +19,7 @@
 package com.beautyorder.androidclient.model;
 
 import android.util.Log;
-import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -97,22 +94,19 @@ public class DBCollectionAccessor {
         mDatabase.collection(mCollectionName)
             .whereEqualTo("__name__", mKey.toString())
             .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
 
-                        readResultFields(task.getResult(), fields, null);
+                    readResultFields(task.getResult(), fields, null);
 
-                        if (cbManager.length >= 1) {
-                            cbManager[0].onSuccess();
-                        }
-                    } else {
-                        Log.e("BeautyAndroid", "Error reading documents: ", task.getException());
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onSuccess();
+                    }
+                } else {
+                    Log.e("BeautyAndroid", "Error reading documents: ", task.getException());
 
-                        if (cbManager.length >= 1) {
-                            cbManager[0].onFailure();
-                        }
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onFailure();
                     }
                 }
             });
@@ -134,22 +128,19 @@ public class DBCollectionAccessor {
             .whereLessThan(firstFilterField, mFilter.getMaxRangeAtIndex(0))
             .whereGreaterThan(firstFilterField, mFilter.getMinRangeAtIndex(0))
             .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
 
-                        readResultFields(task.getResult(), fields, mFilter);
+                    readResultFields(task.getResult(), fields, mFilter);
 
-                        if (cbManager.length >= 1) {
-                            cbManager[0].onSuccess();
-                        }
-                    } else {
-                        Log.e("BeautyAndroid", "Error reading documents: ", task.getException());
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onSuccess();
+                    }
+                } else {
+                    Log.e("BeautyAndroid", "Error reading documents: ", task.getException());
 
-                        if (cbManager.length >= 1) {
-                            cbManager[0].onFailure();
-                        }
+                    if (cbManager.length >= 1) {
+                        cbManager[0].onFailure();
                     }
                 }
             });
@@ -158,6 +149,11 @@ public class DBCollectionAccessor {
     }
 
     private void readResultFields(QuerySnapshot result, String[] fields, SearchFilter filter) {
+
+        // mData and mDataChanged come with a default item. So, it needs to be cleared before
+        // iterating on the results.
+        mData.clear();
+        mDataChanged.clear();
 
         for (QueryDocumentSnapshot document : result) {
 

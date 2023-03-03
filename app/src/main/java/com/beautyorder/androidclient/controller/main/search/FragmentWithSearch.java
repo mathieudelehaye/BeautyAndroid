@@ -382,31 +382,27 @@ public abstract class FragmentWithSearch extends Fragment {
         mDatabase.collection("userInfos")
             .whereEqualTo("__name__", AppUser.getInstance().getId())
             .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    // Display score
-                    int userScore = 0;
+            .addOnCompleteListener(task -> {
+                // Display score
+                int userScore = 0;
 
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            var scoreData = document.getData().get("score").toString();
-                            userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
-                        }
-                    } else {
-                        Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        var scoreData = document.getData().get("score").toString();
+                        userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
                     }
-
-                    Log.d("BeautyAndroid", "userScore = " + String.valueOf(userScore));
-
-
-                    var mainActivity = (MainActivity) getActivity();
-                    if (mainActivity == null) {
-                        Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
-                        return;
-                    }
-                    mainActivity.showScore(userScore);
+                } else {
+                    Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
                 }
+
+                Log.d("BeautyAndroid", "userScore = " + userScore);
+
+                var mainActivity = (MainActivity) getActivity();
+                if (mainActivity == null) {
+                    Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
+                    return;
+                }
+                mainActivity.showScore(userScore);
             });
     }
 }

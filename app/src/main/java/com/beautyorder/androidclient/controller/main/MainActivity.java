@@ -35,7 +35,7 @@ import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.controller.main.list.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.main.map.FragmentMap;
-import com.beautyorder.androidclient.model.AsyncDBDataSender;
+import com.beautyorder.androidclient.model.AsyncDBDataConnector;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.model.SearchResult;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentMap mMapFragment = new FragmentMap();
     private FragmentType mShownFragmentType = FragmentType.NONE;
     private FragmentType mPrevFragmentType = FragmentType.NONE;
-    final private int mDelayBetweenScoreWritingsInSec = 5;  // time in s to wait between two score writing attempts
+    final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
     private static FragmentType mSavedSearchFragment = FragmentType.NONE;
 
     public String getSearchQuery() {
@@ -109,8 +109,9 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabase = FirebaseFirestore.getInstance();
 
-        var runner = new AsyncDBDataSender(this, mDatabase, mDelayBetweenScoreWritingsInSec);
-        runner.execute(String.valueOf(mDelayBetweenScoreWritingsInSec));
+        var runner = new AsyncDBDataConnector(this, mDatabase, mDelayBeforePhotoSendingInSec
+            , 0);
+        runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
 
         // Add to the navigator the fragments and select the first one to show
         mNavigator.addFragment(mAppFragment);

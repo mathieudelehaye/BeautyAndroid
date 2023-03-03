@@ -1,5 +1,5 @@
 //
-//  AsyncDBDataSender.java
+//  AsyncDBDataConnector.java
 //
 //  Created by Mathieu Delehaye on 19/02/2023.
 //
@@ -39,13 +39,17 @@ import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 
-public class AsyncDBDataSender extends AsyncTask<String, String, String> {
+public class AsyncDBDataConnector extends AsyncTask<String, String, String> {
     private Activity mActivity;
     private SharedPreferences mSharedPref;
     private FirebaseFirestore mDatabase;
-    private int mSleepTime;
+    private int mSleepTimeInSec;
+    private long mCumulatedSleepTimeInSec = 0;
+    private final int mTimeBeforePollingScoreInMin = 1;
 
-    public AsyncDBDataSender(Activity activity, FirebaseFirestore database, int sleepTime) {
+    public AsyncDBDataConnector(Activity activity, FirebaseFirestore database, int sleepTime,
+        long cumulatedSleepTime) {
+
         super();
 
         mActivity = activity;
@@ -55,7 +59,9 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
 
         mDatabase = database;
 
-        mSleepTime = sleepTime;
+        mSleepTimeInSec = sleepTime;
+
+        mCumulatedSleepTimeInSec = cumulatedSleepTime;
     }
 
     @Override
@@ -65,9 +71,9 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
         publishProgress("Sleeping..."); // Calls onProgressUpdate()
 
         try {
-            int time = Integer.parseInt(params[0])*1000;
+            int timeInMs = Integer.parseInt(params[0])*1000;
 
-            Thread.sleep(time);
+            Thread.sleep(timeInMs);
             response.append("Slept for " + params[0] + " seconds");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -82,6 +88,9 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
+
+        mCumulatedSleepTimeInSec += mSleepTimeInSec;
+
         // Actions to execute after the background task
         // Return if there is no network available
         if (!((MainActivity)mActivity).isNetworkAvailable()) {
@@ -96,6 +105,8 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
             restart();
             return;
         }
+
+        downloadScore();
 
         // Return if there is no scanning events to send in the app preferences
         var photoQueue = (HashSet<String>) mSharedPref.getStringSet(mActivity.getString(R.string.photos_to_send),
@@ -131,39 +142,7 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
                         // The app won't increase the score, as the photo must first be verified at the backend
                         // server
 
-                        // Upload the photo to the Cloud Storage for Firebase
-                        var photoFile = new File(photoPath);
-                        final var photoURI = Uri.fromFile(photoFile);
-
-                        StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
-                            .child("user_images/"+photoURI.getLastPathSegment());
-
-                        UploadTask uploadTask = riversRef.putFile(photoURI);
-
-                        // Register observers to listen for when the download is done or if it fails
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                Log.i("BeautyAndroid", "Photo sent to the database");
-                                Log.v("BeautyAndroid", "Photo uploaded to the database at timestamp: "
-                                    + String.valueOf(Helpers.getTimestamp()));
-
-                                if (!photoFile.delete()) {
-                                    Log.w("BeautyAndroid", "Unable to delete the local photo file: "
-                                        + photoPath);
-                                } else {
-                                    Log.v("BeautyAndroid", "Local image successfully deleted");
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                                Log.e("BeautyAndroid", "Failed to upload the image with the error:"
-                                        + exception.toString());
-                            }
-                        });
+                        uploadPhoto(photoPath);
                     } else {
                         Log.w("BeautyAndroid", "Photo older than the latest in the database: " + photoPath);
                     }
@@ -197,32 +176,71 @@ public class AsyncDBDataSender extends AsyncTask<String, String, String> {
 
     private void restart() {
         // Restart the asynchronous task
-        var runner = new AsyncDBDataSender(mActivity, mDatabase, mSleepTime);
-        runner.execute(String.valueOf(mSleepTime));
+        var runner = new AsyncDBDataConnector(mActivity, mDatabase, mSleepTimeInSec, mCumulatedSleepTimeInSec);
+        runner.execute(String.valueOf(mSleepTimeInSec));
     }
 
-    private void sendImage(File file) {
+    private void downloadScore() {
+        if ((mCumulatedSleepTimeInSec / 60) < mTimeBeforePollingScoreInMin) {
+            return;
+        }
 
-        // Upload the file to the Cloud Storage for Firebase
-        final var fileURI = Uri.fromFile(file);
+        mCumulatedSleepTimeInSec = 0;
+
+        String uid = AppUser.getInstance().getId();
+        var entry = new UserInfoDBEntry(mDatabase, uid);
+
+        entry.readScoreDBFields(new TaskCompletionManager() {
+            @Override
+            public void onSuccess() {
+
+                final int downloadedScore = entry.getScore();
+                String preferenceKey = mActivity.getString(R.string.last_downloaded_score);
+                final int preferenceScore =
+                    mSharedPref.getInt(preferenceKey, 0);
+
+                if (preferenceScore < downloadedScore) {
+                    Log.v("BeautyAndroid", "Score updated from database: " + downloadedScore);
+
+                    mSharedPref.edit().putInt(preferenceKey, downloadedScore).commit();
+
+                    var mainActivity = (MainActivity) mActivity;
+
+                    if (mainActivity != null) {
+                        mainActivity.showScore(downloadedScore);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure() {
+            }
+        });
+    }
+
+    private void uploadPhoto(String path) {
+        // Upload the photo to the Cloud Storage for Firebase
+
+        var photoFile = new File(path);
+        final var photoURI = Uri.fromFile(photoFile);
 
         StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
-            .child("user_images/"+fileURI.getLastPathSegment());
+            .child("user_images/"+photoURI.getLastPathSegment());
 
-        UploadTask uploadTask = riversRef.putFile(fileURI);
+        UploadTask uploadTask = riversRef.putFile(photoURI);
 
         // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                Log.d("BeautyAndroid", "Image uploaded to the database");
-                Log.v("BeautyAndroid", "Image uploaded to the database at timestamp: "
-                        + String.valueOf(Helpers.getTimestamp()));
+                Log.i("BeautyAndroid", "Photo sent to the database");
+                Log.v("BeautyAndroid", "Photo uploaded to the database at timestamp: "
+                    + Helpers.getTimestamp());
 
-                if (!file.delete()) {
-                    Log.w("BeautyAndroid", "Unable to delete the local image: "
-                            + file);
+                if (!photoFile.delete()) {
+                    Log.w("BeautyAndroid", "Unable to delete the local photo file: "
+                        + path);
                 } else {
                     Log.v("BeautyAndroid", "Local image successfully deleted");
                 }
