@@ -21,28 +21,38 @@ package com.beautyorder.androidclient.controller.main;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.list.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.main.map.FragmentMap;
-import com.beautyorder.androidclient.model.AsyncDBDataConnector;
-import com.beautyorder.androidclient.model.ResultItemInfo;
-import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.model.SearchResult;
+import com.beautyorder.androidclient.model.*;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.File;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityWithAsyncTask {
+   // Fragments: types
     public enum FragmentType {
         APP,
         HELP,
@@ -53,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private FirebaseFirestore mDatabase;
-    private StringBuilder mSearchQuery = new StringBuilder("");
-    private SearchResult mSearchResult;
-    private ResultItemInfo mSelectedRecyclePoint;
+    private SharedPreferences mSharedPref;
+
+    // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
     private FragmentApp mAppFragment = new FragmentApp();
     private FragmentHelp mHelpFragment = new FragmentHelp();
@@ -64,11 +74,25 @@ public class MainActivity extends AppCompatActivity {
     private FragmentMap mMapFragment = new FragmentMap();
     private FragmentType mShownFragmentType = FragmentType.NONE;
     private FragmentType mPrevFragmentType = FragmentType.NONE;
-    final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
-    private static FragmentType mSavedSearchFragment = FragmentType.NONE;
 
+    // Search: properties
+    private StringBuilder mSearchQuery = new StringBuilder("");
+    private SearchResult mSearchResult;
+    private static FragmentType mSavedSearchFragment = FragmentType.NONE;
+    private ResultItemInfo mSelectedRecyclePoint;
+
+    // Background: properties
+    private Set<String> mPhotoQueue;
+    final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
+    private final int mTimeBeforePollingScoreInMin = 1;
+
+    // Search: getter-setter
     public String getSearchQuery() {
         return mSearchQuery.toString();
+    }
+
+    public void saveSearchFragment() {
+        mSavedSearchFragment = mShownFragmentType;
     }
 
     public ResultItemInfo getSelectedRecyclePoint() {
@@ -85,10 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSearchResult(SearchResult result) {
         mSearchResult = result;
-    }
-
-    public void saveSearchFragment() {
-        mSavedSearchFragment = mShownFragmentType;
     }
 
     @Override
@@ -109,8 +129,10 @@ public class MainActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mDatabase = FirebaseFirestore.getInstance();
+        mSharedPref = getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        var runner = new AsyncDBDataConnector(this, mDatabase, mDelayBeforePhotoSendingInSec
+        var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
             , 0);
         runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
 
@@ -172,14 +194,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public boolean isNetworkAvailable() {
-        var connectivityManager
-            = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
-            connectivityManager.getActiveNetworkInfo() : null;
-        return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
-    }
-
+    // Fragments: methods
     public void navigate(FragmentType dest) {
         mPrevFragmentType = mShownFragmentType;
         mShownFragmentType = dest;
@@ -199,55 +214,6 @@ public class MainActivity extends AppCompatActivity {
         mShownFragmentType = tmp;
         onNavigation();
         mNavigator.showFragment(findFragment(mShownFragmentType));
-    }
-
-    public void showDialog(String text, String tag) {
-        var dialogFragment = new FragmentHelpDialog(text);
-        dialogFragment.show(findFragment(mShownFragmentType).getChildFragmentManager(), tag);
-    }
-
-    public void showScore(int value) {
-        Log.v("BeautyAndroid", "Show score: " + value);
-
-        TextView appScore = mAppFragment.getView().findViewById(R.id.score_text);
-        if (appScore != null) {
-            appScore.setText(value + " pts");
-        }
-
-        TextView mapScore = mMapFragment.getView().findViewById(R.id.score_text);
-        if (mapScore != null) {
-            mapScore.setText(value + " pts");
-        }
-    }
-
-    public void enableTabSwiping() {
-        // Enable swiping gesture for the view pager
-        var fragment =
-            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
-        fragment.enableTabSwiping();
-    }
-
-    public void disableTabSwiping() {
-        // Disable the swiping gesture for the view pager
-        var fragment =
-            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
-        fragment.disableTabSwiping();
-    }
-
-    private void handleIntent(Intent intent) {
-
-        String intentAction = intent.getAction();
-        if (Intent.ACTION_SEARCH.equals(intentAction)) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.v("BeautyAndroid", "Intent ACTION_SEARCH received by the main activity with the query: "
-                + query);
-            mSearchQuery.append(query);
-        } else if (Intent.ACTION_VIEW.equals(intentAction)) {
-            Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
-            mSearchQuery.append("usr");
-        } else {
-            Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
-        }
     }
 
     private Fragment findFragment(FragmentType type) {
@@ -307,5 +273,223 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    public void showDialog(String text, String tag) {
+        var dialogFragment = new FragmentHelpDialog(text);
+        dialogFragment.show(findFragment(mShownFragmentType).getChildFragmentManager(), tag);
+    }
+
+    public void showScore(int value) {
+        Log.v("BeautyAndroid", "Show score: " + value);
+
+        TextView appScore = mAppFragment.getView().findViewById(R.id.score_text);
+        if (appScore != null) {
+            appScore.setText(value + " pts");
+        }
+
+        TextView mapScore = mMapFragment.getView().findViewById(R.id.score_text);
+        if (mapScore != null) {
+            mapScore.setText(value + " pts");
+        }
+    }
+
+    public void enableTabSwiping() {
+        // Enable swiping gesture for the view pager
+        var fragment =
+            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+        fragment.enableTabSwiping();
+    }
+
+    public void disableTabSwiping() {
+        // Disable the swiping gesture for the view pager
+        var fragment =
+            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+        fragment.disableTabSwiping();
+    }
+
+    // Search: methods
+    private void handleIntent(Intent intent) {
+
+        String intentAction = intent.getAction();
+        if (Intent.ACTION_SEARCH.equals(intentAction)) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.v("BeautyAndroid", "Intent ACTION_SEARCH received by the main activity with the query: "
+                + query);
+            mSearchQuery.append(query);
+        } else if (Intent.ACTION_VIEW.equals(intentAction)) {
+            Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
+            mSearchQuery.append("usr");
+        } else {
+            Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
+        }
+    }
+
+    // Background: methods
+    @Override
+    public boolean environmentCondition() {
+        if (!isNetworkAvailable()) {
+            //Log.v("BeautyAndroid", "Try to write the scanning events but no network");
+            return false;
+        }
+
+        if (AppUser.getInstance().getAuthenticationType() == AppUser.AuthenticationType.NONE) {
+            //Log.v("BeautyAndroid", "Try to write the scanning events but no app user");
+            return false;
+        }
+
+        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send),
+            new HashSet<>());
+        if (mPhotoQueue.isEmpty()) {
+            //Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean timeCondition(long cumulatedTimeInSec) {
+
+        if ((cumulatedTimeInSec / 60) < mTimeBeforePollingScoreInMin) {
+            Log.v("BeautyAndroid", "Timed condition not fulfilled: " + cumulatedTimeInSec
+                + "sec out of " + (mTimeBeforePollingScoreInMin * 60));
+            return false;
+        }
+
+        Log.v("BeautyAndroid", "Timed condition fulfilled");
+        return true;
+    }
+
+    @Override
+    public void runEnvironmentDependentActions() {
+
+        Log.d("BeautyAndroid", "Number of events to send in the queue: " + mPhotoQueue.size());
+
+        String uid = AppUser.getInstance().getId();
+
+        // Process the first event in the queue: increment the score in the database then removing the event
+        // from the queue
+        for(String photoPath: mPhotoQueue) {
+
+            var entry = new UserInfoDBEntry(mDatabase, uid);
+
+            entry.readScoreDBFields(new TaskCompletionManager() {
+                @Override
+                public void onSuccess() {
+
+                    // Get the date from the photo name
+                    Date photoDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+                        photoPath.substring(photoPath.lastIndexOf("-") + 1));
+
+                    // Only update the score if the event date is after the DB score time
+                    if (photoDate.compareTo(entry.getScoreTime()) > 0) {
+                        // The app won't increase the score, as the photo must first be verified at the backend
+                        // server
+
+                        uploadPhoto(photoPath);
+                    } else {
+                        Log.w("BeautyAndroid", "Photo older than the latest in the database: " + photoPath);
+                    }
+
+                    Log.d("BeautyAndroid", "Photo removed from the app queue: " + photoPath);
+                    mPhotoQueue.remove(photoPath);
+                    mSharedPref.edit().putStringSet(getString(R.string.photos_to_send),
+                        mPhotoQueue).commit();
+                }
+
+                @Override
+                public void onFailure() {
+                }
+            });
+
+            break;
+        }
+    }
+
+    @Override
+    public void runTimesDependentActions() {
+        downloadScore();
+    }
+
+    // Background task: methods
+    public boolean isNetworkAvailable() {
+        var connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
+                connectivityManager.getActiveNetworkInfo() : null;
+        return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
+    }
+
+    private void uploadPhoto(String path) {
+        // Upload the photo to the Cloud Storage for Firebase
+
+        var photoFile = new File(path);
+        final var photoURI = Uri.fromFile(photoFile);
+
+        StorageReference riversRef = (FirebaseStorage.getInstance().getReference())
+            .child("user_images/"+photoURI.getLastPathSegment());
+
+        UploadTask uploadTask = riversRef.putFile(photoURI);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                Log.i("BeautyAndroid", "Photo sent to the database");
+                Log.v("BeautyAndroid", "Photo uploaded to the database at timestamp: "
+                    + Helpers.getTimestamp());
+
+                if (!photoFile.delete()) {
+                    Log.w("BeautyAndroid", "Unable to delete the local photo file: "
+                        + path);
+                } else {
+                    Log.v("BeautyAndroid", "Local image successfully deleted");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.e("BeautyAndroid", "Failed to upload the image with the error:"
+                    + exception);
+            }
+        });
+    }
+
+    private void downloadScore() {
+
+        Log.v("BeautyAndroid", "Start to download the score");
+
+        String uid = AppUser.getInstance().getId();
+        var entry = new UserInfoDBEntry(mDatabase, uid);
+
+        entry.readScoreDBFields(new TaskCompletionManager() {
+            @Override
+            public void onSuccess() {
+
+                final int downloadedScore = entry.getScore();
+                String preferenceKey = getString(R.string.last_downloaded_score);
+                final int preferenceScore =
+                    mSharedPref.getInt(preferenceKey, 0);
+
+                Log.v("BeautyAndroid", "Score downloaded: shown: " + preferenceScore + ", new: "
+                    + downloadedScore);
+
+                if (preferenceScore < downloadedScore) {
+                    Log.v("BeautyAndroid", "Score updated from database: " + downloadedScore);
+
+                    mSharedPref.edit().putInt(preferenceKey, downloadedScore).commit();
+
+                    showScore(downloadedScore);
+                    showDialog("Your score has been increased to " + downloadedScore, "Score increased");
+                }
+            }
+
+            @Override
+            public void onFailure() {
+            }
+        });
     }
 }

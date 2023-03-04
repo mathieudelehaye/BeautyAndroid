@@ -150,14 +150,7 @@ public class ScoreTransferer {
             @Override
             public void onSuccess() {
                 Log.d("BeautyAndroid", "Registered user score updated in the database to: "
-                    + String.valueOf(newScore));
-
-                var mainActivity = (MainActivity) mActivity;
-                if (mainActivity == null) {
-                    Log.w("BeautyAndroid", "Cannot show the score, as no main activity found");
-                    return;
-                }
-                mainActivity.showScore(newScore);
+                    + newScore);
             }
 
             @Override
