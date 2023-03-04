@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
 
 public class Navigator {
-
     private Fragment mShownFragment;
     private Fragment mPrevFragment;
     private Activity mActivity;

@@ -205,9 +205,10 @@ public class AsyncDBDataConnector extends AsyncTask<String, String, String> {
                     mSharedPref.edit().putInt(preferenceKey, downloadedScore).commit();
 
                     var mainActivity = (MainActivity) mActivity;
-
                     if (mainActivity != null) {
                         mainActivity.showScore(downloadedScore);
+                        mainActivity.showDialog("Your score has been increased to "
+                            + downloadedScore, "Score increased");
                     }
                 }
             }

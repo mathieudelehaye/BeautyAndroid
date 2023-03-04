@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.list.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.main.map.FragmentMap;
 import com.beautyorder.androidclient.model.AsyncDBDataConnector;
@@ -198,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
         mShownFragmentType = tmp;
         onNavigation();
         mNavigator.showFragment(findFragment(mShownFragmentType));
+    }
+
+    public void showDialog(String text, String tag) {
+        var dialogFragment = new FragmentHelpDialog(text);
+        dialogFragment.show(findFragment(mShownFragmentType).getChildFragmentManager(), tag);
     }
 
     public void showScore(int value) {
