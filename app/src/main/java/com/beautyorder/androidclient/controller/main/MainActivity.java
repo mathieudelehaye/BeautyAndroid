@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
     private ResultItemInfo mSelectedRecyclePoint;
 
     // Background: properties
+    // TODO: do not use a static property here
+    public static boolean scoreTransferredFromAnonymousAccount = false;
     private Set<String> mPhotoQueue;
     final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
     private final int mTimeBeforePollingScoreInMin = 1;
@@ -418,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
     }
 
     // Background task: methods
-    public boolean isNetworkAvailable() {
+    private boolean isNetworkAvailable() {
         var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
@@ -486,7 +488,13 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
                     Log.v("BeautyAndroid", "Shown score updated: " + downloadedScore);
 
                     showScore(downloadedScore);
-                    showDialog("Your score has been increased to " + downloadedScore, "Score increased");
+                    if (scoreTransferredFromAnonymousAccount) {
+                        scoreTransferredFromAnonymousAccount = false;
+                        showDialog("Nice to see you! Your score was transferred from your other account. "
+                                + "It is now " + downloadedScore + "!", "Score transferred");
+                    } else  {
+                        showDialog("Your score has been increased to " + downloadedScore, "Score increased");
+                    }
                 }
 
                 if (preferenceScore != downloadedScore) {

@@ -39,11 +39,8 @@ import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -139,6 +136,12 @@ public abstract class FragmentWithSearch extends Fragment {
                 // Otherwise, if the user location has been cached, search around it
                 Log.v("BeautyAndroid", "Searching around the user location from the cache");
                 setSearchStart(mUserLocation);
+            } else {
+                var activity = (MainActivity)getActivity();
+                if(activity != null) {
+                    activity.showDialog("Please wait until the app has found your position",
+                        "No search until user position is found");
+                }
             }
         }
 

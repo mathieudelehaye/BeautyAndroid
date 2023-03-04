@@ -267,8 +267,8 @@ public class FragmentCamera extends Fragment {
         if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("cam_help_displayed", "false"))) {
                 mSharedPref.edit().putString("cam_help_displayed", "true").commit();
-                var dialogFragment = new FragmentHelpDialog("Take photos of your empty beauty products on "
-                    + "the counter to get EBpoints!");
+                var dialogFragment = new FragmentHelpDialog("Take a photo of your beauty containers on "
+                    + "the drop-off location counter and receive EBpoints!");
                 dialogFragment.show(getChildFragmentManager(), "Camera help dialog");
             }
         }

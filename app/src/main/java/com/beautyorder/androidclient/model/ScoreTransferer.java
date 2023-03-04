@@ -19,8 +19,10 @@
 package com.beautyorder.androidclient.model;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -114,7 +116,7 @@ public class ScoreTransferer {
 
         // Read the registered user info from the DB
         UserInfoDBEntry registeredUserEntry =
-            new UserInfoDBEntry(mDatabase, mDestinationUid.toString());
+            new UserInfoDBEntry(mDatabase, mDestinationUid);
         registeredUserEntry.readScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
@@ -128,7 +130,7 @@ public class ScoreTransferer {
                     // registered user score.
 
                     updateUserScoreInDatabase(registeredUserEntry,
-                            registeredUserScore + scoreToAddValue);
+                        registeredUserScore + scoreToAddValue);
                 } else {
                     // Otherwise, add the (anonymous score - 1) to the registered one
 
@@ -151,6 +153,15 @@ public class ScoreTransferer {
             public void onSuccess() {
                 Log.d("BeautyAndroid", "Registered user score updated in the database to: "
                     + newScore);
+
+                // Reset the score in the app preferences, so it can be shown after downloading it.
+                String preferenceKey = mActivity.getString(R.string.last_downloaded_score);
+                mActivity.getSharedPreferences("Beauty-Android", Context.MODE_PRIVATE).edit()
+                    .putInt(preferenceKey, 0).commit();
+                Log.v("BeautyAndroid", "Score reset in the app preferences");
+
+                // TODO: do not use an static property here
+                MainActivity.scoreTransferredFromAnonymousAccount = true;
             }
 
             @Override
