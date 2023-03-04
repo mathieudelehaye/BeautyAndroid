@@ -132,9 +132,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
         mSharedPref = getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
-            , 0);
-        runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
+        // Fragments: initialization
 
         // Add to the navigator the fragments and select the first one to show
         mNavigator.addFragment(mAppFragment);
@@ -142,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
         mNavigator.addFragment(mTermsFragment);
         mNavigator.addFragment(mDetailFragment);
         mNavigator.addFragment(mMapFragment);
+
+        // Search: initialization
 
         // Get the intent, like a search, then verify the action and get the query
         handleIntent(getIntent());
@@ -156,6 +156,11 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
             mNavigator.showFragment(mAppFragment);
             mShownFragmentType = FragmentType.APP;
         }
+
+        // Background: initialization
+        var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
+            , 0);
+        runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
     }
 
     @Override
@@ -338,8 +343,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
             return false;
         }
 
-        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send),
-            new HashSet<>());
+        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send), new HashSet<>());
         if (mPhotoQueue.isEmpty()) {
             //Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
             return false;
@@ -351,13 +355,14 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
     @Override
     public boolean timeCondition(long cumulatedTimeInSec) {
 
-        if ((cumulatedTimeInSec / 60) < mTimeBeforePollingScoreInMin) {
-            Log.v("BeautyAndroid", "Timed condition not fulfilled: " + cumulatedTimeInSec
-                + "sec out of " + (mTimeBeforePollingScoreInMin * 60));
+        final int secondsByMinute = 60; // change it to debug
+        if ((cumulatedTimeInSec / secondsByMinute) < mTimeBeforePollingScoreInMin) {
+            //Log.v("BeautyAndroid", "Timed condition not fulfilled: " + cumulatedTimeInSec
+            //    + " sec out of " + (mTimeBeforePollingScoreInMin * secondsByMinute));
             return false;
         }
 
-        Log.v("BeautyAndroid", "Timed condition fulfilled");
+        //Log.v("BeautyAndroid", "Timed condition fulfilled");
         return true;
     }
 
@@ -415,9 +420,9 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
     // Background task: methods
     public boolean isNetworkAvailable() {
         var connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
-                connectivityManager.getActiveNetworkInfo() : null;
+            connectivityManager.getActiveNetworkInfo() : null;
         return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
     }
 
@@ -474,16 +479,18 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
                 final int preferenceScore =
                     mSharedPref.getInt(preferenceKey, 0);
 
-                Log.v("BeautyAndroid", "Score downloaded: shown: " + preferenceScore + ", new: "
+                Log.v("BeautyAndroid", "Score downloaded: current: " + preferenceScore + ", new: "
                     + downloadedScore);
 
                 if (preferenceScore < downloadedScore) {
-                    Log.v("BeautyAndroid", "Score updated from database: " + downloadedScore);
-
-                    mSharedPref.edit().putInt(preferenceKey, downloadedScore).commit();
+                    Log.v("BeautyAndroid", "Shown score updated: " + downloadedScore);
 
                     showScore(downloadedScore);
                     showDialog("Your score has been increased to " + downloadedScore, "Score increased");
+                }
+
+                if (preferenceScore != downloadedScore) {
+                    mSharedPref.edit().putInt(preferenceKey, downloadedScore).commit();
                 }
             }
 
