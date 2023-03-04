@@ -80,14 +80,14 @@ public class FragmentOnboarding extends OnboardingFragment {
 
         switch (pageIndex) {
             case 0:
-                pageTitle = "Search the map";
+                pageTitle = "Find";
                 break;
             case 1:
-                pageTitle = "Scan the QR code";
+                pageTitle = "Send a photo";
                 break;
             case 2:
             default:
-                pageTitle = "Share the EB Points";
+                pageTitle = "Get the EB Points";
                 break;
         }
 
@@ -101,14 +101,14 @@ public class FragmentOnboarding extends OnboardingFragment {
 
         switch (pageIndex) {
             case 0:
-                pageDescr = "For beauty drop-off locations";
+                pageDescr = "Drop-off locations to recycle your containers";
                 break;
             case 1:
-                pageDescr = "At the location against EB Points!";
+                pageDescr = "Of your containers on the location counter";
                 break;
             case 2:
             default:
-                pageDescr = "Soon against free beauty samples!";
+                pageDescr = "After 1 day, when your photo is validated!";
                 break;
         }
 
