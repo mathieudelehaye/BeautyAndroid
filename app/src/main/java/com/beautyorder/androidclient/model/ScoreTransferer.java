@@ -26,7 +26,6 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.beautyorder.androidclient.TaskCompletionManager;
-
 import java.util.Date;
 
 public class ScoreTransferer {
@@ -74,7 +73,7 @@ public class ScoreTransferer {
 
                     if (anonymousUserEntry.getScore() > 0) {
                         Log.v("BeautyAndroid", "Anonymous user data read from the database: "
-                            + String.valueOf(anonymousUserEntry.getScore()));
+                            + anonymousUserEntry.getScore());
 
                         clearAndTransferScoreFromAnonymousUser(anonymousUserEntry);
                     }
@@ -115,27 +114,26 @@ public class ScoreTransferer {
     private void readAndAddToRegisteredUserScore(int scoreToAddValue, Date scoreToAddTimestamp) {
 
         // Read the registered user info from the DB
-        UserInfoDBEntry registeredUserEntry =
-            new UserInfoDBEntry(mDatabase, mDestinationUid);
+        UserInfoDBEntry registeredUserEntry = new UserInfoDBEntry(mDatabase, mDestinationUid);
         registeredUserEntry.readScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
                 final int registeredUserScore = registeredUserEntry.getScore();
 
                 Log.v("BeautyAndroid", "Registered user data read from the database: "
-                    + String.valueOf(registeredUserScore));
+                    + registeredUserScore);
 
                 if (scoreToAddTimestamp.compareTo(registeredUserEntry.getScoreTime()) < 0) {
-                    // If the score to add date is older than the registered user score date, add the former to the
-                    // registered user score.
+                    // If the score to add date is after the registered user score date, add the former score
+                    // to the latter one.
 
-                    updateUserScoreInDatabase(registeredUserEntry,
-                        registeredUserScore + scoreToAddValue);
+                    updateUserScoreInDatabase(registeredUserEntry, registeredUserScore + scoreToAddValue,
+                        scoreToAddTimestamp);
                 } else {
                     // Otherwise, add the (anonymous score - 1) to the registered one
 
                     updateUserScoreInDatabase(registeredUserEntry,
-                        registeredUserEntry.getScore() + scoreToAddValue);
+                        registeredUserEntry.getScore() + scoreToAddValue, scoreToAddTimestamp);
                 }
             }
 
@@ -145,9 +143,11 @@ public class ScoreTransferer {
         });
     }
 
-    private void updateUserScoreInDatabase(UserInfoDBEntry userEntry, int newScore) {
+    private void updateUserScoreInDatabase(UserInfoDBEntry userEntry, int newScore, Date newTimestamp) {
         // Clear the anonymous user score in the DB
         userEntry.setScore(newScore);
+        userEntry.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(newTimestamp));
+
         userEntry.updateDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
