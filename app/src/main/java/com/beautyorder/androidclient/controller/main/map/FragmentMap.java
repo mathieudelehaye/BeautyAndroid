@@ -53,10 +53,10 @@ public class FragmentMap extends FragmentWithSearch {
     private ItemizedOverlayWithFocus<OverlayItem> mRPOverlay;
     private boolean mIsViewVisible = false;
     private boolean mKeyboardDisplayed = false;
-    private final int mMapInitialHeight = 1413;     // = 807 dp
+    private final int mMapInitialHeight = 1413; // = 807 dp
     private final int mMapHeightDiff = 540; // = 309 dp
     private final int mMapReducedHeight = mMapInitialHeight - mMapHeightDiff;
-    private final int mKilomterByCoordinateDeg = 111;   // # km by latitude degree
+    private final int mKilometerByCoordinateDeg = 111;  // # km by latitude degree
 
     @Override
     public View onCreateView(
@@ -227,7 +227,6 @@ public class FragmentMap extends FragmentWithSearch {
                             mMapController.animateTo(item.getPoint());
 
                             var activity = (MainActivity) getActivity();
-
                             if (activity == null) {
                                 Log.w("BeautyAndroid", "Cannot show the result item, as no activity "
                                     + "available");
@@ -235,10 +234,9 @@ public class FragmentMap extends FragmentWithSearch {
                             }
 
                             var result = activity.getSearchResult();
-
                             if (result == null) {
                                 Log.w("BeautyAndroid", "Cannot show the result item, as no result "
-                                        + "available");
+                                    + "available");
                                 return false;
                             }
 
@@ -258,7 +256,7 @@ public class FragmentMap extends FragmentWithSearch {
                 // Refresh the map
                 mMap.invalidate();
 
-                setZoomInKilometer(mSearchRadiusInCoordinate * mKilomterByCoordinateDeg);
+                setZoomInKilometer(mSearchRadiusInCoordinate * mKilometerByCoordinateDeg);
 
                 mMapController.animateTo(mSearchStart);
             }
@@ -295,7 +293,7 @@ public class FragmentMap extends FragmentWithSearch {
         mMap.setMultiTouchControls(true);
 
         mMapController = mMap.getController();
-        setZoomInKilometer(mSearchRadiusInCoordinate * mKilomterByCoordinateDeg);
+        setZoomInKilometer(mSearchRadiusInCoordinate * mKilometerByCoordinateDeg);
 
         mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(mCtx), mMap);
         mLocationOverlay.enableMyLocation();

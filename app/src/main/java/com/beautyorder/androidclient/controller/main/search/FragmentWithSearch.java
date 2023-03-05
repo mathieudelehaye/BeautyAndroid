@@ -39,8 +39,11 @@ import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import org.jetbrains.annotations.NotNull;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -62,8 +65,8 @@ public abstract class FragmentWithSearch extends Fragment {
     protected ArrayList<OverlayItem> mFoundRecyclePoints;
     protected Context mCtx;
     protected final double mSearchRadiusInCoordinate = 0.045;
-
     protected abstract void searchAndDisplayItems();
+    private Geocoder mGeocoder;
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -75,6 +78,8 @@ public abstract class FragmentWithSearch extends Fragment {
 
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        mGeocoder = new Geocoder(requireContext(), Locale.getDefault());
 
         //load/initialize the osmdroid configuration, this can be done
         Configuration.getInstance().load(mCtx, PreferenceManager.getDefaultSharedPreferences(mCtx));
@@ -187,17 +192,19 @@ public abstract class FragmentWithSearch extends Fragment {
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
 
-    protected GeoPoint getCoordinatesFromAddress(String locationName) {
+    protected GeoPoint getCoordinatesFromAddress(@NotNull String locationName) {
+
+        if (mGeocoder == null || locationName.equals("")) {
+            Log.w("BeautyAndroid", "Cannot get coordinates, as no geocoder or empty address");
+            return null;
+        }
 
         try {
-            var geocoder = new Geocoder(requireContext(), Locale.getDefault());
-
-            List<Address> geoResults = geocoder.getFromLocationName(locationName, 1);
+            List<Address> geoResults = mGeocoder.getFromLocationName(locationName, 1);
 
             if (!geoResults.isEmpty()) {
                 final Address addr = geoResults.get(0);
                 var location = new GeoPoint(addr.getLatitude(), addr.getLongitude());
-
                 return location;
             } else {
                 Toast toast = Toast.makeText(requireContext(),"Location Not Found",Toast.LENGTH_LONG);
@@ -244,6 +251,11 @@ public abstract class FragmentWithSearch extends Fragment {
     }
 
     protected void setSearchStart(GeoPoint value) {
+        if (value == null) {
+            Log.w("BeautyAndroid", "Cannot set the search start on a null reference");
+            return;
+        }
+
         Log.v("BeautyAndroid", "Search start set to: " + value.toString());
         mSearchStart = value;
     }
@@ -284,6 +296,10 @@ public abstract class FragmentWithSearch extends Fragment {
                 mFoundRecyclePoints = new ArrayList<>();
 
                 for (int i = 0; i < pointInfo.getData().size(); i++) {
+
+                    // Uncomment to write back to DB the coordinates from the RP address
+                    //writeBackRPAddressCoordinatesToDB(pointInfo.getData().get(i).get("documentId"),
+                    //    pointInfo.getAddressAtIndex(i));
 
                     final double latitude = pointInfo.getLatitudeAtIndex(i);
                     final double longitude = pointInfo.getLongitudeAtIndex(i);
@@ -407,5 +423,29 @@ public abstract class FragmentWithSearch extends Fragment {
                 }
                 mainActivity.showScore(userScore);
             });
+    }
+
+    private void writeBackRPAddressCoordinatesToDB(String documentId, String address) {
+        GeoPoint coordinates = getCoordinatesFromAddress(address);
+        if (coordinates == null) {
+            Log.d("BeautyAndroid", "No coordinates found for the RP address: " + address);
+            return;
+        }
+
+        String propertyKey = "Coordinates";
+
+        WriteBatch batch = mDatabase.batch();
+        DocumentReference ref = mDatabase.collection("recyclePointInfos")
+            .document(documentId);
+        batch.update(ref, propertyKey, coordinates);
+
+        batch.commit().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.i("BeautyAndroid", "Correctly updated coordinates for the document with the key: "
+                    + documentId);
+            } else {
+                Log.e("BeautyAndroid", "Error updating in DB the RP coordinates: ", task.getException());
+            }
+        });
     }
 }

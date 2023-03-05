@@ -21,7 +21,6 @@ package com.beautyorder.androidclient.model;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class RecyclePointInfo extends DBCollectionAccessor {
 
@@ -29,8 +28,8 @@ public class RecyclePointInfo extends DBCollectionAccessor {
 
         super(database, "recyclePointInfos");
 
-        mData = new ArrayList<Map<String, String>>();
-        mDataChanged = new ArrayList<Map<String, Boolean>>();
+        mData = new ArrayList<>();
+        mDataChanged = new ArrayList<>();
     }
 
     public String getTitleAtIndex(int i) {
@@ -40,13 +39,23 @@ public class RecyclePointInfo extends DBCollectionAccessor {
     }
 
     public String getSnippetAtIndex(int i) {
+        String threeWords = mData.get(i).get(("3Words"));
+        String recyclingProgram = mData.get(i).get("RecyclingProgram");
+
+        return getAddressAtIndex(i) +
+            ((threeWords != null)
+                && !threeWords.equals("?") ? ("\n(https://what3words.com/"
+                + threeWords + ")") : "") +
+            ((recyclingProgram != null)
+                && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
+    }
+
+    public String getAddressAtIndex(int i) {
         String buildingName = mData.get(i).get("BuildingName");
         String buildingNumber = mData.get(i).get("BuildingNumber");
         String address = mData.get(i).get("Address");
         String postcode = mData.get(i).get("Postcode");
         String city = mData.get(i).get("City");
-        String threeWords = mData.get(i).get(("3Words"));
-        String recyclingProgram = mData.get(i).get("RecyclingProgram");
 
         return ((buildingName != null)
             && !buildingName.equals("?")  ? (buildingName + " ") : "") +
@@ -57,12 +66,7 @@ public class RecyclePointInfo extends DBCollectionAccessor {
             ((postcode != null)
                 && !postcode.equals("?") ? (postcode + " ") : "") +
             ((city != null)
-                && !city.equals("?") ? (city + " ") : "") +
-            ((threeWords != null)
-                && !threeWords.equals("?") ? ("\n(https://what3words.com/"
-                + threeWords + ")") : "") +
-            ((recyclingProgram != null)
-                && !recyclingProgram.equals("?") ? ("\n\nBrands: " + recyclingProgram) : "");
+                && !city.equals("?") ? (city + " ") : "");
     }
 
     public String getImageUrlAtIndex(int i) {
@@ -72,11 +76,11 @@ public class RecyclePointInfo extends DBCollectionAccessor {
     }
 
     public double getLatitudeAtIndex(int i) {
-        return (double)Double.parseDouble(mData.get(i).get("Latitude"));
+        return Double.parseDouble(mData.get(i).get("Latitude"));
     }
 
     public double getLongitudeAtIndex(int i) {
-        return (double)Double.parseDouble(mData.get(i).get("Longitude"));
+        return Double.parseDouble(mData.get(i).get("Longitude"));
     }
 
     public boolean readAllDBFields(String[] outputFields, TaskCompletionManager... cbManager) {

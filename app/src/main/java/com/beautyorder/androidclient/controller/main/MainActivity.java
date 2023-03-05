@@ -467,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
 
     private void downloadScore() {
 
-        Log.v("BeautyAndroid", "Start to download the score");
+        //Log.v("BeautyAndroid", "Start to download the score");  // uncomment to debug
 
         String uid = AppUser.getInstance().getId();
         var entry = new UserInfoDBEntry(mDatabase, uid);
@@ -481,8 +481,8 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
                 final int preferenceScore =
                     mSharedPref.getInt(preferenceKey, 0);
 
-                Log.v("BeautyAndroid", "Score downloaded: current: " + preferenceScore + ", new: "
-                    + downloadedScore);
+                //Log.v("BeautyAndroid", "Score downloaded: current: " + preferenceScore + ", new: "
+                //    + downloadedScore); // uncomment to debug
 
                 if (preferenceScore < downloadedScore) {
                     Log.v("BeautyAndroid", "Shown score updated: " + downloadedScore);

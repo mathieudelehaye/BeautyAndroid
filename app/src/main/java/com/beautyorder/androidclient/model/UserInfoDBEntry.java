@@ -19,11 +19,8 @@
 package com.beautyorder.androidclient.model;
 
 import android.util.Log;
-import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -157,25 +154,22 @@ public class UserInfoDBEntry extends DBCollectionAccessor {
         }
 
         // Commit the batch
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
+        batch.commit().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
 
-                    // Clear the update flag
-                    for (String key: changedKeys) {
-                        mDataChanged.get(0).put(key, false);
-                    }
+                // Clear the update flag
+                for (String key : changedKeys) {
+                    mDataChanged.get(0).put(key, false);
+                }
 
-                    if (cbManager.length >= 1) {
-                        cbManager[0].onSuccess();
-                    }
-                } else {
-                    Log.e("BeautyAndroid", "Error updating documents: ", task.getException());
+                if (cbManager.length >= 1) {
+                    cbManager[0].onSuccess();
+                }
+            } else {
+                Log.e("BeautyAndroid", "Error updating documents: ", task.getException());
 
-                    if (cbManager.length >= 1) {
-                        cbManager[0].onFailure();
-                    }
+                if (cbManager.length >= 1) {
+                    cbManager[0].onFailure();
                 }
             }
         });

@@ -169,7 +169,26 @@ public class DBCollectionAccessor {
             mData.add(dataItem);
             mDataChanged.add(dataChangeItem);
 
+            //dataItem.put("documentId", document.getId());   // uncomment to debug
+            //dataChangeItem.put("documentId", false);    // uncomment to debug
+
+            // TODO: move the coordinate out of this class, in order to keep it reusable
+            // Get the Coordinates map
+            var coordinatesMap = (HashMap<String, Double>) document.getData().get("Coordinates");
+
             for (String field :fields) {
+                if (coordinatesMap != null && field == "Latitude") {
+                    dataItem.put("Latitude", String.valueOf(coordinatesMap.get("latitude")));
+                    dataChangeItem.put("Latitude", false);
+                    continue;
+                }
+
+                if (coordinatesMap != null && field == "Longitude") {
+                    dataItem.put("Longitude", String.valueOf(coordinatesMap.get("longitude")));
+                    dataChangeItem.put("Longitude", false);
+                    continue;
+                }
+
                 final Object fieldObject = document.getData().get(field);
                 dataItem.put(field, (fieldObject != null) ? fieldObject.toString() : "");
                 dataChangeItem.put(field, false);
