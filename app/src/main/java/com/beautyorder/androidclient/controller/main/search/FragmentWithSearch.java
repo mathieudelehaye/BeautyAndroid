@@ -207,6 +207,7 @@ public abstract class FragmentWithSearch extends Fragment {
                 var location = new GeoPoint(addr.getLatitude(), addr.getLongitude());
                 return location;
             } else {
+                Log.w("BeautyAndroid", "No coordinate found for the address: " + locationName);
                 Toast toast = Toast.makeText(requireContext(),"Location Not Found",Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
                 toast.show();
@@ -251,12 +252,7 @@ public abstract class FragmentWithSearch extends Fragment {
     }
 
     protected void setSearchStart(GeoPoint value) {
-        if (value == null) {
-            Log.w("BeautyAndroid", "Cannot set the search start on a null reference");
-            return;
-        }
-
-        Log.v("BeautyAndroid", "Search start set to: " + value.toString());
+        Log.v("BeautyAndroid", "Search start set to: " + value);
         mSearchStart = value;
     }
 
