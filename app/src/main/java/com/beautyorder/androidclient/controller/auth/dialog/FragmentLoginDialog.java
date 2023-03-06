@@ -72,6 +72,18 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
                 mContainerView.findViewById(R.id.registered_password_signin),
                 null)));
 
+        Button resetPassword = mContainerView.findViewById(R.id.reset_password_signin);
+        if (resetPassword == null) {
+            Log.e("BeautyAndroid", "No view found for the reset password button on login dialog");
+            return null;
+        }
+
+        resetPassword.setOnClickListener(view -> mListener.onDialogResetPasswordClick(mThis,
+            new AuthenticateDialogListener.SigninDialogCredentialViews(
+                mContainerView.findViewById(R.id.registered_email_signin),
+                mContainerView.findViewById(R.id.registered_password_signin),
+                null)));
+
         Button signUp = mContainerView.findViewById(R.id.email_sign_up_signin);
         if (signUp == null) {
             Log.e("BeautyAndroid", "No view found for the sign-up button on login dialog");
