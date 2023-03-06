@@ -21,7 +21,6 @@ package com.beautyorder.androidclient.controller.auth.dialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.beautyorder.androidclient.R;
@@ -41,12 +40,7 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        anonymousSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDialogAnonymousSigninClick(mThis);
-            }
-        });
+        anonymousSignIn.setOnClickListener(view -> mListener.onDialogAnonymousSigninClick(mThis));
 
         Button facebookSignIn = mContainerView.findViewById(R.id.fb_log_in_signin);
         if (facebookSignIn == null) {
@@ -54,12 +48,8 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        facebookSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Facebook sign-in not yet available", Toast.LENGTH_SHORT).show();
-            }
-        });
+        facebookSignIn.setOnClickListener(view -> Toast.makeText(getContext(),
+        "Facebook sign-in not yet available", Toast.LENGTH_SHORT).show());
 
         Button googleSignIn = mContainerView.findViewById(R.id.google_log_in_signin);
         if (googleSignIn == null) {
@@ -67,12 +57,8 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        googleSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Google sign-in not yet available", Toast.LENGTH_SHORT).show();
-            }
-        });
+        googleSignIn.setOnClickListener(view -> Toast.makeText(getContext(),
+        "Google sign-in not yet available", Toast.LENGTH_SHORT).show());
 
         Button confirm = mContainerView.findViewById(R.id.confirm_signin);
         if (confirm == null) {
@@ -80,16 +66,11 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDialogRegisteredSigninClick(mThis,
-                    new AuthenticateDialogListener.SigninDialogCredentialViews(
-                        mContainerView.findViewById(R.id.registered_email_signin),
-                        mContainerView.findViewById(R.id.registered_password_signin),
-                        null));
-            }
-        });
+        confirm.setOnClickListener(view -> mListener.onDialogRegisteredSigninClick(mThis,
+            new AuthenticateDialogListener.SigninDialogCredentialViews(
+                mContainerView.findViewById(R.id.registered_email_signin),
+                mContainerView.findViewById(R.id.registered_password_signin),
+                null)));
 
         Button resetPassword = mContainerView.findViewById(R.id.reset_password_signin);
         if (resetPassword == null) {
@@ -97,16 +78,11 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        resetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDialogResetPasswordClick(mThis,
-                    new AuthenticateDialogListener.SigninDialogCredentialViews(
-                        mContainerView.findViewById(R.id.registered_email_signin),
-                        mContainerView.findViewById(R.id.registered_password_signin),
-                        null));
-            }
-        });
+        resetPassword.setOnClickListener(view -> mListener.onDialogResetPasswordClick(mThis,
+            new AuthenticateDialogListener.SigninDialogCredentialViews(
+                mContainerView.findViewById(R.id.registered_email_signin),
+                mContainerView.findViewById(R.id.registered_password_signin),
+                null)));
 
         return dialog;
     }

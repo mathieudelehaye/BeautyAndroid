@@ -139,41 +139,42 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
         if (navigate) {
 
             mAuth.signInWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("BeautyAndroid", "signInWithEmail:success");
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("BeautyAndroid", "signInWithEmail:success");
 
-                            // Check if the user email is verified
-                            FirebaseUser dbUser = mAuth.getCurrentUser();
+                        // Check if the user email is verified
+                        FirebaseUser dbUser = mAuth.getCurrentUser();
 
-                            if (dbUser.isEmailVerified()) {
+                        if (dbUser.isEmailVerified()) {
 
-                                new ScoreTransferer(FirebaseFirestore.getInstance(),
-                                    getAnonymousUidFromPreferences(),
-                                    emailText, mThis)
-                                    .run();
+                            new ScoreTransferer(FirebaseFirestore.getInstance(),
+                                getAnonymousUidFromPreferences(),
+                                emailText, mThis)
+                                .run();
 
-                                startAppWithUser(emailText, AppUser.AuthenticationType.REGISTERED);
-                            } else {
-                                Log.e("BeautyAndroid", "Email is not verified");
-
-                                Toast.makeText(mThis, "Email not verified",
-                                    Toast.LENGTH_SHORT).show();
-                            }
+                            dialog.dismiss();
+                            startAppWithUser(emailText, AppUser.AuthenticationType.REGISTERED);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(mThis, "Authentication failed",
+                            Log.e("BeautyAndroid", "Email is not verified");
+
+                            Toast.makeText(mThis, "Email not verified",
                                 Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("BeautyAndroid", "signInWithEmail:failure", task.getException());
+
+                        final var exception = (FirebaseAuthException)task.getException();
+                        String completeMessage = exception.getMessage();
+                        String error = exception.getErrorCode();
+
+                        Toast.makeText(mThis, !completeMessage.isEmpty() ? completeMessage : "Authentication failed",
+                            Toast.LENGTH_SHORT).show();
                     }
                 });
         }
-
-        dialog.dismiss();
     }
 
     @Override
