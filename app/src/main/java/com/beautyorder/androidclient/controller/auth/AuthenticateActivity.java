@@ -230,8 +230,9 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
                             userInfoMap.put("address", "");
                             userInfoMap.put("city", "");
                             userInfoMap.put("post_code", "");
-                            userInfoMap.put("score", "");
-                            userInfoMap.put("score_time", "");
+                            userInfoMap.put("score", "0");
+                            userInfoMap.put("score_time", UserInfoDBEntry.scoreTimeFormat.format(
+                                Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(new Date()))));
                             userInfoMap.put("device_id", mThis.getSharedPreferences(
                                 getString(R.string.app_name), Context.MODE_PRIVATE).getString(
                                 getString(R.string.device_id), ""));
