@@ -268,11 +268,16 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
 
                             Pattern pattern = Pattern.compile("(.*) \\[ (.*) \\]",
                                 Pattern.CASE_INSENSITIVE);
-
                             Matcher matcher = pattern.matcher(completeMessage);
 
-                            String messageCause = matcher.find() ?
-                                matcher.group(2) : "Authentication failed.";
+                            var messageCause = new StringBuilder("");
+
+                            if (matcher.find()) {
+                                messageCause.append(matcher.group(2));
+                            } else {
+                                messageCause.append(!completeMessage.isEmpty() ? completeMessage
+                                    : "Authentication failed.");
+                            }
 
                             Toast.makeText(mThis, messageCause, Toast.LENGTH_SHORT).show();
                         }
