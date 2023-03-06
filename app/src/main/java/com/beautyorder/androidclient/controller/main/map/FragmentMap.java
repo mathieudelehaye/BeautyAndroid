@@ -39,6 +39,7 @@ import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
+import com.beautyorder.androidclient.model.SearchResult;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
@@ -212,6 +213,26 @@ public class FragmentMap extends FragmentWithSearch {
         searchRecyclingPoints(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
+                // Prepare the search results and download the images
+                // TODO: make the following code reusable and share it with `FragmentResultList`
+                var result = new SearchResult();
+
+                for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
+                    final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
+                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null),
+                        point.getImage());
+                }
+
+                result.downloadImages(new TaskCompletionManager() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+                });
+
                 // possibly remove the former RP overlay
                 if (mRPOverlay != null) {
                     mMap.getOverlays().remove(mRPOverlay);
@@ -259,6 +280,14 @@ public class FragmentMap extends FragmentWithSearch {
                 setZoomInKilometer(mSearchRadiusInCoordinate * mKilometerByCoordinateDeg);
 
                 mMapController.animateTo(mSearchStart);
+
+                var activity = (MainActivity)getActivity();
+                if (activity == null) {
+                    Log.w("BeautyAndroid", "Cannot set the search result from the map as no activity");
+                    return;
+                }
+
+                activity.setSearchResult(result);
             }
 
             @Override
