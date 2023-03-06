@@ -54,13 +54,10 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        emailSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                var dialog = new FragmentSignupDialog();
-                dialog.show(getFragmentManager(), "FragmentSignupDialog");
-            }
+        emailSignUp.setOnClickListener(view -> {
+            dismiss();
+            var dialog1 = new FragmentSignupDialog();
+            dialog1.show(getFragmentManager(), "FragmentSignupDialog");
         });
 
         Button facebookSignUp = mContainerView.findViewById(R.id.fb_log_in_start);
@@ -69,12 +66,8 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        facebookSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show();
-            }
-        });
+        facebookSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
+        "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show());
 
         Button googleSignUp = mContainerView.findViewById(R.id.google_log_in_start);
         if (googleSignUp == null) {
@@ -82,12 +75,8 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        googleSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Google sign-up not yet available", Toast.LENGTH_SHORT).show();
-            }
-        });
+        googleSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
+        "Google sign-up not yet available", Toast.LENGTH_SHORT).show());
 
         Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
         if (registeredSignIn == null) {
@@ -95,13 +84,10 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
             return null;
         }
 
-        registeredSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                var dialog = new FragmentLoginDialog();
-                dialog.show(getFragmentManager(), "FragmentLoginDialog");
-            }
+        registeredSignIn.setOnClickListener(view -> {
+            dismiss();
+            var dialog2 = new FragmentLoginDialog();
+            dialog2.show(getFragmentManager(), "FragmentLoginDialog");
         });
 
         return dialog;
