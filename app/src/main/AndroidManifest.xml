@@ -25,6 +25,7 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.BeautyAndroid.NoActionBar"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="31"
     >
 
