@@ -80,14 +80,14 @@ public class FragmentOnboarding extends OnboardingFragment {
 
         switch (pageIndex) {
             case 0:
-                pageTitle = "Find";
+                pageTitle = getString(R.string.onboarding_page_1_title);
                 break;
             case 1:
-                pageTitle = "Send a photo";
+                pageTitle = getString(R.string.onboarding_page_2_title);
                 break;
             case 2:
             default:
-                pageTitle = "Get the EB Points";
+                pageTitle = getString(R.string.onboarding_page_3_title);
                 break;
         }
 
@@ -101,14 +101,14 @@ public class FragmentOnboarding extends OnboardingFragment {
 
         switch (pageIndex) {
             case 0:
-                pageDescr = "Drop-off locations to recycle your containers";
+                pageDescr = getString(R.string.onboarding_page_1_description);
                 break;
             case 1:
-                pageDescr = "Of your containers on the location counter";
+                pageDescr = getString(R.string.onboarding_page_2_description);
                 break;
             case 2:
             default:
-                pageDescr = "After 1 day, when your photo is validated!";
+                pageDescr = getString(R.string.onboarding_page_3_description);
                 break;
         }
 

@@ -335,8 +335,7 @@ public class FragmentMap extends FragmentWithSearch {
         if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("map_help_displayed", "false"))) {
                 mSharedPref.edit().putString("map_help_displayed", "true").commit();
-                var dialogFragment = new FragmentHelpDialog("Click on a point on the map to find the " +
-                    " address of a drop-off location!");
+                var dialogFragment = new FragmentHelpDialog(getString(R.string.map_help));
                 dialogFragment.show(getChildFragmentManager(), "Map help dialog");
             }
         }

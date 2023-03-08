@@ -158,8 +158,7 @@ public class FragmentResultList extends FragmentWithSearch {
         if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("list_help_displayed", "false"))) {
                 mSharedPref.edit().putString("list_help_displayed", "true").commit();
-                var dialogFragment = new FragmentHelpDialog("Select an item in the list and display some "
-                    + " info about a drop-off location!");
+                var dialogFragment = new FragmentHelpDialog(getString(R.string.list_help));
                 dialogFragment.show(getChildFragmentManager(), "List help dialog");
             }
         }

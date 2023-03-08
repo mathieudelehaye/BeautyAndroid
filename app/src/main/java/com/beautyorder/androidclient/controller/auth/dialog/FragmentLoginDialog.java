@@ -49,7 +49,7 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
         }
 
         facebookSignIn.setOnClickListener(view -> Toast.makeText(getContext(),
-        "Facebook sign-in not yet available", Toast.LENGTH_SHORT).show());
+            "Facebook sign-in not yet available", Toast.LENGTH_SHORT).show());
 
         Button googleSignIn = mContainerView.findViewById(R.id.google_log_in_signin);
         if (googleSignIn == null) {
@@ -58,7 +58,7 @@ public class FragmentLoginDialog extends FragmentAuthenticateDialog {
         }
 
         googleSignIn.setOnClickListener(view -> Toast.makeText(getContext(),
-        "Google sign-in not yet available", Toast.LENGTH_SHORT).show());
+            "Google sign-in not yet available", Toast.LENGTH_SHORT).show());
 
         Button confirm = mContainerView.findViewById(R.id.confirm_signin);
         if (confirm == null) {

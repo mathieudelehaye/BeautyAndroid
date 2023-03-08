@@ -490,10 +490,9 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
                     showScore(downloadedScore);
                     if (scoreTransferredFromAnonymousAccount) {
                         scoreTransferredFromAnonymousAccount = false;
-                        showDialog("Nice to see you! Your score was transferred from your other account. "
-                                + "It is now " + downloadedScore + "!", "Score transferred");
+                        showDialog(getString(R.string.score_transferred) + downloadedScore + "!", "Score transferred");
                     } else  {
-                        showDialog("Your score has been increased to " + downloadedScore, "Score increased");
+                        showDialog(getString(R.string.new_score_displayed)+ downloadedScore, "Score increased");
                     }
                 }
 

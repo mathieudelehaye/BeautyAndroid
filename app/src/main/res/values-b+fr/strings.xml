@@ -26,31 +26,43 @@
     <string name="photo_date">photo-date</string>
     <string name="photos_to_send">photos-to-send</string>
     <string name="completed_onboarding">completed-onboarding</string>
-    <string name="last_scanning_date">last-scanning-date</string>
     <string name="last_downloaded_score">last-downloaded-score</string>
     <string name="action_settings">Settings</string>
     <string name="search_hint">Search</string>
 
     <!-- Strings used for fragments for navigation -->
-    <string name="home_fragment_label">Home Fragment</string>
-    <string name="login_fragment_label">Login Fragment</string>
-    <string name="register_fragment_label">Register Fragment</string>
-    <string name="map_fragment_label">Map Fragment</string>
     <string name="back_button">Back</string>
-    <string name="no_login_button">Start</string>
-    <string name="login_button">Login</string>
-    <string name="register_button">Register</string>
     <string name="logout_button">Log out</string>
-    <string name="confirm_button">Confirm</string>
-    <string name="title_home_fragment">Welcome to Beauty</string>
-    <string name="title_login_fragment">Login</string>
-    <string name="title_register_fragment">Register</string>
     <string name="tab_bar_readable_label">Choose your screen</string>
+
+    <!-- Strings displayed as text in the app -->
+    <!-- Main activity -->
+    <string name="score_transferred">
+        Nice to see you! Your score was transferred from your other account. It is now
+    </string>
+    <string name="new_score_displayed">Your score has been increased to </string>
+    <!-- List Fragment -->
+    <string name="list_help">Select an item in the list and display some info about a drop-off location!</string>
+    <!-- Map Fragment -->
+    <string name="map_help">Click on a point on the map to find the address of a drop-off location!</string>
+    <!-- Camera Fragment -->
+    <string name="one_photo_by_day">You can only send one photo a day</string>
+    <string name="photo_correctly_sent">
+        The photo has been correctly taken and will be sent for verification.\n\nYou
+        will receive a notification, within 24 hours, when your points have been
+        added.
+    </string>
+    <string name="camera_help">
+        Take a photo of your beauty containers on the drop-off location counter and
+        receive EB Points!
+    </string>
+    <!-- Help Fragment -->
     <string name="help_text">
         1. Voici l\'étape 1.\n\n
         2. Voici l\'étape 2.\n\n
         3. Voici l\'étape 3.
     </string>
+    <!-- Terms Fragment -->
     <string name="filler_text">Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum consequatur. Et
         reiciendis ducimus et repellat magni id ducimus nesciunt. Aut natus nihil est ipsum error est consequatur
         aperiam ut saepe ipsa et quos voluptatem et voluptatem odio?
@@ -58,4 +70,11 @@
         Et minus laboriosam qui laborum voluptate aut doloribus soluta ex voluptatem amet. Sed quae voluptatum et
         velit quam et rerum asperiores! Aut quam dicta quo architecto corporis qui consequatur eveniet.
     </string>
+    <!-- Onboarding activity -->
+    <string name="onboarding_page_1_title">Find</string>
+    <string name="onboarding_page_2_title">Send a photo</string>
+    <string name="onboarding_page_3_title">Get the EB Points</string>
+    <string name="onboarding_page_1_description">Drop-off locations to recycle your containers</string>
+    <string name="onboarding_page_2_description">Of your containers on the location counter</string>
+    <string name="onboarding_page_3_description">After 1 day, when your photo is validated!</string>
 </resources>

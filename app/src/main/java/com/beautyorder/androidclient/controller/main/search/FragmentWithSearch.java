@@ -379,7 +379,7 @@ public abstract class FragmentWithSearch extends Fragment {
         var activity = (MainActivity)getActivity();
         if (activity == null) {
             Log.w("BeautyAndroid", "No activity so cannot save the shown fragment before sending "
-                    + "the intent");
+                + "the intent");
             return;
         }
 
