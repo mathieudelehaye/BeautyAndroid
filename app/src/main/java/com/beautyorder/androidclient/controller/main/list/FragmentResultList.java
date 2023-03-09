@@ -57,6 +57,8 @@ public class FragmentResultList extends FragmentWithSearch {
 
         changeSearchSwitch(ResultPageType.MAP);
 
+        displayScoreBox("List", R.id.score_layout_list);
+
         showHelp();
     }
 
@@ -140,6 +142,8 @@ public class FragmentResultList extends FragmentWithSearch {
             }
 
             //updateSearchResults();
+
+            displayScoreBox("List", R.id.score_layout_list);
 
             showHelp();
         } else {

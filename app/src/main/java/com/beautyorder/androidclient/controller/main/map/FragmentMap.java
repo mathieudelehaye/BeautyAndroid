@@ -140,6 +140,8 @@ public class FragmentMap extends FragmentWithSearch {
 
         ToggleDetailsView(false);
 
+        displayScoreBox("Map", R.id.score_layout_map);
+
         showHelp();
     }
 
@@ -178,6 +180,8 @@ public class FragmentMap extends FragmentWithSearch {
             if ((activity) != null) {
                 activity.disableTabSwiping();
             }
+
+            displayScoreBox("Map", R.id.score_layout_map);
 
             showHelp();
         } else {
