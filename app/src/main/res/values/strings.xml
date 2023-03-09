@@ -36,6 +36,8 @@
     <string name="tab_bar_readable_label">Choose your screen</string>
 
     <!-- Strings displayed as text in the app -->
+    <!-- Auth activity -->
+    <string name="sign_up_title">Sign Up to \nGet Free Samples!</string>
     <!-- Main activity -->
     <string name="score_transferred">
         Nice to see you! Your score was transferred from your other account. It is now

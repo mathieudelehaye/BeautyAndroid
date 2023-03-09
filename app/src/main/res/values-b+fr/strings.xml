@@ -37,24 +37,26 @@
 
     <!-- Strings displayed as text in the app -->
     <!-- Main activity -->
+    <string name="sign_up_title">Lorem ipsum dolor sit amet. Ut!</string>
+    <!-- Auth activity -->
     <string name="score_transferred">
-        Nice to see you! Your score was transferred from your other account. It is now
+        Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum consequatur
     </string>
-    <string name="new_score_displayed">Your score has been increased to </string>
+    <string name="new_score_displayed">Lorem ipsum dolor sit amet. Ut enim</string>
     <!-- List Fragment -->
-    <string name="list_help">Select an item in the list and display some info about a drop-off location!</string>
+    <string name="list_help">Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum conseq</string>
     <!-- Map Fragment -->
-    <string name="map_help">Click on a point on the map to find the address of a drop-off location!</string>
+    <string name="map_help">Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum con</string>
     <!-- Camera Fragment -->
-    <string name="one_photo_by_day">You can only send one photo a day</string>
+    <string name="one_photo_by_day">Lorem ipsum dolor sit amet. Ut enim</string>
     <string name="photo_correctly_sent">
-        The photo has been correctly taken and will be sent for verification.\n\nYou
-        will receive a notification, within 24 hours, when your points have been
-        added.
+        Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum consequatur. Et
+        reiciendis ducimus et repellat magni id ducimus nesciunt. Aut natus nihil est ipsum error est consequatur
+        aperiam ut
     </string>
     <string name="camera_help">
-        Take a photo of your beauty containers on the drop-off location counter and
-        receive EB Points!
+        Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum consequatur. Et
+        reiciendis ducimus et!
     </string>
     <!-- Help Fragment -->
     <string name="help_text">
@@ -71,10 +73,10 @@
         velit quam et rerum asperiores! Aut quam dicta quo architecto corporis qui consequatur eveniet.
     </string>
     <!-- Onboarding activity -->
-    <string name="onboarding_page_1_title">Find</string>
-    <string name="onboarding_page_2_title">Send a photo</string>
-    <string name="onboarding_page_3_title">Get the EB Points</string>
-    <string name="onboarding_page_1_description">Drop-off locations to recycle your containers</string>
-    <string name="onboarding_page_2_description">Of your containers on the location counter</string>
-    <string name="onboarding_page_3_description">After 1 day, when your photo is validated!</string>
+    <string name="onboarding_page_1_title">Lorem</string>
+    <string name="onboarding_page_2_title">Lorem ipsum dolor</string>
+    <string name="onboarding_page_3_title">Lorem ipsum dolor sit</string>
+    <string name="onboarding_page_1_description">Lorem ipsum dolor sit amet. Ut</string>
+    <string name="onboarding_page_2_description">Lorem ipsum dolor sit amet. Ut enim corporis</string>
+    <string name="onboarding_page_3_description">Lorem ipsum dolor sit amet. Ut enim corporis</string>
 </resources>
