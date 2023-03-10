@@ -78,9 +78,10 @@ public class FragmentResultList extends FragmentWithSearch {
 
                 var result = new SearchResult();
 
+                final boolean showBrand = mustShowBrand();
                 for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
                     final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
-                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null),
+                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null, showBrand),
                         point.getImage());
                 }
 
@@ -100,7 +101,7 @@ public class FragmentResultList extends FragmentWithSearch {
                     String description = itemInfo.getDescription();
                     final byte[] imageBytes = itemInfo.getImage();
 
-                    activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes));
+                    activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes, showBrand));
                     activity.navigate(MainActivity.FragmentType.DETAIL);
                 });
 

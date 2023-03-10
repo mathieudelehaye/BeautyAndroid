@@ -80,12 +80,13 @@ public class FragmentResultDetail extends Fragment {
         String title = info.getTitle();
         String description = info.getDescription();
         final byte[] imageBytes = info.getImage();
+        final boolean showImage = info.isImageShown();
 
         TextView resultDescription = getView().findViewById(R.id.description_result_detail);
         resultDescription.setText(title + "\n\n" + description);
 
         ImageView resultImage = getView().findViewById(R.id.image_result_detail);
-        if (imageBytes != null) {
+        if (imageBytes != null && showImage) {
             Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             resultImage.setImageBitmap(image);
         } else {

@@ -22,11 +22,13 @@ public class ResultItemInfo {
     private String mTitle;
     private String mDescription;
     private byte[] mImage;
+    private boolean mShowImage = false;
 
-    public ResultItemInfo(String title, String description, byte[] image) {
+    public ResultItemInfo(String title, String description, byte[] image, boolean displayBrand) {
         mTitle = title;
         mDescription = description;
         mImage = image;
+        mShowImage = displayBrand;
     }
 
     public String getTitle() {
@@ -51,5 +53,9 @@ public class ResultItemInfo {
 
     public void setImage(byte[] image) {
         mImage = image;
+    }
+
+    public boolean isImageShown() {
+        return mShowImage;
     }
 }

@@ -31,7 +31,6 @@ import com.beautyorder.androidclient.model.ResultItemInfo;
 import java.util.ArrayList;
 
 public class ResultListAdapter extends BaseAdapter {
-
     private ArrayList<ResultItemInfo> mResultItems;
     private Context mContext;
 
@@ -66,8 +65,9 @@ public class ResultListAdapter extends BaseAdapter {
         textView.setText(itemInfo.getTitle());
 
         final byte[] imageByte = itemInfo.getImage();
+        final boolean showImage = itemInfo.isImageShown();
 
-        if (imageByte != null) {
+        if (imageByte != null && showImage) {
             Bitmap bmp = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
             imageView.setImageBitmap(bmp);
         } else {

@@ -377,35 +377,37 @@ public abstract class FragmentWithSearch extends Fragment {
 
     protected void displayScoreBox(String fragmentName, int layout_id) {
         // Show or hide the score box according to the locale
-        if (mCtx == null) {
-            Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
-                    + " fragment, as no context");
-            return;
-        }
-
-        Locale primaryLocale = mCtx.getResources().getConfiguration().getLocales().get(0);
-        if (primaryLocale.getDisplayName().contains("Belgique")) {
+        if (!mustShowBrand()) {
             var fragmentRootView = getView();
             if (fragmentRootView == null) {
                 Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
-                        + " fragment, as no fragment root view");
+                    + " fragment, as no fragment root view");
                 return;
             }
 
             View scoreLayout = fragmentRootView.findViewById(layout_id);
             if (scoreLayout == null) {
                 Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
-                        + " fragment, as no score layout");
+                    + " fragment, as no score layout");
                 return;
             }
 
             Log.v("BeautyAndroid", "The score box is hidden in the " + fragmentName
-                    + " fragment");
+                + " fragment");
             scoreLayout.setVisibility(View.GONE);
         } else {
             Log.v("BeautyAndroid", "The score box is shown in the " + fragmentName
-                    + " fragment");
+                + " fragment");
         }
+    }
+
+    protected boolean mustShowBrand() {
+        if (mCtx == null) {
+            Log.w("BeautyAndroid", "Cannot check if brand must be shown, as no context");
+            return false;
+        }
+
+        return !mCtx.getResources().getConfiguration().getLocales().get(0).getDisplayName().contains("Belgique");
     }
 
     private void saveShownFragmentBeforeSearch() {

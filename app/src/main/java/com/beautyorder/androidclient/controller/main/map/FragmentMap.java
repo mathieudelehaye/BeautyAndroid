@@ -221,9 +221,10 @@ public class FragmentMap extends FragmentWithSearch {
                 // TODO: make the following code reusable and share it with `FragmentResultList`
                 var result = new SearchResult();
 
+                final boolean showBrand = mustShowBrand();
                 for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
                     final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
-                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null),
+                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null, showBrand),
                         point.getImage());
                 }
 
@@ -350,9 +351,10 @@ public class FragmentMap extends FragmentWithSearch {
         String itemTitle = itemInfo.getTitle();
         String itemDescription = itemInfo.getDescription();
         final byte[] itemImageBytes = itemInfo.getImage();
+        final boolean showImage = itemInfo.isImageShown();
 
         ImageView resultImage = getView().findViewById(R.id.detail_map_image);
-        if (itemImageBytes != null) {
+        if (itemImageBytes != null && showImage) {
             Bitmap image = BitmapFactory.decodeByteArray(itemImageBytes, 0, itemImageBytes.length);
             resultImage.setImageBitmap(image);
         } else {
