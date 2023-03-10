@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
             case MAP:
                 switch (mPrevFragmentType) {
                     case APP:
-                        mMapFragment.ToggleDetailsView(false);
+                        mMapFragment.toggleDetailsView(false);
                         break;
                     case DETAIL:
                     case HELP:
@@ -301,18 +301,16 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
         }
     }
 
-    public void enableTabSwiping() {
-        // Enable swiping gesture for the view pager
+    public void toggleTabSwiping(boolean enable) {
+        // Enable or disable swiping gesture for the view pager
         var fragment =
             (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
-        fragment.enableTabSwiping();
-    }
 
-    public void disableTabSwiping() {
-        // Disable the swiping gesture for the view pager
-        var fragment =
-            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
-        fragment.disableTabSwiping();
+        if (enable) {
+            fragment.enableTabSwiping();
+        } else {
+            fragment.disableTabSwiping();
+        }
     }
 
     // Search: methods
@@ -490,7 +488,8 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
                     showScore(downloadedScore);
                     if (scoreTransferredFromAnonymousAccount) {
                         scoreTransferredFromAnonymousAccount = false;
-                        showDialog(getString(R.string.score_transferred) + downloadedScore + "!", "Score transferred");
+                        showDialog(getString(R.string.score_transferred) + downloadedScore
+                            + "!", "Score transferred");
                     } else  {
                         showDialog(getString(R.string.new_score_displayed)+ downloadedScore, "Score increased");
                     }

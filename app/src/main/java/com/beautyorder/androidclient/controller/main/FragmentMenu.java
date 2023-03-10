@@ -97,7 +97,7 @@ public class FragmentMenu extends Fragment {
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {
-                activity.enableTabSwiping();
+                activity.toggleTabSwiping(true);
             }
         }
     }

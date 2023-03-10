@@ -354,11 +354,11 @@ public abstract class FragmentWithSearch extends Fragment {
 
                 switch (destination) {
                     case MAP:
-                        //activity.disableTabSwiping();
+                        activity.toggleTabSwiping(false);
                         break;
                     case LIST:
                     default:
-                        //activity.enableTabSwiping();
+                        activity.toggleTabSwiping(true);
                         break;
                 }
             }

@@ -138,7 +138,7 @@ public class FragmentMap extends FragmentWithSearch {
             }
         });
 
-        ToggleDetailsView(false);
+        toggleDetailsView(false);
 
         displayScoreBox("Map", R.id.score_layout_map);
 
@@ -178,7 +178,7 @@ public class FragmentMap extends FragmentWithSearch {
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {
-                activity.disableTabSwiping();
+                activity.toggleTabSwiping(false);
             }
 
             displayScoreBox("Map", R.id.score_layout_map);
@@ -199,7 +199,7 @@ public class FragmentMap extends FragmentWithSearch {
         mMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    public void ToggleDetailsView(boolean visible) {
+    public void toggleDetailsView(boolean visible) {
 
         View rootView = getView();
 
@@ -376,6 +376,6 @@ public class FragmentMap extends FragmentWithSearch {
             activity.navigate(MainActivity.FragmentType.DETAIL);
         });
 
-        ToggleDetailsView(true);
+        toggleDetailsView(true);
     }
 }

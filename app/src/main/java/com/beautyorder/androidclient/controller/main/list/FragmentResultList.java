@@ -139,7 +139,7 @@ public class FragmentResultList extends FragmentWithSearch {
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {
-                activity.enableTabSwiping();
+                activity.toggleTabSwiping(true);
             }
 
             //updateSearchResults();

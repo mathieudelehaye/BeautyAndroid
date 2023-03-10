@@ -125,7 +125,7 @@ public class FragmentCamera extends Fragment {
 
             var activity = (MainActivity)getActivity();
             if ((activity) != null) {
-                activity.enableTabSwiping();
+                activity.toggleTabSwiping(true);
             }
 
             showHelp();
