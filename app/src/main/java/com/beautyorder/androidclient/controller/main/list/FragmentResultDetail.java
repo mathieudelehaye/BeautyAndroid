@@ -77,10 +77,13 @@ public class FragmentResultDetail extends Fragment {
         final var activity = (MainActivity) getActivity();
         final ResultItemInfo info = activity.getSelectedRecyclePoint();
 
-        String title = info.getTitle();
-        String description = info.getDescription();
         final byte[] imageBytes = info.getImage();
         final boolean showImage = info.isImageShown();
+
+        String title = showImage ? info.getTitle() : "Lorem ipsum dolor sit";
+        String description = showImage ? info.getDescription() : "Lorem ipsum dolor sit amet. Ut enim "
+            + "corporis ea labore esse ea illum consequatur. Et reiciendis ducimus et repellat magni id ducimus "
+            + "nesc.";
 
         TextView resultDescription = getView().findViewById(R.id.description_result_detail);
         resultDescription.setText(title + "\n\n" + description);

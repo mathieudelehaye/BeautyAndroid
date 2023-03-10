@@ -348,10 +348,13 @@ public class FragmentMap extends FragmentWithSearch {
 
     private void showDetails(ResultItemInfo itemInfo) {
 
-        String itemTitle = itemInfo.getTitle();
-        String itemDescription = itemInfo.getDescription();
         final byte[] itemImageBytes = itemInfo.getImage();
         final boolean showImage = itemInfo.isImageShown();
+
+        String itemTitle = showImage ? itemInfo.getTitle() : "Lorem ipsum dolor sit";
+        String itemDescription = showImage ? itemInfo.getDescription() : "Lorem ipsum dolor sit amet. Ut enim "
+            + "corporis ea labore esse ea illum consequatur. Et reiciendis ducimus et repellat magni id ducimus "
+            + "nesc.";
 
         ImageView resultImage = getView().findViewById(R.id.detail_map_image);
         if (itemImageBytes != null && showImage) {

@@ -62,10 +62,11 @@ public class ResultListAdapter extends BaseAdapter {
         ImageView imageView = view.findViewById(R.id.result_list_item_image);
 
         var itemInfo=(ResultItemInfo) getItem(position);
-        textView.setText(itemInfo.getTitle());
 
         final byte[] imageByte = itemInfo.getImage();
         final boolean showImage = itemInfo.isImageShown();
+
+        textView.setText(showImage ? (itemInfo.getTitle()) : "Lorem ipsum dolor sit");
 
         if (imageByte != null && showImage) {
             Bitmap bmp = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
