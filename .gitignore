@@ -18,3 +18,5 @@ keystore.properties
 .idea/**
 
 *.APK
+
+google-services.json
