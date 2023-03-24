@@ -180,6 +180,7 @@ public class FragmentOnboarding extends OnboardingFragment {
         editor.putBoolean(
             getString(R.string.completed_onboarding), true).apply();
 
-        startActivity(new Intent(getContext(), com.beautyorder.androidclient.controller.main.MainActivity.class));
+        startActivity(new Intent(getContext(),
+            com.beautyorder.androidclient.controller.auth.AuthenticateActivity.class));
     }
 }

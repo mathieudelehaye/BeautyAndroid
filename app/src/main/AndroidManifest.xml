@@ -41,11 +41,6 @@
         </activity>
 
         <activity
-            android:name=".controller.splash.SplashActivity"
-            android:theme="@style/Theme.App.Splash"
-        />
-
-        <activity
             android:name=".controller.auth.AuthenticateActivity"
             android:enabled="true"
         />

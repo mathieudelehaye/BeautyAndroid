@@ -19,11 +19,18 @@
 package com.beautyorder.androidclient.controller.splash;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.core.splashscreen.SplashScreen;
+import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
 
 public class RoutingActivity extends Activity {
+
+    protected SharedPreferences mSharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +39,24 @@ public class RoutingActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         // Keep the splash screen visible for this Activity
-        splashScreen.setKeepOnScreenCondition(() -> true );
-        startActivity(new Intent(this,
-            com.beautyorder.androidclient.controller.auth.AuthenticateActivity.class));
+        splashScreen.setKeepOnScreenCondition(() -> true);
+
+        // Read the app preferences
+        mSharedPref = getSharedPreferences(
+            getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        // Check if we need to display our OnboardingFragment
+        if (!mSharedPref.getBoolean(
+            getString(R.string.completed_onboarding), false)) {
+
+            Log.i("BeautyAndroid", "Onboarding activity started");
+            startActivity(new Intent(this, OnboardingActivity.class));
+        } else {
+            Log.i("BeautyAndroid", "Onboarding activity skipped");
+            startActivity(new Intent(this,
+                com.beautyorder.androidclient.controller.auth.AuthenticateActivity.class));
+        }
+
         finish();
     }
 }
