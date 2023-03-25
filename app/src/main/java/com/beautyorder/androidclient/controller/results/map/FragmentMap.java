@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main.map;
+package com.beautyorder.androidclient.controller.results.map;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -36,7 +36,7 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
+import com.beautyorder.androidclient.controller.results.FragmentShowResults;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
@@ -47,7 +47,7 @@ import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class FragmentMap extends FragmentWithSearch {
+public class FragmentMap extends FragmentShowResults {
     private FragmentMapBinding mBinding;
     private MapView mMap = null;
     private IMapController mMapController;

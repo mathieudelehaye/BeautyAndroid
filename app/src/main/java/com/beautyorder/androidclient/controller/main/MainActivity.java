@@ -36,9 +36,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.controller.Navigator;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.main.list.FragmentResultDetail;
-import com.beautyorder.androidclient.controller.main.map.FragmentMap;
+import com.beautyorder.androidclient.controller.results.list.FragmentResultDetail;
+import com.beautyorder.androidclient.controller.results.map.FragmentMap;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
 
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
-    private FragmentApp mAppFragment = new FragmentApp();
+    private FragmentMain mAppFragment = new FragmentMain();
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
     private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
     public void toggleTabSwiping(boolean enable) {
         // Enable or disable swiping gesture for the view pager
         var fragment =
-            (FragmentApp) FragmentManager.findFragment(findViewById(R.id.appPager));
+            (FragmentMain) FragmentManager.findFragment(findViewById(R.id.appPager));
 
         if (enable) {
             fragment.enableTabSwiping();

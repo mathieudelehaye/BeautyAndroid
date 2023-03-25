@@ -1,5 +1,5 @@
 //
-//  FragmentApp.java
+//  FragmentMain.java
 //
 //  Created by Mathieu Delehaye on 17/12/2022.
 //
@@ -30,7 +30,7 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
 import com.google.android.material.tabs.TabLayout;
 
-public class FragmentApp extends Fragment {
+public class FragmentMain extends Fragment {
     private FragmentAppBinding mBinding;
     private NotSwipeableViewPager mViewPager;
 

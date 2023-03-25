@@ -1,5 +1,5 @@
 //
-//  FragmentHome.java
+//  FragmentSearch.java
 //
 //  Created by Mathieu Delehaye on 25/03/2023.
 //
@@ -16,16 +16,16 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main.list;
+package com.beautyorder.androidclient.controller.main.search;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.beautyorder.androidclient.controller.main.search.FragmentWithSearch;
+import com.beautyorder.androidclient.controller.results.FragmentShowResults;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 
-public class FragmentHome  extends FragmentWithSearch {
+public class FragmentSearch extends FragmentShowResults {
 
     private FragmentHomeBinding mBinding;
 
