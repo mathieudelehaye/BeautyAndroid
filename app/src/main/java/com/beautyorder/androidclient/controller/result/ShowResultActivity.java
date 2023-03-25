@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.results;
+package com.beautyorder.androidclient.controller.result;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -34,14 +34,14 @@ import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
 import com.beautyorder.androidclient.controller.main.*;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.results.list.FragmentResultDetail;
-import com.beautyorder.androidclient.controller.results.list.FragmentResultList;
-import com.beautyorder.androidclient.controller.results.map.FragmentMap;
+import com.beautyorder.androidclient.controller.result.list.FragmentResultDetail;
+import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.result.map.FragmentMap;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ShowResultsActivity extends AppCompatActivity {
+public class ShowResultActivity extends AppCompatActivity {
    // Fragments: types
     public enum FragmentType {
         LIST,

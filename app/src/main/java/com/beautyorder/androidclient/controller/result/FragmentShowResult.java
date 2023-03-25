@@ -1,5 +1,5 @@
 //
-//  FragmentShowResults.java
+//  FragmentShowResult.java
 //
 //  Created by Mathieu Delehaye on 22/01/2023.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.results;
+package com.beautyorder.androidclient.controller.result;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -36,7 +36,7 @@ import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.main.MainActivity;
-import com.beautyorder.androidclient.controller.results.map.OverlayItemWithImage;
+import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.google.firebase.firestore.DocumentReference;
@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class FragmentShowResults extends Fragment {
+public abstract class FragmentShowResult extends Fragment {
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected GeoPoint mUserLocation;

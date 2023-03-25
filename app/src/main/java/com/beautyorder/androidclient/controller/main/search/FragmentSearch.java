@@ -22,10 +22,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.beautyorder.androidclient.controller.results.FragmentShowResults;
+import com.beautyorder.androidclient.controller.result.FragmentShowResult;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 
-public class FragmentSearch extends FragmentShowResults {
+public class FragmentSearch extends FragmentShowResult {
 
     private FragmentHomeBinding mBinding;
 

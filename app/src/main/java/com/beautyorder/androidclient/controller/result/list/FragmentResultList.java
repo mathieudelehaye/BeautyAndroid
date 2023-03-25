@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.results.list;
+package com.beautyorder.androidclient.controller.result.list;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -29,13 +29,13 @@ import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.main.MainActivity;
 import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.results.FragmentShowResults;
-import com.beautyorder.androidclient.controller.results.map.OverlayItemWithImage;
+import com.beautyorder.androidclient.controller.result.FragmentShowResult;
+import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
 
-public class FragmentResultList extends FragmentShowResults {
+public class FragmentResultList extends FragmentShowResult {
     private FragmentResultListBinding mBinding;
     private boolean mIsViewVisible = false;
 
