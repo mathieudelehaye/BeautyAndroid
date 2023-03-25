@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    fragment_home.xml
+
+    Created by Mathieu Delehaye on 25/03/2023.
+
+    BeautyAndroid: An Android app to order and recycle cosmetics.
+
+    Copyright © 2023 Mathieu Delehaye. All rights reserved.
+
+
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    tools:context="com.beautyorder.androidclient.controller.main.list.FragmentResultList"
+>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/result_list_search"
+        android:layout_width="match_parent"
+        android:layout_height="52.5dp"
+        android:layout_marginTop="112dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+    >
+        <include layout="@layout/fragment_search_box"/>
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lastRPHorizontalButtons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/last_rp_fragment_height"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/result_list_search"
+    >
+
+        <HorizontalScrollView
+            android:id="@+id/lastRPHorizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/last_rp_fragment_height"
+            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+        >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/last_rp_fragment_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+            >
+
+                <LinearLayout
+                    android:id="@+id/lastRPHorizontalButtonRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                >
+                    <Button
+                        android:id="@+id/rpButton1a"
+                        android:text="New Button1"
+                        android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
+                        android:layout_width="@dimen/last_search_button_width"
+                        android:layout_height="@dimen/last_search_button_height"
+                    />
+
+                    <Button
+                        android:id="@+id/rpButton1b"
+                        android:text="New Button2"
+                        android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
+                        android:layout_marginEnd="@dimen/last_search_button_horizontal_margin"
+                        android:layout_width="@dimen/last_search_button_width"
+                        android:layout_height="@dimen/last_search_button_height"
+                        app:layout_constraintStart_toEndOf="@id/button1a"
+                    />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </HorizontalScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lastSearchHorizontalButtons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/last_search_fragment_height"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lastRPHorizontalButtons"
+    >
+
+        <HorizontalScrollView
+            android:id="@+id/lastSearchHorizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/last_search_fragment_height"
+            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+        >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/last_search_fragment_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+            >
+
+                <LinearLayout
+                    android:id="@+id/lastSearchHorizontalButtonRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                >
+                    <Button
+                        android:id="@+id/button1a"
+                        android:text="New Button1"
+                        android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
+                        android:layout_width="@dimen/last_search_button_width"
+                        android:layout_height="@dimen/last_search_button_height"
+                    />
+
+                    <Button
+                        android:id="@+id/button1b"
+                        android:text="New Button2"
+                        android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
+                        android:layout_marginEnd="@dimen/last_search_button_horizontal_margin"
+                        android:layout_width="@dimen/last_search_button_width"
+                        android:layout_height="@dimen/last_search_button_height"
+                        app:layout_constraintStart_toEndOf="@id/button1a"
+                    />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lastSearchHorizontalButtonRow2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/lastSearchHorizontalButtonRow1"
+                >
+                    <Button
+                        android:id="@+id/button2a"
+                        android:text="New Button1"
+                        android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
+                        android:layout_width="@dimen/last_search_button_width"
+                        android:layout_height="@dimen/last_search_button_height"
+                    />
+
+                    <Button
+                        android:id="@+id/button2b"
+                        android:text="New Button2"
+                        android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
+                        android:layout_marginEnd="@dimen/last_search_button_horizontal_margin"
+                        android:layout_width="@dimen/last_search_button_width"
+                        android:layout_height="@dimen/last_search_button_height"
+                        app:layout_constraintStart_toEndOf="@id/button2b"
+                    />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </HorizontalScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

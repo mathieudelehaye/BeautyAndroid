@@ -28,7 +28,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.camera.FragmentCamera;
-import com.beautyorder.androidclient.controller.main.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.main.list.FragmentHome;
+import com.beautyorder.androidclient.controller.main.list.FragmentSaved;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     public enum ResultPageType {
@@ -60,12 +61,15 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (i) {
             case 0:
-                fragment = new FragmentResultList();
+                fragment = new FragmentHome();
                 break;
             case 1:
-                fragment = new FragmentCamera();
+                fragment = new FragmentSaved();
                 break;
             case 2:
+                fragment = new FragmentCamera();
+                break;
+            case 3:
             default:
                 fragment = new FragmentMenu();
                 break;
@@ -76,7 +80,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -86,12 +90,15 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                image = mActivity.getResources().getDrawable(R.drawable.home);
+                image = mActivity.getResources().getDrawable(R.drawable.magnify);
                 break;
             case 1:
-                image = mActivity.getResources().getDrawable(R.drawable.camera);
+                image = mActivity.getResources().getDrawable(R.drawable.heart_outline);
                 break;
             case 2:
+                image = mActivity.getResources().getDrawable(R.drawable.camera);
+                break;
+            case 3:
             default:
                 image = mActivity.getResources().getDrawable(R.drawable.dots_horizontal);
                 break;
