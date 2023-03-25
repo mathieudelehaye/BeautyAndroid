@@ -23,7 +23,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:name="com.beautyorder.androidclient.controller.onboarding.FragmentOnboarding"
+        android:name="com.beautyorder.androidclient.controller.onboarding.FragmentOnboard"
         android:id="@+id/main_onboarding_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

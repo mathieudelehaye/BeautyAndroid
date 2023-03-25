@@ -27,7 +27,7 @@ import com.beautyorder.androidclient.R;
 
 public class OnboardActivity extends Activity implements GestureDetector.OnGestureListener {
 
-    private FragmentOnboarding mFragment;
+    private FragmentOnboard mFragment;
     private GestureDetector mGestureDetector;
     final private int mSwipeThreshold = 100;
     final private int mSwipeVelocityThreshold = 100;
@@ -38,7 +38,7 @@ public class OnboardActivity extends Activity implements GestureDetector.OnGestu
         setContentView(R.layout.onboarding);
 
         var manager = getFragmentManager();
-        mFragment = (FragmentOnboarding) manager
+        mFragment = (FragmentOnboard) manager
             .findFragmentById(R.id.main_onboarding_fragment);
 
         mGestureDetector = new GestureDetector(this);

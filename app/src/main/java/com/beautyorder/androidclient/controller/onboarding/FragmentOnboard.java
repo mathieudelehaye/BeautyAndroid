@@ -1,5 +1,5 @@
 //
-//  FragmentOnboarding.java
+//  FragmentOnboard.java
 //
 //  Created by Mathieu Delehaye on 14/01/2023.
 //
@@ -35,7 +35,7 @@ import androidx.leanback.app.OnboardingFragment;
 import com.beautyorder.androidclient.R;
 import java.util.ArrayList;
 
-public class FragmentOnboarding extends OnboardingFragment {
+public class FragmentOnboard extends OnboardingFragment {
 
     private SharedPreferences mSharedPref;
     private ImageView mContentImage;
