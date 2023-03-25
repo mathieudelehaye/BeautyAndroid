@@ -1,5 +1,5 @@
 //
-//  FragmentMain.java
+//  FragmentTabView.java
 //
 //  Created by Mathieu Delehaye on 17/12/2022.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.tabview;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +30,7 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentAppBinding;
 import com.google.android.material.tabs.TabLayout;
 
-public class FragmentMain extends Fragment {
+public class FragmentTabView extends Fragment {
     private FragmentAppBinding mBinding;
     private NotSwipeableViewPager mViewPager;
 

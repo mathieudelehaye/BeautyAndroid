@@ -29,13 +29,13 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
-import com.beautyorder.androidclient.controller.main.MainActivity;
-import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.FragmentShowResult;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
@@ -176,7 +176,7 @@ public class FragmentMap extends FragmentShowResult {
 
             changeSearchSwitch(ResultPageType.LIST);
 
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
             if ((activity) != null) {
                 activity.toggleTabSwiping(false);
             }
@@ -252,7 +252,7 @@ public class FragmentMap extends FragmentShowResult {
                             Log.i("BeautyAndroid", "Single tap");
                             mMapController.animateTo(item.getPoint());
 
-                            var activity = (MainActivity) getActivity();
+                            var activity = (TabViewActivity) getActivity();
                             if (activity == null) {
                                 Log.w("BeautyAndroid", "Cannot show the result item, as no activity "
                                     + "available");
@@ -286,7 +286,7 @@ public class FragmentMap extends FragmentShowResult {
 
                 mMapController.animateTo(mSearchStart);
 
-                var activity = (MainActivity)getActivity();
+                var activity = (TabViewActivity)getActivity();
                 if (activity == null) {
                     Log.w("BeautyAndroid", "Cannot set the search result from the map as no activity");
                     return;
@@ -370,10 +370,10 @@ public class FragmentMap extends FragmentShowResult {
         resultDescription.setText(itemTitle + "\n\n" + itemDescription);
 
         mBinding.detailMapLayout.setOnClickListener(view1 -> {
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
 
             activity.setSelectedRecyclePoint(itemInfo);
-            activity.navigate(MainActivity.FragmentType.DETAIL);
+            activity.navigate(TabViewActivity.FragmentType.DETAIL);
         });
 
         toggleDetailsView(true);

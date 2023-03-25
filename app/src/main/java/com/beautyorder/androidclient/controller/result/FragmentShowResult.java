@@ -33,9 +33,9 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
-import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
@@ -128,7 +128,7 @@ public abstract class FragmentShowResult extends Fragment {
 
         // If there is no search start yet, find it and get the items to display
         if (mSearchStart == null && getContext() != null) {
-            String searchQuery = ((MainActivity)getContext()).getSearchQuery();
+            String searchQuery = ((TabViewActivity)getContext()).getSearchQuery();
 
             boolean userLocationReadFromCache = readCachedUserLocation();
 
@@ -142,7 +142,7 @@ public abstract class FragmentShowResult extends Fragment {
                 Log.v("BeautyAndroid", "Searching around the user location from the cache");
                 setSearchStart(mUserLocation);
             } else {
-                var activity = (MainActivity)getActivity();
+                var activity = (TabViewActivity)getActivity();
                 if(activity != null) {
                     activity.showDialog("Please wait until the app has found your position",
                         "No search until user position is found");
@@ -241,7 +241,7 @@ public abstract class FragmentShowResult extends Fragment {
 
         // Do not use an R.string resource here to store "user_location". As sometimes
         // the context won't be available yet, when creating again the child view of
-        // the FragmentMain object (e.g.: after tapping the search view switch button).
+        // the FragmentTabView object (e.g.: after tapping the search view switch button).
         // In such a case, `getString` will throw an exception.
         mSharedPref.edit().putString("user_location", cacheLocation)
             .commit();
@@ -348,7 +348,7 @@ public abstract class FragmentShowResult extends Fragment {
             }
 
             // Toggle the tab swiping according to the destination view
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
 
             if ((activity) != null) {
 
@@ -365,9 +365,9 @@ public abstract class FragmentShowResult extends Fragment {
 
             Log.d("BeautyAndroid", "Switch button pressed, navigate to: " + destination);
 
-            final MainActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
-                MainActivity.FragmentType.APP :
-                MainActivity.FragmentType.MAP;
+            final TabViewActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
+                TabViewActivity.FragmentType.APP :
+                TabViewActivity.FragmentType.MAP;
 
             activity.navigate(destinationType);
         });
@@ -411,7 +411,7 @@ public abstract class FragmentShowResult extends Fragment {
     }
 
     private void saveShownFragmentBeforeSearch() {
-        var activity = (MainActivity)getActivity();
+        var activity = (TabViewActivity)getActivity();
         if (activity == null) {
             Log.w("BeautyAndroid", "No activity so cannot save the shown fragment before sending "
                 + "the intent");
@@ -447,7 +447,7 @@ public abstract class FragmentShowResult extends Fragment {
 
                 Log.d("BeautyAndroid", "userScore = " + userScore);
 
-                var mainActivity = (MainActivity) getActivity();
+                var mainActivity = (TabViewActivity) getActivity();
                 if (mainActivity == null) {
                     Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
                     return;

@@ -25,7 +25,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="com.beautyorder.androidclient.controller.main.MainActivity"
+    tools:context="com.beautyorder.androidclient.controller.tabview.TabViewActivity"
 >
 
     <com.google.android.material.appbar.AppBarLayout

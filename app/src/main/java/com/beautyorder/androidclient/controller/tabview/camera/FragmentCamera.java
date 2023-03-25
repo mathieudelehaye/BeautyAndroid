@@ -15,7 +15,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main.camera;
+package com.beautyorder.androidclient.controller.tabview.camera;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,9 +37,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.main.MainActivity;
-import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
@@ -123,7 +123,7 @@ public class FragmentCamera extends Fragment {
 
             requestCamera();
 
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
             if ((activity) != null) {
                 activity.toggleTabSwiping(true);
             }

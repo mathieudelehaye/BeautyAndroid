@@ -58,7 +58,7 @@
         </activity>
 
         <activity
-            android:name=".controller.main.MainActivity"
+            android:name=".controller.tabview.TabViewActivity"
             android:exported="true"
         >
 
@@ -80,7 +80,7 @@
         </activity>
 
         <provider
-            android:name=".controller.main.search.SearchSuggestionProvider"
+            android:name=".controller.tabview.search.SearchSuggestionProvider"
             android:authorities=".controller.main.search.SearchSuggestionProvider"
         />
     </application>

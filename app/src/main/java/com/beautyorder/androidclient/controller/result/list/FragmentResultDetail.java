@@ -31,7 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.main.MainActivity;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentResultDetailBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 
@@ -56,7 +56,7 @@ public class FragmentResultDetail extends Fragment {
         // Back button
         mBinding.backResultDetail.setOnClickListener(view1 -> {
             // Go back to the previous fragment
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
             activity.navigateBack();
         });
     }
@@ -74,7 +74,7 @@ public class FragmentResultDetail extends Fragment {
 
     private void updateDetails() {
         // Description and image
-        final var activity = (MainActivity) getActivity();
+        final var activity = (TabViewActivity) getActivity();
         final ResultItemInfo info = activity.getSelectedRecyclePoint();
 
         final byte[] imageBytes = info.getImage();

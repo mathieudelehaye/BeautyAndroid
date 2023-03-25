@@ -1,5 +1,5 @@
 //
-//  MainActivity.java
+//  TabViewActivity.java
 //
 //  Created by Mathieu Delehaye on 1/12/2022.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.tabview;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -37,7 +37,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
-import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
+import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.list.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.result.map.FragmentMap;
 import com.beautyorder.androidclient.model.*;
@@ -52,7 +52,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements ActivityWithAsyncTask {
+public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask {
    // Fragments: types
     public enum FragmentType {
         APP,
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
 
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
-    private FragmentMain mAppFragment = new FragmentMain();
+    private FragmentTabView mAppFragment = new FragmentTabView();
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
     private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements ActivityWithAsync
     public void toggleTabSwiping(boolean enable) {
         // Enable or disable swiping gesture for the view pager
         var fragment =
-            (FragmentMain) FragmentManager.findFragment(findViewById(R.id.appPager));
+            (FragmentTabView) FragmentManager.findFragment(findViewById(R.id.appPager));
 
         if (enable) {
             fragment.enableTabSwiping();

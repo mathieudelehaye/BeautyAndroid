@@ -32,8 +32,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
-import com.beautyorder.androidclient.controller.main.*;
-import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
+import com.beautyorder.androidclient.controller.tabview.*;
+import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.list.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.result.map.FragmentMap;
@@ -246,7 +246,7 @@ public class ShowResultActivity extends AppCompatActivity {
     public void toggleTabSwiping(boolean enable) {
         // Enable or disable swiping gesture for the view pager
         var fragment =
-            (FragmentMain) FragmentManager.findFragment(findViewById(R.id.appPager));
+            (FragmentTabView) FragmentManager.findFragment(findViewById(R.id.appPager));
 
         if (enable) {
             fragment.enableTabSwiping();

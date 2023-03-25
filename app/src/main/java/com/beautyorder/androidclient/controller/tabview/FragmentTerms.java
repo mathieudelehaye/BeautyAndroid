@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.tabview;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -51,7 +51,7 @@ public class FragmentTerms extends Fragment {
             @Override
             public void onClick(View view) {
                 // Go back to the app Menu
-                var activity = (MainActivity)getActivity();
+                var activity = (TabViewActivity)getActivity();
                 activity.navigateBack();
             }
         });

@@ -23,7 +23,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.beautyorder.androidclient.controller.main.camera.FragmentCamera">
+    tools:context="com.beautyorder.androidclient.controller.tabview.camera.FragmentCamera">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_camera"

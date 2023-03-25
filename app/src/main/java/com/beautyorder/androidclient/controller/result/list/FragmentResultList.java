@@ -26,9 +26,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.main.CollectionPagerAdapter.ResultPageType;
-import com.beautyorder.androidclient.controller.main.MainActivity;
-import com.beautyorder.androidclient.controller.main.dialog.FragmentHelpDialog;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.FragmentShowResult;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
@@ -72,7 +72,7 @@ public class FragmentResultList extends FragmentShowResult {
                 Log.v("BeautyAndroid", "Results received from database at timestamp: "
                     + Helpers.getTimestamp());
 
-                var activity = (MainActivity) getActivity();
+                var activity = (TabViewActivity) getActivity();
 
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
@@ -102,7 +102,7 @@ public class FragmentResultList extends FragmentShowResult {
                     final byte[] imageBytes = itemInfo.getImage();
 
                     activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes, showBrand));
-                    activity.navigate(MainActivity.FragmentType.DETAIL);
+                    activity.navigate(TabViewActivity.FragmentType.DETAIL);
                 });
 
                 result.downloadImages(new TaskCompletionManager() {
@@ -137,7 +137,7 @@ public class FragmentResultList extends FragmentShowResult {
 
             changeSearchSwitch(ResultPageType.MAP);
 
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
             if ((activity) != null) {
                 activity.toggleTabSwiping(true);
             }

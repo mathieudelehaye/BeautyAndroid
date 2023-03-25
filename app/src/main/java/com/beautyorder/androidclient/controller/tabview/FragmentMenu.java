@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.main;
+package com.beautyorder.androidclient.controller.tabview;
 
 import android.content.Context;
 import android.content.Intent;
@@ -61,14 +61,14 @@ public class FragmentMenu extends Fragment {
         switchLogoutButtonVisibility();
 
         mBinding.helpMenu.setOnClickListener(view1 -> {
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
 
-            activity.navigate(MainActivity.FragmentType.HELP);
+            activity.navigate(TabViewActivity.FragmentType.HELP);
         });
 
         mBinding.termsMenu.setOnClickListener(view12 -> {
-            var activity = (MainActivity)getActivity();
-            activity.navigate(MainActivity.FragmentType.TERMS);
+            var activity = (TabViewActivity)getActivity();
+            activity.navigate(TabViewActivity.FragmentType.TERMS);
         });
 
         mBinding.logOutMenu.setOnClickListener(view13 -> {
@@ -95,7 +95,7 @@ public class FragmentMenu extends Fragment {
 
             switchLogoutButtonVisibility();
 
-            var activity = (MainActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
             if ((activity) != null) {
                 activity.toggleTabSwiping(true);
             }
