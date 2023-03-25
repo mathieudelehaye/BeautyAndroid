@@ -1,5 +1,5 @@
 //
-//  RoutingActivity.java
+//  LaunchActivity.java
 //
 //  Created by Mathieu Delehaye on 22/02/2023.
 //
@@ -28,7 +28,7 @@ import androidx.core.splashscreen.SplashScreen;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
 
-public class RoutingActivity extends Activity {
+public class LaunchActivity extends Activity {
 
     protected SharedPreferences mSharedPref;
 

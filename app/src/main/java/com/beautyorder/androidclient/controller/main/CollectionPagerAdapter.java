@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.main.camera.FragmentCamera;
 import com.beautyorder.androidclient.controller.main.list.FragmentHome;
-import com.beautyorder.androidclient.controller.main.list.FragmentSaved;
+import com.beautyorder.androidclient.controller.main.saved.FragmentSaved;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     public enum ResultPageType {

@@ -30,7 +30,7 @@
     >
 
         <activity
-            android:name=".controller.splash.RoutingActivity"
+            android:name=".controller.splash.LaunchActivity"
             android:theme="@style/Theme.App.Splash"
             android:exported="true"
         >
@@ -53,7 +53,6 @@
         >
 
             <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
@@ -64,7 +63,6 @@
         >
 
             <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
