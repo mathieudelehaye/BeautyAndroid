@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.util.Log;
 import androidx.core.splashscreen.SplashScreen;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.onboarding.OnboardActivity;
+import com.beautyorder.androidclient.controller.onboard.OnboardActivity;
 
 public class LaunchActivity extends Activity {
 

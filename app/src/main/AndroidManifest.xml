@@ -46,7 +46,7 @@
         />
 
         <activity
-            android:name=".controller.onboarding.OnboardActivity"
+            android:name=".controller.onboard.OnboardActivity"
             android:enabled="true"
             android:theme="@style/Theme.Leanback.Onboarding.Beauty"
             android:exported="true"
