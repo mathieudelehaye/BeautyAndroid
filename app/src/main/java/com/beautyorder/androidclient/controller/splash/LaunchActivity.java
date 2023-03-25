@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.util.Log;
 import androidx.core.splashscreen.SplashScreen;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.onboarding.OnboardingActivity;
+import com.beautyorder.androidclient.controller.onboarding.OnboardActivity;
 
 public class LaunchActivity extends Activity {
 
@@ -50,7 +50,7 @@ public class LaunchActivity extends Activity {
             getString(R.string.completed_onboarding), false)) {
 
             Log.i("BeautyAndroid", "Onboarding activity started");
-            startActivity(new Intent(this, OnboardingActivity.class));
+            startActivity(new Intent(this, OnboardActivity.class));
         } else {
             Log.i("BeautyAndroid", "Onboarding activity skipped");
             startActivity(new Intent(this,

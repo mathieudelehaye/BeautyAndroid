@@ -1,5 +1,5 @@
 //
-//  OnboardingActivity.java
+//  OnboardActivity.java
 //
 //  Created by Mathieu Delehaye on 14/01/2023.
 //
@@ -19,14 +19,13 @@
 package com.beautyorder.androidclient.controller.onboarding;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import com.beautyorder.androidclient.R;
 
-public class OnboardingActivity extends Activity implements GestureDetector.OnGestureListener {
+public class OnboardActivity extends Activity implements GestureDetector.OnGestureListener {
 
     private FragmentOnboarding mFragment;
     private GestureDetector mGestureDetector;
