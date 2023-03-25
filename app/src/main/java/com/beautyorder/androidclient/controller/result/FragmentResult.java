@@ -55,7 +55,6 @@ public abstract class FragmentResult extends FragmentWithSearch {
     protected GeoPoint mSearchStart;
     protected MyLocationNewOverlay mLocationOverlay;
     protected ArrayList<OverlayItem> mFoundRecyclePoints;
-    protected Context mCtx;
     protected final double mSearchRadiusInCoordinate = 0.045;
     protected abstract void searchAndDisplayItems();
     private Geocoder mGeocoder;
@@ -89,7 +88,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
                     mUserLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.v("BeautyAndroid", "First received location at timestamp: "
-                            + Helpers.getTimestamp());
+                        + Helpers.getTimestamp());
 
                     writeCachedUserLocation();
 
