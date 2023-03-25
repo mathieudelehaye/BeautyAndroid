@@ -1,7 +1,7 @@
 //
-//  FragmentShowResult.java
+//  FragmentResult.java
 //
-//  Created by Mathieu Delehaye on 22/01/2023.
+//  Created by Mathieu Delehaye on 25/03/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -20,7 +20,6 @@ package com.beautyorder.androidclient.controller.result;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -31,18 +30,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.controller.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
-import com.beautyorder.androidclient.model.AppUser;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import org.jetbrains.annotations.NotNull;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -56,9 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class FragmentShowResult extends Fragment {
-    protected FirebaseFirestore mDatabase;
-    protected SharedPreferences mSharedPref;
+public abstract class FragmentResult extends FragmentWithSearch {
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchStart;
     protected MyLocationNewOverlay mLocationOverlay;
@@ -72,13 +64,6 @@ public abstract class FragmentShowResult extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mDatabase = FirebaseFirestore.getInstance();
-
-        mCtx = view.getContext();
-
-        mSharedPref = mCtx.getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
-
         mGeocoder = new Geocoder(requireContext(), Locale.getDefault());
 
         //load/initialize the osmdroid configuration, this can be done
@@ -89,8 +74,6 @@ public abstract class FragmentShowResult extends Fragment {
         //see also StorageUtils
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
         //tile servers will get you banned based on this string
-
-        setupSearchBox();
 
         // Get the current user geolocation
         final boolean[] firstLocationReceived = {false};
@@ -106,7 +89,7 @@ public abstract class FragmentShowResult extends Fragment {
                     Log.d("BeautyAndroid", "First received location for the user: " + location.toString());
                     mUserLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.v("BeautyAndroid", "First received location at timestamp: "
-                        + Helpers.getTimestamp());
+                            + Helpers.getTimestamp());
 
                     writeCachedUserLocation();
 
@@ -120,8 +103,6 @@ public abstract class FragmentShowResult extends Fragment {
         });
 
         updateSearchResults();
-
-        updateUserScore();
     }
 
     protected void updateSearchResults() {
@@ -241,7 +222,7 @@ public abstract class FragmentShowResult extends Fragment {
 
         // Do not use an R.string resource here to store "user_location". As sometimes
         // the context won't be available yet, when creating again the child view of
-        // the FragmentTabView object (e.g.: after tapping the search view switch button).
+        // the FragmentApp object (e.g.: after tapping the search view switch button).
         // In such a case, `getString` will throw an exception.
         mSharedPref.edit().putString("user_location", cacheLocation)
             .commit();
@@ -375,32 +356,6 @@ public abstract class FragmentShowResult extends Fragment {
         viewSwitch.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
     }
 
-    protected void displayScoreBox(String fragmentName, int layout_id) {
-        // Show or hide the score box according to the locale
-        if (!mustShowBrand()) {
-            var fragmentRootView = getView();
-            if (fragmentRootView == null) {
-                Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
-                    + " fragment, as no fragment root view");
-                return;
-            }
-
-            View scoreLayout = fragmentRootView.findViewById(layout_id);
-            if (scoreLayout == null) {
-                Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
-                    + " fragment, as no score layout");
-                return;
-            }
-
-            Log.v("BeautyAndroid", "The score box is hidden in the " + fragmentName
-                + " fragment");
-            scoreLayout.setVisibility(View.GONE);
-        } else {
-            Log.v("BeautyAndroid", "The score box is shown in the " + fragmentName
-                + " fragment");
-        }
-    }
-
     protected boolean mustShowBrand() {
         if (mCtx == null) {
             Log.w("BeautyAndroid", "Cannot check if brand must be shown, as no context");
@@ -408,75 +363,5 @@ public abstract class FragmentShowResult extends Fragment {
         }
 
         return !mCtx.getResources().getConfiguration().getLocales().get(0).getDisplayName().contains("Belgique");
-    }
-
-    private void saveShownFragmentBeforeSearch() {
-        var activity = (TabViewActivity)getActivity();
-        if (activity == null) {
-            Log.w("BeautyAndroid", "No activity so cannot save the shown fragment before sending "
-                + "the intent");
-            return;
-        }
-
-        Log.v("BeautyAndroid", "Search intent sent, save the shown fragment");
-        activity.saveSearchFragment();
-    }
-
-    private void updateUserScore() {
-
-        if (mDatabase == null) {
-            return;
-        }
-
-        // Display the user score
-        mDatabase.collection("userInfos")
-            .whereEqualTo("__name__", AppUser.getInstance().getId())
-            .get()
-            .addOnCompleteListener(task -> {
-                // Display score
-                int userScore = 0;
-
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        var scoreData = document.getData().get("score").toString();
-                        userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
-                    }
-                } else {
-                    Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
-                }
-
-                Log.d("BeautyAndroid", "userScore = " + userScore);
-
-                var mainActivity = (TabViewActivity) getActivity();
-                if (mainActivity == null) {
-                    Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
-                    return;
-                }
-                mainActivity.showScore(userScore);
-            });
-    }
-
-    private void writeBackRPAddressCoordinatesToDB(String documentId, String address) {
-        GeoPoint coordinates = getCoordinatesFromAddress(address);
-        if (coordinates == null) {
-            Log.d("BeautyAndroid", "No coordinates found for the RP address: " + address);
-            return;
-        }
-
-        String propertyKey = "Coordinates";
-
-        WriteBatch batch = mDatabase.batch();
-        DocumentReference ref = mDatabase.collection("recyclePointInfos")
-            .document(documentId);
-        batch.update(ref, propertyKey, coordinates);
-
-        batch.commit().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.i("BeautyAndroid", "Correctly updated coordinates for the document with the key: "
-                    + documentId);
-            } else {
-                Log.e("BeautyAndroid", "Error updating in DB the RP coordinates: ", task.getException());
-            }
-        });
     }
 }

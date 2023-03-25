@@ -63,15 +63,19 @@
         >
 
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
 
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".controller.main.SearchActivity"
-            />
+        <activity
+            android:name=".controller.result.ShowResultActivity"
+            android:exported="true"
+        >
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"

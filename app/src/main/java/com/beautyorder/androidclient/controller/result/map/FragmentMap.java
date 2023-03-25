@@ -29,6 +29,7 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import com.beautyorder.androidclient.controller.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.Helpers;
@@ -36,7 +37,6 @@ import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.result.FragmentShowResult;
 import com.beautyorder.androidclient.databinding.FragmentMapBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
@@ -47,7 +47,7 @@ import org.osmdroid.views.overlay.*;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class FragmentMap extends FragmentShowResult {
+public class FragmentMap extends FragmentResult {
     private FragmentMapBinding mBinding;
     private MapView mMap = null;
     private IMapController mMapController;
@@ -140,8 +140,6 @@ public class FragmentMap extends FragmentShowResult {
 
         toggleDetailsView(false);
 
-        displayScoreBox("Map", R.id.score_layout_map);
-
         showHelp();
     }
 
@@ -180,8 +178,6 @@ public class FragmentMap extends FragmentShowResult {
             if ((activity) != null) {
                 activity.toggleTabSwiping(false);
             }
-
-            displayScoreBox("Map", R.id.score_layout_map);
 
             showHelp();
         } else {

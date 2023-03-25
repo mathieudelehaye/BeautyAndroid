@@ -26,16 +26,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.controller.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.result.FragmentShowResult;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
 
-public class FragmentResultList extends FragmentShowResult {
+public class FragmentResultList extends FragmentResult {
     private FragmentResultListBinding mBinding;
     private boolean mIsViewVisible = false;
 
@@ -56,8 +56,6 @@ public class FragmentResultList extends FragmentShowResult {
         super.onViewCreated(view, savedInstanceState);
 
         changeSearchSwitch(ResultPageType.MAP);
-
-        displayScoreBox("List", R.id.score_layout_list);
 
         showHelp();
     }
@@ -143,8 +141,6 @@ public class FragmentResultList extends FragmentShowResult {
             }
 
             //updateSearchResults();
-
-            displayScoreBox("List", R.id.score_layout_list);
 
             showHelp();
         } else {
