@@ -18,6 +18,7 @@
 
 package com.beautyorder.androidclient.controller.result;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -26,11 +27,13 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
@@ -127,6 +130,25 @@ public abstract class FragmentResult extends FragmentWithSearch {
         });
 
         updateSearchResults();
+
+        // Show the Back button from the search box
+        ViewGroup searchBackLayout = view.findViewById(R.id.search_box_back_layout);
+        if (searchBackLayout == null) {
+            Log.e("BeautyAndroid", "No view found when showing the search back button");
+            return;
+        }
+        searchBackLayout.setVisibility(View.VISIBLE);
+
+        // Implement the back button behaviour
+        Button searchBackButton = view.findViewById(R.id.search_box_back);
+        if (searchBackButton == null) {
+            Log.e("BeautyAndroid", "No view found when implementing the behaviour for the search "
+                + "back button");
+            return;
+        }
+        searchBackButton.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), TabViewActivity.class));
+        });
     }
 
     protected void updateSearchResults() {

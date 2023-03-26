@@ -61,6 +61,14 @@ public class FragmentSearch extends FragmentWithSearch {
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
         updateUserScore();
+
+        // Hide the back arrow button from the search box
+        ViewGroup searchBackLayout = view.findViewById(R.id.search_box_back_layout);
+        if (searchBackLayout == null) {
+            Log.e("BeautyAndroid", "No view found when hiding the search back button");
+            return;
+        }
+        searchBackLayout.setVisibility(View.GONE);
     }
 
     protected void displayScoreBox(String fragmentName, int layout_id) {
