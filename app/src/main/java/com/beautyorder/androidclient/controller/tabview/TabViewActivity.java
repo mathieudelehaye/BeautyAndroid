@@ -59,7 +59,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;
-
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
     private FragmentTabView mTabViewFragment = new FragmentTabView();
@@ -97,11 +96,11 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
         // Fragments: initialization
-
         // Add to the navigator the fragments and select the first one to show
         mNavigator.addFragment(mTabViewFragment);
         mNavigator.addFragment(mHelpFragment);
         mNavigator.addFragment(mTermsFragment);
+        mNavigator.showFragment(mTabViewFragment);
 
         // Background: initialization
         var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
@@ -210,7 +209,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     public void toggleTabSwiping(boolean enable) {
         // Enable or disable swiping gesture for the view pager
         var fragment =
-            (FragmentTabView) FragmentManager.findFragment(findViewById(R.id.appPager));
+            (FragmentTabView) FragmentManager.findFragment(findViewById(R.id.tabViewPager));
 
         if (enable) {
             fragment.enableTabSwiping();

@@ -29,10 +29,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
-import com.beautyorder.androidclient.controller.tabview.*;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.list.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
@@ -203,7 +201,6 @@ public class ShowResultActivity extends AppCompatActivity {
             case LIST:
                 switch (mPrevFragmentType) {
                     case DETAIL:
-                        CollectionPagerAdapter.setPage(0);
                         break;
                     case MAP:
                     default:
@@ -225,18 +222,6 @@ public class ShowResultActivity extends AppCompatActivity {
     public void showDialog(String text, String tag) {
         var dialogFragment = new FragmentHelpDialog(text);
         dialogFragment.show(findFragment(mShownFragmentType).getChildFragmentManager(), tag);
-    }
-
-    public void toggleTabSwiping(boolean enable) {
-        // Enable or disable swiping gesture for the view pager
-        var fragment =
-            (FragmentTabView) FragmentManager.findFragment(findViewById(R.id.appPager));
-
-        if (enable) {
-            fragment.enableTabSwiping();
-        } else {
-            fragment.disableTabSwiping();
-        }
     }
 
     // Search: methods

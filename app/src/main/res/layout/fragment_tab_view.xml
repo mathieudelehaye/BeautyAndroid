@@ -27,14 +27,14 @@
 >
 
     <com.beautyorder.androidclient.controller.tabview.NotSwipeableViewPager
-        android:id="@+id/appPager"
+        android:id="@+id/tabViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
     >
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/appTabbar"
+            android:id="@+id/tabViewTabbar"
             android:background="@android:color/white"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"

@@ -27,11 +27,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.databinding.FragmentAppBinding;
+import com.beautyorder.androidclient.databinding.FragmentTabViewBinding;
 import com.google.android.material.tabs.TabLayout;
 
 public class FragmentTabView extends Fragment {
-    private FragmentAppBinding mBinding;
+    private FragmentTabViewBinding mBinding;
     private NotSwipeableViewPager mViewPager;
 
     @Override
@@ -39,7 +39,7 @@ public class FragmentTabView extends Fragment {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        mBinding = FragmentAppBinding.inflate(inflater, container, false);
+        mBinding = FragmentTabViewBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
@@ -49,8 +49,8 @@ public class FragmentTabView extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
-        mViewPager = view.findViewById(R.id.appPager);
-        TabLayout tabLayout = view.findViewById(R.id.appTabbar);
+        mViewPager = view.findViewById(R.id.tabViewPager);
+        TabLayout tabLayout = view.findViewById(R.id.tabViewTabbar);
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.camera);
         tabLayout.setupWithViewPager(mViewPager);

@@ -31,7 +31,6 @@ import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
@@ -312,26 +311,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
 
         viewSwitch.setOnClickListener(view -> {
 
-            // Select the page if the destination is a view pager
-            if (destination == ResultPageType.LIST) {
-                CollectionPagerAdapter.setPage(0);
-            }
-
-            // Toggle the tab swiping according to the destination view
             var activity = (ShowResultActivity)getActivity();
-
-            if ((activity) != null) {
-
-                switch (destination) {
-                    case MAP:
-                        activity.toggleTabSwiping(false);
-                        break;
-                    case LIST:
-                    default:
-                        activity.toggleTabSwiping(true);
-                        break;
-                }
-            }
 
             Log.d("BeautyAndroid", "Switch button pressed, navigate to: " + destination);
 

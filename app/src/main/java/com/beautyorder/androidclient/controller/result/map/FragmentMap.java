@@ -31,7 +31,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.controller.result.FragmentResult;
 import com.beautyorder.androidclient.controller.result.ShowResultActivity;
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -169,14 +168,7 @@ public class FragmentMap extends FragmentResult {
             Log.v("BeautyAndroid", "Map view becomes visible at timestamp: "
                 + Helpers.getTimestamp());
 
-            CollectionPagerAdapter.setPage(0);
-
             changeSearchSwitch(ResultPageType.LIST);
-
-            var activity = (ShowResultActivity)getActivity();
-            if ((activity) != null) {
-                activity.toggleTabSwiping(false);
-            }
 
             showHelp();
         } else {
