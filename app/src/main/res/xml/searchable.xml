@@ -21,7 +21,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
     android:hint="@string/search_hint"
-    android:searchSuggestAuthority=".controller.main.search.SearchSuggestionProvider"
+    android:searchSuggestAuthority=".com.beautyorder.androidclient.controller.SearchSuggestionProvider"
     android:searchSuggestIntentAction="android.intent.action.VIEW"
     android:searchSuggestSelection="word MATCH ?"
 />

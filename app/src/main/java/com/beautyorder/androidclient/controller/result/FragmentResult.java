@@ -18,8 +18,6 @@
 
 package com.beautyorder.androidclient.controller.result;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -32,11 +30,11 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
+import com.beautyorder.androidclient.model.ResultItemInfo;
+import com.beautyorder.androidclient.model.SearchResult;
 import org.jetbrains.annotations.NotNull;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -51,6 +49,11 @@ import java.util.List;
 import java.util.Locale;
 
 public abstract class FragmentResult extends FragmentWithSearch {
+    public enum ResultPageType {
+        LIST,
+        MAP
+    }
+
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchStart;
     protected MyLocationNewOverlay mLocationOverlay;
@@ -58,6 +61,29 @@ public abstract class FragmentResult extends FragmentWithSearch {
     protected final double mSearchRadiusInCoordinate = 0.045;
     protected abstract void searchAndDisplayItems();
     private Geocoder mGeocoder;
+    private StringBuilder mSearchQuery = new StringBuilder("");
+    private SearchResult mSearchResult;
+    private ResultItemInfo mSelectedRecyclePoint;
+
+    public String getSearchQuery() {
+        return mSearchQuery.toString();
+    }
+
+    public ResultItemInfo getSelectedRecyclePoint() {
+        return mSelectedRecyclePoint;
+    }
+
+    public void setSelectedRecyclePoint(ResultItemInfo value) {
+        mSelectedRecyclePoint = value;
+    }
+
+    public SearchResult getSearchResult() {
+        return mSearchResult;
+    }
+
+    public void setSearchResult(SearchResult result) {
+        mSearchResult = result;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -108,7 +134,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
 
         // If there is no search start yet, find it and get the items to display
         if (mSearchStart == null && getContext() != null) {
-            String searchQuery = ((TabViewActivity)getContext()).getSearchQuery();
+            String searchQuery = ((ShowResultActivity)getContext()).getSearchQuery();
 
             boolean userLocationReadFromCache = readCachedUserLocation();
 
@@ -122,7 +148,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
                 Log.v("BeautyAndroid", "Searching around the user location from the cache");
                 setSearchStart(mUserLocation);
             } else {
-                var activity = (TabViewActivity)getActivity();
+                var activity = (ShowResultActivity)getActivity();
                 if(activity != null) {
                     activity.showDialog("Please wait until the app has found your position",
                         "No search until user position is found");
@@ -134,42 +160,6 @@ public abstract class FragmentResult extends FragmentWithSearch {
             // Search and display the items in the child fragment
             searchAndDisplayItems();
         }
-    }
-
-    protected void setupSearchBox() {
-        // Get the SearchView and set the searchable configuration
-        var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        var searchView = (SearchView) getView().findViewById(R.id.search_box);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                saveShownFragmentBeforeSearch();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int i) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int i) {
-                saveShownFragmentBeforeSearch();
-                return false;
-            }
-        });
-
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
 
     protected GeoPoint getCoordinatesFromAddress(@NotNull String locationName) {
@@ -328,7 +318,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
             }
 
             // Toggle the tab swiping according to the destination view
-            var activity = (TabViewActivity)getActivity();
+            var activity = (ShowResultActivity)getActivity();
 
             if ((activity) != null) {
 
@@ -345,9 +335,9 @@ public abstract class FragmentResult extends FragmentWithSearch {
 
             Log.d("BeautyAndroid", "Switch button pressed, navigate to: " + destination);
 
-            final TabViewActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
-                TabViewActivity.FragmentType.APP :
-                TabViewActivity.FragmentType.MAP;
+            final ShowResultActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
+                ShowResultActivity.FragmentType.LIST:
+                ShowResultActivity.FragmentType.MAP;
 
             activity.navigate(destinationType);
         });

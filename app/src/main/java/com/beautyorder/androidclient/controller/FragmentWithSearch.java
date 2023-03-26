@@ -22,13 +22,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {
@@ -59,7 +57,6 @@ public abstract class FragmentWithSearch extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                saveShownFragmentBeforeSearch();
                 return false;
             }
 
@@ -77,25 +74,13 @@ public abstract class FragmentWithSearch extends Fragment {
 
             @Override
             public boolean onSuggestionClick(int i) {
-                saveShownFragmentBeforeSearch();
                 return false;
             }
         });
 
-        // Assumes current activity is the searchable activity
+        // Enable assisted search for the SearchView, by passing the SearchableInfo object that represents
+        // the searchable configuration.
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-    }
-
-    protected void saveShownFragmentBeforeSearch() {
-        var activity = (TabViewActivity)getActivity();
-        if (activity == null) {
-            Log.w("BeautyAndroid", "No activity so cannot save the shown fragment before sending "
-                + "the intent");
-            return;
-        }
-
-        Log.v("BeautyAndroid", "Search intent sent, save the shown fragment");
-        activity.saveSearchFragment();
     }
 }

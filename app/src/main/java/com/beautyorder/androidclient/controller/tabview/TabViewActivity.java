@@ -18,9 +18,7 @@
 
 package com.beautyorder.androidclient.controller.tabview;
 
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
@@ -38,8 +36,6 @@ import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.result.list.FragmentResultDetail;
-import com.beautyorder.androidclient.controller.result.map.FragmentMap;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,11 +51,9 @@ import java.util.Set;
 public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask {
    // Fragments: types
     public enum FragmentType {
-        APP,
+        TAB_VIEW,
         HELP,
         TERMS,
-        DETAIL,
-        MAP,
         NONE
     }
 
@@ -68,19 +62,11 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
-    private FragmentTabView mAppFragment = new FragmentTabView();
+    private FragmentTabView mTabViewFragment = new FragmentTabView();
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
-    private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
-    private FragmentMap mMapFragment = new FragmentMap();
     private FragmentType mShownFragmentType = FragmentType.NONE;
     private FragmentType mPrevFragmentType = FragmentType.NONE;
-
-    // Search: properties
-    private StringBuilder mSearchQuery = new StringBuilder("");
-    private SearchResult mSearchResult;
-    private static FragmentType mSavedSearchFragment = FragmentType.NONE;
-    private ResultItemInfo mSelectedRecyclePoint;
 
     // Background: properties
     // TODO: do not use a static property here
@@ -88,31 +74,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private Set<String> mPhotoQueue;
     final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
     private final int mTimeBeforePollingScoreInMin = 1;
-
-    // Search: getter-setter
-    public String getSearchQuery() {
-        return mSearchQuery.toString();
-    }
-
-    public void saveSearchFragment() {
-        mSavedSearchFragment = mShownFragmentType;
-    }
-
-    public ResultItemInfo getSelectedRecyclePoint() {
-        return mSelectedRecyclePoint;
-    }
-
-    public void setSelectedRecyclePoint(ResultItemInfo value) {
-        mSelectedRecyclePoint = value;
-    }
-
-    public SearchResult getSearchResult() {
-        return mSearchResult;
-    }
-
-    public void setSearchResult(SearchResult result) {
-        mSearchResult = result;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,40 +99,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         // Fragments: initialization
 
         // Add to the navigator the fragments and select the first one to show
-        mNavigator.addFragment(mAppFragment);
+        mNavigator.addFragment(mTabViewFragment);
         mNavigator.addFragment(mHelpFragment);
         mNavigator.addFragment(mTermsFragment);
-        mNavigator.addFragment(mDetailFragment);
-        mNavigator.addFragment(mMapFragment);
-
-        // Search: initialization
-
-        // Get the intent, like a search, then verify the action and get the query
-        handleIntent(getIntent());
-
-        if (!mSearchQuery.toString().equals("")
-            && mSavedSearchFragment == FragmentType.MAP) {
-            Log.v("BeautyAndroid", "Show the map, as intent received from there");
-            mNavigator.showFragment(mMapFragment);
-            mShownFragmentType = FragmentType.MAP;
-        } else {
-            Log.v("BeautyAndroid", "Show the list, as no intent or one from another fragment than the map");
-            mNavigator.showFragment(mAppFragment);
-            mShownFragmentType = FragmentType.APP;
-        }
 
         // Background: initialization
         var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
             , 0);
         runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        setIntent(intent);
-        handleIntent(intent);
     }
 
     @Override
@@ -198,7 +133,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -211,7 +145,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     public void navigateBack() {
-
         if (mPrevFragmentType == FragmentType.NONE) {
             Log.w("BeautyAndroid", "Cannot navigate back, as the previous fragment type is unknown");
             return;
@@ -228,21 +161,15 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         Fragment fragment;
 
         switch (type) {
-            case APP:
+            case TAB_VIEW:
             default:
-                fragment = mAppFragment;
+                fragment = mTabViewFragment;
                 break;
             case HELP:
                 fragment = mHelpFragment;
                 break;
             case TERMS:
                 fragment = mTermsFragment;
-                break;
-            case DETAIL:
-                fragment = mDetailFragment;
-                break;
-            case MAP:
-                fragment = mMapFragment;
                 break;
         }
 
@@ -251,33 +178,16 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     private void onNavigation() {
         switch (mShownFragmentType) {
-            case APP:
+            case TAB_VIEW:
                 switch (mPrevFragmentType) {
-                    case DETAIL:
-                        CollectionPagerAdapter.setPage(0);
-                        break;
                     case HELP:
                     case TERMS:
                         CollectionPagerAdapter.setPage(2);
                         break;
-                    case APP:
-                    case MAP:
+                    case TAB_VIEW:
                     default:
                         break;
                 }
-            case MAP:
-                switch (mPrevFragmentType) {
-                    case APP:
-                        mMapFragment.toggleDetailsView(false);
-                        break;
-                    case DETAIL:
-                    case HELP:
-                    case TERMS:
-                    case MAP:
-                    default:
-                        break;
-                }
-                break;
             default:
                 break;
         }
@@ -291,14 +201,9 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     public void showScore(int value) {
         Log.v("BeautyAndroid", "Show score: " + value);
 
-        TextView appScore = mAppFragment.getView().findViewById(R.id.score_text);
+        TextView appScore = mTabViewFragment.getView().findViewById(R.id.score_text);
         if (appScore != null) {
             appScore.setText(value + " pts");
-        }
-
-        TextView mapScore = mMapFragment.getView().findViewById(R.id.score_text);
-        if (mapScore != null) {
-            mapScore.setText(value + " pts");
         }
     }
 
@@ -311,23 +216,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             fragment.enableTabSwiping();
         } else {
             fragment.disableTabSwiping();
-        }
-    }
-
-    // Search: methods
-    private void handleIntent(Intent intent) {
-
-        String intentAction = intent.getAction();
-        if (Intent.ACTION_SEARCH.equals(intentAction)) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.v("BeautyAndroid", "Intent ACTION_SEARCH received by the main activity with the query: "
-                + query);
-            mSearchQuery.append(query);
-        } else if (Intent.ACTION_VIEW.equals(intentAction)) {
-            Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
-            mSearchQuery.append("usr");
-        } else {
-            Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
         }
     }
 

@@ -32,14 +32,8 @@ import com.beautyorder.androidclient.controller.tabview.search.FragmentSearch;
 import com.beautyorder.androidclient.controller.tabview.saved.FragmentSaved;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
-    public enum ResultPageType {
-        LIST,
-        MAP
-    }
-
     // current page of the app ViewPager
     private static int mCurrentPage = 0;
-    private static ResultPageType mResultPage = ResultPageType.LIST;
     private FragmentActivity mActivity;
 
     public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {

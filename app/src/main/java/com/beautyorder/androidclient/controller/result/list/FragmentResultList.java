@@ -27,7 +27,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.result.FragmentResult;
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter.ResultPageType;
+import com.beautyorder.androidclient.controller.result.ShowResultActivity;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
@@ -70,7 +70,7 @@ public class FragmentResultList extends FragmentResult {
                 Log.v("BeautyAndroid", "Results received from database at timestamp: "
                     + Helpers.getTimestamp());
 
-                var activity = (TabViewActivity) getActivity();
+                var activity = (ShowResultActivity) getActivity();
 
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
@@ -100,7 +100,7 @@ public class FragmentResultList extends FragmentResult {
                     final byte[] imageBytes = itemInfo.getImage();
 
                     activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes, showBrand));
-                    activity.navigate(TabViewActivity.FragmentType.DETAIL);
+                    activity.navigate(ShowResultActivity.FragmentType.DETAIL);
                 });
 
                 result.downloadImages(new TaskCompletionManager() {

@@ -18,7 +18,6 @@
 
 package com.beautyorder.androidclient.controller.tabview.search;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
@@ -62,45 +60,7 @@ public class FragmentSearch extends FragmentWithSearch {
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        setupSearchBox();
-
         updateUserScore();
-    }
-
-    protected void setupSearchBox() {
-        // Get the SearchView and set the searchable configuration
-        var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        var searchView = (SearchView) getView().findViewById(R.id.search_box);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                saveShownFragmentBeforeSearch();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int i) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int i) {
-                saveShownFragmentBeforeSearch();
-                return false;
-            }
-        });
-
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
 
     protected void displayScoreBox(String fragmentName, int layout_id) {

@@ -58,7 +58,7 @@
         </activity>
 
         <activity
-            android:name=".controller.tabview.TabViewActivity"
+            android:name="com.beautyorder.androidclient.controller.tabview.TabViewActivity"
             android:exported="true"
         >
 
@@ -68,7 +68,7 @@
         </activity>
 
         <activity
-            android:name=".controller.result.ShowResultActivity"
+            android:name="com.beautyorder.androidclient.controller.result.ShowResultActivity"
             android:exported="true"
         >
 
@@ -84,8 +84,8 @@
         </activity>
 
         <provider
-            android:name=".controller.tabview.search.SearchSuggestionProvider"
-            android:authorities=".controller.main.search.SearchSuggestionProvider"
+            android:name="com.beautyorder.androidclient.controller.SearchSuggestionProvider"
+            android:authorities="com.beautyorder.androidclient.controller.SearchSuggestionProvider"
         />
     </application>
 </manifest>

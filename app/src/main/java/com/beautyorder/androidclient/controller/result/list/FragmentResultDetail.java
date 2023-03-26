@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.result.ShowResultActivity;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentResultDetailBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
@@ -74,7 +75,7 @@ public class FragmentResultDetail extends Fragment {
 
     private void updateDetails() {
         // Description and image
-        final var activity = (TabViewActivity) getActivity();
+        final var activity = (ShowResultActivity) getActivity();
         final ResultItemInfo info = activity.getSelectedRecyclePoint();
 
         final byte[] imageBytes = info.getImage();

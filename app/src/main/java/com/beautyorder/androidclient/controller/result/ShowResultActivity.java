@@ -64,16 +64,11 @@ public class ShowResultActivity extends AppCompatActivity {
     // Search: properties
     private StringBuilder mSearchQuery = new StringBuilder("");
     private SearchResult mSearchResult;
-    private static FragmentType mSavedSearchFragment = FragmentType.NONE;
     private ResultItemInfo mSelectedRecyclePoint;
 
     // Search: getter-setter
     public String getSearchQuery() {
         return mSearchQuery.toString();
-    }
-
-    public void saveSearchFragment() {
-        mSavedSearchFragment = mShownFragmentType;
     }
 
     public ResultItemInfo getSelectedRecyclePoint() {
@@ -124,17 +119,6 @@ public class ShowResultActivity extends AppCompatActivity {
 
         // Get the intent, like a search, then verify the action and get the query
         handleIntent(getIntent());
-
-        if (!mSearchQuery.toString().equals("")
-            && mSavedSearchFragment == FragmentType.MAP) {
-            Log.v("BeautyAndroid", "Show the map, as intent received from there");
-            mNavigator.showFragment(mMapFragment);
-            mShownFragmentType = FragmentType.MAP;
-        } else {
-            Log.v("BeautyAndroid", "Show the list, as no intent or one from another fragment than the map");
-            mNavigator.showFragment(mListFragment);
-            mShownFragmentType = FragmentType.LIST;
-        }
     }
 
     @Override
