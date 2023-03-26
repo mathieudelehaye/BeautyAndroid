@@ -112,6 +112,7 @@ public class ShowResultActivity extends AppCompatActivity {
         mNavigator.addFragment(mListFragment);
         mNavigator.addFragment(mDetailFragment);
         mNavigator.addFragment(mMapFragment);
+        mNavigator.showFragment(mListFragment);
 
         // Search: initialization
 
@@ -151,7 +152,6 @@ public class ShowResultActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

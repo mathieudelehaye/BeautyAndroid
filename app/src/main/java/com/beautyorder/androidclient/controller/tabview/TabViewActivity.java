@@ -36,6 +36,8 @@ import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
+import com.beautyorder.androidclient.controller.tabview.menu.FragmentHelp;
+import com.beautyorder.androidclient.controller.tabview.menu.FragmentTerms;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

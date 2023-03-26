@@ -23,7 +23,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.beautyorder.androidclient.controller.tabview.FragmentTerms">
+    tools:context="com.beautyorder.androidclient.controller.tabview.menu.FragmentTerms">
 
     <TextView
         android:id="@+id/title_terms"

@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview;
+package com.beautyorder.androidclient.controller.tabview.menu;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +32,8 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
+import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 import com.beautyorder.androidclient.model.AppUser;
 

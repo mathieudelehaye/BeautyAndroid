@@ -32,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.result.ShowResultActivity;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentResultDetailBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 
@@ -57,7 +56,7 @@ public class FragmentResultDetail extends Fragment {
         // Back button
         mBinding.backResultDetail.setOnClickListener(view1 -> {
             // Go back to the previous fragment
-            var activity = (TabViewActivity)getActivity();
+            var activity = (ShowResultActivity)getActivity();
             activity.navigateBack();
         });
     }

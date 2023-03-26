@@ -1,5 +1,5 @@
 //
-//  FragmentTerms.java
+//  FragmentHelp.java
 //
 //  Created by Mathieu Delehaye on 19/01/2023.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview;
+package com.beautyorder.androidclient.controller.tabview.menu;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -26,28 +26,29 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.databinding.FragmentTermsBinding;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.databinding.FragmentHelpBinding;
 
-public class FragmentTerms extends Fragment {
+public class FragmentHelp extends Fragment {
 
-    private FragmentTermsBinding mBinding;
+    private FragmentHelpBinding mBinding;
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
+        LayoutInflater inflater, ViewGroup container,
+        Bundle savedInstanceState
     ) {
-        mBinding = FragmentTermsBinding.inflate(inflater, container, false);
+        mBinding = FragmentHelpBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        Log.v("BeautyAndroid", "Terms view created at timestamp: "
+        Log.v("BeautyAndroid", "Help view created at timestamp: "
             + Helpers.getTimestamp());
 
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.backTerms.setOnClickListener(new View.OnClickListener() {
+        mBinding.backHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Go back to the app Menu

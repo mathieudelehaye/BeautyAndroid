@@ -28,7 +28,6 @@ import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.result.FragmentResult;
 import com.beautyorder.androidclient.controller.result.ShowResultActivity;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
@@ -134,11 +133,6 @@ public class FragmentResultList extends FragmentResult {
             Log.d("BeautyAndroid", "Result list view becomes visible");
 
             changeSearchSwitch(ResultPageType.MAP);
-
-            var activity = (TabViewActivity)getActivity();
-            if ((activity) != null) {
-                activity.toggleTabSwiping(true);
-            }
 
             //updateSearchResults();
 

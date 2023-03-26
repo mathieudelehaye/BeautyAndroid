@@ -27,9 +27,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.tabview.camera.FragmentCamera;
+import com.beautyorder.androidclient.controller.tabview.menu.FragmentMenu;
 import com.beautyorder.androidclient.controller.tabview.search.FragmentSearch;
 import com.beautyorder.androidclient.controller.tabview.saved.FragmentSaved;
+import com.beautyorder.androidclient.controller.tabview.camera.FragmentCamera;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     // current page of the app ViewPager
