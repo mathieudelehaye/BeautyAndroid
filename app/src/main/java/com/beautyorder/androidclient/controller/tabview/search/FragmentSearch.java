@@ -29,13 +29,13 @@ import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
+import com.beautyorder.androidclient.databinding.FragmentSearchBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class FragmentSearch extends FragmentWithSearch {
-    private FragmentHomeBinding mBinding;
+    private FragmentSearchBinding mBinding;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected Context mCtx;
@@ -45,7 +45,7 @@ public class FragmentSearch extends FragmentWithSearch {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        mBinding = FragmentHomeBinding.inflate(inflater, container, false);
+        mBinding = FragmentSearchBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 

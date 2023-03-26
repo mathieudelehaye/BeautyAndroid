@@ -58,17 +58,22 @@
         </activity>
 
         <activity
-            android:name="com.beautyorder.androidclient.controller.tabview.TabViewActivity"
+            android:name=".controller.tabview.TabViewActivity"
             android:exported="true"
         >
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- enable the search dialog to send searches to ShowResultActivity -->
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".controller.result.ShowResultActivity"
+            />
         </activity>
 
         <activity
-            android:name="com.beautyorder.androidclient.controller.result.ShowResultActivity"
+            android:name=".controller.result.ShowResultActivity"
             android:exported="true"
         >
 
@@ -77,6 +82,11 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
 
+            <!-- enable the search dialog to send searches to ShowResultActivity -->
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".controller.result.ShowResultActivity"
+            />
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"
@@ -84,8 +94,8 @@
         </activity>
 
         <provider
-            android:name="com.beautyorder.androidclient.controller.SearchSuggestionProvider"
-            android:authorities="com.beautyorder.androidclient.controller.SearchSuggestionProvider"
+            android:name="com.beautyorder.androidclient.controller.result.SearchSuggestionProvider"
+            android:authorities="com.beautyorder.androidclient.controller.result.SearchSuggestionProvider"
         />
     </application>
 </manifest>

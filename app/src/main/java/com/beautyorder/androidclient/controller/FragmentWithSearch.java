@@ -78,8 +78,8 @@ public abstract class FragmentWithSearch extends Fragment {
             }
         });
 
-        // Enable assisted search for the SearchView, by passing the SearchableInfo object that represents
-        // the searchable configuration.
+        // Enable assisted search for the SearchView, by passing the SearchableInfo object
+        // that represents the searchable configuration.
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
