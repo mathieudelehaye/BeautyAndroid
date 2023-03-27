@@ -35,6 +35,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
+import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentTerms;
@@ -56,6 +57,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         TAB_VIEW,
         HELP,
         TERMS,
+        LIST,
         NONE
     }
 
@@ -64,6 +66,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
     private FragmentTabView mTabViewFragment = new FragmentTabView();
+    private FragmentResultList mResultListFragment;
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
     private FragmentType mShownFragmentType = FragmentType.NONE;
@@ -135,6 +138,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void showResult(FragmentResultList fragment) {
+        mResultListFragment = fragment;
+        mNavigator.addFragment(mResultListFragment);
+        mNavigator.showFragment(mResultListFragment);
+
+        // TODO: add the related map fragment.
     }
 
     // Fragments: methods

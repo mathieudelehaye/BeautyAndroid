@@ -18,7 +18,6 @@
 
 package com.beautyorder.androidclient.controller.result;
 
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -56,6 +55,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
         MAP
     }
 
+    private static String sResultQuery;
     protected GeoPoint mUserLocation;
     protected GeoPoint mSearchStart;
     protected MyLocationNewOverlay mLocationOverlay;
@@ -63,12 +63,11 @@ public abstract class FragmentResult extends FragmentWithSearch {
     protected final double mSearchRadiusInCoordinate = 0.045;
     protected abstract void searchAndDisplayItems();
     private Geocoder mGeocoder;
-    private StringBuilder mSearchQuery = new StringBuilder("");
     private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
 
-    public String getSearchQuery() {
-        return mSearchQuery.toString();
+    public static void setResultQuery(String query) {
+        sResultQuery = query;
     }
 
     public ResultItemInfo getSelectedRecyclePoint() {
@@ -147,7 +146,8 @@ public abstract class FragmentResult extends FragmentWithSearch {
             return;
         }
         searchBackButton.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), TabViewActivity.class));
+            Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigate",
+                TabViewActivity.FragmentType.TAB_VIEW, null, null);
         });
     }
 
@@ -155,7 +155,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
 
         // If there is no search start yet, find it and get the items to display
         if (mSearchStart == null && getContext() != null) {
-            String searchQuery = ((ShowResultActivity)getContext()).getSearchQuery();
+            final String searchQuery = sResultQuery;
 
             boolean userLocationReadFromCache = readCachedUserLocation();
 

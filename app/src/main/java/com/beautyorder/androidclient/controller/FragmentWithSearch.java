@@ -22,11 +22,15 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {
@@ -57,7 +61,18 @@ public abstract class FragmentWithSearch extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return false;
+                Log.v("BeautyAndroid", "Query text submitted: " + s);
+
+                // Store the search query as a class static property
+                FragmentResultList.setResultQuery(s);
+
+                Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "showResult",
+                    new FragmentResultList(), null, null);
+
+                // Return true in order to override the standard behavior and not to
+                // send the `android.intent.action.SEARCH` intent to any searchable
+                // activity.
+                return true;
             }
 
             @Override

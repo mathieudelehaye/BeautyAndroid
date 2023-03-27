@@ -21,6 +21,8 @@ package com.beautyorder.androidclient;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -73,5 +75,51 @@ public class Helpers {
         }
 
         return (d1.getDate() - d2.getDate());
+    }
+
+    // TODO: improve implementation, e.g. by using varargs or array for the called method arguments.
+    public static <T, T1, T2, T3> Object callObjectMethod(Object obj, Class<T> objType, String methodName,
+        T1 arg1, T2 arg2, T3 arg3) {
+
+        if (obj == null) {
+            Log.e("BeautyAndroid", "Cannot call method, as object null");
+            return null;
+        }
+
+        var typedObject = objType.cast(obj);
+        if (typedObject == null) {
+            Log.e("BeautyAndroid", "Cannot call method, as object not of the expected type");
+            return null;
+        }
+
+        try {
+            Method method = (arg1 == null) ? typedObject.getClass().getMethod(methodName):
+                (arg2 == null) ? typedObject.getClass().getMethod(methodName, arg1.getClass()):
+                    (arg3 == null) ? typedObject.getClass().getMethod(methodName, arg1.getClass(), arg2.getClass()):
+                        typedObject.getClass().getMethod(methodName, arg1.getClass(), arg2.getClass(),
+                            arg3.getClass());
+
+            Object ret = (arg1 == null) ? method.invoke(obj):
+                (arg2 == null) ? method.invoke(obj, arg1):
+                    (arg3 == null) ? method.invoke(obj, arg1, arg2):
+                        method.invoke(obj, arg1, arg2, arg3);
+
+            return ret;
+        } catch (SecurityException e) {
+            Log.e("BeautyAndroid", "Security exception: " + e);
+            return null;
+        } catch (NoSuchMethodException e) {
+            Log.e("BeautyAndroid", "No method exception: " + e);
+            return null;
+        } catch (IllegalArgumentException e) {
+            Log.e("BeautyAndroid", "Illegal argument method exception: " + e);
+            return null;
+        } catch (IllegalAccessException e) {
+            Log.e("BeautyAndroid", "Illegal access exception: " + e);
+            return null;
+        } catch (InvocationTargetException e) {
+            Log.e("BeautyAndroid", "Invocation target exception: " + e);
+            return null;
+        }
     }
 }
