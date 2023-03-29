@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.result.map;
+package com.beautyorder.androidclient.controller.tabview.result.map;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -29,8 +29,9 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import com.beautyorder.androidclient.controller.result.FragmentResult;
-import com.beautyorder.androidclient.controller.result.ShowResultActivity;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
+import com.beautyorder.androidclient.controller.tabview.result.OverlayItemWithImage;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -239,7 +240,7 @@ public class FragmentMap extends FragmentResult {
                             Log.i("BeautyAndroid", "Single tap");
                             mMapController.animateTo(item.getPoint());
 
-                            var activity = (ShowResultActivity) getActivity();
+                            var activity = (TabViewActivity) getActivity();
                             if (activity == null) {
                                 Log.w("BeautyAndroid", "Cannot show the result item, as no activity "
                                     + "available");
@@ -273,7 +274,7 @@ public class FragmentMap extends FragmentResult {
 
                 mMapController.animateTo(mSearchStart);
 
-                var activity = (ShowResultActivity)getActivity();
+                var activity = (TabViewActivity)getActivity();
                 if (activity == null) {
                     Log.w("BeautyAndroid", "Cannot set the search result from the map as no activity");
                     return;
@@ -357,10 +358,10 @@ public class FragmentMap extends FragmentResult {
         resultDescription.setText(itemTitle + "\n\n" + itemDescription);
 
         mBinding.detailMapLayout.setOnClickListener(view1 -> {
-            var activity = (ShowResultActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
 
             activity.setSelectedRecyclePoint(itemInfo);
-            activity.navigate(ShowResultActivity.FragmentType.DETAIL);
+            activity.navigate(TabViewActivity.FragmentType.DETAIL);
         });
 
         toggleDetailsView(true);

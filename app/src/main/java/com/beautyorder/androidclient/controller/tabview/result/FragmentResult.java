@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.result;
+package com.beautyorder.androidclient.controller.tabview.result;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -31,7 +31,6 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
-import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ResultItemInfo;
@@ -169,7 +168,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
                 Log.v("BeautyAndroid", "Searching around the user location from the cache");
                 setSearchStart(mUserLocation);
             } else {
-                var activity = (ShowResultActivity)getActivity();
+                var activity = (TabViewActivity)getActivity();
                 if(activity != null) {
                     activity.showDialog("Please wait until the app has found your position",
                         "No search until user position is found");
@@ -333,13 +332,13 @@ public abstract class FragmentResult extends FragmentWithSearch {
 
         viewSwitch.setOnClickListener(view -> {
 
-            var activity = (ShowResultActivity)getActivity();
+            var activity = (TabViewActivity)getActivity();
 
             Log.d("BeautyAndroid", "Switch button pressed, navigate to: " + destination);
 
-            final ShowResultActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
-                ShowResultActivity.FragmentType.LIST:
-                ShowResultActivity.FragmentType.MAP;
+            final TabViewActivity.FragmentType destinationType = (destination == ResultPageType.LIST) ?
+                TabViewActivity.FragmentType.LIST:
+                TabViewActivity.FragmentType.MAP;
 
             activity.navigate(destinationType);
         });

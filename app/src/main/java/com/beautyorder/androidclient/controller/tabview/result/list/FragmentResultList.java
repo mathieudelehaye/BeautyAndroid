@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.result.list;
+package com.beautyorder.androidclient.controller.tabview.result.list;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -26,10 +26,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.result.FragmentResult;
+import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.result.map.OverlayItemWithImage;
+import com.beautyorder.androidclient.controller.tabview.result.OverlayItemWithImage;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;

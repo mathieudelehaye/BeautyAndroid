@@ -29,7 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -91,6 +91,10 @@ public abstract class FragmentWithSearch extends Fragment {
             public boolean onSuggestionClick(int i) {
                 return false;
             }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            // TODO: show a Suggestion segment when the focus is on the search box.
         });
 
         // Enable assisted search for the SearchView, by passing the SearchableInfo object

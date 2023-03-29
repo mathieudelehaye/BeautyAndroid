@@ -35,7 +35,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.Navigator;
-import com.beautyorder.androidclient.controller.result.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.result.FragmentResultDetail;
+import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.result.map.FragmentMap;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentTerms;
@@ -58,6 +60,8 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         HELP,
         TERMS,
         LIST,
+        MAP,
+        DETAIL,
         NONE
     }
 
@@ -66,11 +70,18 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
     private FragmentTabView mTabViewFragment = new FragmentTabView();
-    private FragmentResultList mResultListFragment;
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
+    private FragmentResultList mResultListFragment;
+    private FragmentMap mMapFragment;
+    private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
     private FragmentType mShownFragmentType = FragmentType.NONE;
     private FragmentType mPrevFragmentType = FragmentType.NONE;
+
+    // Search: properties
+    private StringBuilder mSearchQuery = new StringBuilder("");
+    private SearchResult mSearchResult;
+    private ResultItemInfo mSelectedRecyclePoint;
 
     // Background: properties
     // TODO: do not use a static property here
@@ -78,6 +89,27 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private Set<String> mPhotoQueue;
     final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
     private final int mTimeBeforePollingScoreInMin = 1;
+
+    // Search: getter-setter
+    public String getSearchQuery() {
+        return mSearchQuery.toString();
+    }
+
+    public ResultItemInfo getSelectedRecyclePoint() {
+        return mSelectedRecyclePoint;
+    }
+
+    public void setSelectedRecyclePoint(ResultItemInfo value) {
+        mSelectedRecyclePoint = value;
+    }
+
+    public SearchResult getSearchResult() {
+        return mSearchResult;
+    }
+
+    public void setSearchResult(SearchResult result) {
+        mSearchResult = result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +137,22 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.addFragment(mTabViewFragment);
         mNavigator.addFragment(mHelpFragment);
         mNavigator.addFragment(mTermsFragment);
+        mNavigator.addFragment(mDetailFragment);
         mNavigator.showFragment(mTabViewFragment);
+
+        // TODO: uncomment and update logic to process the query
+//        String intentAction = intent.getAction();
+//        if (Intent.ACTION_SEARCH.equals(intentAction)) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            Log.v("BeautyAndroid", "Intent ACTION_SEARCH received by the main activity with the query: "
+//                    + query);
+//            mSearchQuery.append(query);
+//        } else if (Intent.ACTION_VIEW.equals(intentAction)) {
+//            Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
+//            mSearchQuery.append("usr");
+//        } else {
+//            Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
+//        }
 
         // Background: initialization
         var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
@@ -140,12 +187,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void showResult(FragmentResultList fragment) {
-        mResultListFragment = fragment;
+    public void showResult(FragmentResultList list) {
+        mResultListFragment = list;
         mNavigator.addFragment(mResultListFragment);
         mNavigator.showFragment(mResultListFragment);
 
-        // TODO: add the related map fragment.
+        // TODO: add map fragment
+        /*mNavigator.addFragment(mMapFragment);
+        mNavigator.addFragment(mMapFragment);*/
     }
 
     // Fragments: methods
@@ -183,6 +232,15 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             case TERMS:
                 fragment = mTermsFragment;
                 break;
+            case LIST:
+                fragment = mResultListFragment;
+                break;
+            case MAP:
+                fragment = mMapFragment;
+                break;
+            case DETAIL:
+                fragment = mDetailFragment;
+                break;
         }
 
         return fragment;
@@ -196,7 +254,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                     case TERMS:
                         CollectionPagerAdapter.setPage(2);
                         break;
-                    case TAB_VIEW:
                     default:
                         break;
                 }

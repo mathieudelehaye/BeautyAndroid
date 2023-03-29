@@ -63,28 +63,14 @@
         >
 
             <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <!-- enable the search dialog to send searches to ShowResultActivity -->
+            <!-- enable the search dialog to send searches to TabViewActivity -->
             <meta-data android:name="android.app.default_searchable"
-                android:value=".controller.result.ShowResultActivity"
-            />
-        </activity>
-
-        <activity
-            android:name=".controller.result.ShowResultActivity"
-            android:exported="true"
-        >
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-
-            <!-- enable the search dialog to send searches to ShowResultActivity -->
-            <meta-data android:name="android.app.default_searchable"
-                android:value=".controller.result.ShowResultActivity"
+                android:value=".controller.result.TabViewActivity"
             />
 
             <meta-data
@@ -94,8 +80,8 @@
         </activity>
 
         <provider
-            android:name="com.beautyorder.androidclient.controller.result.SearchSuggestionProvider"
-            android:authorities="com.beautyorder.androidclient.controller.result.SearchSuggestionProvider"
+            android:name="com.beautyorder.androidclient.controller.tabview.SearchSuggestionProvider"
+            android:authorities="com.beautyorder.androidclient.controller.tabview.SearchSuggestionProvider"
         />
     </application>
 </manifest>

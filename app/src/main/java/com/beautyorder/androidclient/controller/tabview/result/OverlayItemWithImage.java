@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.result.map;
+package com.beautyorder.androidclient.controller.tabview.result;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
