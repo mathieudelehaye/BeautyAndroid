@@ -39,6 +39,16 @@
         </activity>-->
 
         <activity
+            android:name=".controller.splash.LaunchActivity"
+            android:exported="true"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".controller.auth.AuthenticateActivity"
             android:enabled="true"
         />
