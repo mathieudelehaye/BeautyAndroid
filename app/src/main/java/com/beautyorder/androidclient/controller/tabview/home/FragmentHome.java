@@ -1,5 +1,5 @@
 //
-//  FragmentSearch.java
+//  FragmentHome.java
 //
 //  Created by Mathieu Delehaye on 25/03/2023.
 //
@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview.search;
+package com.beautyorder.androidclient.controller.tabview.home;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,13 +29,13 @@ import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.databinding.FragmentSearchBinding;
+import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 import com.beautyorder.androidclient.model.AppUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-public class FragmentSearch extends FragmentWithSearch {
-    private FragmentSearchBinding mBinding;
+public class FragmentHome extends FragmentWithSearch {
+    private FragmentHomeBinding mBinding;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected Context mCtx;
@@ -45,7 +45,7 @@ public class FragmentSearch extends FragmentWithSearch {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        mBinding = FragmentSearchBinding.inflate(inflater, container, false);
+        mBinding = FragmentHomeBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 

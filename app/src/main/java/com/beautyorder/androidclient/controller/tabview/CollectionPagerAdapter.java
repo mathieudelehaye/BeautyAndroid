@@ -28,7 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentMenu;
-import com.beautyorder.androidclient.controller.tabview.search.FragmentSearch;
+import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
 import com.beautyorder.androidclient.controller.tabview.saved.FragmentSaved;
 import com.beautyorder.androidclient.controller.tabview.camera.FragmentCamera;
 
@@ -56,7 +56,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (i) {
             case 0:
-                fragment = new FragmentSearch();
+                fragment = new FragmentHome();
                 break;
             case 1:
                 fragment = new FragmentSaved();

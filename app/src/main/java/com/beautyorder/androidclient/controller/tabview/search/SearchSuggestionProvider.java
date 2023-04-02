@@ -24,6 +24,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -37,12 +38,20 @@ public class SearchSuggestionProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
+//        Log.v("BeautyAndroid", "SearchSuggestionProvider.query: "
+//            + "uri = " + uri.toString()
+//            + ", projection = " + projection.toString()
+//            + ", selection = " + selection
+//            + ", selectionArgs = " + selectionArgs.toString()
+//            + ", sortOrder = " + sortOrder
+//        );
+
         String[] columns = {"_ID", SearchManager.SUGGEST_COLUMN_TEXT_1};
-        var matrixCursor = new MatrixCursor(columns);
+        var cursor = new MatrixCursor(columns);
 
-        matrixCursor.addRow(new Object[] {1, "Around current location"});
+        cursor.addRow(new Object[] {1, "Around current location"});
 
-        return matrixCursor;
+        return cursor;
     }
 
     @Nullable

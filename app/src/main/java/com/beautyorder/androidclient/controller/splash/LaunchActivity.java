@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import androidx.core.splashscreen.SplashScreen;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.onboard.OnboardActivity;
 
@@ -34,12 +33,12 @@ public class LaunchActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        //SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
         super.onCreate(savedInstanceState);
 
         // Keep the splash screen visible for this Activity
-        splashScreen.setKeepOnScreenCondition(() -> true);
+        //splashScreen.setKeepOnScreenCondition(() -> true);
 
         // Read the app preferences
         mSharedPref = getSharedPreferences(
