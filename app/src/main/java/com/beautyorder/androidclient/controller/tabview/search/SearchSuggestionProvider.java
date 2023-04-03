@@ -16,7 +16,7 @@
 //
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview;
+package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.app.SearchManager;
 import android.content.ContentProvider;
@@ -38,18 +38,14 @@ public class SearchSuggestionProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
-//        Log.v("BeautyAndroid", "SearchSuggestionProvider.query: "
-//            + "uri = " + uri.toString()
-//            + ", projection = " + projection.toString()
-//            + ", selection = " + selection
-//            + ", selectionArgs = " + selectionArgs.toString()
-//            + ", sortOrder = " + sortOrder
-//        );
+        final String userInput = selectionArgs[0];
+        Log.v("BeautyAndroid", "Received the query: " + userInput);
 
         String[] columns = {"_ID", SearchManager.SUGGEST_COLUMN_TEXT_1};
         var cursor = new MatrixCursor(columns);
 
-        cursor.addRow(new Object[] {1, "Around current location"});
+        cursor.addRow(new Object[] {0, "Around current location"});
+        cursor.addRow(new Object[] {1, userInput});
 
         return cursor;
     }

@@ -8,17 +8,22 @@
 //  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not,
+//  see <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller;
 
+import android.app.Activity;
 import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,6 +36,7 @@ import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.search.SuggestionsAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {
@@ -54,9 +60,26 @@ public abstract class FragmentWithSearch extends Fragment {
     }
 
     protected void setupSearchBox() {
+        final Activity activity = getActivity();
+        if (activity == null || mCtx == null) {
+            Log.e("BeautyAndroid", "Cannot set up the search box, as no activity or no context");
+            return;
+        }
+
         // Get the SearchView and set the searchable configuration
         var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         var searchView = (SearchView) getView().findViewById(R.id.search_box);
+        SearchableInfo configuration = searchManager.getSearchableInfo(activity.getComponentName());
+        final String queryHint = getString(configuration.getHintId());
+        searchView.setQueryHint(queryHint);
+
+        // Overwrite the suggestion adapter, so the drop-down menu is replaced by a dedicated screen
+        var suggestionsAdapter = new SuggestionsAdapter(mCtx, searchView, configuration);
+        suggestionsAdapter.setDropDownViewTheme(null);  // Prevent the drop-down view from showing
+        searchView.setSuggestionsAdapter(suggestionsAdapter);
+
+        // Do not iconify the widget; expand it by default
+        searchView.setIconifiedByDefault(false);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -66,7 +89,7 @@ public abstract class FragmentWithSearch extends Fragment {
                 // Store the search query as a class static property
                 FragmentResultList.setResultQuery(s);
 
-                Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "showResult",
+                Helpers.callObjectMethod(activity, TabViewActivity.class, "showResult",
                     new FragmentResultList(), null, null);
 
                 // Return true in order to override the standard behavior and not to
@@ -96,10 +119,5 @@ public abstract class FragmentWithSearch extends Fragment {
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             // TODO: show a Suggestion segment when the focus is on the search box.
         });
-
-        // Enable assisted search for the SearchView, by passing the SearchableInfo object
-        // that represents the searchable configuration.
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
     }
 }

@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
     />
 
-    <android.widget.SearchView
+    <com.beautyorder.androidclient.controller.tabview.search.SearchViewWithSuggestions
         android:id="@+id/search_box"
         android:imeOptions="actionSearch"
         android:inputType="text"

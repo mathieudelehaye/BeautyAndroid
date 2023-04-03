@@ -1,5 +1,5 @@
 //
-//  SearchViewWithSuggestionPage.java
+//  SearchViewWithSuggestions.java
 //
 //  Created by Mathieu Delehaye on 30/03/2023.
 //
@@ -25,26 +25,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.SearchView;
 
-public class SearchViewWithSuggestionPage extends SearchView {
+public class SearchViewWithSuggestions extends SearchView {
 
-    public SearchViewWithSuggestionPage(Context context) {
+    public SearchViewWithSuggestions(Context context) {
         super(context);
     }
 
-    public SearchViewWithSuggestionPage(Context context, AttributeSet attrs) {
+    public SearchViewWithSuggestions(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SearchViewWithSuggestionPage(Context context, AttributeSet attrs, int defStyle) {
+    public SearchViewWithSuggestions(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
-//    @Override
-//    private void updateSearchAutoComplete() {
-//    }
-
-//    @Override
-//    public void setOnSuggestionListener(OnSuggestionListener listener) {
-////        mOnSuggestionListener = listener;
-//    }
 }
