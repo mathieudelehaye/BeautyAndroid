@@ -157,5 +157,11 @@ public abstract class FragmentWithSearch extends Fragment {
             Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigateBack",
                 null, null, null);
         });
+
+        // On the Suggestions page, use the suggestions adapter as base adapter for the suggestion list
+        if (this instanceof FragmentSuggestion) {
+            var suggestionsFragment = (FragmentSuggestion) this;
+            suggestionsFragment.setListAdapter(suggestionsAdapter);
+        }
     }
 }

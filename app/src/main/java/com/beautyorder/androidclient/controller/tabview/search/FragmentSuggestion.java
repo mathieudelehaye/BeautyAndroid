@@ -26,8 +26,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.Helpers;
+import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentSuggestionBinding;
 
 public class FragmentSuggestion extends FragmentWithSearch {
@@ -40,6 +43,15 @@ public class FragmentSuggestion extends FragmentWithSearch {
     ) {
         mBinding = FragmentSuggestionBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
+    }
+
+    public void setListAdapter(BaseAdapter adapter) {
+        final var suggestionsList = (ListView) getView().findViewById(R.id.suggestion_list);
+        if(suggestionsList == null) {
+            Log.e("BeautyAndroid", "Cannot set the adapter, as no suggestions list view");
+        }
+
+        suggestionsList.setAdapter(adapter);
     }
 
     @Override

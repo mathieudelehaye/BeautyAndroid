@@ -32,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.SearchView;
+import android.widget.TextView;
+import com.beautyorder.androidclient.R;
 
 
 public class SuggestionsAdapter extends CursorAdapter {
@@ -143,5 +145,30 @@ public class SuggestionsAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+    }
+
+    @Override
+    public int getCount() {
+        return 2;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return new String("The text has changed " + position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = View.inflate(mContext, R.layout.suggestion_list_item,null);
+        TextView textView = view.findViewById(R.id.suggestion_list_item_text);
+
+        textView.setText("The text has changed " + position);
+
+        return view;
     }
 }
