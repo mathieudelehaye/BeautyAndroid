@@ -89,8 +89,8 @@ public class SuggestionsAdapter extends CursorAdapter {
         return null;
     }
 
-    // From android/app/SearchManager.java. Though public, it cannot be called straightforward, as this is not
-    // a part of the SDK (@UnsupportedAppUsage).
+    // From android/app/SearchManager.java. Though public, it cannot be called, as this is not a
+    // part of the SDK (@UnsupportedAppUsage).
     public Cursor getSuggestions(SearchableInfo searchable, String query, int limit) {
         if (searchable == null) {
             return null;

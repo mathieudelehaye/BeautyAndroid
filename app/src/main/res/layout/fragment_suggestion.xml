@@ -28,10 +28,10 @@
     android:layout_width="match_parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
-    tools:context="com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList"
+    tools:context="com.beautyorder.androidclient.controller.tabview.search.FragmentSuggestion"
 >
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/result_list_search"
+        android:id="@+id/suggestion_search"
         android:layout_width="match_parent"
         android:layout_height="52.5dp"
         android:layout_marginTop="25dp"
@@ -47,36 +47,21 @@
         android:layout_width="match_parent"
         android:layout_marginTop="56dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/result_list_search"
+        app:layout_constraintTop_toBottomOf="@id/suggestion_search"
     >
 
         <View
-            android:id="@+id/result_list_view_background"
+            android:id="@+id/suggestion_list_background"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:background="@color/white"
         />
 
         <ListView
-            android:id="@+id/result_list_view"
+            android:id="@+id/suggestion_list"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
         />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/score_layout_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-    >
-
-        <include layout="@layout/fragment_score"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

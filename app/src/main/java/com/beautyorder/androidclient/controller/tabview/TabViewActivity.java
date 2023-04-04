@@ -34,7 +34,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.Navigator;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.FragmentMap;
