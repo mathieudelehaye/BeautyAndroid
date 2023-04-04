@@ -19,7 +19,7 @@
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not,
 //  see <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview;
+package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -34,8 +34,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
-import com.beautyorder.androidclient.controller.tabview.search.SuggestionsAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {

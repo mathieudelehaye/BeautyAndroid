@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.tabview.FragmentWithSearch;
+import com.beautyorder.androidclient.controller.tabview.search.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 import com.beautyorder.androidclient.model.AppUser;

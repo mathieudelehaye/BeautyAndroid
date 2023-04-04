@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.tabview.FragmentWithSearch;
+import com.beautyorder.androidclient.controller.tabview.search.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.model.RecyclePointInfo;
 import com.beautyorder.androidclient.model.ResultItemInfo;
