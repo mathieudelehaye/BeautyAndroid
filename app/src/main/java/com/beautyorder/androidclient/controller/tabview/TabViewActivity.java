@@ -28,8 +28,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -78,7 +80,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
-    private FragmentType mShownFragmentType = FragmentType.NONE;
+    private FragmentType mShownFragmentType = FragmentType.TAB_VIEW;    // We show the Tabview page by default
     private FragmentType mPrevFragmentType = FragmentType.NONE;
 
     // Search: properties
@@ -202,8 +204,18 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.addFragment(mMapFragment);*/
     }
 
+    public void toggleToolbar(Boolean visible) {
+        Log.v("BeautyAndroid", "Tab view toolbar visibility toggled to " + visible);
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+        mainToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     // Fragments: methods
     public void navigate(FragmentType dest) {
+        if (dest == mShownFragmentType) {
+            return;
+        }
+
         Log.v("BeautyAndroid", "Navigating to the fragment of type " + dest);
         mPrevFragmentType = mShownFragmentType;
         mShownFragmentType = dest;

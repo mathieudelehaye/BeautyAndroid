@@ -27,11 +27,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.databinding.FragmentSuggestionBinding;
 
-public class FragmentSuggestion extends Fragment {
+public class FragmentSuggestion extends FragmentWithSearch {
     private FragmentSuggestionBinding mBinding;
 
     @Override
@@ -41,6 +40,10 @@ public class FragmentSuggestion extends Fragment {
     ) {
         mBinding = FragmentSuggestionBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
+    }
+
+    @Override
+    protected void searchAndDisplayItems() {
     }
 
     @Override

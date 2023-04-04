@@ -82,13 +82,14 @@ public class Helpers {
         T1 arg1, T2 arg2, T3 arg3) {
 
         if (obj == null) {
-            Log.e("BeautyAndroid", "Cannot call method, as object null");
+            Log.e("BeautyAndroid", "Cannot call method " + methodName + ", as object null");
             return null;
         }
 
         var typedObject = objType.cast(obj);
         if (typedObject == null) {
-            Log.e("BeautyAndroid", "Cannot call method, as object not of the expected type");
+            Log.e("BeautyAndroid", "Cannot call method " + methodName
+                + ",  as object not of the expected type " + objType);
             return null;
         }
 
@@ -106,19 +107,19 @@ public class Helpers {
 
             return ret;
         } catch (SecurityException e) {
-            Log.e("BeautyAndroid", "Security exception: " + e);
+            Log.e("BeautyAndroid", "Security exception: " + e.getCause());
             return null;
         } catch (NoSuchMethodException e) {
-            Log.e("BeautyAndroid", "No method exception: " + e);
+            Log.e("BeautyAndroid", "No method exception: " + e.getCause());
             return null;
         } catch (IllegalArgumentException e) {
-            Log.e("BeautyAndroid", "Illegal argument method exception: " + e);
+            Log.e("BeautyAndroid", "Illegal argument method exception: " + e.getCause());
             return null;
         } catch (IllegalAccessException e) {
-            Log.e("BeautyAndroid", "Illegal access exception: " + e);
+            Log.e("BeautyAndroid", "Illegal access exception: " + e.getCause());
             return null;
         } catch (InvocationTargetException e) {
-            Log.e("BeautyAndroid", "Invocation target exception: " + e);
+            Log.e("BeautyAndroid", "Invocation target exception: " + e.getCause());
             return null;
         }
     }

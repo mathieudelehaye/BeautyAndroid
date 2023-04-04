@@ -29,12 +29,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -55,10 +58,10 @@ public abstract class FragmentWithSearch extends Fragment {
         mSharedPref = mCtx.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        setupSearchBox();
+        setupSearchBox(view);
     }
 
-    protected void setupSearchBox() {
+    private void setupSearchBox(@NonNull View view) {
         final Activity activity = getActivity();
         if (activity == null || mCtx == null) {
             Log.e("BeautyAndroid", "Cannot set up the search box, as no activity or no context");
@@ -88,8 +91,9 @@ public abstract class FragmentWithSearch extends Fragment {
                 // Store the search query as a class static property
                 FragmentResultList.setResultQuery(s);
 
+                // Show the suggestion view
                 Helpers.callObjectMethod(activity, TabViewActivity.class, "showResult",
-                    new FragmentResultList(), null, null);
+                    new FragmentSuggestion(), null, null);
 
                 // Return true in order to override the standard behavior and not to
                 // send the `android.intent.action.SEARCH` intent to any searchable
@@ -116,8 +120,42 @@ public abstract class FragmentWithSearch extends Fragment {
         });
 
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigate",
+            if (!hasFocus) {
+                return;
+            }
+            Log.v("BeautyAndroid", "View " + v + " has focus");
+
+            // Hide the toolbar
+            Helpers.callObjectMethod(activity, TabViewActivity.class, "toggleToolbar",
+                false, null, null);
+
+            Helpers.callObjectMethod(activity, TabViewActivity.class, "navigate",
                 TabViewActivity.FragmentType.SUGGESTION, null, null);
+        });
+
+        if (this instanceof FragmentHome) {
+            // No search Back button on the Home page
+            return;
+        }
+
+        // Show the Back button from the search box
+        ViewGroup searchBackLayout = view.findViewById(R.id.search_box_back_layout);
+        if (searchBackLayout == null) {
+            Log.e("BeautyAndroid", "No view found when showing the search back button");
+            return;
+        }
+        searchBackLayout.setVisibility(View.VISIBLE);
+
+        // Implement the back button behaviour
+        Button searchBackButton = view.findViewById(R.id.search_box_back);
+        if (searchBackButton == null) {
+            Log.e("BeautyAndroid", "No view found when implementing the behaviour for the search "
+                + "back button");
+            return;
+        }
+        searchBackButton.setOnClickListener(v -> {
+            Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigateBack",
+                null, null, null);
         });
     }
 }
