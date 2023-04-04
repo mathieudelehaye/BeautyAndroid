@@ -116,7 +116,8 @@ public abstract class FragmentWithSearch extends Fragment {
         });
 
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            // TODO: show a Suggestion segment when the focus is on the search box.
+            Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigate",
+                TabViewActivity.FragmentType.SUGGESTION, null, null);
         });
     }
 }

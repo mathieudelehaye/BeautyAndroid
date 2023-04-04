@@ -40,6 +40,7 @@ import com.beautyorder.androidclient.controller.tabview.result.map.FragmentMap;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentTerms;
+import com.beautyorder.androidclient.controller.tabview.search.FragmentSuggestion;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,24 +57,27 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
    // Fragments: types
     public enum FragmentType {
         TAB_VIEW,
-        HELP,
-        TERMS,
+        SUGGESTION,
         LIST,
         MAP,
         DETAIL,
+        HELP,
+        TERMS,
         NONE
     }
 
     private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;
+
     // Fragments: properties
     private Navigator mNavigator = new Navigator(this);
     private FragmentTabView mTabViewFragment = new FragmentTabView();
-    private FragmentHelp mHelpFragment = new FragmentHelp();
-    private FragmentTerms mTermsFragment = new FragmentTerms();
+    private FragmentSuggestion mSuggestionFragment = new FragmentSuggestion();
     private FragmentResultList mResultListFragment;
     private FragmentMap mMapFragment;
     private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
+    private FragmentHelp mHelpFragment = new FragmentHelp();
+    private FragmentTerms mTermsFragment = new FragmentTerms();
     private FragmentType mShownFragmentType = FragmentType.NONE;
     private FragmentType mPrevFragmentType = FragmentType.NONE;
 
@@ -134,9 +138,11 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         // Fragments: initialization
         // Add to the navigator the fragments and select the first one to show
         mNavigator.addFragment(mTabViewFragment);
+        mNavigator.addFragment(mSuggestionFragment);
+        mNavigator.addFragment(mDetailFragment);
         mNavigator.addFragment(mHelpFragment);
         mNavigator.addFragment(mTermsFragment);
-        mNavigator.addFragment(mDetailFragment);
+
         mNavigator.showFragment(mTabViewFragment);
 
         // TODO: uncomment and update logic to process the query
@@ -198,6 +204,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     // Fragments: methods
     public void navigate(FragmentType dest) {
+        Log.v("BeautyAndroid", "Navigating to the fragment of type " + dest);
         mPrevFragmentType = mShownFragmentType;
         mShownFragmentType = dest;
         onNavigation();
@@ -225,11 +232,8 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             default:
                 fragment = mTabViewFragment;
                 break;
-            case HELP:
-                fragment = mHelpFragment;
-                break;
-            case TERMS:
-                fragment = mTermsFragment;
+            case SUGGESTION:
+                fragment = mSuggestionFragment;
                 break;
             case LIST:
                 fragment = mResultListFragment;
@@ -239,6 +243,12 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                 break;
             case DETAIL:
                 fragment = mDetailFragment;
+                break;
+            case HELP:
+                fragment = mHelpFragment;
+                break;
+            case TERMS:
+                fragment = mTermsFragment;
                 break;
         }
 
