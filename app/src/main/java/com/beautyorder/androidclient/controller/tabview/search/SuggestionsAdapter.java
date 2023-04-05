@@ -43,6 +43,7 @@ public class SuggestionsAdapter extends CursorAdapter {
     private final SearchManager mSearchManager;
     private final SearchView mSearchView;
     private final SearchableInfo mSearchable;
+    private Cursor mLastFoundSuggestions;
 
     public SuggestionsAdapter(Context context, SearchView searchView, SearchableInfo searchable) {
         super(context, null /* no initial cursor */, true /* auto-requery */);
@@ -79,6 +80,7 @@ public class SuggestionsAdapter extends CursorAdapter {
             // trigger fill window so the spinner stays up until the results are copied over and
             // closer to being ready
             if (cursor != null) {
+                mLastFoundSuggestions = cursor;
                 cursor.getCount();
                 return cursor;
             }
@@ -149,25 +151,49 @@ public class SuggestionsAdapter extends CursorAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        if (mLastFoundSuggestions == null) {
+            return 0;
+        }
+
+        final int count = mLastFoundSuggestions.getCount();
+
+        return count;
     }
 
     @Override
     public Object getItem(int position) {
-        return new String("The text has changed " + position);
+        if (mLastFoundSuggestions == null) {
+            return null;
+        }
+
+        mLastFoundSuggestions.moveToPosition(position);
+        return mLastFoundSuggestions;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        if (mLastFoundSuggestions == null) {
+            return -1;
+        }
+
+        mLastFoundSuggestions.moveToPosition(position);
+        final String id = mLastFoundSuggestions.getString(0);
+
+        return Long.parseLong(id);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if (mLastFoundSuggestions == null) {
+            return null;
+        }
+
+        mLastFoundSuggestions.moveToPosition(position);
+        final String value = mLastFoundSuggestions.getString(1);
+
         View view = View.inflate(mContext, R.layout.suggestion_list_item,null);
         TextView textView = view.findViewById(R.id.suggestion_list_item_text);
-
-        textView.setText("The text has changed " + position);
+        textView.setText(value);
 
         return view;
     }
