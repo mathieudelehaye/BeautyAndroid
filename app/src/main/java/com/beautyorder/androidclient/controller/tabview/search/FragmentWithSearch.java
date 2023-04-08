@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
@@ -68,8 +67,10 @@ public abstract class FragmentWithSearch extends Fragment {
 
         // Get the SearchView and set the searchable configuration
         final var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        final var searchView = (EditText) getView().findViewById(R.id.search_box_query);
+        final var searchView = (SearchViewWithSuggestions) getView().findViewById(R.id.search_box_query);
         final var configuration = searchManager.getSearchableInfo(activity.getComponentName());
+        var suggestionsAdapter = new SuggestionsAdapter(mCtx, searchView, configuration);
+        searchView.setAdapter(suggestionsAdapter);
         final var queryHint = getString(configuration.getHintId());
         searchView.setHint(queryHint);
 

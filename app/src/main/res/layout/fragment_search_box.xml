@@ -110,7 +110,7 @@
         app:layout_constraintEnd_toStartOf="@id/search_view_switch"
         app:layout_constraintTop_toTopOf="parent"
     >
-        <EditText
+        <com.beautyorder.androidclient.controller.tabview.search.SearchViewWithSuggestions
             android:id="@+id/search_box_query"
             android:imeOptions="actionSearch"
             android:inputType="text"
