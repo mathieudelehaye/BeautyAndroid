@@ -31,7 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.SearchView;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.beautyorder.androidclient.R;
 
@@ -41,11 +41,11 @@ public class SuggestionsAdapter extends CursorAdapter {
     private static final int QUERY_LIMIT = 50;
     private Context mContext;
     private final SearchManager mSearchManager;
-    private final SearchView mSearchView;
+    private final EditText mSearchView;
     private final SearchableInfo mSearchable;
     private Cursor mLastFoundSuggestions;
 
-    public SuggestionsAdapter(Context context, SearchView searchView, SearchableInfo searchable) {
+    public SuggestionsAdapter(Context context, EditText searchView, SearchableInfo searchable) {
         super(context, null /* no initial cursor */, true /* auto-requery */);
 
         mContext = context;
@@ -142,7 +142,7 @@ public class SuggestionsAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return new View(context);
+        return null;
     }
 
     @Override

@@ -23,22 +23,20 @@ package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.SearchView;
+import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
-import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {
@@ -69,61 +67,23 @@ public abstract class FragmentWithSearch extends Fragment {
         }
 
         // Get the SearchView and set the searchable configuration
-        var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        var searchView = (SearchView) getView().findViewById(R.id.search_box);
-        SearchableInfo configuration = searchManager.getSearchableInfo(activity.getComponentName());
-        final String queryHint = getString(configuration.getHintId());
-        searchView.setQueryHint(queryHint);
+        final var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        final var searchView = (EditText) getView().findViewById(R.id.search_box_query);
+        final var configuration = searchManager.getSearchableInfo(activity.getComponentName());
+        final var queryHint = getString(configuration.getHintId());
+        searchView.setHint(queryHint);
 
-        // Overwrite the suggestion adapter, so the drop-down menu is replaced by a dedicated screen
-        var suggestionsAdapter = new SuggestionsAdapter(mCtx, searchView, configuration);
-        suggestionsAdapter.setDropDownViewTheme(null);  // Prevent the drop-down view from showing
-        searchView.setSuggestionsAdapter(suggestionsAdapter);
+        final boolean isSuggestionFragment = this instanceof FragmentSuggestion;
 
-        // Do not iconify the widget; expand it by default
-        searchView.setIconifiedByDefault(false);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Log.v("BeautyAndroid", "Query text submitted: " + s);
-
-                // Store the search query as a class static property
-                FragmentResultList.setResultQuery(s);
-
-                // Show the suggestion view
-                Helpers.callObjectMethod(activity, TabViewActivity.class, "showResult",
-                    new FragmentSuggestion(), null, null);
-
-                // Return true in order to override the standard behavior and not to
-                // send the `android.intent.action.SEARCH` intent to any searchable
-                // activity.
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int i) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int i) {
-                return false;
-            }
-        });
-
-        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+        searchView.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 return;
             }
             Log.v("BeautyAndroid", "View " + v + " has focus");
+
+            if (isSuggestionFragment) {
+                return;
+            }
 
             // Hide the toolbar
             Helpers.callObjectMethod(activity, TabViewActivity.class, "toggleToolbar",
@@ -133,15 +93,16 @@ public abstract class FragmentWithSearch extends Fragment {
                 TabViewActivity.FragmentType.SUGGESTION, null, null);
         });
 
-        if (this instanceof FragmentHome) {
-            // No search Back button on the Home page
+        if (!isSuggestionFragment) {
             return;
         }
+
+        // Only Suggestion Fragment
 
         // Show the Back button from the search box
         ViewGroup searchBackLayout = view.findViewById(R.id.search_box_back_layout);
         if (searchBackLayout == null) {
-            Log.e("BeautyAndroid", "No view found when showing the search back button");
+            Log.e("BeautyAndroid", "No view found when showing the search Back button");
             return;
         }
         searchBackLayout.setVisibility(View.VISIBLE);
@@ -150,18 +111,20 @@ public abstract class FragmentWithSearch extends Fragment {
         Button searchBackButton = view.findViewById(R.id.search_box_back);
         if (searchBackButton == null) {
             Log.e("BeautyAndroid", "No view found when implementing the behaviour for the search "
-                + "back button");
+                + "Back button");
             return;
         }
         searchBackButton.setOnClickListener(v -> {
+            // Show the toolbar
+            Helpers.callObjectMethod(activity, TabViewActivity.class, "toggleToolbar",
+                true, null, null);
+
+            // Hide the keyboard
+            final var inputManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
             Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigateBack",
                 null, null, null);
         });
-
-        // On the Suggestions page, use the suggestions adapter as base adapter for the suggestion list
-        if (this instanceof FragmentSuggestion) {
-            var suggestionsFragment = (FragmentSuggestion) this;
-            suggestionsFragment.setListAdapter(suggestionsAdapter);
-        }
     }
 }

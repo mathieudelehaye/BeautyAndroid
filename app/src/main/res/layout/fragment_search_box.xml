@@ -9,12 +9,15 @@
     Copyright © 2023 Mathieu Delehaye. All rights reserved.
 
 
-    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+    Public License as published by
     the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS
     FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-    You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+    <https://www.gnu.org/licenses/>.
 -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,23 +49,15 @@
     />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_box_back_layout"
+        android:id="@+id/search_box_magnifier_or_back__layout"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
     >
-        <View
-            android:id="@+id/search_box_back_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-        />
-
         <View
             android:id="@+id/search_box_magnifier_icon"
             android:layout_width="25dp"
@@ -70,36 +65,53 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/magnify"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
         />
 
-        <Button
-            android:id="@+id/search_box_back"
-            android:drawableLeft="@drawable/arrow_left"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/search_box_back_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="10dp"
-            app:cornerRadius="200dp"
+            android:layout_marginTop="3dp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            style="?android:attr/borderlessButtonStyle"
-        />
+        >
+            <View
+                android:id="@+id/search_box_back_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+            />
+
+            <Button
+                android:id="@+id/search_box_back"
+                android:drawableLeft="@drawable/arrow_left"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="10dp"
+                app:cornerRadius="200dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                style="?android:attr/borderlessButtonStyle"
+            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_box_layout"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintStart_toEndOf="@id/search_box_back_layout"
+        app:layout_constraintStart_toEndOf="@id/search_box_magnifier_or_back__layout"
         app:layout_constraintEnd_toStartOf="@id/search_view_switch"
         app:layout_constraintTop_toTopOf="parent"
     >
         <EditText
-            android:id="@+id/search_box"
+            android:id="@+id/search_box_query"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:hint="Search"
@@ -124,8 +136,8 @@
             android:id="@+id/search_box_clear_text"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="12dp"
             android:layout_gravity="right|center_vertical"
             android:contentDescription=""
             android:background="@drawable/backspace_outline"

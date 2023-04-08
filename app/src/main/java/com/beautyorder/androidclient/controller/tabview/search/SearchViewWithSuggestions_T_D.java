@@ -23,9 +23,9 @@ package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.SearchView;
+import androidx.appcompat.widget.AppCompatEditText;
 
-public class SearchViewWithSuggestions extends SearchView {
+public class SearchViewWithSuggestions extends AppCompatEditText {
 
     public SearchViewWithSuggestions(Context context) {
         super(context);
