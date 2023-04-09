@@ -21,11 +21,13 @@
 
 package com.beautyorder.androidclient.controller.tabview.search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
@@ -35,6 +37,8 @@ import com.beautyorder.androidclient.databinding.FragmentSuggestionBinding;
 
 public class FragmentSuggestion extends FragmentWithSearch {
     private FragmentSuggestionBinding mBinding;
+    private Context mContext;
+    private View mContainerView;
 
     @Override
     public View onCreateView(
@@ -43,6 +47,17 @@ public class FragmentSuggestion extends FragmentWithSearch {
     ) {
         mBinding = FragmentSuggestionBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v("BeautyAndroid", "Suggestion view created at timestamp: "
+                + Helpers.getTimestamp());
+
+        super.onViewCreated(view, savedInstanceState);
+
+        mContext = getContext();
+        mContainerView = view;
     }
 
     public void setListAdapter(BaseAdapter adapter) {
@@ -55,14 +70,36 @@ public class FragmentSuggestion extends FragmentWithSearch {
     }
 
     @Override
-    protected void searchAndDisplayItems() {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "Suggestions page becomes visible");
+
+            if (mContext == null) {
+                Log.w("BeautyAndroid", "Cannot prepare the edit text view, as no context");
+                return;
+            }
+
+            // When the view is displayed, the keyboard is visible. So, give the focus to the edit text view
+            final var searchView = (SearchViewWithSuggestions) mContainerView.findViewById(R.id.search_box_query);
+            if (searchView == null) {
+                return;
+            }
+
+            Log.v("BeautyAndroid", "Focus requested on the edit text view");
+            searchView.requestFocus();
+
+            // Show the keyboard
+            final var inputManager = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+
+            // Clear the edit text
+            searchView.getText().clear();
+        }
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        Log.v("BeautyAndroid", "Suggestion view created at timestamp: "
-            + Helpers.getTimestamp());
-
-        super.onViewCreated(view, savedInstanceState);
+    protected void searchAndDisplayItems() {
     }
 }
