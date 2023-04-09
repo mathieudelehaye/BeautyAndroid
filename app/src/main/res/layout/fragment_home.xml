@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    fragment_search.xml
+    fragment_home.xml
 
     Created by Mathieu Delehaye on 25/03/2023.
 
@@ -9,12 +9,15 @@
     Copyright © 2023 Mathieu Delehaye. All rights reserved.
 
 
-    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+    Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+    even the implied warranty of MERCHANTABILITY or FITNESS
     FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-    You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License along with this program.
+    If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
     >
-        <include layout="@layout/fragment_search_box"/>
+        <include layout="@layout/search_box"/>
         
     </androidx.constraintlayout.widget.ConstraintLayout>
 

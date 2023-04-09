@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.Helpers;
@@ -82,7 +83,7 @@ public class FragmentSuggestion extends FragmentWithSearch {
             }
 
             // When the view is displayed, the keyboard is visible. So, give the focus to the edit text view
-            final var searchView = (SearchViewWithSuggestions) mContainerView.findViewById(R.id.search_box_query);
+            final var searchView = (EditText) mContainerView.findViewById(R.id.search_view_query);
             if (searchView == null) {
                 return;
             }

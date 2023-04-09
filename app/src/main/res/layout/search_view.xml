@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    fragment_search_box.xml
+    search_view.xml
 
-    Created by Mathieu Delehaye on 25/01/2023.
+    Created by Mathieu Delehaye on 9/04/2023.
 
     BeautyAndroid: An Android app to order and recycle cosmetics.
 
@@ -24,32 +24,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="52.5dp"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:orientation="vertical"
 >
 
-    <View
-        android:id="@+id/search_box_border"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-    />
-
-    <View
-        android:id="@+id/search_box_background"
-        android:layout_width="410dp"
-        android:layout_height="51.5dp"
-        android:background="@color/white"
-        android:layout_marginStart="0.5dp"
-        android:layout_marginTop="0.5dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-    />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_box_magnifier_or_back__layout"
+        android:id="@+id/search_view_magnifier_or_back_layout"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="10dp"
@@ -59,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
     >
         <View
-            android:id="@+id/search_box_magnifier_icon"
+            android:id="@+id/search_view_magnifier_icon"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="10dp"
@@ -71,7 +51,7 @@
         />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/search_box_back_layout"
+            android:id="@+id/search_view_back_button_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="3dp"
@@ -80,7 +60,7 @@
             app:layout_constraintTop_toTopOf="parent"
         >
             <View
-                android:id="@+id/search_box_back_background"
+                android:id="@+id/search_view_back_button_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
@@ -89,7 +69,7 @@
             />
 
             <Button
-                android:id="@+id/search_box_back"
+                android:id="@+id/search_view_back_button"
                 android:drawableLeft="@drawable/arrow_left"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -103,15 +83,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_box_layout"
+        android:id="@+id/search_view_query_layout"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        app:layout_constraintStart_toEndOf="@id/search_box_magnifier_or_back__layout"
-        app:layout_constraintEnd_toStartOf="@id/search_view_switch"
+        app:layout_constraintStart_toEndOf="@id/search_view_magnifier_or_back_layout"
         app:layout_constraintTop_toTopOf="parent"
     >
-        <com.beautyorder.androidclient.controller.tabview.search.SearchViewWithSuggestions
-            android:id="@+id/search_box_query"
+        <EditText
+            android:id="@+id/search_view_query"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:hint="Search"
@@ -133,7 +112,7 @@
         />
 
         <ImageButton
-            android:id="@+id/search_box_clear_text"
+            android:id="@+id/search_view_clear_button"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginRight="15dp"
@@ -146,18 +125,4 @@
             app:layout_constraintTop_toTopOf="parent"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/search_view_switch"
-        android:backgroundTint="@color/white"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="3dp"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:iconSize="24dp"
-        app:iconTint="@color/Blue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-    />
 </androidx.constraintlayout.widget.ConstraintLayout>

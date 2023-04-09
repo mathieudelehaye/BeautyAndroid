@@ -22,7 +22,6 @@
 package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
@@ -65,18 +65,17 @@ public abstract class FragmentWithSearch extends Fragment {
             return;
         }
 
-        // Get the SearchView and set the searchable configuration
-        final var searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        final var searchView = (SearchViewWithSuggestions) getView().findViewById(R.id.search_box_query);
-        final var configuration = searchManager.getSearchableInfo(activity.getComponentName());
-        var suggestionsAdapter = new SuggestionsAdapter(mCtx, searchView, configuration);
-        searchView.setAdapter(suggestionsAdapter);
-        final var queryHint = getString(configuration.getHintId());
-        searchView.setHint(queryHint);
+        final SearchView searchView = view.findViewById(R.id.search_box_search_view);
 
         final boolean isSuggestionFragment = this instanceof FragmentSuggestion;
 
-        searchView.setOnFocusChangeListener((v, hasFocus) -> {
+        final var query = (EditText)searchView.findViewById(R.id.search_view_query);
+        if (query == null) {
+            Log.e("BeautyAndroid", "Error with fragment with search, as no query edit text");
+            return;
+        }
+
+        query.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 return;
             }
@@ -85,6 +84,8 @@ public abstract class FragmentWithSearch extends Fragment {
             if (isSuggestionFragment) {
                 return;
             }
+
+            // Only if Suggestions fragment not displayed
 
             // Hide the toolbar
             Helpers.callObjectMethod(activity, TabViewActivity.class, "toggleToolbar",
@@ -98,10 +99,10 @@ public abstract class FragmentWithSearch extends Fragment {
             return;
         }
 
-        // Only Suggestion Fragment
+        // Only if Suggestions fragment displayed
 
         // Show the Back button from the search box
-        ViewGroup searchBackLayout = view.findViewById(R.id.search_box_back_layout);
+        ViewGroup searchBackLayout = searchView.findViewById(R.id.search_view_back_button_layout);
         if (searchBackLayout == null) {
             Log.e("BeautyAndroid", "No view found when showing the search Back button");
             return;
@@ -109,7 +110,7 @@ public abstract class FragmentWithSearch extends Fragment {
         searchBackLayout.setVisibility(View.VISIBLE);
 
         // Implement the back button behaviour
-        Button searchBackButton = view.findViewById(R.id.search_box_back);
+        Button searchBackButton = searchView.findViewById(R.id.search_view_back_button);
         if (searchBackButton == null) {
             Log.e("BeautyAndroid", "No view found when implementing the behaviour for the search "
                 + "Back button");
@@ -122,9 +123,9 @@ public abstract class FragmentWithSearch extends Fragment {
 
             // Hide the keyboard
             final var inputManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            inputManager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
-            Helpers.callObjectMethod(getActivity(), TabViewActivity.class, "navigateBack",
+            Helpers.callObjectMethod(activity, TabViewActivity.class, "navigateBack",
                 null, null, null);
         });
     }
