@@ -53,12 +53,16 @@ public class FragmentSuggestion extends FragmentWithSearch {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v("BeautyAndroid", "Suggestion view created at timestamp: "
-                + Helpers.getTimestamp());
+            + Helpers.getTimestamp());
 
         super.onViewCreated(view, savedInstanceState);
 
         mContext = getContext();
         mContainerView = view;
+
+        final var suggestionsAdapter = new SuggestionsAdapter(mContext, mSearchView, mConfiguration);
+        mSearchView.setAdapter(suggestionsAdapter);
+        setListAdapter(suggestionsAdapter);
     }
 
     public void setListAdapter(BaseAdapter adapter) {

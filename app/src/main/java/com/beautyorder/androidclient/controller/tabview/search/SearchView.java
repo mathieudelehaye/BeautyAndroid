@@ -22,7 +22,7 @@
 package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.app.Activity;
-import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.text.Editable;
@@ -45,6 +45,7 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
     private TabViewActivity.FragmentType mShownFragment = TabViewActivity.FragmentType.NONE;
     private EditText mQuery;
     private DataSetObserver mObserver;
+    private SearchableInfo mConfiguration;
     private CursorAdapter mAdapter;
     private Filter mFilter;
 
@@ -66,6 +67,12 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
         mContainerView = inflater.inflate(R.layout.search_view, this, true);
 
         init();
+    }
+
+    public void setSearchableInfo(SearchableInfo config) {
+        mConfiguration = config;
+        final var queryHint = mActivity.getString(mConfiguration.getHintId());
+        mQuery.setHint(queryHint);
     }
 
     public <T extends ListAdapter & Filterable> void setAdapter(T adapter) {
@@ -169,14 +176,6 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
             public void afterTextChanged(Editable s) {
             }
         });
-
-        // Set the searchable configuration
-        final var searchManager = (SearchManager) mActivity.getSystemService(Context.SEARCH_SERVICE);
-        final var configuration = searchManager.getSearchableInfo(mActivity.getComponentName());
-        final var suggestionsAdapter = new SuggestionsAdapter(mContext, this, configuration);
-        setAdapter(suggestionsAdapter);
-        final var queryHint = mActivity.getString(configuration.getHintId());
-        mQuery.setHint(queryHint);
     }
 
     private void performFiltering() {

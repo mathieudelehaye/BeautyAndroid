@@ -22,6 +22,8 @@
 package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -40,6 +42,8 @@ public abstract class FragmentWithSearch extends Fragment {
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
     protected Context mCtx;
+    protected SearchableInfo mConfiguration;
+    protected SearchView mSearchView;
     protected abstract void searchAndDisplayItems();
 
     @Override
@@ -63,11 +67,11 @@ public abstract class FragmentWithSearch extends Fragment {
             return;
         }
 
-        final SearchView searchView = view.findViewById(R.id.search_box_search_view);
+        mSearchView = view.findViewById(R.id.search_box_search_view);
 
         final boolean isSuggestionFragment = this instanceof FragmentSuggestion;
 
-        final var query = (EditText)searchView.findViewById(R.id.search_view_query);
+        final var query = (EditText)mSearchView.findViewById(R.id.search_view_query);
         if (query == null) {
             Log.e("BeautyAndroid", "Error with fragment with search, as no query edit text");
             return;
@@ -93,6 +97,11 @@ public abstract class FragmentWithSearch extends Fragment {
                 TabViewActivity.FragmentType.SUGGESTION, null, null);
         });
 
+        // Set the searchable configuration
+        final var searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
+        mConfiguration = searchManager.getSearchableInfo(activity.getComponentName());
+        mSearchView.setSearchableInfo(mConfiguration);
+
         if (!isSuggestionFragment) {
             return;
         }
@@ -100,7 +109,7 @@ public abstract class FragmentWithSearch extends Fragment {
         // Only if Suggestions fragment displayed
 
         // Show the Back button from the search box
-        ViewGroup searchBackLayout = searchView.findViewById(R.id.search_view_back_button_layout);
+        ViewGroup searchBackLayout = mSearchView.findViewById(R.id.search_view_back_button_layout);
         if (searchBackLayout == null) {
             Log.e("BeautyAndroid", "No view found when showing the search Back button");
             return;
