@@ -7,13 +7,16 @@
 //  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 
 package com.beautyorder.androidclient.controller.tabview.search;
@@ -28,8 +31,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.R;
 
@@ -107,12 +112,42 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
             return;
         }
 
-        mQuery = mContainerView.findViewById(R.id.search_view_query);
-        if (mQuery == null) {
-            Log.e("BeautyAndroid", "Error with search view layout, as no query edit text");
+        // Set up the Back button
+        final var back = (Button)mContainerView.findViewById(R.id.search_view_back_button);
+        if (back == null) {
+            Log.e("BeautyAndroid", "Error with search view layout, as no Back button");
             return;
         }
+        back.setOnClickListener(v -> {
+            // Show the toolbar
+            Helpers.callObjectMethod(mActivity, TabViewActivity.class, "toggleToolbar",
+                true, null, null);
 
+            // Hide the keyboard
+            final var inputManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(mContainerView.getWindowToken(), 0);
+
+            Helpers.callObjectMethod(mActivity, TabViewActivity.class, "navigateBack",
+                null, null, null);
+        });
+
+        // Set up the Clear button
+        final var clear = (ImageButton)mContainerView.findViewById(R.id.search_view_clear_button);
+        if (clear == null) {
+            Log.e("BeautyAndroid", "Error with search view layout, as no Clear button");
+            return;
+        }
+        clear.setVisibility(GONE);
+        clear.setOnClickListener(v -> {
+            mQuery.getText().clear();
+        });
+
+        // Set up the Query edit text
+        mQuery = mContainerView.findViewById(R.id.search_view_query);
+        if (mQuery == null) {
+            Log.e("BeautyAndroid", "Error with search view layout, as no Query edit text");
+            return;
+        }
         mQuery.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -122,7 +157,9 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (mQuery.getText().toString().equals("")) {
                     // If the query is empty, hide the Clear button
+                    clear.setVisibility(GONE);
                 } else {
+                    clear.setVisibility(VISIBLE);
                 }
 
                 performFiltering();

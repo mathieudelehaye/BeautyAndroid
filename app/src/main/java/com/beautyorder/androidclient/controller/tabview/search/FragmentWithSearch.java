@@ -28,8 +28,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -108,25 +106,5 @@ public abstract class FragmentWithSearch extends Fragment {
             return;
         }
         searchBackLayout.setVisibility(View.VISIBLE);
-
-        // Implement the back button behaviour
-        Button searchBackButton = searchView.findViewById(R.id.search_view_back_button);
-        if (searchBackButton == null) {
-            Log.e("BeautyAndroid", "No view found when implementing the behaviour for the search "
-                + "Back button");
-            return;
-        }
-        searchBackButton.setOnClickListener(v -> {
-            // Show the toolbar
-            Helpers.callObjectMethod(activity, TabViewActivity.class, "toggleToolbar",
-                true, null, null);
-
-            // Hide the keyboard
-            final var inputManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-
-            Helpers.callObjectMethod(activity, TabViewActivity.class, "navigateBack",
-                null, null, null);
-        });
     }
 }
