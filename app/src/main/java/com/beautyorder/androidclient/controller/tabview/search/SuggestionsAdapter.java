@@ -45,56 +45,53 @@ public class SuggestionsAdapter extends CursorAdapter {
     private final SearchableInfo mSearchable;
     private Cursor mLastFoundSuggestions;
 
-    public SuggestionsAdapter(Context context, EditText searchView, SearchableInfo searchable) {
+    public SuggestionsAdapter(Context context, SearchView search, SearchableInfo searchable) {
         super(context, null /* no initial cursor */, true /* auto-requery */);
 
         mContext = context;
         mSearchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = searchView;
         mSearchable = searchable;
+
+        mSearchView = search.findViewById(R.id.search_view_query);
+        if (mSearchView == null) {
+            Log.e("BeautyAndroid", "Error with suggestions adapter, as no Query edit text");
+        }
     }
 
     /**
      * Use the search suggestions provider to obtain a live cursor.  This will be called
      * in a worker thread, so it's OK if the query is slow (e.g. round trip for suggestions).
      * The results will be processed in the UI thread and changeCursor() will be called.
+     * changeCursor() doesn't get called if cursor is null.
      */
     @Override
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
         Log.d("BeautyAndroid", "runQueryOnBackgroundThread(" + constraint + ")");
 
         final String query = (constraint == null) ? "" : constraint.toString();
-        /**
-         * for in app search we show the progress spinner until the cursor is returned with
-         * the results.
-         */
-        Cursor cursor;
+
         if (mSearchView.getVisibility() != View.VISIBLE
             || mSearchView.getWindowVisibility() != View.VISIBLE) {
 
             return null;
         }
-        //mSearchView.getWindow().getDecorView().post(mStartSpinnerRunnable); // TODO:
+
         try {
-            cursor = getSuggestions(mSearchable, query, QUERY_LIMIT);
-            // trigger fill window so the spinner stays up until the results are copied over and
-            // closer to being ready
+            final Cursor cursor = getSuggestions(mSearchable, query, QUERY_LIMIT);
             if (cursor != null) {
                 mLastFoundSuggestions = cursor;
                 cursor.getCount();
                 return cursor;
             }
         } catch (RuntimeException e) {
-            Log.w("BeautyAndroid", "Search suggestions query threw an exception.", e);
+            Log.w("BeautyAndroid", "Search suggestions query threw an exception: ", e);
         }
-        // If cursor is null or an exception was thrown, stop the spinner and return null.
-        // changeCursor doesn't get called if cursor is null
-        // mSearchView.getWindow().getDecorView().post(mStopSpinnerRunnable); // TODO:
+
         return null;
     }
 
-    // From android/app/SearchManager.java. Though public, it cannot be called, as this is not a
-    // part of the SDK (@UnsupportedAppUsage).
+    /* From android/app/SearchManager.java. Though public, it cannot be called, as this is not a
+       part of the SDK (@UnsupportedAppUsage). */
     public Cursor getSuggestions(SearchableInfo searchable, String query, int limit) {
         if (searchable == null) {
             return null;

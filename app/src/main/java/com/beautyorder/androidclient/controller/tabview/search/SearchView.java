@@ -173,8 +173,8 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
         // Set the searchable configuration
         final var searchManager = (SearchManager) mActivity.getSystemService(Context.SEARCH_SERVICE);
         final var configuration = searchManager.getSearchableInfo(mActivity.getComponentName());
-        //var suggestionsAdapter = new SuggestionsAdapter(mContext, queryView, configuration);
-        //mQuery.setAdapter(suggestionsAdapter);
+        final var suggestionsAdapter = new SuggestionsAdapter(mContext, this, configuration);
+        setAdapter(suggestionsAdapter);
         final var queryHint = mActivity.getString(configuration.getHintId());
         mQuery.setHint(queryHint);
     }
