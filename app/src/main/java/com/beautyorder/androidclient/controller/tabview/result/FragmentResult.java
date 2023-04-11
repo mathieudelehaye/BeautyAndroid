@@ -94,7 +94,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
         mGeocoder = new Geocoder(requireContext(), Locale.getDefault());
 
         //load/initialize the osmdroid configuration, this can be done
-        Configuration.getInstance().load(mCtx, PreferenceManager.getDefaultSharedPreferences(mCtx));
+        Configuration.getInstance().load(mContext, PreferenceManager.getDefaultSharedPreferences(mContext));
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
         //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
@@ -104,7 +104,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
 
         // Get the current user geolocation
         final boolean[] firstLocationReceived = {false};
-        var locationProvider = new GpsMyLocationProvider(mCtx);
+        var locationProvider = new GpsMyLocationProvider(mContext);
         locationProvider.startLocationProvider(new IMyLocationConsumer() {
             @Override
             public void onLocationChanged(Location location, IMyLocationProvider source) {
@@ -329,11 +329,11 @@ public abstract class FragmentResult extends FragmentWithSearch {
     }
 
     protected boolean mustShowBrand() {
-        if (mCtx == null) {
+        if (mContext == null) {
             Log.w("BeautyAndroid", "Cannot check if brand must be shown, as no context");
             return false;
         }
 
-        return !mCtx.getResources().getConfiguration().getLocales().get(0).getDisplayName().contains("Belgique");
+        return !mContext.getResources().getConfiguration().getLocales().get(0).getDisplayName().contains("Belgique");
     }
 }

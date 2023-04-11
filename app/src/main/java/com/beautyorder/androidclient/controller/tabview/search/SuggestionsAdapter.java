@@ -79,8 +79,8 @@ public class SuggestionsAdapter extends CursorAdapter {
         try {
             final Cursor cursor = getSuggestions(mSearchable, query, QUERY_LIMIT);
             if (cursor != null) {
+                // TODO: do not use a property here, but the method return value instead.
                 mLastFoundSuggestions = cursor;
-                cursor.getCount();
                 return cursor;
             }
         } catch (RuntimeException e) {

@@ -36,14 +36,16 @@ import androidx.fragment.app.Fragment;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
-    protected Context mCtx;
+    protected Context mContext;
     protected SearchableInfo mConfiguration;
     protected SearchView mSearchView;
+    protected EditText mSearchQuery;
     protected abstract void searchAndDisplayItems();
 
     @Override
@@ -52,17 +54,24 @@ public abstract class FragmentWithSearch extends Fragment {
 
         mDatabase = FirebaseFirestore.getInstance();
 
-        mCtx = view.getContext();
+        mContext = view.getContext();
 
-        mSharedPref = mCtx.getSharedPreferences(
+        mSharedPref = mContext.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
         setupSearchBox(view);
     }
 
+    protected void search(String query) {
+        FragmentResultList.setResultQuery(query);
+
+        Helpers.callObjectMethod(mContext, TabViewActivity.class, "showResult",
+            new FragmentResultList(), null, null);
+    }
+
     private void setupSearchBox(@NonNull View view) {
         final Activity activity = getActivity();
-        if (activity == null || mCtx == null) {
+        if (activity == null || mContext == null) {
             Log.e("BeautyAndroid", "Cannot set up the search box, as no activity or no context");
             return;
         }
@@ -71,13 +80,13 @@ public abstract class FragmentWithSearch extends Fragment {
 
         final boolean isSuggestionFragment = this instanceof FragmentSuggestion;
 
-        final var query = (EditText)mSearchView.findViewById(R.id.search_view_query);
-        if (query == null) {
+        mSearchQuery = mSearchView.findViewById(R.id.search_view_query);
+        if (mSearchQuery == null) {
             Log.e("BeautyAndroid", "Error with fragment with search, as no query edit text");
             return;
         }
 
-        query.setOnFocusChangeListener((v, hasFocus) -> {
+        mSearchQuery.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 return;
             }

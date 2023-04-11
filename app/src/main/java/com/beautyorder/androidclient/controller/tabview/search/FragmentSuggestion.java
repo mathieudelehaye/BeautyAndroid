@@ -22,6 +22,7 @@
 package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.Helpers;
@@ -68,10 +68,19 @@ public class FragmentSuggestion extends FragmentWithSearch {
     public void setListAdapter(BaseAdapter adapter) {
         final var suggestionsList = (ListView) getView().findViewById(R.id.suggestion_list);
         if(suggestionsList == null) {
-            Log.e("BeautyAndroid", "Cannot set the adapter, as no suggestions list view");
+            Log.e("BeautyAndroid", "Cannot set the Suggestions adapter, as no suggestions list view");
         }
 
         suggestionsList.setAdapter(adapter);
+
+        suggestionsList.setOnItemClickListener((adapterView, view, position, l) -> {
+            final String query = ((Cursor)adapter.getItem(position)).getString(1);
+            mSearchQuery.setText(query);
+            Log.v("BeautyAndroid", "Search query set from tapped suggestion to: " + query);
+
+            // Start the search
+            search(query);
+        });
     }
 
     @Override
@@ -87,20 +96,15 @@ public class FragmentSuggestion extends FragmentWithSearch {
             }
 
             // When the view is displayed, the keyboard is visible. So, give the focus to the edit text view
-            final var searchView = (EditText) mContainerView.findViewById(R.id.search_view_query);
-            if (searchView == null) {
-                return;
-            }
-
             Log.v("BeautyAndroid", "Focus requested on the edit text view");
-            searchView.requestFocus();
+            mSearchQuery.requestFocus();
 
             // Show the keyboard
             final var inputManager = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 
             // Clear the edit text
-            searchView.getText().clear();
+            mSearchQuery.getText().clear();
         }
     }
 
