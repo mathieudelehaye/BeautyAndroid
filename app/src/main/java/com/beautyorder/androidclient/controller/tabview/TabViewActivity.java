@@ -215,10 +215,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     // Fragments: methods
     public void navigate(FragmentType dest) {
-        if (dest == mShownFragmentType) {
-            return;
-        }
-
         Log.v("BeautyAndroid", "Navigating to the fragment of type " + dest);
         mPrevFragmentType = mShownFragmentType;
         mShownFragmentType = dest;
