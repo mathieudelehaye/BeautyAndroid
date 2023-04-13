@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.search.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
@@ -41,7 +42,7 @@ public class FragmentHome extends FragmentWithSearch {
     private FragmentHomeBinding mBinding;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
-    protected Context mCtx;
+    protected Context mContext;
 
     @Override
     public View onCreateView(
@@ -58,12 +59,24 @@ public class FragmentHome extends FragmentWithSearch {
 
         mDatabase = FirebaseFirestore.getInstance();
 
-        mCtx = view.getContext();
+        mContext = getContext();
 
-        mSharedPref = mCtx.getSharedPreferences(
+        mSharedPref = mContext.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
+        updateRecentSearches();
+
         updateUserScore();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "Home view becomes visible");
+
+           updateRecentSearches();
+        }
     }
 
     protected void displayScoreBox(String fragmentName, int layout_id) {
@@ -93,16 +106,35 @@ public class FragmentHome extends FragmentWithSearch {
     }
 
     protected boolean mustShowBrand() {
-        if (mCtx == null) {
+        if (mContext == null) {
             Log.w("BeautyAndroid", "Cannot check if brand must be shown, as no context");
             return false;
         }
 
-        return !mCtx.getResources().getConfiguration().getLocales().get(0).getDisplayName().contains("Belgique");
+        return !mContext.getResources().getConfiguration().getLocales().get(0).getDisplayName().contains("Belgique");
     }
 
     @Override
     protected void searchAndDisplayItems() {
+    }
+
+    private void updateRecentSearches() {
+        if (mContext == null) {
+            Log.w("BeautyAndroid", "Cannot update the recent searches, as no context");
+            return;
+        }
+
+        final var queries = (Integer)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+            "getQueryNumber", null, null, null);
+
+        if (queries == null) {
+            return;
+        }
+
+        for(int i = 0; i < queries; i++) {
+            final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+                "loadSearchQuery", i, null, null);
+        }
     }
 
     private void updateUserScore() {

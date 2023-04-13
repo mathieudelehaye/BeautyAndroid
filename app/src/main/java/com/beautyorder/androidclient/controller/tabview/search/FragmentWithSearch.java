@@ -80,6 +80,7 @@ public abstract class FragmentWithSearch extends Fragment {
         mSearchView = view.findViewById(R.id.search_box_search_view);
 
         final boolean isSuggestionFragment = this instanceof FragmentSuggestion;
+        final boolean isResultListFragment = this instanceof FragmentResultList;
 
         mSearchQuery = mSearchView.findViewById(R.id.search_view_query);
         if (mSearchQuery == null) {
@@ -98,10 +99,6 @@ public abstract class FragmentWithSearch extends Fragment {
             }
 
             // Only if Suggestions fragment not displayed
-
-            // Hide the toolbar
-            Helpers.callObjectMethod(activity, TabViewActivity.class, "toggleToolbar",
-                false, null, null);
 
             Helpers.callObjectMethod(activity, TabViewActivity.class, "navigate",
                 TabViewActivity.FragmentType.SUGGESTION, null, null);
@@ -128,11 +125,11 @@ public abstract class FragmentWithSearch extends Fragment {
         mConfiguration = searchManager.getSearchableInfo(activity.getComponentName());
         mSearchView.setSearchableInfo(mConfiguration);
 
-        if (!isSuggestionFragment) {
+        if (!isSuggestionFragment && !isResultListFragment) {
             return;
         }
 
-        // Only if Suggestions fragment displayed
+        // Only if Suggestions or Result list fragment displayed
 
         // Show the Back button from the search box
         ViewGroup searchBackLayout = mSearchView.findViewById(R.id.search_view_back_button_layout);

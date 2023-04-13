@@ -244,7 +244,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
         mResultListFragment = list;
         mNavigator.addFragment(mResultListFragment);
-        mNavigator.showFragment(mResultListFragment);
+        navigate(FragmentType.LIST);
 
         // TODO: add map fragment
         /*mNavigator.addFragment(mMapFragment);
@@ -252,7 +252,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     public void toggleToolbar(Boolean visible) {
-        Log.v("BeautyAndroid", "Tab view toolbar visibility toggled to " + visible);
+        Log.v("BeautyAndroid", "Toolbar visibility toggled to " + visible);
         Toolbar mainToolbar = findViewById(R.id.main_toolbar);
         mainToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
@@ -272,9 +272,17 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             return;
         }
 
-        FragmentType tmp = mPrevFragmentType;
-        mPrevFragmentType = mShownFragmentType;
-        mShownFragmentType = tmp;
+        if (mShownFragmentType == FragmentType.SUGGESTION) {
+            // When coming back from Suggestion page, always navigate to the Tabview page
+            mPrevFragmentType = mShownFragmentType;
+            mShownFragmentType = FragmentType.TAB_VIEW;
+        } else {
+            // Otherwise, swap the previous and the current pages
+            FragmentType tmp = mPrevFragmentType;
+            mPrevFragmentType = mShownFragmentType;
+            mShownFragmentType = tmp;
+        }
+
         onNavigation();
         mNavigator.showFragment(findFragment(mShownFragmentType));
     }
@@ -318,9 +326,28 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                     case TERMS:
                         CollectionPagerAdapter.setPage(2);
                         break;
+                    case SUGGESTION:
+                        // Show toolbar when coming from the Suggestion page
+                        toggleToolbar(true);
+                        break;
                     default:
                         break;
                 }
+                break;
+            case LIST:
+            case MAP:
+                switch (mPrevFragmentType) {
+                    case SUGGESTION:
+                        // Show toolbar when coming from the Suggestion page
+                        toggleToolbar(true);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case SUGGESTION:
+                // Hide toolbar when going to the Suggestion page
+                toggleToolbar(false);
             default:
                 break;
         }

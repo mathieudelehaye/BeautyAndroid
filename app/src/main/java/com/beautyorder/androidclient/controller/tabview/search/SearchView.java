@@ -126,10 +126,6 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
             return;
         }
         back.setOnClickListener(v -> {
-            // Show the toolbar
-            Helpers.callObjectMethod(mActivity, TabViewActivity.class, "toggleToolbar",
-                true, null, null);
-
             // Hide the keyboard
             final var inputManager = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(mContainerView.getWindowToken(), 0);
@@ -145,9 +141,7 @@ public class SearchView extends LinearLayoutCompat implements Filter.FilterListe
             return;
         }
         clear.setVisibility(GONE);
-        clear.setOnClickListener(v -> {
-            mQuery.getText().clear();
-        });
+        clear.setOnClickListener(v -> mQuery.getText().clear());
 
         // Set up the Query edit text
         mQuery = mContainerView.findViewById(R.id.search_view_query);
