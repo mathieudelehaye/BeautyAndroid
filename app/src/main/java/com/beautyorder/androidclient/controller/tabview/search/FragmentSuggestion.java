@@ -79,7 +79,7 @@ public class FragmentSuggestion extends FragmentWithSearch {
             Log.v("BeautyAndroid", "Search query set from tapped suggestion to: " + query);
 
             // Start the search
-            search(query);
+            runSearch(query);
         });
     }
 

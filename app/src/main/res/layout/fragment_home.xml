@@ -31,7 +31,7 @@
     tools:context="com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList"
 >
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/result_list_search"
+        android:id="@+id/home_search"
         android:layout_width="match_parent"
         android:layout_height="52.5dp"
         android:layout_marginTop="112dp"
@@ -41,14 +41,27 @@
         <include layout="@layout/search_box"/>
         
     </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <TextView
+        android:id="@+id/rp_history_title"
+        android:text="Last Drop-off Points"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_search"
+    />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lastRPHorizontalButtons"
+        android:id="@+id/rp_history"
         android:layout_width="match_parent"
         android:layout_height="@dimen/last_rp_fragment_height"
         android:layout_marginTop="56dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/result_list_search"
+        app:layout_constraintTop_toBottomOf="@id/home_search"
     >
 
         <HorizontalScrollView
@@ -96,13 +109,26 @@
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/search_history_title"
+        android:text="Search history"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rp_history"
+    />
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lastSearchHorizontalButtons"
+        android:id="@+id/search_history"
         android:layout_width="match_parent"
         android:layout_height="@dimen/last_search_fragment_height"
         android:layout_marginTop="56dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lastRPHorizontalButtons"
+        app:layout_constraintTop_toBottomOf="@id/rp_history"
     >
 
         <HorizontalScrollView

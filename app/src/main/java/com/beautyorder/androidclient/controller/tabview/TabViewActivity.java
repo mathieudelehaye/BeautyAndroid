@@ -39,6 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.FragmentMap;
@@ -54,6 +55,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -87,7 +89,9 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private FragmentType mPrevFragmentType = FragmentType.NONE;
 
     // Search: properties
-    private StringBuilder mSearchQuery = new StringBuilder("");
+    private ArrayList<String> mSearchQueries = new ArrayList<>();
+    private int mMostRecentQueryIndex = 0;
+    final private int mMaximumQueryAge = 4;
     private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
 
@@ -99,8 +103,44 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private final int mTimeBeforePollingScoreInMin = 1;
 
     // Search: getter-setter
-    public String getSearchQuery() {
-        return mSearchQuery.toString();
+    public Integer getQueryNumber() {
+        return mSearchQueries.size();
+    }
+
+    public String loadSearchQuery(Integer age) {
+        final boolean atLeastFourQueriesInQueue = mSearchQueries.size() >= 4;
+
+        if (!atLeastFourQueriesInQueue && age > mMostRecentQueryIndex) {
+            Log.w("BeautyAndroid", "Not possible to get the query, as the queue doesn't have at least "
+                + (mMostRecentQueryIndex + 1) + " items");
+            return null;
+        }
+
+        if (age >= mMaximumQueryAge) {
+            Log.w("BeautyAndroid", "Not possible to get the query, as the age is greater than the maximum "
+                + mMaximumQueryAge);
+            return null;
+        }
+
+        int queryIndex;
+        final int queriesAfterMostRecentIndex = mMaximumQueryAge - mMostRecentQueryIndex - 1;
+
+        if (age > queriesAfterMostRecentIndex) {
+            queryIndex = age - mMostRecentQueryIndex - 1;
+        } else {
+            queryIndex = age + mMostRecentQueryIndex + 1;
+        }
+
+        return mSearchQueries.get(queryIndex);
+    }
+
+    public void storeSearchQuery(String query) {
+        mSearchQueries.add(mMostRecentQueryIndex, query);
+
+        mMostRecentQueryIndex++;
+        if (mMostRecentQueryIndex >= mMaximumQueryAge) {
+            mMostRecentQueryIndex = 0;
+        }
     }
 
     public ResultItemInfo getSelectedRecyclePoint() {
@@ -198,6 +238,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     public void showResult(FragmentResultList list) {
+        final String query = FragmentResult.getResultQuery();
+
+        storeSearchQuery(query);
+
         mResultListFragment = list;
         mNavigator.addFragment(mResultListFragment);
         mNavigator.showFragment(mResultListFragment);

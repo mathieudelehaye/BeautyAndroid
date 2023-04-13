@@ -67,6 +67,10 @@ public abstract class FragmentResult extends FragmentWithSearch {
     private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
 
+    public static String getResultQuery() {
+        return sResultQuery;
+    }
+
     public static void setResultQuery(String query) {
         sResultQuery = query;
     }

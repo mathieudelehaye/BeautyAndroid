@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -62,7 +63,7 @@ public abstract class FragmentWithSearch extends Fragment {
         setupSearchBox(view);
     }
 
-    protected void search(String query) {
+    protected void runSearch(String query) {
         FragmentResultList.setResultQuery(query);
 
         Helpers.callObjectMethod(mContext, TabViewActivity.class, "showResult",
@@ -104,6 +105,22 @@ public abstract class FragmentWithSearch extends Fragment {
 
             Helpers.callObjectMethod(activity, TabViewActivity.class, "navigate",
                 TabViewActivity.FragmentType.SUGGESTION, null, null);
+        });
+
+        mSearchQuery.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+            {
+                final String query = mSearchQuery.getText().toString();
+                Log.v("BeautyAndroid", "Search query validated by pressing enter: " + query);
+
+                // Start the search
+                runSearch(query);
+
+                return false;
+            }
+
+            return false;
         });
 
         // Set the searchable configuration

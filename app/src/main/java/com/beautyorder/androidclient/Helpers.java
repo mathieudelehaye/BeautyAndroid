@@ -8,13 +8,16 @@
 //  Copyright © 2022 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient;
 
@@ -82,14 +85,19 @@ public class Helpers {
         T1 arg1, T2 arg2, T3 arg3) {
 
         if (obj == null) {
-            Log.e("BeautyAndroid", "Cannot call method " + methodName + ", as object null");
+            Log.e("BeautyAndroid", "Cannot call method `" + methodName + "`, as object null");
             return null;
         }
 
         var typedObject = objType.cast(obj);
         if (typedObject == null) {
-            Log.e("BeautyAndroid", "Cannot call method " + methodName
-                + ",  as object not of the expected type " + objType);
+            Log.e("BeautyAndroid", "Cannot call method `" + methodName
+                + "`,  as object not of the expected type " + objType);
+            return null;
+        }
+
+        if (methodName == null | methodName.equals("")) {
+            Log.e("BeautyAndroid", "Cannot call a method with a null or empty name");
             return null;
         }
 
@@ -107,19 +115,22 @@ public class Helpers {
 
             return ret;
         } catch (SecurityException e) {
-            Log.e("BeautyAndroid", "Security exception: " + e.getCause());
+            Log.e("BeautyAndroid", "Security exception while calling `" + methodName + "`: " + e.getCause());
             return null;
         } catch (NoSuchMethodException e) {
-            Log.e("BeautyAndroid", "No method exception: " + e.getCause());
+            Log.e("BeautyAndroid", "No method exception while calling `" + methodName + "`: " + e.getCause());
             return null;
         } catch (IllegalArgumentException e) {
-            Log.e("BeautyAndroid", "Illegal argument method exception: " + e.getCause());
+            Log.e("BeautyAndroid", "Illegal argument method exception while calling `" + methodName + "`: "
+                + e.getCause());
             return null;
         } catch (IllegalAccessException e) {
-            Log.e("BeautyAndroid", "Illegal access exception: " + e.getCause());
+            Log.e("BeautyAndroid", "Illegal access exception while calling `" + methodName + "`: "
+                + e.getCause());
             return null;
         } catch (InvocationTargetException e) {
-            Log.e("BeautyAndroid", "Invocation target exception: " + e.getCause());
+            Log.e("BeautyAndroid", "Invocation target exception while calling `" + methodName + "`: "
+                + e.getCause());
             return null;
         }
     }
