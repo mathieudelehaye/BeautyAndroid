@@ -117,6 +117,7 @@ public class FragmentHome extends FragmentWithSearch {
                 (Button)mFragmentRootView.findViewById(R.id.search_history_button_2b);
 
             historyButton.setText(query.substring(0, Math.min(query.length(), 15)));
+            historyButton.setOnClickListener(v -> runSearch(query));
         }
     }
 

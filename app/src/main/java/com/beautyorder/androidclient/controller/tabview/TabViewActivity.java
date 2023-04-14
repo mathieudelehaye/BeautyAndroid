@@ -134,7 +134,19 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         return mSearchQueries.get(queryIndex);
     }
 
-    public void storeSearchQuery(String query) {
+    public void storeSearchQuery(@NonNull String query) {
+        if (query.equals("")) {
+            Log.w("BeautyAndroid", "Cannot store an empty search query");
+            return;
+        }
+
+        for (String pastQuery : mSearchQueries) {
+            if (query.trim().equalsIgnoreCase(pastQuery.trim())) {
+                // Do not duplicate the stored queries
+                return;
+            }
+        }
+
         mMostRecentQueryIndex++;
         if (mMostRecentQueryIndex > mMaximumQueryAge) {
             mMostRecentQueryIndex = 0;
