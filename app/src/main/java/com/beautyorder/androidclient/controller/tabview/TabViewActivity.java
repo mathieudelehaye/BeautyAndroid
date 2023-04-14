@@ -90,8 +90,8 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     // Search: properties
     private ArrayList<String> mSearchQueries = new ArrayList<>();
-    private int mMostRecentQueryIndex = 0;
-    final private int mMaximumQueryAge = 4;
+    private int mMostRecentQueryIndex = -1;
+    final private int mMaximumQueryAge = 3;
     private SearchResult mSearchResult;
     private ResultItemInfo mSelectedRecyclePoint;
 
@@ -108,7 +108,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     public String loadSearchQuery(Integer age) {
-        final boolean atLeastFourQueriesInQueue = mSearchQueries.size() >= 4;
+        final boolean atLeastFourQueriesInQueue = mSearchQueries.size() > mMaximumQueryAge;
 
         if (!atLeastFourQueriesInQueue && age > mMostRecentQueryIndex) {
             Log.w("BeautyAndroid", "Not possible to get the query, as the queue doesn't have at least "
@@ -116,30 +116,34 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             return null;
         }
 
-        if (age >= mMaximumQueryAge) {
+        if (age > mMaximumQueryAge) {
             Log.w("BeautyAndroid", "Not possible to get the query, as the age is greater than the maximum "
                 + mMaximumQueryAge);
             return null;
         }
 
         int queryIndex;
-        final int queriesAfterMostRecentIndex = mMaximumQueryAge - mMostRecentQueryIndex - 1;
+        final int queriesWithIndexSmallerOrEqualToTheMostRecent = mMostRecentQueryIndex + 1;
 
-        if (age > queriesAfterMostRecentIndex) {
-            queryIndex = age - mMostRecentQueryIndex - 1;
+        if (age >= queriesWithIndexSmallerOrEqualToTheMostRecent) {
+            queryIndex = mMaximumQueryAge + queriesWithIndexSmallerOrEqualToTheMostRecent - age;
         } else {
-            queryIndex = age + mMostRecentQueryIndex + 1;
+            queryIndex = mMostRecentQueryIndex - age;
         }
 
         return mSearchQueries.get(queryIndex);
     }
 
     public void storeSearchQuery(String query) {
-        mSearchQueries.add(mMostRecentQueryIndex, query);
-
         mMostRecentQueryIndex++;
-        if (mMostRecentQueryIndex >= mMaximumQueryAge) {
+        if (mMostRecentQueryIndex > mMaximumQueryAge) {
             mMostRecentQueryIndex = 0;
+        }
+
+        if (mMostRecentQueryIndex >= mSearchQueries.size()) {
+            mSearchQueries.add(query);
+        } else {
+            mSearchQueries.set(mMostRecentQueryIndex, query);
         }
     }
 

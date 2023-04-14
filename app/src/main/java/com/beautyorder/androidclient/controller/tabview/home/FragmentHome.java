@@ -79,6 +79,26 @@ public class FragmentHome extends FragmentWithSearch {
         }
     }
 
+    public void updateRecentSearches() {
+        if (mContext == null) {
+            Log.w("BeautyAndroid", "Cannot update the recent searches, as no context");
+            return;
+        }
+
+        final var queries = (Integer)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+            "getQueryNumber", null, null, null);
+
+        if (queries == null) {
+            return;
+        }
+
+        for(int i = 0; i < queries; i++) {
+            final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+                "loadSearchQuery", i, null, null);
+            Log.v("BeautyAndroid", "updateRecentSearches: age = " + i + ", query = " + query);
+        }
+    }
+
     protected void displayScoreBox(String fragmentName, int layout_id) {
         // Show or hide the score box according to the locale
         if (!mustShowBrand()) {
@@ -116,25 +136,6 @@ public class FragmentHome extends FragmentWithSearch {
 
     @Override
     protected void searchAndDisplayItems() {
-    }
-
-    private void updateRecentSearches() {
-        if (mContext == null) {
-            Log.w("BeautyAndroid", "Cannot update the recent searches, as no context");
-            return;
-        }
-
-        final var queries = (Integer)Helpers.callObjectMethod(mContext, TabViewActivity.class,
-            "getQueryNumber", null, null, null);
-
-        if (queries == null) {
-            return;
-        }
-
-        for(int i = 0; i < queries; i++) {
-            final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
-                "loadSearchQuery", i, null, null);
-        }
     }
 
     private void updateUserScore() {

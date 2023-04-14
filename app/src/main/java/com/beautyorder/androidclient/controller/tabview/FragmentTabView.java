@@ -8,16 +8,20 @@
 //  Copyright © 2022 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller.tabview;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,13 +29,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
 import com.beautyorder.androidclient.databinding.FragmentTabViewBinding;
 import com.google.android.material.tabs.TabLayout;
 
 public class FragmentTabView extends Fragment {
     private FragmentTabViewBinding mBinding;
+    private Activity mActivity;
     private NotSwipeableViewPager mViewPager;
 
     @Override
@@ -48,6 +55,8 @@ public class FragmentTabView extends Fragment {
             + Helpers.getTimestamp());
 
         super.onViewCreated(view, savedInstanceState);
+
+        mActivity = getActivity();
 
         mViewPager = view.findViewById(R.id.tabViewPager);
         TabLayout tabLayout = view.findViewById(R.id.tabViewTabbar);
@@ -66,7 +75,7 @@ public class FragmentTabView extends Fragment {
 
     @Override
     public void onResume() {
-        Log.v("BeautyAndroid", "App fragment resumed");
+        Log.v("BeautyAndroid", "Tab view fragment resumed");
 
         super.onResume();
 
@@ -95,6 +104,19 @@ public class FragmentTabView extends Fragment {
             Log.v("BeautyAndroid", "Tab swiping disabled from the current page on");
             mViewPager.setSwipingEnabled(false);
             mViewPager.beginFakeDrag();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            Log.d("BeautyAndroid", "Tab view becomes visible");
+
+            if(mActivity != null) {
+                ((FragmentHome)FragmentManager.findFragment(mActivity.findViewById(R.id.rp_history_title)))
+                    .updateRecentSearches();
+            }
         }
     }
 }
