@@ -102,7 +102,7 @@
                         android:layout_marginEnd="@dimen/last_search_button_horizontal_margin"
                         android:layout_width="@dimen/last_search_button_width"
                         android:layout_height="@dimen/last_search_button_height"
-                        app:layout_constraintStart_toEndOf="@id/button1a"
+                        app:layout_constraintStart_toEndOf="@id/search_history_button_1a"
                     />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -155,7 +155,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                 >
                     <Button
-                        android:id="@+id/button1a"
+                        android:id="@+id/search_history_button_1a"
                         android:text="New Button1"
                         android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
                         android:layout_width="@dimen/last_search_button_width"
@@ -163,13 +163,13 @@
                     />
 
                     <Button
-                        android:id="@+id/button1b"
+                        android:id="@+id/search_history_button_1b"
                         android:text="New Button2"
                         android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
                         android:layout_marginEnd="@dimen/last_search_button_horizontal_margin"
                         android:layout_width="@dimen/last_search_button_width"
                         android:layout_height="@dimen/last_search_button_height"
-                        app:layout_constraintStart_toEndOf="@id/button1a"
+                        app:layout_constraintStart_toEndOf="@id/search_history_button_1a"
                     />
                 </LinearLayout>
 
@@ -181,7 +181,7 @@
                     app:layout_constraintTop_toBottomOf="@id/lastSearchHorizontalButtonRow1"
                 >
                     <Button
-                        android:id="@+id/button2a"
+                        android:id="@+id/search_history_button_2a"
                         android:text="New Button1"
                         android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
                         android:layout_width="@dimen/last_search_button_width"
@@ -189,13 +189,13 @@
                     />
 
                     <Button
-                        android:id="@+id/button2b"
+                        android:id="@+id/search_history_button_2b"
                         android:text="New Button2"
                         android:layout_marginStart="@dimen/last_search_button_horizontal_margin"
                         android:layout_marginEnd="@dimen/last_search_button_horizontal_margin"
                         android:layout_width="@dimen/last_search_button_width"
                         android:layout_height="@dimen/last_search_button_height"
-                        app:layout_constraintStart_toEndOf="@id/button2b"
+                        app:layout_constraintStart_toEndOf="@id/search_history_button_2b"
                     />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

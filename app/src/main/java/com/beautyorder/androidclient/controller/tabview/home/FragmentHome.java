@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
@@ -40,9 +41,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class FragmentHome extends FragmentWithSearch {
     private FragmentHomeBinding mBinding;
+    protected Context mContext;
+    private View mFragmentRootView;
     protected FirebaseFirestore mDatabase;
     protected SharedPreferences mSharedPref;
-    protected Context mContext;
 
     @Override
     public View onCreateView(
@@ -61,8 +63,9 @@ public class FragmentHome extends FragmentWithSearch {
 
         mContext = getContext();
 
-        mSharedPref = mContext.getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
+        mSharedPref = mContext.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        mFragmentRootView = getView();
 
         updateRecentSearches();
 
@@ -85,6 +88,11 @@ public class FragmentHome extends FragmentWithSearch {
             return;
         }
 
+        if (mFragmentRootView == null) {
+            Log.w("BeautyAndroid", "Cannot update the recent searches, as no root view");
+            return;
+        }
+
         final var queries = (Integer)Helpers.callObjectMethod(mContext, TabViewActivity.class,
             "getQueryNumber", null, null, null);
 
@@ -95,21 +103,34 @@ public class FragmentHome extends FragmentWithSearch {
         for(int i = 0; i < queries; i++) {
             final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
                 "loadSearchQuery", i, null, null);
+            if (query == null) {
+                continue;
+            }
+
             Log.v("BeautyAndroid", "updateRecentSearches: age = " + i + ", query = " + query);
+
+            // Update the search history buttons
+            var historyButton =
+                (i == 0) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_1a) :
+                (i == 1) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_1b) :
+                (i == 2) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_2a) :
+                (Button)mFragmentRootView.findViewById(R.id.search_history_button_2b);
+
+            historyButton.setText(query.substring(0, Math.min(query.length(), 15)));
         }
     }
 
     protected void displayScoreBox(String fragmentName, int layout_id) {
+        if (mFragmentRootView == null) {
+            Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
+                + " fragment, as no fragment root view");
+            return;
+        }
+
         // Show or hide the score box according to the locale
         if (!mustShowBrand()) {
-            var fragmentRootView = getView();
-            if (fragmentRootView == null) {
-                Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
-                    + " fragment, as no fragment root view");
-                return;
-            }
 
-            View scoreLayout = fragmentRootView.findViewById(layout_id);
+            View scoreLayout = mFragmentRootView.findViewById(layout_id);
             if (scoreLayout == null) {
                 Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
                     + " fragment, as no score layout");
