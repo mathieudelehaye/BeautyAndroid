@@ -38,6 +38,7 @@ import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
+import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {
@@ -61,6 +62,21 @@ public abstract class FragmentWithSearch extends Fragment {
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
         setupSearchBox(view);
+    }
+
+    protected void showResult(ResultItemInfo item) {
+        var activity = (TabViewActivity) getActivity();
+
+        if (activity == null) {
+            Log.w("BeautyAndroid", "Cannot show result, as no activity");
+            return;
+        }
+
+        final String title = item.getTitle();
+        Log.d("BeautyAndroid", "Item to display: " + title);
+
+        activity.setSelectedRecyclePoint(item);
+        activity.navigate(TabViewActivity.FragmentType.DETAIL);
     }
 
     protected void runSearch(String query) {

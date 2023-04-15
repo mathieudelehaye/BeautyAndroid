@@ -31,7 +31,6 @@ import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.tabview.result.EnhancedOverlayItem;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
@@ -72,8 +71,6 @@ public class FragmentResultList extends FragmentResult {
                 Log.v("BeautyAndroid", "Results received from database at timestamp: "
                     + Helpers.getTimestamp());
 
-                var activity = (TabViewActivity) getActivity();
-
                 var resultList = (ListView) getView().findViewById(R.id.result_list_view);
 
                 var result = new SearchResult();
@@ -89,18 +86,8 @@ public class FragmentResultList extends FragmentResult {
                 resultList.setAdapter(adapter);
 
                 resultList.setOnItemClickListener((adapterView, view, position, l) -> {
-
-                    if (activity == null) {
-                        Log.w("BeautyAndroid", "List item tapped but activity not available");
-                        return;
-                    }
-
                     final var itemInfo = ((ResultItemInfo)adapter.getItem(position));
-                    final String title = itemInfo.getTitle();
-                    Log.d("BeautyAndroid", "Tapped item: " + title);
-
-                    activity.setSelectedRecyclePoint(itemInfo);
-                    activity.navigate(TabViewActivity.FragmentType.DETAIL);
+                    showResult(itemInfo);
                 });
 
                 result.downloadImages(new TaskCompletionManager() {

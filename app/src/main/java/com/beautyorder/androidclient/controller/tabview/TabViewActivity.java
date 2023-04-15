@@ -219,11 +219,25 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     // Search: methods
-    public Integer getQueryNumber() {
+    public Integer getPreviousRPNumber() {
+        return mPastRPKeys.items();
+    }
+
+    public ResultItemInfo getPreviousRP(Integer age) {
+        final String key = mPastRPKeys.readFromEnd(age);
+
+        if (!mRecyclePoints.containsKey(key)) {
+            Log.e("BeautyAndroid", "Cannot get previous RP, as unknown key");
+        }
+
+        return mRecyclePoints.get(key);
+    }
+
+    public Integer getPreviousQueryNumber() {
         return mPastSearchQueries.items();
     }
 
-    public String loadSearchQuery(Integer age) {
+    public String getPreviousSearchQuery(Integer age) {
         return mPastSearchQueries.readFromEnd(age);
     }
 

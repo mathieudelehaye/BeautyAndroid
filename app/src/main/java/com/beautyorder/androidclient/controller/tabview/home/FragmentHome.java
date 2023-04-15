@@ -36,6 +36,7 @@ import com.beautyorder.androidclient.controller.tabview.search.FragmentWithSearc
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
 import com.beautyorder.androidclient.model.AppUser;
+import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -67,6 +68,7 @@ public class FragmentHome extends FragmentWithSearch {
 
         mFragmentRootView = getView();
 
+        updateRecentRP();
         updateRecentSearches();
 
         updateUserScore();
@@ -78,7 +80,58 @@ public class FragmentHome extends FragmentWithSearch {
         if (isVisibleToUser) {
             Log.d("BeautyAndroid", "Home view becomes visible");
 
-           updateRecentSearches();
+            updateRecentRP();
+            updateRecentSearches();
+        }
+    }
+
+    public void updateRecentRP() {
+        final int buttonNumber = 2;
+
+        if (mContext == null) {
+            Log.w("BeautyAndroid", "Cannot update the recent searches, as no context");
+            return;
+        }
+
+        if (mFragmentRootView == null) {
+            Log.w("BeautyAndroid", "Cannot update the recent searches, as no root view");
+            return;
+        }
+
+        final var recyclePoints = (Integer)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+            "getPreviousRPNumber", null, null, null);
+
+        if (recyclePoints == null) {
+            return;
+        }
+
+        for(int i = 0; i < buttonNumber; i++) {
+            var historyButton =
+                (i == 0) ? (Button)mFragmentRootView.findViewById(R.id.rp_history_button_1a) :
+                (Button)mFragmentRootView.findViewById(R.id.rp_history_button_1b);
+
+            if (i < recyclePoints) {
+                // Update the RP history buttons
+                final var recyclingPoint = (ResultItemInfo)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+                    "getPreviousRP", i, null, null);
+                if (recyclingPoint == null) {
+                    continue;
+                }
+
+                final String key = recyclingPoint.getTitle();
+                final String title = recyclingPoint.getTitle();
+
+                Log.v("BeautyAndroid", "updateRecentRP: age = " + i + ", key = " + key
+                    + ", title = " + title);
+
+                historyButton.setText(title.substring(0, Math.min(key.length(), 15)));
+
+                historyButton.setOnClickListener(v -> showResult(recyclingPoint));
+                historyButton.setVisibility(View.VISIBLE);
+            } else {
+                // Hide the button if no related RP
+                historyButton.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -96,14 +149,14 @@ public class FragmentHome extends FragmentWithSearch {
         }
 
         final var queries = (Integer)Helpers.callObjectMethod(mContext, TabViewActivity.class,
-            "getQueryNumber", null, null, null);
+            "getPreviousQueryNumber", null, null, null);
 
         if (queries == null) {
             return;
         }
 
         for(int i = 0; i < buttonNumber; i++) {
-            Button historyButton =
+            var historyButton =
                 (i == 0) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_1a) :
                 (i == 1) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_1b) :
                 (i == 2) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_2a) :
@@ -112,7 +165,7 @@ public class FragmentHome extends FragmentWithSearch {
             if (i < queries) {
                 // Update the search history buttons
                 final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
-                    "loadSearchQuery", i, null, null);
+                    "getPreviousSearchQuery", i, null, null);
                 if (query == null) {
                     continue;
                 }
@@ -126,10 +179,6 @@ public class FragmentHome extends FragmentWithSearch {
                 // Hide the button if no related query
                 historyButton.setVisibility(View.GONE);
             }
-        }
-
-        for (int i = queries; i < buttonNumber; i++) {
-
         }
     }
 

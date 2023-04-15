@@ -115,6 +115,8 @@ public class FragmentTabView extends Fragment {
 
             if(mActivity != null) {
                 ((FragmentHome)FragmentManager.findFragment(mActivity.findViewById(R.id.rp_history_title)))
+                    .updateRecentRP();
+                ((FragmentHome)FragmentManager.findFragment(mActivity.findViewById(R.id.rp_history_title)))
                     .updateRecentSearches();
             }
         }
