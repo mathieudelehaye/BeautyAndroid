@@ -101,7 +101,8 @@ public abstract class FragmentResult extends FragmentWithSearch {
         Configuration.getInstance().load(mContext, PreferenceManager.getDefaultSharedPreferences(mContext));
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
+        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance()
+        //.setCachePath
         //see also StorageUtils
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's
         //tile servers will get you banned based on this string
@@ -273,6 +274,8 @@ public abstract class FragmentResult extends FragmentWithSearch {
                     //writeBackRPAddressCoordinatesToDB(pointInfo.getData().get(i).get("documentId"),
                     //    pointInfo.getAddressAtIndex(i));
 
+                    final String key = pointInfo.getKeyAtIndex(i);
+
                     final double latitude = pointInfo.getLatitudeAtIndex(i);
                     final double longitude = pointInfo.getLongitudeAtIndex(i);
 
@@ -280,7 +283,7 @@ public abstract class FragmentResult extends FragmentWithSearch {
                     String itemSnippet = pointInfo.getSnippetAtIndex(i);
                     String itemImageUrl = pointInfo.getImageUrlAtIndex(i);
 
-                    mFoundRecyclePoints.add(new OverlayItemWithImage(itemTitle, itemSnippet,
+                    mFoundRecyclePoints.add(new EnhancedOverlayItem(key, itemTitle, itemSnippet,
                         new GeoPoint(latitude,longitude), itemImageUrl));
                 }
 

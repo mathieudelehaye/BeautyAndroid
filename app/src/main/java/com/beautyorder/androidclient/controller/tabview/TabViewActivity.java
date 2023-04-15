@@ -86,11 +86,11 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     Stack<FragmentType> mPrevFragmentTypes = new Stack<>();
 
     // Search: properties
-    private ArrayList<String> mSearchQueries = new ArrayList<>();
-    private int mMostRecentQueryIndex = -1;
-    final private int mMaximumQueryAge = 3;
+    private CircularKeyBuffer<String> mPastRPKeys = new CircularKeyBuffer<>(2);
+    private CircularKeyBuffer<String> mPastSearchQueries = new CircularKeyBuffer<>(4);
     private SearchResult mSearchResult;
-    private ResultItemInfo mSelectedRecyclePoint;
+    private HashMap<String, ResultItemInfo> mRecyclePoints = new HashMap<>();
+    private String mSelectedRPKey = "";
 
     // Background: properties
     // TODO: do not use a static property here
@@ -100,16 +100,22 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private final int mTimeBeforePollingScoreInMin = 1;
 
     // Search: getter-setter
-    public Integer getQueryNumber() {
-        return mSearchQueries.size();
-    }
-
     public ResultItemInfo getSelectedRecyclePoint() {
-        return mSelectedRecyclePoint;
+        return mRecyclePoints.get(mSelectedRPKey);
     }
 
     public void setSelectedRecyclePoint(ResultItemInfo value) {
-        mSelectedRecyclePoint = value;
+        final String key = value.getKey();
+
+        mSelectedRPKey = key;
+
+        if (!mRecyclePoints.containsKey(key)) {
+            mRecyclePoints.put(key, value);
+        }
+
+        if (!key.equals("")) {
+            mPastRPKeys.add(key);
+        }
     }
 
     public SearchResult getSearchResult() {
@@ -171,65 +177,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
     }
 
-    public String loadSearchQuery(Integer age) {
-        final boolean atLeastFourQueriesInQueue = mSearchQueries.size() > mMaximumQueryAge;
-
-        if (!atLeastFourQueriesInQueue && age > mMostRecentQueryIndex) {
-            Log.w("BeautyAndroid", "Not possible to get the query, as the queue doesn't have at least "
-                    + (mMostRecentQueryIndex + 1) + " items");
-            return null;
-        }
-
-        if (age > mMaximumQueryAge) {
-            Log.w("BeautyAndroid", "Not possible to get the query, as the age is greater than the maximum "
-                    + mMaximumQueryAge);
-            return null;
-        }
-
-        int queryIndex;
-        final int queriesWithIndexSmallerOrEqualToTheMostRecent = mMostRecentQueryIndex + 1;
-
-        if (age >= queriesWithIndexSmallerOrEqualToTheMostRecent) {
-            queryIndex = mMaximumQueryAge + queriesWithIndexSmallerOrEqualToTheMostRecent - age;
-        } else {
-            queryIndex = mMostRecentQueryIndex - age;
-        }
-
-        return mSearchQueries.get(queryIndex);
-    }
-
-    public void storeSearchQuery(@NonNull String query) {
-        if (query.equals("")) {
-            Log.w("BeautyAndroid", "Cannot store an empty search query");
-            return;
-        }
-
-        for (String pastQuery : mSearchQueries) {
-            if (query.trim().equalsIgnoreCase(pastQuery.trim())) {
-                // Do not duplicate the stored queries
-                return;
-            }
-        }
-
-        mMostRecentQueryIndex++;
-        if (mMostRecentQueryIndex > mMaximumQueryAge) {
-            mMostRecentQueryIndex = 0;
-        }
-
-        if (mMostRecentQueryIndex >= mSearchQueries.size()) {
-            mSearchQueries.add(query);
-        } else {
-            mSearchQueries.set(mMostRecentQueryIndex, query);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -243,6 +190,13 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -264,13 +218,27 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.addFragment(mMapFragment);*/
     }
 
+    // Search: methods
+    public Integer getQueryNumber() {
+        return mPastSearchQueries.items();
+    }
+
+    public String loadSearchQuery(Integer age) {
+        return mPastSearchQueries.readFromEnd(age);
+    }
+
+    public void storeSearchQuery(@NonNull String query) {
+        mPastSearchQueries.add(query);
+    }
+
+    // Fragments: methods
+
     public void toggleToolbar(Boolean visible) {
         Log.v("BeautyAndroid", "Toolbar visibility toggled to " + visible);
         Toolbar mainToolbar = findViewById(R.id.main_toolbar);
         mainToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    // Fragments: methods
     public void navigate(FragmentType dest) {
         Log.d("BeautyAndroid", "Navigating to the fragment of type " + dest);
 
@@ -478,7 +446,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         downloadScore();
     }
 
-    // Background task: methods
     private boolean isNetworkAvailable() {
         var connectivityManager
             = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

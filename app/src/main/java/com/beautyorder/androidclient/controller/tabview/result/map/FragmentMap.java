@@ -34,7 +34,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
-import com.beautyorder.androidclient.controller.tabview.result.OverlayItemWithImage;
+import com.beautyorder.androidclient.controller.tabview.result.EnhancedOverlayItem;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.TaskCompletionManager;
@@ -214,9 +214,9 @@ public class FragmentMap extends FragmentResult {
 
                 final boolean showBrand = mustShowBrand();
                 for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
-                    final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
-                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null, showBrand),
-                        point.getImage());
+                    final var point = (EnhancedOverlayItem) mFoundRecyclePoints.get(i);
+                    result.add(new ResultItemInfo(point.getKey(), point.getTitle(), point.getSnippet(), null,
+                        showBrand), point.getImage());
                 }
 
                 result.downloadImages(new TaskCompletionManager() {

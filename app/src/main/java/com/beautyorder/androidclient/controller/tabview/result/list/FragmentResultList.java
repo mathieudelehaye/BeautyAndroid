@@ -29,10 +29,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.controller.tabview.result.EnhancedOverlayItem;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.controller.tabview.result.OverlayItemWithImage;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
 import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.beautyorder.androidclient.model.SearchResult;
@@ -80,9 +80,9 @@ public class FragmentResultList extends FragmentResult {
 
                 final boolean showBrand = mustShowBrand();
                 for (int i = 0; i < mFoundRecyclePoints.size(); i++) {
-                    final var point = (OverlayItemWithImage) mFoundRecyclePoints.get(i);
-                    result.add(new ResultItemInfo(point.getTitle(), point.getSnippet(), null, showBrand),
-                        point.getImage());
+                    final var point = (EnhancedOverlayItem) mFoundRecyclePoints.get(i);
+                    result.add(new ResultItemInfo(point.getKey(), point.getTitle(), point.getSnippet(), null,
+                        showBrand), point.getImage());
                 }
 
                 var adapter = new ResultListAdapter(getContext(), result.getResultItems());
@@ -96,12 +96,10 @@ public class FragmentResultList extends FragmentResult {
                     }
 
                     final var itemInfo = ((ResultItemInfo)adapter.getItem(position));
-                    String title = itemInfo.getTitle();
+                    final String title = itemInfo.getTitle();
                     Log.d("BeautyAndroid", "Tapped item: " + title);
-                    String description = itemInfo.getDescription();
-                    final byte[] imageBytes = itemInfo.getImage();
 
-                    activity.setSelectedRecyclePoint(new ResultItemInfo(title, description, imageBytes, showBrand));
+                    activity.setSelectedRecyclePoint(itemInfo);
                     activity.navigate(TabViewActivity.FragmentType.DETAIL);
                 });
 
