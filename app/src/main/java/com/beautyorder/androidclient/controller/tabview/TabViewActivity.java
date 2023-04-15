@@ -55,10 +55,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask {
    // Fragments: types
@@ -86,7 +83,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private FragmentHelp mHelpFragment = new FragmentHelp();
     private FragmentTerms mTermsFragment = new FragmentTerms();
     private FragmentType mShownFragmentType = FragmentType.TAB_VIEW;    // We show the Tabview page by default
-    private FragmentType mPrevFragmentType = FragmentType.NONE;
+    Stack<FragmentType> mPrevFragmentTypes = new Stack<>();
 
     // Search: properties
     private ArrayList<String> mSearchQueries = new ArrayList<>();
@@ -105,58 +102,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     // Search: getter-setter
     public Integer getQueryNumber() {
         return mSearchQueries.size();
-    }
-
-    public String loadSearchQuery(Integer age) {
-        final boolean atLeastFourQueriesInQueue = mSearchQueries.size() > mMaximumQueryAge;
-
-        if (!atLeastFourQueriesInQueue && age > mMostRecentQueryIndex) {
-            Log.w("BeautyAndroid", "Not possible to get the query, as the queue doesn't have at least "
-                + (mMostRecentQueryIndex + 1) + " items");
-            return null;
-        }
-
-        if (age > mMaximumQueryAge) {
-            Log.w("BeautyAndroid", "Not possible to get the query, as the age is greater than the maximum "
-                + mMaximumQueryAge);
-            return null;
-        }
-
-        int queryIndex;
-        final int queriesWithIndexSmallerOrEqualToTheMostRecent = mMostRecentQueryIndex + 1;
-
-        if (age >= queriesWithIndexSmallerOrEqualToTheMostRecent) {
-            queryIndex = mMaximumQueryAge + queriesWithIndexSmallerOrEqualToTheMostRecent - age;
-        } else {
-            queryIndex = mMostRecentQueryIndex - age;
-        }
-
-        return mSearchQueries.get(queryIndex);
-    }
-
-    public void storeSearchQuery(@NonNull String query) {
-        if (query.equals("")) {
-            Log.w("BeautyAndroid", "Cannot store an empty search query");
-            return;
-        }
-
-        for (String pastQuery : mSearchQueries) {
-            if (query.trim().equalsIgnoreCase(pastQuery.trim())) {
-                // Do not duplicate the stored queries
-                return;
-            }
-        }
-
-        mMostRecentQueryIndex++;
-        if (mMostRecentQueryIndex > mMaximumQueryAge) {
-            mMostRecentQueryIndex = 0;
-        }
-
-        if (mMostRecentQueryIndex >= mSearchQueries.size()) {
-            mSearchQueries.add(query);
-        } else {
-            mSearchQueries.set(mMostRecentQueryIndex, query);
-        }
     }
 
     public ResultItemInfo getSelectedRecyclePoint() {
@@ -226,6 +171,58 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
     }
 
+    public String loadSearchQuery(Integer age) {
+        final boolean atLeastFourQueriesInQueue = mSearchQueries.size() > mMaximumQueryAge;
+
+        if (!atLeastFourQueriesInQueue && age > mMostRecentQueryIndex) {
+            Log.w("BeautyAndroid", "Not possible to get the query, as the queue doesn't have at least "
+                    + (mMostRecentQueryIndex + 1) + " items");
+            return null;
+        }
+
+        if (age > mMaximumQueryAge) {
+            Log.w("BeautyAndroid", "Not possible to get the query, as the age is greater than the maximum "
+                    + mMaximumQueryAge);
+            return null;
+        }
+
+        int queryIndex;
+        final int queriesWithIndexSmallerOrEqualToTheMostRecent = mMostRecentQueryIndex + 1;
+
+        if (age >= queriesWithIndexSmallerOrEqualToTheMostRecent) {
+            queryIndex = mMaximumQueryAge + queriesWithIndexSmallerOrEqualToTheMostRecent - age;
+        } else {
+            queryIndex = mMostRecentQueryIndex - age;
+        }
+
+        return mSearchQueries.get(queryIndex);
+    }
+
+    public void storeSearchQuery(@NonNull String query) {
+        if (query.equals("")) {
+            Log.w("BeautyAndroid", "Cannot store an empty search query");
+            return;
+        }
+
+        for (String pastQuery : mSearchQueries) {
+            if (query.trim().equalsIgnoreCase(pastQuery.trim())) {
+                // Do not duplicate the stored queries
+                return;
+            }
+        }
+
+        mMostRecentQueryIndex++;
+        if (mMostRecentQueryIndex > mMaximumQueryAge) {
+            mMostRecentQueryIndex = 0;
+        }
+
+        if (mMostRecentQueryIndex >= mSearchQueries.size()) {
+            mSearchQueries.add(query);
+        } else {
+            mSearchQueries.set(mMostRecentQueryIndex, query);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -275,31 +272,30 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     // Fragments: methods
     public void navigate(FragmentType dest) {
-        Log.v("BeautyAndroid", "Navigating to the fragment of type " + dest);
-        mPrevFragmentType = mShownFragmentType;
+        Log.d("BeautyAndroid", "Navigating to the fragment of type " + dest);
+
+        mPrevFragmentTypes.push(mShownFragmentType);
         mShownFragmentType = dest;
-        onNavigation();
+
+        Log.v("BeautyAndroid", "Previous fragment stack updated to: " + mPrevFragmentTypes.toString());
+
+        onNavigation(dest, mPrevFragmentTypes.peek());
         mNavigator.showFragment(findFragment(dest));
     }
 
     public void navigateBack() {
-        if (mPrevFragmentType == FragmentType.NONE) {
-            Log.w("BeautyAndroid", "Cannot navigate back, as the previous fragment type is unknown");
+        if (mPrevFragmentTypes.empty()) {
+            Log.w("BeautyAndroid", "Cannot navigate back, as previous fragment stack empty");
             return;
         }
 
-        if (mShownFragmentType == FragmentType.SUGGESTION) {
-            // When coming back from Suggestion page, always navigate to the Tabview page
-            mPrevFragmentType = mShownFragmentType;
-            mShownFragmentType = FragmentType.TAB_VIEW;
-        } else {
-            // Otherwise, swap the previous and the current pages
-            FragmentType tmp = mPrevFragmentType;
-            mPrevFragmentType = mShownFragmentType;
-            mShownFragmentType = tmp;
-        }
+        final FragmentType prevFragment = mShownFragmentType;
+        mShownFragmentType = mPrevFragmentTypes.pop();
 
-        onNavigation();
+        Log.d("BeautyAndroid", "Navigating back to the fragment of type " + mShownFragmentType);
+        Log.v("BeautyAndroid", "Previous fragment stack updated to: " + mPrevFragmentTypes.toString());
+
+        onNavigation(mShownFragmentType, prevFragment);
         mNavigator.showFragment(findFragment(mShownFragmentType));
     }
 
@@ -334,10 +330,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         return fragment;
     }
 
-    private void onNavigation() {
-        switch (mShownFragmentType) {
+    private void onNavigation(FragmentType dest, FragmentType orig) {
+        switch (dest) {
             case TAB_VIEW:
-                switch (mPrevFragmentType) {
+                switch (orig) {
                     case HELP:
                     case TERMS:
                         CollectionPagerAdapter.setPage(2);
@@ -352,7 +348,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                 break;
             case LIST:
             case MAP:
-                switch (mPrevFragmentType) {
+                switch (orig) {
                     case SUGGESTION:
                         // Show toolbar when coming from the Suggestion page
                         toggleToolbar(true);
