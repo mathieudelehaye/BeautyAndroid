@@ -83,6 +83,8 @@ public class FragmentHome extends FragmentWithSearch {
     }
 
     public void updateRecentSearches() {
+        final int buttonNumber = 4;
+
         if (mContext == null) {
             Log.w("BeautyAndroid", "Cannot update the recent searches, as no context");
             return;
@@ -100,24 +102,34 @@ public class FragmentHome extends FragmentWithSearch {
             return;
         }
 
-        for(int i = 0; i < queries; i++) {
-            final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
-                "loadSearchQuery", i, null, null);
-            if (query == null) {
-                continue;
-            }
-
-            Log.v("BeautyAndroid", "updateRecentSearches: age = " + i + ", query = " + query);
-
-            // Update the search history buttons
-            var historyButton =
+        for(int i = 0; i < buttonNumber; i++) {
+            Button historyButton =
                 (i == 0) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_1a) :
                 (i == 1) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_1b) :
                 (i == 2) ? (Button)mFragmentRootView.findViewById(R.id.search_history_button_2a) :
                 (Button)mFragmentRootView.findViewById(R.id.search_history_button_2b);
 
-            historyButton.setText(query.substring(0, Math.min(query.length(), 15)));
-            historyButton.setOnClickListener(v -> runSearch(query));
+            if (i < queries) {
+                // Update the search history buttons
+                final String query = (String)Helpers.callObjectMethod(mContext, TabViewActivity.class,
+                    "loadSearchQuery", i, null, null);
+                if (query == null) {
+                    continue;
+                }
+
+                Log.v("BeautyAndroid", "updateRecentSearches: age = " + i + ", query = " + query);
+
+                historyButton.setText(query.substring(0, Math.min(query.length(), 15)));
+                historyButton.setOnClickListener(v -> runSearch(query));
+                historyButton.setVisibility(View.VISIBLE);
+            } else {
+                // Hide the button if no related query
+                historyButton.setVisibility(View.GONE);
+            }
+        }
+
+        for (int i = queries; i < buttonNumber; i++) {
+
         }
     }
 
