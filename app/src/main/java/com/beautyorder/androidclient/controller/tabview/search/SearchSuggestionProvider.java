@@ -48,7 +48,9 @@ public class SearchSuggestionProvider extends ContentProvider {
         var cursor = new MatrixCursor(columns);
 
         cursor.addRow(new Object[] {0, "Around current location"});
-        cursor.addRow(new Object[] {1, userInput});
+        //cursor.addRow(new Object[] {1, userInput});
+        cursor.addRow(new Object[] {1, "Partick"});
+        cursor.addRow(new Object[] {2, "G37EE"});
 
         return cursor;
     }
