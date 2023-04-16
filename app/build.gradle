@@ -39,12 +39,18 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding true
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 
     splits {
