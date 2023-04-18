@@ -18,6 +18,7 @@
 
 package com.beautyorder.androidclient.model;
 
+import com.android.java.androidjavatools.model.DBCollectionAccessor;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.model.FirebaseFirestoreMockManager;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;

@@ -21,11 +21,11 @@ package com.beautyorder.androidclient.model;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.beautyorder.androidclient.TaskCompletionManager;
 import java.util.Date;
 
 public class ScoreTransferer {

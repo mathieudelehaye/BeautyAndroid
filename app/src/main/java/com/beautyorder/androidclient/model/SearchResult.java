@@ -19,8 +19,8 @@
 package com.beautyorder.androidclient.model;
 
 import android.util.Log;
+import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;

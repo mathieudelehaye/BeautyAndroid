@@ -21,7 +21,8 @@
 
 package com.beautyorder.androidclient.model;
 
-import com.beautyorder.androidclient.TaskCompletionManager;
+import com.android.java.androidjavatools.model.DBCollectionAccessor;
+import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 

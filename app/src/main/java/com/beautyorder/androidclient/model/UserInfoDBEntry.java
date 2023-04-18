@@ -19,8 +19,9 @@
 package com.beautyorder.androidclient.model;
 
 import android.util.Log;
+import com.android.java.androidjavatools.model.DBCollectionAccessor;
+import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.Helpers;
-import com.beautyorder.androidclient.TaskCompletionManager;
 import com.google.firebase.firestore.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -38,6 +38,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResultDetail;
