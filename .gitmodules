@@ -1,0 +1,3 @@
+[submodule "AndroidJavaTools"]
+	path = AndroidJavaTools
+	url = git@github.com:mathieudelehaye/AndroidJavaTools.git
