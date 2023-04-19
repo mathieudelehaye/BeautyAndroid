@@ -33,7 +33,7 @@ import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.android.java.androidjavatools.model.SearchResult;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.tabview.result.EnhancedOverlayItem;
+import com.android.java.androidjavatools.controller.tabview.result.EnhancedOverlayItem;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;

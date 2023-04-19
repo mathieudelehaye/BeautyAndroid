@@ -35,7 +35,7 @@ import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
-import com.beautyorder.androidclient.controller.tabview.result.EnhancedOverlayItem;
+import com.android.java.androidjavatools.controller.tabview.result.EnhancedOverlayItem;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.android.java.androidjavatools.model.SearchResult;

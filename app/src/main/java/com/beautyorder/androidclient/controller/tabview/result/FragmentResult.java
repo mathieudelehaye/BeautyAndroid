@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.result.EnhancedOverlayItem;
 import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.android.java.androidjavatools.model.SearchResult;
 import com.android.java.androidjavatools.model.TaskCompletionManager;

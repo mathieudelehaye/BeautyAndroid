@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.NotSwipeableViewPager;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
 import com.beautyorder.androidclient.databinding.FragmentTabViewBinding;

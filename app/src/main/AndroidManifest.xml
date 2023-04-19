@@ -83,8 +83,8 @@
         </activity>
 
         <provider
-            android:name="com.beautyorder.androidclient.controller.tabview.search.SearchSuggestionProvider"
-            android:authorities="com.beautyorder.androidclient.controller.tabview.search.SearchSuggestionProvider"
+            android:name="com.android.java.androidjavatools.controller.tabview.search.SearchSuggestionProvider"
+            android:authorities="com.android.java.androidjavatools.controller.tabview.search.SearchSuggestionProvider"
         />
     </application>
 </manifest>
