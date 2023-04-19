@@ -28,14 +28,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
+import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.model.ResultItemInfo;
+import com.android.java.androidjavatools.model.SearchResult;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.tabview.result.EnhancedOverlayItem;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.databinding.FragmentResultListBinding;
-import com.beautyorder.androidclient.model.ResultItemInfo;
-import com.beautyorder.androidclient.model.SearchResult;
 
 public class FragmentResultList extends FragmentResult {
     private FragmentResultListBinding mBinding;

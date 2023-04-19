@@ -32,7 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import androidx.annotation.NonNull;
-import com.beautyorder.androidclient.Helpers;
+import com.android.java.androidjavatools.Helpers;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.databinding.FragmentSuggestionBinding;
 

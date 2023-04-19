@@ -24,9 +24,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.model.AppUser;
 
 public class ActivityWithStart extends AppCompatActivity {
 

@@ -34,11 +34,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.beautyorder.androidclient.Helpers;
+import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
-import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class FragmentWithSearch extends Fragment {

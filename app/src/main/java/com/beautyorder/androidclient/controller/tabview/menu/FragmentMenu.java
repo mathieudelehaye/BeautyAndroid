@@ -29,13 +29,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.beautyorder.androidclient.Helpers;
+import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
-import com.beautyorder.androidclient.model.AppUser;
 
 public class FragmentMenu extends Fragment {
 

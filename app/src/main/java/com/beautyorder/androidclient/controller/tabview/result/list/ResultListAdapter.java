@@ -26,8 +26,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.model.ResultItemInfo;
 import java.util.ArrayList;
 
 public class ResultListAdapter extends BaseAdapter {

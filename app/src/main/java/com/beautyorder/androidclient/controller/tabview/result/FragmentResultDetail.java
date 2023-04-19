@@ -29,11 +29,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.beautyorder.androidclient.Helpers;
+import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentResultDetailBinding;
-import com.beautyorder.androidclient.model.ResultItemInfo;
 
 public class FragmentResultDetail extends Fragment {
     private FragmentResultDetailBinding mBinding;

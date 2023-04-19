@@ -34,7 +34,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import com.beautyorder.androidclient.Helpers;
+import com.android.java.androidjavatools.Helpers;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.R;
 

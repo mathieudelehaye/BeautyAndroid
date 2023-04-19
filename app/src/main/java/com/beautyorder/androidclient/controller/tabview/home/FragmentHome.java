@@ -30,13 +30,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
-import com.beautyorder.androidclient.Helpers;
+import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.model.AppUser;
+import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.search.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.databinding.FragmentHomeBinding;
-import com.beautyorder.androidclient.model.AppUser;
-import com.beautyorder.androidclient.model.ResultItemInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
