@@ -38,9 +38,9 @@ import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.android.java.androidjavatools.model.AppUser;
 import com.android.java.androidjavatools.Helpers;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.auth.dialog.FragmentLoginDialog;
-import com.beautyorder.androidclient.controller.auth.dialog.FragmentStartDialog;
-import com.beautyorder.androidclient.controller.auth.dialog.AuthenticateDialogListener;
+import com.android.java.androidjavatools.controller.auth.dialog.AuthenticateDialogListener;
+import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentLoginDialog;
+import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentStartDialog;
 import com.beautyorder.androidclient.model.ScoreTransferer;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -95,7 +95,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
             startAppWithUser(lastUId, AppUser.AuthenticationType.REGISTERED);
         }
 
-        DialogFragment newFragment = new FragmentStartDialog();
+        DialogFragment newFragment = new EBFragmentStartDialog();
         newFragment.show(getSupportFragmentManager(), "FragmentStartDialog");
     }
 
@@ -116,7 +116,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
     }
 
     @Override
-    public void onDialogRegisteredSigninClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
+    public void onDialogRegisteredSigninClick(DialogFragment dialog, SigningDialogCredentialViews credentials) {
 
         boolean navigate = true;
 
@@ -178,7 +178,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
     }
 
     @Override
-    public void onDialogSignupClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
+    public void onDialogSignupClick(DialogFragment dialog, SigningDialogCredentialViews credentials) {
         EditText email = credentials.getEmail();
         String emailText = email.getText().toString();
 
@@ -257,7 +257,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
 
                             // Navigate to the login dialog
                             dialog.dismiss();
-                            var dialog = new FragmentLoginDialog();
+                            var dialog = new EBFragmentLoginDialog();
                             dialog.show(getSupportFragmentManager(), "FragmentLoginDialog");
 
                         } else {
@@ -289,7 +289,7 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
     }
 
     @Override
-    public void onDialogResetPasswordClick(DialogFragment dialog, SigninDialogCredentialViews credentials) {
+    public void onDialogResetPasswordClick(DialogFragment dialog, SigningDialogCredentialViews credentials) {
 
         EditText email = credentials.getEmail();
         String emailText = email.getText().toString();

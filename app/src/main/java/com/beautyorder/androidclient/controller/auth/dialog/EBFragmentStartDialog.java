@@ -1,37 +1,38 @@
 //
-//  FragmentStartDialog.java
+//  EBFragmentStartDialog.java
 //
-//  Created by Mathieu Delehaye on 3/02/2023.
+//  Created by Mathieu Delehaye on 19/04/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
 //  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller.auth.dialog;
 
 import android.app.Dialog;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.android.java.androidjavatools.controller.auth.dialog.FragmentStartDialog;
 import com.beautyorder.androidclient.R;
 
-public class FragmentStartDialog extends FragmentAuthenticateDialog {
-
+public class EBFragmentStartDialog extends FragmentStartDialog {
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        super.onCreateDialog(savedInstanceState);
+    protected Dialog initializeGUI(Dialog parentDialog) {
+        // Do not use the parent dialog
 
         Dialog dialog = buildDialogFromLayout(R.layout.fragment_start_dialog);
 
@@ -56,7 +57,7 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
 
         emailSignUp.setOnClickListener(view -> {
             dismiss();
-            var dialog1 = new FragmentSignupDialog();
+            var dialog1 = new EBFragmentSignupDialog();
             dialog1.show(getFragmentManager(), "FragmentSignupDialog");
         });
 
@@ -67,7 +68,7 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
         }
 
         facebookSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
-            "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show());
+                "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show());
 
         Button googleSignUp = mContainerView.findViewById(R.id.google_log_in_start);
         if (googleSignUp == null) {
@@ -76,7 +77,7 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
         }
 
         googleSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
-            "Google sign-up not yet available", Toast.LENGTH_SHORT).show());
+                "Google sign-up not yet available", Toast.LENGTH_SHORT).show());
 
         Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
         if (registeredSignIn == null) {
@@ -86,7 +87,7 @@ public class FragmentStartDialog extends FragmentAuthenticateDialog {
 
         registeredSignIn.setOnClickListener(view -> {
             dismiss();
-            var dialog2 = new FragmentLoginDialog();
+            var dialog2 = new EBFragmentLoginDialog();
             dialog2.show(getFragmentManager(), "FragmentLoginDialog");
         });
 
