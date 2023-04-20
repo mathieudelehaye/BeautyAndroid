@@ -9,12 +9,15 @@
     Copyright © 2023 Mathieu Delehaye. All rights reserved.
 
 
-    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+    Public License as published by
     the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS
     FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-    You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+    <https://www.gnu.org/licenses/>.
 -->
 
 <resources>
@@ -63,14 +66,6 @@
         1. Voici l\'étape 1.\n\n
         2. Voici l\'étape 2.\n\n
         3. Voici l\'étape 3.
-    </string>
-    <!-- Terms Fragment -->
-    <string name="filler_text">Lorem ipsum dolor sit amet. Ut enim corporis ea labore esse ea illum consequatur. Et
-        reiciendis ducimus et repellat magni id ducimus nesciunt. Aut natus nihil est ipsum error est consequatur
-        aperiam ut saepe ipsa et quos voluptatem et voluptatem odio?
-
-        Et minus laboriosam qui laborum voluptate aut doloribus soluta ex voluptatem amet. Sed quae voluptatum et
-        velit quam et rerum asperiores! Aut quam dicta quo architecto corporis qui consequatur eveniet.
     </string>
     <!-- Onboarding activity -->
     <string name="onboarding_page_1_title">Lorem</string>

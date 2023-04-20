@@ -41,13 +41,14 @@ import androidx.fragment.app.FragmentManager;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
+import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentTerms;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.result.FragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.FragmentMap;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.controller.tabview.menu.FragmentHelp;
-import com.beautyorder.androidclient.controller.tabview.menu.FragmentTerms;
+import com.android.java.androidjavatools.controller.tabview.menu.FragmentTerms;
 import com.beautyorder.androidclient.controller.tabview.search.FragmentSuggestion;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -83,7 +84,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private FragmentMap mMapFragment;
     private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
     private FragmentHelp mHelpFragment = new FragmentHelp();
-    private FragmentTerms mTermsFragment = new FragmentTerms();
+    private FragmentTerms mTermsFragment = new EBFragmentTerms();
     private FragmentType mShownFragmentType = FragmentType.TAB_VIEW;    // We show the Tabview page by default
     Stack<FragmentType> mPrevFragmentTypes = new Stack<>();
 
