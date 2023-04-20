@@ -1,113 +1,58 @@
-//  FragmentCamera.java
 //
-//  Created by Mathieu Delehaye on 17/12/2022.
+//  EBFragmentCamera.java
+//
+//  Created by Mathieu Delehaye on 20/04/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller.tabview.camera;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Size;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.camera.core.*;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.camera.FragmentCamera;
 import com.android.java.androidjavatools.model.AppUser;
-import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.databinding.FragmentCameraBinding;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.beautyorder.androidclient.R;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-public class FragmentCamera extends Fragment {
-    private static final int PERMISSION_REQUEST_CAMERA = 1;
-    private FragmentCameraBinding mBinding;
-    private Context mCtx;
-    private PreviewView mPreviewView;
-    private ListenableFuture<ProcessCameraProvider> mCameraProviderFuture;
+public class EBFragmentCamera extends FragmentCamera {
     private SharedPreferences mSharedPref;
-    private boolean mIsViewVisible = false;
 
     @Override
-    public View onCreateView(
-        LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState
-    ) {
-        mBinding = FragmentCameraBinding.inflate(inflater, container, false);
-        return mBinding.getRoot();
-    }
-
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        Log.v("BeautyAndroid", "Camera view created at timestamp: "
-            + Helpers.getTimestamp());
-
         super.onViewCreated(view, savedInstanceState);
 
-        mCtx = view.getContext();
-
-        mPreviewView = view.findViewById(R.id.preview_camera);
-
-        mCameraProviderFuture = ProcessCameraProvider.getInstance(mCtx);
-
-        mSharedPref = mCtx.getSharedPreferences(
+        mSharedPref = mContext.getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
         showHelp();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
-
-        if (requestCode == PERMISSION_REQUEST_CAMERA) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCamera();
-            } else {
-                Toast.makeText(mCtx, "Camera Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mBinding = null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -115,13 +60,7 @@ public class FragmentCamera extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            mIsViewVisible = true;
-
-            Log.d("BeautyAndroid", "Camera view becomes visible");
-
             CollectionPagerAdapter.setPage(1);
-
-            requestCamera();
 
             var activity = (TabViewActivity)getActivity();
             if ((activity) != null) {
@@ -129,50 +68,11 @@ public class FragmentCamera extends Fragment {
             }
 
             showHelp();
-        } else {
-            mIsViewVisible = false;
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    private void requestCamera() {
-        if (mCtx != null && ContextCompat.checkSelfPermission(mCtx, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            var permissionsToRequest = new ArrayList<String>();
-            permissionsToRequest.add(Manifest.permission.CAMERA);
-
-            requestPermissions(
-                permissionsToRequest.toArray(new String[0]),
-                PERMISSION_REQUEST_CAMERA);
-        } else {
-            startCamera();
-        }
-    }
-
-    private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
-
-        mPreviewView.setPreferredImplementationMode(PreviewView.ImplementationMode.SURFACE_VIEW);
-
-        var preview = new Preview.Builder()
-            .build();
-
-        var cameraSelector = new CameraSelector.Builder()
-            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-            .build();
-
-        preview.setSurfaceProvider(mPreviewView.createSurfaceProvider());
-
-        var imageCapture =
-            new ImageCapture.Builder()
-                .setTargetRotation(mPreviewView.getDisplay().getRotation())
-                .setTargetResolution(new Size(480, 640))
-                .build();
+    protected void defineCameraButtonBehaviour(ImageCapture imageCapture) {
 
         mBinding.takePhotoCamera.setOnClickListener(view -> {
 
@@ -208,7 +108,7 @@ public class FragmentCamera extends Fragment {
                     public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
                         Log.d("BeautyAndroid", "Photo saved to file: " + file);
                         Log.v("BeautyAndroid", "Photo saved at timestamp: "
-                            + Helpers.getTimestamp());
+                                + Helpers.getTimestamp());
 
                         mSharedPref.edit().putString(getString(R.string.photo_date), photoDate).commit();
 
@@ -216,7 +116,7 @@ public class FragmentCamera extends Fragment {
 
                         // Store the local file path in a queue to send the file to the DB
                         var photoQueue = (HashSet<String>) (mSharedPref.getStringSet(
-                            getString(R.string.photos_to_send), new HashSet<>()));
+                                getString(R.string.photos_to_send), new HashSet<>()));
 
                         if (!photoQueue.contains(filePath)) {
                             photoQueue.add(filePath);
@@ -241,26 +141,9 @@ public class FragmentCamera extends Fragment {
                 }
             );
         });
-
-        // avoid having too many use cases, when switching back to the camera screen
-        cameraProvider.unbindAll();
-
-        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
-    }
-
-    public void startCamera() {
-        mCameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = mCameraProviderFuture.get();
-                bindCameraPreview(cameraProvider);
-            } catch (ExecutionException | InterruptedException e) {
-                Toast.makeText(mCtx, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }, ContextCompat.getMainExecutor(mCtx));
     }
 
     private void showHelp() {
-
         if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("cam_help_displayed", "false"))) {
                 mSharedPref.edit().putString("cam_help_displayed", "true").commit();

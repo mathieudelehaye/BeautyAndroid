@@ -30,10 +30,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
 import com.beautyorder.androidclient.controller.tabview.saved.FragmentSaved;
-import com.beautyorder.androidclient.controller.tabview.camera.FragmentCamera;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     // current page of the app ViewPager
@@ -65,7 +65,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new FragmentSaved();
                 break;
             case 2:
-                fragment = new FragmentCamera();
+                fragment = new EBFragmentCamera();
                 break;
             case 3:
             default:
