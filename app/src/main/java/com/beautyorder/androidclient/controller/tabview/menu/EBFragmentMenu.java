@@ -1,20 +1,23 @@
 //
-//  FragmentMenu.java
+//  EBFragmentMenu.java
 //
-//  Created by Mathieu Delehaye on 28/12/2022.
+//  Created by Mathieu Delehaye on 20/04/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller.tabview.menu;
 
@@ -22,24 +25,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.menu.FragmentMenu;
 import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.databinding.FragmentMenuBinding;
 
-public class FragmentMenu extends Fragment {
-
-    private FragmentMenuBinding mBinding;
+public class EBFragmentMenu extends FragmentMenu {
     private SharedPreferences mSharedPref;
 
     @Override
@@ -47,24 +44,19 @@ public class FragmentMenu extends Fragment {
         LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState
     ) {
-        mSharedPref = getContext().getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        mBinding = FragmentMenuBinding.inflate(inflater, container, false);
-        return mBinding.getRoot();
+        mSharedPref = getContext().getSharedPreferences(
+        getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        return  rootView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        Log.v("BeautyAndroid", "Menu view created at timestamp: "
-            + Helpers.getTimestamp());
-
         super.onViewCreated(view, savedInstanceState);
-
-        switchLogoutButtonVisibility();
 
         mBinding.helpMenu.setOnClickListener(view1 -> {
             var activity = (TabViewActivity)getActivity();
-
             activity.navigate(TabViewActivity.FragmentType.HELP);
         });
 
@@ -74,7 +66,6 @@ public class FragmentMenu extends Fragment {
         });
 
         mBinding.logOutMenu.setOnClickListener(view13 -> {
-
             // Delete the app preferences, app user object and navigate to the Home page
             mSharedPref.edit().putString(getString(R.string.app_uid), "").commit();
 
@@ -90,46 +81,14 @@ public class FragmentMenu extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
         if (isVisibleToUser) {
-            Log.d("BeautyAndroid", "Menu view becomes visible");
-
             CollectionPagerAdapter.setPage(2);
-
-            switchLogoutButtonVisibility();
 
             var activity = (TabViewActivity)getActivity();
             if ((activity) != null) {
                 activity.toggleTabSwiping(true);
             }
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mBinding = null;
-    }
-
-    private void switchLogoutButtonVisibility() {
-
-        final var fragmentRootView = getView();
-        if (fragmentRootView == null) {
-            return;
-        }
-
-        Button logoutButton = fragmentRootView.findViewById(R.id.log_out_menu);
-        if (logoutButton == null) {
-            return;
-        }
-
-        // Show the logout button if the uid is a registered one. Hide the button otherwise
-        switch (AppUser.getInstance().getAuthenticationType()) {
-            case REGISTERED:
-                logoutButton.setVisibility(View.VISIBLE);
-                break;
-            default:
-                logoutButton.setVisibility(View.GONE);
-                break;
         }
     }
 }

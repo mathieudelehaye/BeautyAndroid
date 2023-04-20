@@ -1,11 +1,11 @@
 //
-//  FragmentHelp.java
+//  EBFragmentTerms.java
 //
-//  Created by Mathieu Delehaye on 19/01/2023.
+//  Created by Mathieu Delehaye on 20/04/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
 //  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
@@ -22,34 +22,17 @@
 package com.beautyorder.androidclient.controller.tabview.menu;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.menu.FragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.databinding.FragmentHelpBinding;
+import com.beautyorder.androidclient.R;
 
-public class FragmentHelp extends Fragment {
-
-    private FragmentHelpBinding mBinding;
-
-    @Override
-    public View onCreateView(
-        LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState
-    ) {
-        mBinding = FragmentHelpBinding.inflate(inflater, container, false);
-        return mBinding.getRoot();
-    }
-
+public class EBFragmentHelp extends FragmentHelp {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        Log.v("BeautyAndroid", "Help view created at timestamp: "
-            + Helpers.getTimestamp());
-
         super.onViewCreated(view, savedInstanceState);
+
+        mBinding.descriptionHelp.setText(R.string.help_text);
 
         mBinding.backHelp.setOnClickListener(new View.OnClickListener() {
             @Override
