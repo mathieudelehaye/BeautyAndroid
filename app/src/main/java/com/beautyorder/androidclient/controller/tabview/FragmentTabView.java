@@ -32,8 +32,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.NotSwipeableViewPager;
-import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
+import com.android.java.androidjavatools.R;
+import com.android.java.androidjavatools.controller.tabview.home.FragmentHome;
+import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.databinding.FragmentTabViewBinding;
 import com.google.android.material.tabs.TabLayout;
 
@@ -59,12 +60,13 @@ public class FragmentTabView extends Fragment {
 
         mActivity = getActivity();
 
-        mViewPager = view.findViewById(R.id.tabViewPager);
-        TabLayout tabLayout = view.findViewById(R.id.tabViewTabbar);
+        mViewPager = mBinding.tabViewPager;
+        TabLayout tabLayout = mBinding.tabViewTabbar;
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.camera);
         tabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity()));
+        mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity(),
+            (FragmentResult.ResultProvider)getActivity()));
         mViewPager.setOffscreenPageLimit(3);    // display up to 3 pages without recreating them at each swipe
     }
 
@@ -116,7 +118,7 @@ public class FragmentTabView extends Fragment {
 
             if(mActivity != null) {
                 ((FragmentHome)FragmentManager.findFragment(mActivity.findViewById(R.id.rp_history_title)))
-                    .updateRecentRP();
+                    .updateRecentResults();
                 ((FragmentHome)FragmentManager.findFragment(mActivity.findViewById(R.id.rp_history_title)))
                     .updateRecentSearches();
             }

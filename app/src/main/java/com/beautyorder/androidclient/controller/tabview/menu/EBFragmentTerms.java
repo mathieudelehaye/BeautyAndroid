@@ -36,7 +36,7 @@ public class EBFragmentTerms extends FragmentTerms {
         mBinding.backTerms.setOnClickListener(view1 -> {
             // Go back to the app Menu
             var activity = (TabViewActivity)getActivity();
-            activity.navigateBack();
+            activity.navigator().back();
         });
     }
 }

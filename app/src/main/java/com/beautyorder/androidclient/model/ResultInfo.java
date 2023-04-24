@@ -1,5 +1,5 @@
 //
-//  RecyclePointInfo.java
+//  ResultInfo.java
 //
 //  Created by Mathieu Delehaye on 22/01/2023.
 //
@@ -26,9 +26,9 @@ import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
-public class RecyclePointInfo extends DBCollectionAccessor {
+public class ResultInfo extends DBCollectionAccessor {
 
-    public RecyclePointInfo(FirebaseFirestore database) {
+    public ResultInfo(FirebaseFirestore database) {
 
         super(database, "recyclePointInfos");
 

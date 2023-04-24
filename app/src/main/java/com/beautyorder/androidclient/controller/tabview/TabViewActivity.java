@@ -36,21 +36,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.Navigator;
+import com.android.java.androidjavatools.controller.tabview.search.FragmentWithSearch;
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
-import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentHelp;
-import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentTerms;
-import com.beautyorder.androidclient.controller.tabview.result.FragmentResult;
-import com.beautyorder.androidclient.controller.tabview.result.FragmentResultDetail;
-import com.beautyorder.androidclient.controller.tabview.result.list.FragmentResultList;
-import com.beautyorder.androidclient.controller.tabview.result.map.FragmentMap;
-import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
-import com.android.java.androidjavatools.controller.tabview.menu.FragmentHelp;
-import com.android.java.androidjavatools.controller.tabview.menu.FragmentTerms;
-import com.beautyorder.androidclient.controller.tabview.search.FragmentSuggestion;
+import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
+import com.android.java.androidjavatools.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,40 +54,20 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.*;
 
-public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask {
-   // Fragments: types
-    public enum FragmentType {
-        TAB_VIEW,
-        SUGGESTION,
-        LIST,
-        MAP,
-        DETAIL,
-        HELP,
-        TERMS,
-        NONE
-    }
+public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask,
+    FragmentWithSearch.HistoryManager, FragmentResult.ResultProvider, Navigator.NavigatorManager {
 
     private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;
 
     // Fragments: properties
-    private Navigator mNavigator = new Navigator(this);
-    private FragmentTabView mTabViewFragment = new FragmentTabView();
-    private FragmentSuggestion mSuggestionFragment = new FragmentSuggestion();
-    private FragmentResultList mResultListFragment;
-    private FragmentMap mMapFragment;
-    private FragmentResultDetail mDetailFragment = new FragmentResultDetail();
-    private FragmentHelp mHelpFragment = new EBFragmentHelp();
-    private FragmentTerms mTermsFragment = new EBFragmentTerms();
-    private FragmentType mShownFragmentType = FragmentType.TAB_VIEW;    // We show the Tabview page by default
-    Stack<FragmentType> mPrevFragmentTypes = new Stack<>();
+    private Navigator mNavigator = new Navigator(this, R.id.mainActivityLayout);
 
     // Search: properties
     private CircularKeyBuffer<String> mPastRPKeys = new CircularKeyBuffer<>(2);
     private CircularKeyBuffer<String> mPastSearchQueries = new CircularKeyBuffer<>(4);
-    private SearchResult mSearchResult;
-    private HashMap<String, ResultItemInfo> mRecyclePoints = new HashMap<>();
-    private String mSelectedRPKey = "";
+    private SearchResult mSearchResult = new SearchResult();
+    private String mSelectedResultItemKey = "";
 
     // Background: properties
     // TODO: do not use a static property here
@@ -104,18 +77,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private final int mTimeBeforePollingScoreInMin = 1;
 
     // Search: getter-setter
-    public ResultItemInfo getSelectedRecyclePoint() {
-        return mRecyclePoints.get(mSelectedRPKey);
+    public ResultItemInfo getSelectedResultItem() {
+        return mSearchResult.get(mSelectedResultItemKey);
     }
 
-    public void setSelectedRecyclePoint(ResultItemInfo value) {
+    public void setSelectedResultItem(ResultItemInfo value) {
         final String key = value.getKey();
 
-        mSelectedRPKey = key;
-
-        if (!mRecyclePoints.containsKey(key)) {
-            mRecyclePoints.put(key, value);
-        }
+        mSelectedResultItemKey = key;
 
         if (!key.equals("")) {
             mPastRPKeys.add(key);
@@ -126,8 +95,9 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         return mSearchResult;
     }
 
+    @Override
     public void setSearchResult(SearchResult result) {
-        mSearchResult = result;
+
     }
 
     @Override
@@ -150,16 +120,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mDatabase = FirebaseFirestore.getInstance();
         mSharedPref = getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
-
-        // Fragments: initialization
-        // Add to the navigator the fragments and select the first one to show
-        mNavigator.addFragment(mTabViewFragment);
-        mNavigator.addFragment(mSuggestionFragment);
-        mNavigator.addFragment(mDetailFragment);
-        mNavigator.addFragment(mHelpFragment);
-        mNavigator.addFragment(mTermsFragment);
-
-        mNavigator.showFragment(mTabViewFragment);
 
         // TODO: uncomment and update logic to process the query
 //        String intentAction = intent.getAction();
@@ -208,14 +168,12 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void showResult(FragmentResultList list) {
+    public void showResultList(FragmentResultList list) {
         final String query = FragmentResult.getResultQuery();
-
         storeSearchQuery(query);
 
-        mResultListFragment = list;
-        mNavigator.addFragment(mResultListFragment);
-        navigate(FragmentType.LIST);
+        mNavigator.updateFragment(FragmentResultList.class, list);
+        mNavigator.showFragment("list");
 
         // TODO: add map fragment
         /*mNavigator.addFragment(mMapFragment);
@@ -223,26 +181,27 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     // Search: methods
-    public Integer getPreviousRPNumber() {
-        return mPastRPKeys.items();
-    }
-
-    public ResultItemInfo getPreviousRP(Integer age) {
-        final String key = mPastRPKeys.readFromEnd(age);
-
-        if (!mRecyclePoints.containsKey(key)) {
-            Log.e("BeautyAndroid", "Cannot get previous RP, as unknown key");
-        }
-
-        return mRecyclePoints.get(key);
-    }
-
-    public Integer getPreviousQueryNumber() {
+    public int getPreviousQueryNumber() {
         return mPastSearchQueries.items();
     }
 
-    public String getPreviousSearchQuery(Integer age) {
-        return mPastSearchQueries.readFromEnd(age);
+    @Override
+    public String getPreviousSearchQuery(int index) {
+        return mPastSearchQueries.readFromEnd(index);
+    }
+
+    @Override
+    public int getPreviousResultItemNumber() {
+        return mPastRPKeys.items();
+    }
+
+    @Override
+    public ResultItemInfo getPreviousResultItem(int index) {
+        final String key = mPastRPKeys.readFromEnd(index);
+
+        // TODO: check if previous search result is in an hash table and return it
+
+        return mSearchResult.get(key);
     }
 
     public void storeSearchQuery(@NonNull String query) {
@@ -257,74 +216,21 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mainToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public void navigate(FragmentType dest) {
-        Log.d("BeautyAndroid", "Navigating to the fragment of type " + dest);
-
-        mPrevFragmentTypes.push(mShownFragmentType);
-        mShownFragmentType = dest;
-
-        Log.v("BeautyAndroid", "Previous fragment stack updated to: " + mPrevFragmentTypes.toString());
-
-        onNavigation(dest, mPrevFragmentTypes.peek());
-        mNavigator.showFragment(findFragment(dest));
+    @Override
+    public Navigator navigator() {
+        return mNavigator;
     }
 
-    public void navigateBack() {
-        if (mPrevFragmentTypes.empty()) {
-            Log.w("BeautyAndroid", "Cannot navigate back, as previous fragment stack empty");
-            return;
-        }
-
-        final FragmentType prevFragment = mShownFragmentType;
-        mShownFragmentType = mPrevFragmentTypes.pop();
-
-        Log.d("BeautyAndroid", "Navigating back to the fragment of type " + mShownFragmentType);
-        Log.v("BeautyAndroid", "Previous fragment stack updated to: " + mPrevFragmentTypes.toString());
-
-        onNavigation(mShownFragmentType, prevFragment);
-        mNavigator.showFragment(findFragment(mShownFragmentType));
-    }
-
-    private Fragment findFragment(FragmentType type) {
-        Fragment fragment;
-
-        switch (type) {
-            case TAB_VIEW:
-            default:
-                fragment = mTabViewFragment;
-                break;
-            case SUGGESTION:
-                fragment = mSuggestionFragment;
-                break;
-            case LIST:
-                fragment = mResultListFragment;
-                break;
-            case MAP:
-                fragment = mMapFragment;
-                break;
-            case DETAIL:
-                fragment = mDetailFragment;
-                break;
-            case HELP:
-                fragment = mHelpFragment;
-                break;
-            case TERMS:
-                fragment = mTermsFragment;
-                break;
-        }
-
-        return fragment;
-    }
-
-    private void onNavigation(FragmentType dest, FragmentType orig) {
+    @Override
+    public void onNavigation(String dest, String orig) {
         switch (dest) {
-            case TAB_VIEW:
+            case "tab":
                 switch (orig) {
-                    case HELP:
-                    case TERMS:
+                    case "help":
+                    case "terms":
                         CollectionPagerAdapter.setPage(2);
                         break;
-                    case SUGGESTION:
+                    case "suggestion":
                         // Show toolbar when coming from the Suggestion page
                         toggleToolbar(true);
                         break;
@@ -332,10 +238,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                         break;
                 }
                 break;
-            case LIST:
-            case MAP:
+            case "list":
+            case "map":
                 switch (orig) {
-                    case SUGGESTION:
+                    case "suggestion":
                         // Show toolbar when coming from the Suggestion page
                         toggleToolbar(true);
                         break;
@@ -343,7 +249,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                         break;
                 }
                 break;
-            case SUGGESTION:
+            case "suggestion":
                 // Hide toolbar when going to the Suggestion page
                 toggleToolbar(false);
             default:
@@ -351,18 +257,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         }
     }
 
-    public void showDialog(String text, String tag) {
-        var dialogFragment = new FragmentHelpDialog(text);
-        dialogFragment.show(findFragment(mShownFragmentType).getChildFragmentManager(), tag);
-    }
-
     public void showScore(int value) {
         Log.v("BeautyAndroid", "Show score: " + value);
 
-        TextView appScore = mTabViewFragment.getView().findViewById(R.id.score_text);
-        if (appScore != null) {
-            appScore.setText(value + " pts");
-        }
+        // TODO: fix the score display
+//        TextView appScore = mTabViewFragment.getView().findViewById(R.id.score_text);
+//        if (appScore != null) {
+//            appScore.setText(value + " pts");
+//        }
     }
 
     public void toggleTabSwiping(boolean enable) {
@@ -532,13 +434,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                     Log.v("BeautyAndroid", "Shown score updated: " + downloadedScore);
 
                     showScore(downloadedScore);
-                    if (scoreTransferredFromAnonymousAccount) {
-                        scoreTransferredFromAnonymousAccount = false;
-                        showDialog(getString(R.string.score_transferred) + downloadedScore
-                            + "!", "Score transferred");
-                    } else  {
-                        showDialog(getString(R.string.new_score_displayed)+ downloadedScore, "Score increased");
-                    }
+                    // TODO: update the score download
+//                    if (scoreTransferredFromAnonymousAccount) {
+//                        scoreTransferredFromAnonymousAccount = false;
+//                        showDialog(getString(R.string.score_transferred) + downloadedScore
+//                            + "!", "Score transferred");
+//                    } else  {
+//                        showDialog(getString(R.string.new_score_displayed)+ downloadedScore, "Score increased");
+//                    }
                 }
 
                 if (preferenceScore != downloadedScore) {

@@ -29,9 +29,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.beautyorder.androidclient.R;
+import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
+import com.android.java.androidjavatools.R;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
-import com.beautyorder.androidclient.controller.tabview.home.FragmentHome;
+import com.beautyorder.androidclient.controller.tabview.home.EBFragmentHome;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
 import com.beautyorder.androidclient.controller.tabview.saved.FragmentSaved;
 
@@ -39,10 +40,14 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     // current page of the app ViewPager
     private static int mCurrentPage = 0;
     private FragmentActivity mActivity;
+    private FragmentResult.ResultProvider mSearchResultProvider;
 
-    public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa) {
+    public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa,
+        FragmentResult.ResultProvider resultProvider) {
+
         super(fm);
         mActivity = fa;
+        mSearchResultProvider = resultProvider;
     }
 
     public static int getPage() {
@@ -59,7 +64,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (i) {
             case 0:
-                fragment = new FragmentHome();
+                fragment = new EBFragmentHome(mSearchResultProvider);
                 break;
             case 1:
                 fragment = new FragmentSaved();

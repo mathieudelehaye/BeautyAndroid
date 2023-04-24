@@ -39,7 +39,7 @@ public class EBFragmentHelp extends FragmentHelp {
             public void onClick(View view) {
                 // Go back to the app Menu
                 var activity = (TabViewActivity)getActivity();
-                activity.navigateBack();
+                activity.navigator().back();
             }
         });
     }

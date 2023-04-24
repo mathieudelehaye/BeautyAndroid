@@ -35,7 +35,7 @@ import com.android.java.androidjavatools.controller.tabview.camera.FragmentCamer
 import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
-import com.beautyorder.androidclient.controller.tabview.dialog.FragmentHelpDialog;
+import com.android.java.androidjavatools.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.R;
 import java.io.File;

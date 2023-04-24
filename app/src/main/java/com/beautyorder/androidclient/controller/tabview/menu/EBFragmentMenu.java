@@ -57,12 +57,12 @@ public class EBFragmentMenu extends FragmentMenu {
 
         mBinding.helpMenu.setOnClickListener(view1 -> {
             var activity = (TabViewActivity)getActivity();
-            activity.navigate(TabViewActivity.FragmentType.HELP);
+            activity.navigator().showFragment("help");
         });
 
         mBinding.termsMenu.setOnClickListener(view12 -> {
             var activity = (TabViewActivity)getActivity();
-            activity.navigate(TabViewActivity.FragmentType.TERMS);
+            activity.navigator().showFragment("terms");
         });
 
         mBinding.logOutMenu.setOnClickListener(view13 -> {
