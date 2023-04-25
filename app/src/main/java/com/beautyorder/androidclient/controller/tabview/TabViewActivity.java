@@ -42,6 +42,13 @@ import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
 import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
 import com.android.java.androidjavatools.controller.tabview.result.list.FragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
+import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentHelp;
+import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
+import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentTerms;
+import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
+import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -118,6 +125,16 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mDatabase = FirebaseFirestore.getInstance();
         mSharedPref = getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        mNavigator.createFragment(EBFragmentTabView.class);
+        mNavigator.createFragment(EBFragmentCamera.class);
+        mNavigator.createFragment(EBFragmentMenu.class);
+        mNavigator.createFragment(EBFragmentHelp.class);
+        mNavigator.createFragment(EBFragmentTerms.class);
+        mNavigator.createFragment(EBFragmentResultList.class);
+        mNavigator.createFragment(EBFragmentMap.class);
+        mNavigator.createFragment(EBFragmentResultDetail.class);
+        mNavigator.showFragment("EBFragmentHelp");
 
         // TODO: uncomment and update logic to process the query
 //        String intentAction = intent.getAction();
