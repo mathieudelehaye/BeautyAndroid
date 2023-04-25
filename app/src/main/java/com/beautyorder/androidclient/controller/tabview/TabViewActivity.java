@@ -32,11 +32,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.Navigator;
 import com.android.java.androidjavatools.controller.tabview.search.FragmentWithSearch;
@@ -267,16 +265,9 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 //        }
     }
 
+    @Override
     public void toggleTabSwiping(boolean enable) {
-        // Enable or disable swiping gesture for the view pager
-        var fragment =
-            (FragmentTabView) FragmentManager.findFragment(findViewById(R.id.tabViewPager));
-
-        if (enable) {
-            fragment.enableTabSwiping();
-        } else {
-            fragment.disableTabSwiping();
-        }
+        mNavigator.toggleTabSwiping(enable);
     }
 
     // Background: methods
