@@ -49,6 +49,7 @@ import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentTerms;
 import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
+import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -66,7 +67,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private SharedPreferences mSharedPref;
 
     // Fragments: properties
-    private Navigator mNavigator = new Navigator(this, R.id.mainActivityLayout);
+    private Navigator mNavigator;
 
     // Search: properties
     private CircularKeyBuffer<String> mPastRPKeys = new CircularKeyBuffer<>(2);
@@ -102,7 +103,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     @Override
     public void setSearchResult(SearchResult result) {
-
     }
 
     @Override
@@ -126,15 +126,17 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mSharedPref = getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);
 
-        mNavigator.createFragment(EBFragmentTabView.class);
-        mNavigator.createFragment(EBFragmentCamera.class);
-        mNavigator.createFragment(EBFragmentMenu.class);
-        mNavigator.createFragment(EBFragmentHelp.class);
-        mNavigator.createFragment(EBFragmentTerms.class);
-        mNavigator.createFragment(EBFragmentResultList.class);
-        mNavigator.createFragment(EBFragmentMap.class);
-        mNavigator.createFragment(EBFragmentResultDetail.class);
-        mNavigator.showFragment("EBFragmentHelp");
+        mNavigator = new Navigator(this, R.id.mainActivityLayout);
+        mNavigator.createFragment("tab", EBFragmentTabView.class);
+        mNavigator.createFragment("camera", EBFragmentCamera.class);
+        mNavigator.createFragment("menu", EBFragmentMenu.class);
+        mNavigator.createFragment("help", EBFragmentHelp.class);
+        mNavigator.createFragment("terms", EBFragmentTerms.class);
+        mNavigator.createFragment("list", EBFragmentResultList.class);
+        mNavigator.createFragment("map", EBFragmentMap.class);
+        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
+        mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
+        mNavigator.showFragment("tab");
 
         // TODO: uncomment and update logic to process the query
 //        String intentAction = intent.getAction();
@@ -187,7 +189,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         final String query = FragmentResult.getResultQuery();
         storeSearchQuery(query);
 
-        mNavigator.updateFragment(FragmentResultList.class, list);
+        mNavigator.updateFragment("list", list);
         mNavigator.showFragment("list");
 
         // TODO: add map fragment
@@ -237,7 +239,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     @Override
-    public void onNavigation(String dest, String orig) {
+    public void onNavigation(@NonNull String dest, @NonNull String orig) {
         switch (dest) {
             case "tab":
                 switch (orig) {
