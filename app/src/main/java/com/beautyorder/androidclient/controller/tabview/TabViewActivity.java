@@ -103,6 +103,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     @Override
     public void setSearchResult(SearchResult result) {
+        mSearchResult = result;
     }
 
     @Override
