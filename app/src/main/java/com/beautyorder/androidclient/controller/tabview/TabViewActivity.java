@@ -41,7 +41,6 @@ import com.android.java.androidjavatools.controller.tabview.search.FragmentWithS
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
 import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
-import com.android.java.androidjavatools.controller.tabview.result.list.FragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
@@ -186,18 +185,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void showResultList(FragmentResultList list) {
-        final String query = FragmentResult.getResultQuery();
-        storeSearchQuery(query);
-
-        mNavigator.updateFragment("list", list);
-        mNavigator.showFragment("list");
-
-        // TODO: add map fragment
-        /*mNavigator.addFragment(mMapFragment);
-        mNavigator.addFragment(mMapFragment);*/
-    }
-
     // Search: methods
     public int getPreviousQueryNumber() {
         return mPastSearchQueries.items();
@@ -222,6 +209,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         return mSearchResult.get(key);
     }
 
+    @Override
     public void storeSearchQuery(@NonNull String query) {
         mPastSearchQueries.add(query);
     }
