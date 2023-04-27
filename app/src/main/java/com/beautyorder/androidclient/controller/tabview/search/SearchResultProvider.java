@@ -31,11 +31,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.util.GeoPoint;
 
 public class SearchResultProvider implements FragmentWithSearch.SearchProvider {
+    private SearchResult mSearchResults;
+
+    @Override
+    public SearchResult getSearchResults() {
+        return mSearchResults;
+    }
+
     @Override
     public void searchGeoPointResults(GeoPoint searchStart, double searchRadiusInCoordinate,
-        FirebaseFirestore database, SearchResult outputResult, TaskCompletionManager... cbManager) {
-
-        outputResult = new SearchResult();
+        FirebaseFirestore database, TaskCompletionManager... cbManager) {
 
         final double startLatitude = searchStart.getLatitude();
         final double startLongitude = searchStart.getLongitude();
@@ -61,8 +66,7 @@ public class SearchResultProvider implements FragmentWithSearch.SearchProvider {
         var pointInfo = new ResultInfo(database);
         pointInfo.SetFilter(filterFields, filterMinRanges, filterMaxRanges);
 
-        // TODO: Check if the reference is still accessible from the anonymous inner class
-        SearchResult finalOutputResult = outputResult;
+        mSearchResults = new SearchResult();
 
         pointInfo.readAllDBFields(outputFields, new TaskCompletionManager() {
             @Override
@@ -81,7 +85,7 @@ public class SearchResultProvider implements FragmentWithSearch.SearchProvider {
                     String itemSnippet = pointInfo.getSnippetAtIndex(i);
                     String itemImageUrl = pointInfo.getImageUrlAtIndex(i);
 
-                    finalOutputResult.add(
+                    mSearchResults.add(
                         key,
                         new ResultItemInfo(
                             key, itemTitle, itemSnippet, new GeoPoint(latitude,longitude),
