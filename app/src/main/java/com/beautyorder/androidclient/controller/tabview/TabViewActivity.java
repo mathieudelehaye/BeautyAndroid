@@ -60,7 +60,7 @@ import java.io.File;
 import java.util.*;
 
 public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask,
-    FragmentWithSearch.HistoryManager, FragmentResult.ResultProvider, Navigator.NavigatorManager {
+    FragmentWithSearch.SearchHistoryManager, FragmentResult.ResultProvider, Navigator.NavigatorManager {
 
     private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;
@@ -69,6 +69,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     private Navigator mNavigator;
 
     // Search: properties
+    private final int mSavedListMaxSize = 100;
+    private HashMap<String, ResultItemInfo> mPastRP = new HashMap<>();
+    private HashMap<String, ResultItemInfo> mSavedRP = new HashMap<>();
+    private ArrayList<String> mSavedRPKeys = new ArrayList<>();
     private CircularKeyBuffer<String> mPastRPKeys = new CircularKeyBuffer<>(2);
     private CircularKeyBuffer<String> mPastSearchQueries = new CircularKeyBuffer<>(4);
     private SearchResult mSearchResult = new SearchResult();
@@ -90,6 +94,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         final String key = value.getKey();
 
         mSelectedResultItemKey = key;
+
+        if (!mPastRP.containsKey(key)) {
+            mPastRP.put(key, value);
+        }
 
         if (!key.equals("")) {
             mPastRPKeys.add(key);
@@ -192,21 +200,65 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 
     @Override
     public String getPreviousSearchQuery(int index) {
-        return mPastSearchQueries.readFromEnd(index);
+        return mPastSearchQueries.getFromEnd(index);
     }
 
     @Override
-    public int getPreviousResultItemNumber() {
+    public int getPreviousResultNumber() {
         return mPastRPKeys.items();
     }
 
     @Override
     public ResultItemInfo getPreviousResultItem(int index) {
-        final String key = mPastRPKeys.readFromEnd(index);
+        final String key = mPastRPKeys.getFromEnd(index);
 
-        // TODO: check if previous search result is in an hash table and return it
+        return mPastRP.get(key);
+    }
 
-        return mSearchResult.get(key);
+    @Override
+    public int getSavedResultItemNumber() {
+        return mSavedRP.size();
+    }
+
+    @Override
+    public ResultItemInfo getSavedResultItem(int index) {
+        if (index > mSavedRP.size()) {
+            Log.e("BeautyAndroid", "Saved result index greater than actual list size");
+            return null;
+        }
+
+        return mSavedRP.get(mSavedRPKeys.get(index));
+    }
+
+    @Override
+    public boolean createSavedResult(ResultItemInfo value) {
+        if (mSavedRPKeys.size() >= mSavedListMaxSize) {
+            Log.w("BeautyAndroid", "Cannot save more than " + mSavedListMaxSize + " RP");
+            return false;
+        }
+
+        final String key = value.getKey();
+        mSavedRP.put(key, value);
+        mSavedRPKeys.add(key);
+
+        return true;
+    }
+
+    @Override
+    public boolean isSavedResult(String key) {
+        return mSavedRP.containsKey(key);
+    }
+
+    @Override
+    public void deleteSavedResult(String key) {
+        mSavedRP.remove(key);
+
+        for (int i = 0; i < mSavedRPKeys.size(); i++) {
+            if (mSavedRPKeys.get(i).equals(key)) {
+                mSavedRPKeys.remove(i);
+                break;
+            }
+        }
     }
 
     @Override
