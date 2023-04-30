@@ -27,6 +27,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.saved.FragmentSavedList;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.R;
 
 public class EBFragmentSavedList extends FragmentSavedList {
     private TabViewActivity mActivity;
@@ -36,13 +37,12 @@ public class EBFragmentSavedList extends FragmentSavedList {
         super.onViewCreated(view, savedInstanceState);
 
         mActivity = (TabViewActivity)getActivity();
+        setToolbarBackgroundColor(R.color.white);
     }
 
-    // TODO: move this method to the library parent class
+    // TODO: move this method logic to the library parent class
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
         if (mActivity == null) {
             return;
         }
@@ -51,5 +51,7 @@ public class EBFragmentSavedList extends FragmentSavedList {
         Log.v("AndroidJavaTools", (isVisibleToUser ? "Hiding" : "Showing") + " the app regular toolbar");
 
         mActivity.toggleToolbar(!isVisibleToUser);
+
+        super.setUserVisibleHint(isVisibleToUser);
     }
 }
