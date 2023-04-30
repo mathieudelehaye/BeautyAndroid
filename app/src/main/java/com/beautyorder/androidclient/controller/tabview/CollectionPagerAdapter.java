@@ -67,7 +67,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new EBFragmentHome(mSearchResultProvider);
                 break;
             case 1:
-                fragment = new EBFragmentSavedList();
+                fragment = new EBFragmentSavedList(mSearchResultProvider);
                 break;
             case 2:
                 fragment = new EBFragmentCamera();

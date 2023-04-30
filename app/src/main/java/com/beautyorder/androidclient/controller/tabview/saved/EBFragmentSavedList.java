@@ -26,11 +26,16 @@ import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.saved.FragmentSavedList;
+import com.android.java.androidjavatools.controller.tabview.search.FragmentWithSearch;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentSavedList extends FragmentSavedList {
     private TabViewActivity mActivity;
+
+    public EBFragmentSavedList(FragmentWithSearch.ResultProvider provider) {
+        super(provider);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -38,6 +43,7 @@ public class EBFragmentSavedList extends FragmentSavedList {
 
         mActivity = (TabViewActivity)getActivity();
         setToolbarBackgroundColor(R.color.white);
+        setToolbarBackButtonVisibility(false);
     }
 
     // TODO: move this method logic to the library parent class

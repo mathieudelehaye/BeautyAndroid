@@ -216,18 +216,13 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     @Override
-    public int getSavedResultItemNumber() {
-        return mSavedRP.size();
+    public Map<String, ResultItemInfo> getSavedResults() {
+        return mSavedRP;
     }
 
     @Override
-    public ResultItemInfo getSavedResultItem(int index) {
-        if (index > mSavedRP.size()) {
-            Log.e("BeautyAndroid", "Saved result index greater than actual list size");
-            return null;
-        }
-
-        return mSavedRP.get(mSavedRPKeys.get(index));
+    public List<String> getSavedResultKeys() {
+        return mSavedRPKeys;
     }
 
     @Override
