@@ -22,9 +22,12 @@
 package com.beautyorder.androidclient.controller.tabview.product
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,36 +42,50 @@ class EBFragmentProductBrowser: FragmentProductBrowser() {
             R.drawable.beauty04, R.drawable.beauty05)
 
         Column {
-            Spacer(modifier = Modifier.height(130.dp))
-            Text(
-                text = "Browse by Functions",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(all = 4.dp),
-                style = MaterialTheme.typography.h1
-            )
-            infinitePager(images)
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                text = "Sustainable Brands",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(all = 4.dp),
-                style = MaterialTheme.typography.h1
-            )
-            infinitePager(images)
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                text = "Popular on ECOBEAUTY",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(all = 4.dp),
-                style = MaterialTheme.typography.h1
-            )
-            infinitePager(images)
+            Spacer(modifier = Modifier.height(105.dp))
+            Row {
+                Spacer(modifier = Modifier.width(15.dp))
+                browserButton("Button 1")
+                Spacer(modifier = Modifier.width(5.dp))
+                browserButton("Button 2")
+            }
+
+            Spacer(modifier = Modifier.height(3é.dp))
+            pagerRow("Browse by Functions", images)
+            pagerRow("Sustainable Brands", images)
+            pagerRow("Popular on ECOBEAUTY", images)
         }
+    }
+
+    @Composable
+    fun browserButton(title: String) {
+        Button(
+            modifier = Modifier
+                .width(width = 188.dp)
+                .height(height = 60.dp),
+            onClick = {
+            }
+        ) {
+            Text(text = title)
+        }
+    }
+
+    @Composable
+    fun pagerRow(title: String, images: IntArray) {
+        Spacer(modifier = Modifier.height(5.dp))
+        Row {
+            Spacer(modifier = Modifier.width(25.dp))
+            Text(
+                text = title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(all = 4.dp),
+                style = MaterialTheme.typography.h1
+            )
+        }
+        infinitePager(images)
+        Spacer(modifier = Modifier.height(10.dp))
+        Divider(color = Color.LightGray, thickness = 2.dp)
     }
 }
