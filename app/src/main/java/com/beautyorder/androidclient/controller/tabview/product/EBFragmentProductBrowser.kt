@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.java.androidjavatools.controller.tabview.product.FragmentProductBrowser
@@ -50,10 +51,10 @@ class EBFragmentProductBrowser: FragmentProductBrowser() {
                 browserButton("Button 2")
             }
 
-            Spacer(modifier = Modifier.height(3é.dp))
-            pagerRow("Browse by Functions", images)
-            pagerRow("Sustainable Brands", images)
-            pagerRow("Popular on ECOBEAUTY", images)
+            Spacer(modifier = Modifier.height(5.dp))
+            browserPager("Browse by Functions", images)
+            browserPager("Sustainable Brands", images)
+            browserPager("Popular on ECOBEAUTY", images)
         }
     }
 
@@ -71,21 +72,31 @@ class EBFragmentProductBrowser: FragmentProductBrowser() {
     }
 
     @Composable
-    fun pagerRow(title: String, images: IntArray) {
-        Spacer(modifier = Modifier.height(5.dp))
-        Row {
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = title,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(all = 4.dp),
-                style = MaterialTheme.typography.h1
-            )
+    fun browserPager(title: String, images: IntArray) {
+        Column {
+            Spacer(modifier = Modifier.height(5.dp))
+            Row {
+                Spacer(modifier = Modifier.width(25.dp))
+                Text(
+                    text = title,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(all = 4.dp),
+                    style = MaterialTheme.typography.h1
+                )
+            }
+            infinitePager(images)
+            Spacer(modifier = Modifier.height(10.dp))
+            Divider(color = Color.LightGray, thickness = 2.dp)
         }
-        infinitePager(images)
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.LightGray, thickness = 2.dp)
+    }
+
+    @Preview
+    @Composable
+    fun previewBrowserPager() {
+        val images = intArrayOf(R.drawable.beauty01, R.drawable.beauty02, R.drawable.beauty03,
+            R.drawable.beauty04, R.drawable.beauty05)
+        browserPager("Pager row preview", images)
     }
 }
