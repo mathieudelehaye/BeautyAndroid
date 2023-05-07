@@ -45,10 +45,10 @@ import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentTerms;
+import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductBrowser;
 import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
-import com.beautyorder.androidclient.controller.tabview.sample.EBFragmentSampleBrowser;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
 import com.beautyorder.androidclient.model.*;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -145,7 +145,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.createFragment("map", EBFragmentMap.class);
         mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
-        mNavigator.createFragment("sample", EBFragmentSampleBrowser.class);
+        mNavigator.createFragment("sample", EBFragmentProductBrowser.class);
         mNavigator.showFragment("sample");
 
         // TODO: uncomment and update logic to process the query
