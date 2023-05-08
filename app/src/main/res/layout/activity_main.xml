@@ -34,29 +34,27 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
+        app:layout_anchorGravity="center"
+        app:layout_anchor="@+id/appBarLayout"
     >
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/main_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
-            app:layout_anchorGravity="center"
-            app:layout_anchor="@+id/appBarLayout"
-        >
-
-            <ImageView
-                android:id="@+id/search_box_icon"
-                android:src="@drawable/brand_logo"
-                android:scaleX=".6"
-                android:scaleY=".6"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-            />
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+        <ImageView
+            android:id="@+id/search_box_icon"
+            android:src="@drawable/brand_logo"
+            android:scaleX=".6"
+            android:scaleY=".6"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        />
+    </androidx.appcompat.widget.Toolbar>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

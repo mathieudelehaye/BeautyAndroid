@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.java.androidjavatools.controller.tabview.product.FragmentProductBrowser
+import com.android.java.androidjavatools.controller.tabview.search.SearchBox
 import com.beautyorder.androidclient.R
 
 class EBFragmentProductBrowser: FragmentProductBrowser() {
@@ -53,12 +54,15 @@ class EBFragmentProductBrowser: FragmentProductBrowser() {
             R.drawable.beauty04, R.drawable.beauty05)
 
         Column {
-            Spacer(modifier = Modifier.height(105.dp))
+            Spacer(modifier = Modifier.height(56.dp))
+            SearchBox()
+
+            Spacer(modifier = Modifier.height(45.dp))
             Row {
                 Spacer(modifier = Modifier.width(15.dp))
                 browserButton("Free Samples", Color(0xFF3FA3BD))    // Light blue
                 Spacer(modifier = Modifier.width(5.dp))
-                browserButton("Free Products", Color(0xFFD0A038))     // Orange)
+                browserButton("Free Products", Color(0xFFD0A038))     // Orange
             }
 
             Spacer(modifier = Modifier.height(5.dp))
