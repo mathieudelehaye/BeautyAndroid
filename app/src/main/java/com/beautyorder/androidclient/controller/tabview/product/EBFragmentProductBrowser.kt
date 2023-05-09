@@ -50,12 +50,14 @@ class EBFragmentProductBrowser: FragmentProductBrowser() {
     @Composable
     fun browserView(
     ) {
+        var searchBox = SearchBox()
+
         val images = intArrayOf(R.drawable.beauty01, R.drawable.beauty02, R.drawable.beauty03,
             R.drawable.beauty04, R.drawable.beauty05)
 
         Column {
             Spacer(modifier = Modifier.height(56.dp))
-            SearchBox()
+            searchBox.show()
 
             Spacer(modifier = Modifier.height(45.dp))
             Row {
