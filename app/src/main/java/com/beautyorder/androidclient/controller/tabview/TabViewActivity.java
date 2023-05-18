@@ -45,7 +45,6 @@ import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
 import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentTerms;
-import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductBrowser;
 import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
@@ -287,6 +286,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                     case "suggestion":
                         // Show toolbar when coming from the Suggestion page
                         toggleToolbar(true);
+
+                        // Hide the keyboard
+                        Helpers.toggleKeyboard(this, false);
+
                         break;
                     default:
                         break;
@@ -298,6 +301,10 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
                     case "suggestion":
                         // Show toolbar when coming from the Suggestion page
                         toggleToolbar(true);
+
+                        // Hide the keyboard
+                        Helpers.toggleKeyboard(this, false);
+
                         break;
                     default:
                         break;
@@ -306,6 +313,11 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
             case "suggestion":
                 // Hide toolbar when going to the Suggestion page
                 toggleToolbar(false);
+
+                // Show the keyboard
+                Helpers.toggleKeyboard(this, true);
+
+                break;
             default:
                 break;
         }
