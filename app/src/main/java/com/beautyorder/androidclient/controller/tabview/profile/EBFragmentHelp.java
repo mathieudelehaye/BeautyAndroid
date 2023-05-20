@@ -19,12 +19,12 @@
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
 //  <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview.menu;
+package com.beautyorder.androidclient.controller.tabview.profile;
 
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.NonNull;
-import com.android.java.androidjavatools.controller.tabview.menu.FragmentHelp;
+import com.android.java.androidjavatools.controller.tabview.profile.FragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.R;
 

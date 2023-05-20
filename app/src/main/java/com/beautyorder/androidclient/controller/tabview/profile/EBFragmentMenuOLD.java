@@ -29,14 +29,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import com.android.java.androidjavatools.controller.tabview.menu.FragmentMenu;
+import com.android.java.androidjavatools.controller.tabview.menu.FragmentMenuOLD;
 import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 
-public class EBFragmentMenu extends FragmentMenu {
+public class EBFragmentMenu extends FragmentMenuOLD {
     private SharedPreferences mSharedPref;
 
     @Override

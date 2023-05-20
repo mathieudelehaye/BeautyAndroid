@@ -33,7 +33,7 @@ import com.android.java.androidjavatools.controller.tabview.result.FragmentResul
 import com.android.java.androidjavatools.R;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.home.EBFragmentHome;
-import com.beautyorder.androidclient.controller.tabview.menu.EBFragmentMenu;
+import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentProfile;
 import com.beautyorder.androidclient.controller.tabview.saved.EBFragmentSavedList;
 
 public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
@@ -74,7 +74,7 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
                 break;
             case 3:
             default:
-                fragment = new EBFragmentMenu();
+                fragment = new EBFragmentProfile();
                 break;
         }
 
