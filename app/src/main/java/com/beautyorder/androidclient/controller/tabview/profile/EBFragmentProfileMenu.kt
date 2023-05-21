@@ -1,5 +1,5 @@
 //
-//  EBFragmentProfile.java
+//  EBFragmentProfileMenu.kt
 //
 //  Created by Mathieu Delehaye on 20/05/2023.
 //
@@ -21,7 +21,7 @@
 
 package com.beautyorder.androidclient.controller.tabview.profile
 
-import com.android.java.androidjavatools.controller.tabview.profile.FragmentProfile
+import com.android.java.androidjavatools.controller.tabview.profile.FragmentProfileMenu
 
-class EBFragmentProfile: FragmentProfile() {
+class EBFragmentProfileMenu: FragmentProfileMenu() {
 }
