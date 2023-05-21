@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.controller.onboard.OnboardActivity;
 
 public class LaunchActivity extends Activity {
@@ -52,8 +53,7 @@ public class LaunchActivity extends Activity {
             startActivity(new Intent(this, OnboardActivity.class));
         } else {
             Log.i("BeautyAndroid", "Onboarding activity skipped");
-            startActivity(new Intent(this,
-                com.beautyorder.androidclient.controller.auth.AuthenticateActivity.class));
+            startActivity(new Intent(this, AuthenticateActivity.class));
         }
 
         finish();
