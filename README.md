@@ -50,3 +50,7 @@ An Android app to order and recycle cosmetics
   <img src="screenshots/screenshot18.png" height ="628" width="300" hspace="10" />
   <img src="screenshots/screenshot19.png" height ="628" width="300" hspace="10" />
 </p>
+
+<p float="left">
+  <img src="screenshots/screenshot20.png" height ="628" width="300" hspace="10" />
+</p>
