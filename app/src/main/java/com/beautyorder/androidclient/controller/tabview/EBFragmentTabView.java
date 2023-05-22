@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.FragmentTabView;
-import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
+import com.android.java.androidjavatools.controller.template.ResultProvider;
 
 public class EBFragmentTabView extends FragmentTabView {
     @Override
@@ -33,7 +33,7 @@ public class EBFragmentTabView extends FragmentTabView {
         super.onViewCreated(view, savedInstanceState);
 
         mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity(),
-            (FragmentResult.ResultProvider) getActivity()));
+            (ResultProvider) getActivity()));
     }
 
     @Override

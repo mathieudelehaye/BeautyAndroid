@@ -29,8 +29,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
 import com.android.java.androidjavatools.R;
+import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.home.EBFragmentHome;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentProfileMenu;
@@ -40,10 +40,10 @@ public class CollectionPagerAdapter extends FragmentStatePagerAdapter {
     // current page of the app ViewPager
     private static int mCurrentPage = 0;
     private FragmentActivity mActivity;
-    private FragmentResult.ResultProvider mSearchResultProvider;
+    private ResultProvider mSearchResultProvider;
 
     public CollectionPagerAdapter(FragmentManager fm, FragmentActivity fa,
-        FragmentResult.ResultProvider resultProvider) {
+        ResultProvider resultProvider) {
 
         super(fm);
         mActivity = fa;

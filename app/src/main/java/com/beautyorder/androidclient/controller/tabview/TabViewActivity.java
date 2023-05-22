@@ -37,10 +37,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.Navigator;
-import com.android.java.androidjavatools.controller.tabview.search.FragmentWithSearch;
+import com.android.java.androidjavatools.controller.template.ResultProvider;
+import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
-import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentAccount;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentHelp;
@@ -60,7 +60,7 @@ import java.io.File;
 import java.util.*;
 
 public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask,
-    FragmentWithSearch.SearchHistoryManager, FragmentResult.ResultProvider, Navigator.NavigatorManager {
+    SearchHistoryManager, ResultProvider, Navigator.NavigatorManager {
 
     private FirebaseFirestore mDatabase;
     private SharedPreferences mSharedPref;

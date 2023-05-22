@@ -22,7 +22,7 @@
 package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.util.Log;
-import com.android.java.androidjavatools.controller.tabview.search.FragmentWithSearch;
+import com.android.java.androidjavatools.controller.template.SearchProvider;
 import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.android.java.androidjavatools.model.SearchResult;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
@@ -30,7 +30,7 @@ import com.beautyorder.androidclient.model.ResultInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.util.GeoPoint;
 
-public class SearchResultProvider implements FragmentWithSearch.SearchProvider {
+public class SearchResultProvider implements SearchProvider {
     private SearchResult mSearchResults;
 
     @Override

@@ -26,14 +26,14 @@ import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.saved.FragmentSavedList;
-import com.android.java.androidjavatools.controller.tabview.search.FragmentWithSearch;
+import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentSavedList extends FragmentSavedList {
     private TabViewActivity mActivity;
 
-    public EBFragmentSavedList(FragmentWithSearch.ResultProvider provider) {
+    public EBFragmentSavedList(ResultProvider provider) {
         super(provider);
     }
 

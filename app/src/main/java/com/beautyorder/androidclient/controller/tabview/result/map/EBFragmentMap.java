@@ -22,6 +22,7 @@
 package com.beautyorder.androidclient.controller.tabview.result.map;
 
 import com.android.java.androidjavatools.controller.tabview.result.map.FragmentMap;
+import com.android.java.androidjavatools.controller.template.SearchProvider;
 
 public class EBFragmentMap extends FragmentMap {
     public EBFragmentMap(SearchProvider provider) {

@@ -28,7 +28,7 @@ import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.home.FragmentHome;
-import com.android.java.androidjavatools.controller.tabview.result.FragmentResult;
+import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.beautyorder.androidclient.R;
@@ -37,7 +37,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class EBFragmentHome extends FragmentHome {
     protected SharedPreferences mSharedPref;
 
-    public EBFragmentHome(FragmentResult.ResultProvider provider) {
+    public EBFragmentHome(ResultProvider provider) {
         super(provider);
     }
 
