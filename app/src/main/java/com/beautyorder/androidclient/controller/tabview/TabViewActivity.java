@@ -42,6 +42,7 @@ import com.android.java.androidjavatools.controller.template.SearchHistoryManage
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
+import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductSelection;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentAccount;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentHelp;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentTerms;
@@ -144,7 +145,8 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.createFragment("map", EBFragmentMap.class);
         mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
-        mNavigator.showFragment("tab");
+        mNavigator.createFragment("products", EBFragmentProductSelection.class);
+        mNavigator.showFragment("products");
 
         // TODO: uncomment and update logic to process the query
 //        String intentAction = intent.getAction();
@@ -277,6 +279,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     @Override
     public void onNavigation(@NonNull String dest, @NonNull String orig) {
         switch (dest) {
+            case "products":
             case "tab":
                 switch (orig) {
                     case "help":
