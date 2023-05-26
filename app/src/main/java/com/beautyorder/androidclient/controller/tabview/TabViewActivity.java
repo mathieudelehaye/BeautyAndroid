@@ -42,6 +42,7 @@ import com.android.java.androidjavatools.controller.template.SearchHistoryManage
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
+import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductDetail;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductSelection;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentAccount;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentHelp;
@@ -146,6 +147,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
         mNavigator.createFragment("products", EBFragmentProductSelection.class);
+        mNavigator.createFragment("product", EBFragmentProductDetail.class);
         mNavigator.showFragment("products");
 
         // TODO: uncomment and update logic to process the query
