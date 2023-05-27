@@ -77,7 +77,6 @@ class EBUserInfoDBEntry : UserInfoDBEntry {
         mDataChanged[0]["score_time"] = true
     }
 
-
     fun readScoreDBFields(vararg cbManager: TaskCompletionManager?): Boolean {
         val fields = arrayOf("score", "score_time")
         return readDBFieldsForCurrentKey(fields, *cbManager)
