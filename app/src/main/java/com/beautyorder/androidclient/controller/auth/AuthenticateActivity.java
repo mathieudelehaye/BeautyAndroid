@@ -41,8 +41,8 @@ import com.beautyorder.androidclient.R;
 import com.android.java.androidjavatools.controller.auth.dialog.AuthenticateDialogListener;
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentLoginDialog;
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentStartDialog;
+import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import com.beautyorder.androidclient.model.ScoreTransferer;
-import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -228,13 +228,13 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
                         userInfoMap.put("city", "");
                         userInfoMap.put("post_code", "");
                         userInfoMap.put("score", "0");
-                        userInfoMap.put("score_time", UserInfoDBEntry.scoreTimeFormat.format(
-                                Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(new Date()))));
+                        userInfoMap.put("score_time", EBUserInfoDBEntry.scoreTimeFormat.format(
+                            Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(new Date()))));
                         userInfoMap.put("device_id", mThis.getSharedPreferences(
-                                getString(R.string.app_name), Context.MODE_PRIVATE).getString(
-                                getString(R.string.device_id), ""));
+                            getString(R.string.app_name), Context.MODE_PRIVATE).getString(
+                            getString(R.string.device_id), ""));
 
-                        var userInfo = new UserInfoDBEntry(mDatabase, emailText, userInfoMap);
+                        var userInfo = new EBUserInfoDBEntry(mDatabase, emailText, userInfoMap);
                         userInfo.createAllDBFields();
 
                         user.sendEmailVerification()
@@ -392,8 +392,8 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
                         uid.append(UUID.nameUUIDFromBytes(hash).toString());
 
                         // Add userInfos table entry to the database for the anonymous user
-                        var userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
-                        userInfo.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
+                        var userInfo = new EBUserInfoDBEntry(mDatabase, uid.toString());
+                        userInfo.setScoreTime(EBUserInfoDBEntry.scoreTimeFormat.format(
                             Helpers.getDayBeforeDate(date)));
                         userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
 

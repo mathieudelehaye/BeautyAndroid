@@ -51,7 +51,7 @@ import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultD
 import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
-import com.beautyorder.androidclient.model.*;
+import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -390,14 +390,14 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         // from the queue
         for(String photoPath: mPhotoQueue) {
 
-            var entry = new UserInfoDBEntry(mDatabase, uid);
+            var entry = new EBUserInfoDBEntry(mDatabase, uid);
 
             entry.readScoreDBFields(new TaskCompletionManager() {
                 @Override
                 public void onSuccess() {
 
                     // Get the date from the photo name
-                    Date photoDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+                    Date photoDate = Helpers.parseTime(EBUserInfoDBEntry.scoreTimeFormat,
                         photoPath.substring(photoPath.lastIndexOf("-") + 1));
 
                     // Only update the score if the event date is after the DB score time
@@ -480,7 +480,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         //Log.v("BeautyAndroid", "Start to download the score");  // uncomment to debug
 
         String uid = AppUser.getInstance().getId();
-        var entry = new UserInfoDBEntry(mDatabase, uid);
+        var entry = new EBUserInfoDBEntry(mDatabase, uid);
 
         entry.readScoreDBFields(new TaskCompletionManager() {
             @Override

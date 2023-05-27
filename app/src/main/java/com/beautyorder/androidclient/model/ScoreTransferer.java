@@ -8,13 +8,16 @@
 //  Copyright © 2022 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.model;
 
@@ -65,8 +68,7 @@ public class ScoreTransferer {
             // Get the DB
             mDatabase = FirebaseFirestore.getInstance();
 
-            UserInfoDBEntry anonymousUserEntry =
-                new UserInfoDBEntry(mDatabase, mSourceUid);
+            var anonymousUserEntry = new EBUserInfoDBEntry(mDatabase, mSourceUid);
             anonymousUserEntry.readScoreDBFields(new TaskCompletionManager() {
                 @Override
                 public void onSuccess() {
@@ -87,14 +89,14 @@ public class ScoreTransferer {
     }
 
     private void clearAndTransferScoreFromAnonymousUser(
-        UserInfoDBEntry anonymousUserEntry) {
+        EBUserInfoDBEntry anonymousUserEntry) {
 
         // Clear the anonymous user score in the DB
         final int anonymousUserScore = anonymousUserEntry.getScore();
         final Date anonymousUserTimestamp = anonymousUserEntry.getScoreTime();
 
         anonymousUserEntry.setScore(0);
-        anonymousUserEntry.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
+        anonymousUserEntry.setScoreTime(EBUserInfoDBEntry.scoreTimeFormat.format(
             Helpers.getDayBeforeDate(new Date())));
 
         anonymousUserEntry.updateDBFields(new TaskCompletionManager() {
@@ -114,7 +116,7 @@ public class ScoreTransferer {
     private void readAndAddToRegisteredUserScore(int scoreToAddValue, Date scoreToAddTimestamp) {
 
         // Read the registered user info from the DB
-        UserInfoDBEntry registeredUserEntry = new UserInfoDBEntry(mDatabase, mDestinationUid);
+        var registeredUserEntry = new EBUserInfoDBEntry(mDatabase, mDestinationUid);
         registeredUserEntry.readScoreDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
@@ -143,10 +145,10 @@ public class ScoreTransferer {
         });
     }
 
-    private void updateUserScoreInDatabase(UserInfoDBEntry userEntry, int newScore, Date newTimestamp) {
+    private void updateUserScoreInDatabase(EBUserInfoDBEntry userEntry, int newScore, Date newTimestamp) {
         // Clear the anonymous user score in the DB
         userEntry.setScore(newScore);
-        userEntry.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(newTimestamp));
+        userEntry.setScoreTime(EBUserInfoDBEntry.scoreTimeFormat.format(newTimestamp));
 
         userEntry.updateDBFields(new TaskCompletionManager() {
             @Override
