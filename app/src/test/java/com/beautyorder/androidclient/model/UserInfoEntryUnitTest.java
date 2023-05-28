@@ -38,13 +38,17 @@ public class UserInfoEntryUnitTest {
     public void createUserInfo() {
 
         Map<String, String> mUserInfoMap = new HashMap<>();
+
         mUserInfoMap.put("first_name", "Mathieu");
         mUserInfoMap.put("last_name", "Delehaye");
         mUserInfoMap.put("address", "15, Granville street");
         mUserInfoMap.put("city", "Glasgow");
         mUserInfoMap.put("post_code", "G3 7EE");
+        mUserInfoMap.put("email", "mathieu.delehaye@gmail.com");
+
         mUserInfoMap.put("score", "10");
         mUserInfoMap.put("score_time", "2022.12.20");
+
         mUserInfoMap.put("device_id", "5d944db5c143e59b");
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
