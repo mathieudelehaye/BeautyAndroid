@@ -23,7 +23,6 @@ package com.beautyorder.androidclient.controller.auth.dialog;
 
 import android.app.Dialog;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import com.android.java.androidjavatools.controller.auth.dialog.AuthenticateDialogListener;
 import com.android.java.androidjavatools.controller.auth.dialog.FragmentSignupDialog;
@@ -42,12 +41,7 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
             return null;
         }
 
-        anonymousSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDialogAnonymousSigninClick(mThis);
-            }
-        });
+        anonymousSignIn.setOnClickListener(view -> mListener.onDialogAnonymousSigninClick(mThis));
 
         Button confirm = mContainerView.findViewById(R.id.confirm_signup);
         if (confirm == null) {
@@ -55,16 +49,11 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
             return null;
         }
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDialogSignupClick(mThis,
-                    new AuthenticateDialogListener.SigningDialogCredentialViews(
-                        mContainerView.findViewById(R.id.registered_email_signup),
-                        mContainerView.findViewById(R.id.registered_password_signup),
-                        mContainerView.findViewById(R.id.repeated_password_signup)));
-            }
-        });
+        confirm.setOnClickListener(view -> mListener.onDialogSignupClick(mThis,
+            new AuthenticateDialogListener.SigningDialogCredentialViews(
+                mContainerView.findViewById(R.id.registered_email_signup),
+                mContainerView.findViewById(R.id.registered_password_signup),
+                mContainerView.findViewById(R.id.repeated_password_signup))));
 
         Button back = mContainerView.findViewById(R.id.back_signup);
         if (back == null) {
@@ -72,13 +61,10 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
             return null;
         }
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                var dialog = new EBFragmentStartDialog();
-                dialog.show(getFragmentManager(), "FragmentStartDialog");
-            }
+        back.setOnClickListener(view -> {
+            dismiss();
+            var dialog1 = new EBFragmentStartDialog();
+            dialog1.show(getFragmentManager(), "FragmentStartDialog");
         });
 
         return dialog;

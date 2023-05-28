@@ -36,8 +36,8 @@ import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
 import com.android.java.androidjavatools.controller.tabview.dialog.FragmentHelpDialog;
-import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import java.io.File;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
@@ -78,7 +78,7 @@ public class EBFragmentCamera extends FragmentCamera {
 
             // If a picture has already been taken the same day, do nothing
             final var currentDate = new java.util.Date();
-            final var lastPhotoDate = Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+            final var lastPhotoDate = Helpers.parseTime(EBUserInfoDBEntry.scoreTimeFormat,
                 mSharedPref.getString(getString(R.string.photo_date), "1970.01.01"));
 
             if (Helpers.compareYearDays(lastPhotoDate, currentDate) >= 0) {
@@ -92,7 +92,7 @@ public class EBFragmentCamera extends FragmentCamera {
 
             Log.i("BeautyAndroid", "Capturing a photo with the camera");
 
-            String photoDate = UserInfoDBEntry.scoreTimeFormat.format(currentDate);
+            String photoDate = EBUserInfoDBEntry.scoreTimeFormat.format(currentDate);
             String fileName = AppUser.getInstance().getId() + "-" + photoDate;
 
             String appFolderPath = "/storage/emulated/0/Android/data/com.beautyorder.androidclient/files";

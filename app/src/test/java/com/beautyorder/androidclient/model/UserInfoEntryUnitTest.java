@@ -8,13 +8,16 @@
 //  Copyright © 2022 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.model;
 
@@ -35,17 +38,21 @@ public class UserInfoEntryUnitTest {
     public void createUserInfo() {
 
         Map<String, String> mUserInfoMap = new HashMap<>();
+
         mUserInfoMap.put("first_name", "Mathieu");
         mUserInfoMap.put("last_name", "Delehaye");
         mUserInfoMap.put("address", "15, Granville street");
         mUserInfoMap.put("city", "Glasgow");
         mUserInfoMap.put("post_code", "G3 7EE");
+        mUserInfoMap.put("email", "mathieu.delehaye@gmail.com");
+
         mUserInfoMap.put("score", "10");
         mUserInfoMap.put("score_time", "2022.12.20");
+
         mUserInfoMap.put("device_id", "5d944db5c143e59b");
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        UserInfoDBEntry entry = new UserInfoDBEntry(database, unitTestUser, mUserInfoMap);
+        var entry = new EBUserInfoDBEntry(database, unitTestUser, mUserInfoMap);
 
         entry.createAllDBFields();
     }
@@ -54,7 +61,7 @@ public class UserInfoEntryUnitTest {
     public void updateScore() {
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        UserInfoDBEntry entry = new UserInfoDBEntry(database, unitTestUser);
+        var entry = new EBUserInfoDBEntry(database, unitTestUser);
 
         {
             final int entryScore = entry.getScore();
@@ -73,18 +80,18 @@ public class UserInfoEntryUnitTest {
     public void updateScoreTime() {
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();
-        var entry = new UserInfoDBEntry(database, unitTestUser);
+        var entry = new EBUserInfoDBEntry(database, unitTestUser);
 
         {
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+            assertEquals(true, entryScoreTime.equals(Helpers.parseTime(EBUserInfoDBEntry.scoreTimeFormat,
                 "1970.01.01")));
         }
 
         {
             entry.setScoreTime("2022.12.22");
             final Date entryScoreTime = entry.getScoreTime();
-            assertEquals(true, entryScoreTime.equals(Helpers.parseTime(UserInfoDBEntry.scoreTimeFormat,
+            assertEquals(true, entryScoreTime.equals(Helpers.parseTime(EBUserInfoDBEntry.scoreTimeFormat,
                 "2022.12.22")));
             entry.updateDBFields();
         }

@@ -8,13 +8,16 @@
 //  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller.auth;
 
@@ -41,11 +44,10 @@ import com.beautyorder.androidclient.R;
 import com.android.java.androidjavatools.controller.auth.dialog.AuthenticateDialogListener;
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentLoginDialog;
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentStartDialog;
+import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import com.beautyorder.androidclient.model.ScoreTransferer;
-import com.beautyorder.androidclient.model.UserInfoDBEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
@@ -214,75 +216,75 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
 
             // Create user
             mAuth.createUserWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("BeautyAndroid", "createUserWithEmail:success");
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("BeautyAndroid", "createUserWithEmail:success");
 
-                            FirebaseUser user = mAuth.getCurrentUser();
+                        FirebaseUser user = mAuth.getCurrentUser();
 
-                            // Add userInfos table entry to the database matching the new user
-                            Map<String, String> userInfoMap = new HashMap<>();
-                            userInfoMap.put("first_name", "");
-                            userInfoMap.put("last_name", "");
-                            userInfoMap.put("address", "");
-                            userInfoMap.put("city", "");
-                            userInfoMap.put("post_code", "");
-                            userInfoMap.put("score", "0");
-                            userInfoMap.put("score_time", UserInfoDBEntry.scoreTimeFormat.format(
-                                Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(new Date()))));
-                            userInfoMap.put("device_id", mThis.getSharedPreferences(
-                                getString(R.string.app_name), Context.MODE_PRIVATE).getString(
-                                getString(R.string.device_id), ""));
+                        // Add userInfos table entry to the database matching the new user
+                        Map<String, String> userInfoMap = new HashMap<>();
 
-                            var userInfo = new UserInfoDBEntry(mDatabase, emailText, userInfoMap);
-                            userInfo.createAllDBFields();
+                        userInfoMap.put("first_name", "");
+                        userInfoMap.put("last_name", "");
+                        userInfoMap.put("address", "");
+                        userInfoMap.put("city", "");
+                        userInfoMap.put("post_code", "");
+                        userInfoMap.put("email", "");
 
-                            user.sendEmailVerification()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("BeautyAndroid", "Verification email sent.");
+                        userInfoMap.put("score", "0");
+                        userInfoMap.put("score_time", EBUserInfoDBEntry.scoreTimeFormat.format(
+                            Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(new Date()))));
+                        userInfoMap.put("device_id", mThis.getSharedPreferences(
+                            getString(R.string.app_name), Context.MODE_PRIVATE).getString(
+                            getString(R.string.device_id), ""));
 
-                                            Toast toast = Toast.makeText(mThis, "Verification email sent", Toast.LENGTH_SHORT);
-                                            toast.show();
-                                        }
+                        var userInfo = new EBUserInfoDBEntry(mDatabase, emailText, userInfoMap);
+                        userInfo.createAllDBFields();
+
+                        user.sendEmailVerification()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("BeautyAndroid", "Verification email sent.");
+
+                                        Toast toast = Toast.makeText(mThis, "Verification email sent", Toast.LENGTH_SHORT);
+                                        toast.show();
                                     }
-                                });
+                                }
+                            });
 
-                            SystemClock.sleep(1000);
+                        SystemClock.sleep(1000);
 
-                            // Navigate to the login dialog
-                            dialog.dismiss();
-                            var dialog = new EBFragmentLoginDialog();
-                            dialog.show(getSupportFragmentManager(), "FragmentLoginDialog");
+                        // Navigate to the login dialog
+                        dialog.dismiss();
+                        var dialog1 = new EBFragmentLoginDialog();
+                        dialog1.show(getSupportFragmentManager(), "FragmentLoginDialog");
 
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());
+
+                        final var exception = (FirebaseAuthException) task.getException();
+                        String completeMessage = exception.getMessage();
+                        String error = exception.getErrorCode();
+
+                        Pattern pattern = Pattern.compile("(.*) \\[ (.*) \\]",
+                            Pattern.CASE_INSENSITIVE);
+                        Matcher matcher = pattern.matcher(completeMessage);
+
+                        var messageCause = new StringBuilder("");
+
+                        if (matcher.find()) {
+                            messageCause.append(matcher.group(2));
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("BeautyAndroid", "createUserWithEmail:failure", task.getException());
-
-                            final var exception = (FirebaseAuthException)task.getException();
-                            String completeMessage = exception.getMessage();
-                            String error = exception.getErrorCode();
-
-                            Pattern pattern = Pattern.compile("(.*) \\[ (.*) \\]",
-                                Pattern.CASE_INSENSITIVE);
-                            Matcher matcher = pattern.matcher(completeMessage);
-
-                            var messageCause = new StringBuilder("");
-
-                            if (matcher.find()) {
-                                messageCause.append(matcher.group(2));
-                            } else {
-                                messageCause.append(!completeMessage.isEmpty() ? completeMessage
-                                    : "Authentication failed.");
-                            }
-
-                            Toast.makeText(mThis, messageCause, Toast.LENGTH_SHORT).show();
+                            messageCause.append(!completeMessage.isEmpty() ? completeMessage
+                                : "Authentication failed.");
                         }
+
+                        Toast.makeText(mThis, messageCause, Toast.LENGTH_SHORT).show();
                     }
                 });
         }
@@ -396,8 +398,8 @@ public class AuthenticateActivity extends ActivityWithStart implements Authentic
                         uid.append(UUID.nameUUIDFromBytes(hash).toString());
 
                         // Add userInfos table entry to the database for the anonymous user
-                        var userInfo = new UserInfoDBEntry(mDatabase, uid.toString());
-                        userInfo.setScoreTime(UserInfoDBEntry.scoreTimeFormat.format(
+                        var userInfo = new EBUserInfoDBEntry(mDatabase, uid.toString());
+                        userInfo.setScoreTime(EBUserInfoDBEntry.scoreTimeFormat.format(
                             Helpers.getDayBeforeDate(date)));
                         userInfo.setDeviceId(mSharedPref.getString(getString(R.string.device_id), ""));
 
