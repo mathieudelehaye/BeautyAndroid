@@ -64,7 +64,7 @@ public class SearchResultProvider implements SearchProvider {
         double[] filterMaxRanges = { maxSearchLatitude, maxSearchLongitude };
 
         var pointInfo = new ResultInfo(database);
-        pointInfo.SetFilter(filterFields, filterMinRanges, filterMaxRanges);
+        pointInfo.SetRangeBasedFilter(filterFields, filterMinRanges, filterMaxRanges);
 
         mSearchResults = new SearchResult();
 
