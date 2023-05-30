@@ -148,7 +148,7 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
         mNavigator.createFragment("products", EBFragmentProductSelection.class);
         mNavigator.createFragment("product", EBFragmentProductDetail.class);
-        mNavigator.showFragment("products");
+        mNavigator.showFragment("tab");
 
         // TODO: uncomment and update logic to process the query
 //        String intentAction = intent.getAction();
