@@ -30,7 +30,7 @@ import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.home.FragmentHome;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.android.java.androidjavatools.model.AppUser;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.beautyorder.androidclient.R;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -73,7 +73,7 @@ public class EBFragmentHome extends FragmentHome {
 
                 Log.d("BeautyAndroid", "userScore = " + userScore);
 
-                var mainActivity = (TabViewActivity) getActivity();
+                var mainActivity = (EBTabViewActivity) getActivity();
                 if (mainActivity == null) {
                     Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
                     return;

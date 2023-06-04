@@ -26,7 +26,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 
 public class ActivityWithStart extends AppCompatActivity {
 
@@ -92,6 +92,6 @@ public class ActivityWithStart extends AppCompatActivity {
         // Update the current app user
         AppUser.getInstance().authenticate(_uid, _userType);
 
-        startActivity(new Intent(this, TabViewActivity.class));
+        startActivity(new Intent(this, EBTabViewActivity.class));
     }
 }

@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentTerms;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 
 public class EBFragmentTerms extends FragmentTerms {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class EBFragmentTerms extends FragmentTerms {
 
         mBinding.backTerms.setOnClickListener(view1 -> {
             // Go back to the app Menu
-            var activity = (TabViewActivity)getActivity();
+            var activity = (EBTabViewActivity)getActivity();
             activity.navigator().back();
         });
     }

@@ -1,11 +1,11 @@
 //
-//  TabViewActivity.java
+//  EBTabViewActivity.java
 //
-//  Created by Mathieu Delehaye on 1/12/2022.
+//  Created by Mathieu Delehaye on 3/06/2023.
 //
-//  BeautyAndroid: An Android app to order and recycle cosmetics.
+//  AndroidJavaTools: A framework to develop Android apps in Java.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
 //  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
@@ -21,26 +21,21 @@
 
 package com.beautyorder.androidclient.controller.tabview;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.android.java.androidjavatools.Helpers;
+import com.android.java.androidjavatools.controller.tabview.TabViewActivity;
 import com.android.java.androidjavatools.controller.tabview.Navigator;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
-import com.beautyorder.androidclient.*;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductDetail;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductSelection;
@@ -52,33 +47,17 @@ import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentRe
 import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
+import com.beautyorder.androidclient.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.*;
 
-public class TabViewActivity extends AppCompatActivity implements ActivityWithAsyncTask,
+public class EBTabViewActivity extends TabViewActivity implements ActivityWithAsyncTask,
     SearchHistoryManager, ResultProvider, Navigator.NavigatorManager {
-
-    private FirebaseFirestore mDatabase;
-    private SharedPreferences mSharedPref;
-
-    // Fragments: properties
-    private Navigator mNavigator;
-
-    // Search: properties
-    private final int mSavedListMaxSize = 100;
-    private HashMap<String, ResultItemInfo> mPastRP = new HashMap<>();
-    private HashMap<String, ResultItemInfo> mSavedRP = new HashMap<>();
-    private ArrayList<String> mSavedRPKeys = new ArrayList<>();
-    private CircularKeyBuffer<String> mPastRPKeys = new CircularKeyBuffer<>(2);
-    private CircularKeyBuffer<String> mPastSearchQueries = new CircularKeyBuffer<>(4);
-    private SearchResult mSearchResult = new SearchResult();
-    private String mSelectedResultItemKey = "";
 
     // Background: properties
     // TODO: do not use a static property here
@@ -87,82 +66,19 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
     private final int mTimeBeforePollingScoreInMin = 1;
 
-    // Search: getter-setter
-    public ResultItemInfo getSelectedResultItem() {
-        return mSearchResult.get(mSelectedResultItemKey);
-    }
-
-    public void setSelectedResultItem(ResultItemInfo value) {
-        final String key = value.getKey();
-
-        mSelectedResultItemKey = key;
-
-        if (!mPastRP.containsKey(key)) {
-            mPastRP.put(key, value);
-        }
-
-        if (!key.equals("")) {
-            mPastRPKeys.add(key);
-        }
-    }
-
-    public SearchResult getSearchResult() {
-        return mSearchResult;
-    }
-
-    @Override
-    public void setSearchResult(SearchResult result) {
-        mSearchResult = result;
-    }
-
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Helpers.startTimestamp();
-        Log.i("BeautyAndroid", "Main activity started");
-
         super.onCreate(savedInstanceState);
 
-        if(this.getSupportActionBar()!=null) {
-            this.getSupportActionBar().hide();
-        }
+        final var coordinatorLayout = (CoordinatorLayout) findViewById(
+            com.android.java.androidjavatools.R.id.main_activity_layout);
+        coordinatorLayout.setBackground(getResources().getDrawable(R.drawable.background));
 
-        setContentView(R.layout.activity_main);
-
-        // Only portrait orientation
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        mDatabase = FirebaseFirestore.getInstance();
-        mSharedPref = getSharedPreferences(
-            getString(R.string.app_name), Context.MODE_PRIVATE);
-
-        mNavigator = new Navigator(this, R.id.mainActivityLayout);
-        mNavigator.createFragment("tab", EBFragmentTabView.class);
-        mNavigator.createFragment("camera", EBFragmentCamera.class);
-        mNavigator.createFragment("account", EBFragmentAccount.class);
-        mNavigator.createFragment("help", EBFragmentHelp.class);
-        mNavigator.createFragment("terms", EBFragmentTerms.class);
-        mNavigator.createFragment("list", EBFragmentResultList.class);
-        mNavigator.createFragment("map", EBFragmentMap.class);
-        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
-        mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
-        mNavigator.createFragment("products", EBFragmentProductSelection.class);
-        mNavigator.createFragment("product", EBFragmentProductDetail.class);
-        mNavigator.showFragment("tab");
-
-        // TODO: uncomment and update logic to process the query
-//        String intentAction = intent.getAction();
-//        if (Intent.ACTION_SEARCH.equals(intentAction)) {
-//            String query = intent.getStringExtra(SearchManager.QUERY);
-//            Log.v("BeautyAndroid", "Intent ACTION_SEARCH received by the main activity with the query: "
-//                    + query);
-//            mSearchQuery.append(query);
-//        } else if (Intent.ACTION_VIEW.equals(intentAction)) {
-//            Log.v("BeautyAndroid", "Intent ACTION_VIEW received by the main activity");
-//            mSearchQuery.append("usr");
-//        } else {
-//            Log.d("BeautyAndroid", "Another intent received by the main activity: " + intentAction);
-//        }
+        final var mainActivityIcon = (ImageView) findViewById(
+            com.android.java.androidjavatools.R.id.main_activity_icon);
+        mainActivityIcon.setImageResource(R.drawable.brand_logo);
 
         // Background: initialization
         var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
@@ -193,139 +109,22 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+    protected void createNavigator() {
+        mNavigator = new Navigator(this, com.android.java.androidjavatools.R.id.main_activity_layout);
 
-    // Search: methods
-    public int getPreviousQueryNumber() {
-        return mPastSearchQueries.items();
-    }
+        mNavigator.createFragment("tab", EBFragmentTabView.class);
+        mNavigator.createFragment("camera", EBFragmentCamera.class);
+        mNavigator.createFragment("account", EBFragmentAccount.class);
+        mNavigator.createFragment("help", EBFragmentHelp.class);
+        mNavigator.createFragment("terms", EBFragmentTerms.class);
+        mNavigator.createFragment("list", EBFragmentResultList.class);
+        mNavigator.createFragment("map", EBFragmentMap.class);
+        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
+        mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
+        mNavigator.createFragment("products", EBFragmentProductSelection.class);
+        mNavigator.createFragment("product", EBFragmentProductDetail.class);
 
-    @Override
-    public String getPreviousSearchQuery(int index) {
-        return mPastSearchQueries.getFromEnd(index);
-    }
-
-    @Override
-    public int getPreviousResultNumber() {
-        return mPastRPKeys.items();
-    }
-
-    @Override
-    public ResultItemInfo getPreviousResultItem(int index) {
-        final String key = mPastRPKeys.getFromEnd(index);
-
-        return mPastRP.get(key);
-    }
-
-    @Override
-    public Map<String, ResultItemInfo> getSavedResults() {
-        return mSavedRP;
-    }
-
-    @Override
-    public List<String> getSavedResultKeys() {
-        return mSavedRPKeys;
-    }
-
-    @Override
-    public boolean createSavedResult(ResultItemInfo value) {
-        if (mSavedRPKeys.size() >= mSavedListMaxSize) {
-            Log.w("BeautyAndroid", "Cannot save more than " + mSavedListMaxSize + " RP");
-            return false;
-        }
-
-        final String key = value.getKey();
-        mSavedRP.put(key, value);
-        mSavedRPKeys.add(key);
-
-        return true;
-    }
-
-    @Override
-    public boolean isSavedResult(String key) {
-        return mSavedRP.containsKey(key);
-    }
-
-    @Override
-    public void deleteSavedResult(String key) {
-        mSavedRP.remove(key);
-
-        for (int i = 0; i < mSavedRPKeys.size(); i++) {
-            if (mSavedRPKeys.get(i).equals(key)) {
-                mSavedRPKeys.remove(i);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void storeSearchQuery(@NonNull String query) {
-        mPastSearchQueries.add(query);
-    }
-
-    // Fragments: methods
-
-    public void toggleToolbar(Boolean visible) {
-        Log.v("BeautyAndroid", "Toolbar visibility toggled to " + visible);
-        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-        mainToolbar.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public Navigator navigator() {
-        return mNavigator;
-    }
-
-    @Override
-    public void onNavigation(@NonNull String dest, @NonNull String orig) {
-        switch (dest) {
-            case "products":
-            case "tab":
-                switch (orig) {
-                    case "help":
-                    case "terms":
-                        CollectionPagerAdapter.setPage(2);
-                        break;
-                    case "suggestion":
-                        // Show toolbar when coming from the Suggestion page
-                        toggleToolbar(true);
-
-                        // Hide the keyboard
-                        Helpers.toggleKeyboard(this, false);
-
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case "list":
-            case "map":
-                switch (orig) {
-                    case "suggestion":
-                        // Show toolbar when coming from the Suggestion page
-                        toggleToolbar(true);
-
-                        // Hide the keyboard
-                        Helpers.toggleKeyboard(this, false);
-
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case "suggestion":
-                // Hide toolbar when going to the Suggestion page
-                toggleToolbar(false);
-
-                // Show the keyboard
-                Helpers.toggleKeyboard(this, true);
-
-                break;
-            default:
-                break;
-        }
+        mNavigator.showFragment("tab");
     }
 
     public void showScore(int value) {
@@ -336,11 +135,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
 //        if (appScore != null) {
 //            appScore.setText(value + " pts");
 //        }
-    }
-
-    @Override
-    public void toggleTabSwiping(boolean enable) {
-        mNavigator.toggleTabSwiping(enable);
     }
 
     // Background: methods
@@ -428,14 +222,6 @@ public class TabViewActivity extends AppCompatActivity implements ActivityWithAs
     @Override
     public void runTimesDependentActions() {
         downloadScore();
-    }
-
-    private boolean isNetworkAvailable() {
-        var connectivityManager
-            = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = (connectivityManager != null) ?
-            connectivityManager.getActiveNetworkInfo() : null;
-        return (activeNetworkInfo != null) && activeNetworkInfo.isConnected();
     }
 
     private void uploadPhoto(String path) {

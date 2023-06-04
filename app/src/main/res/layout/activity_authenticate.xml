@@ -27,14 +27,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="com.beautyorder.androidclient.controller.tabview.TabViewActivity"
+    tools:context="com.beautyorder.androidclient.controller.tabview.EBTabViewActivity"
 >
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
-        android:id="@+id/appBarLayout">
+        android:id="@+id/main_activity_app_bar_layout">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -43,10 +43,10 @@
             app:popupTheme="@style/Theme.BeautyAndroid.PopupOverlay"
             android:layout_height="?attr/actionBarSize"
             app:layout_anchorGravity="center"
-            app:layout_anchor="@+id/appBarLayout">
+            app:layout_anchor="@+id/main_activity_app_bar_layout">
 
             <ImageView
-                android:id="@+id/search_box_icon"
+                android:id="@+id/main_activity_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleX=".6"

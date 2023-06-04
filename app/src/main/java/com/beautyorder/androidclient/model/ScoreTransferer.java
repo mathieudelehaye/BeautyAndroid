@@ -27,7 +27,7 @@ import android.util.Log;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 
@@ -46,7 +46,7 @@ public class ScoreTransferer {
         mActivity = _activity;
     }
 
-    public ScoreTransferer(FirebaseFirestore _database, TabViewActivity _activity) {
+    public ScoreTransferer(FirebaseFirestore _database, EBTabViewActivity _activity) {
 
         mDatabase = _database;
         mSourceUid = "";
@@ -163,7 +163,7 @@ public class ScoreTransferer {
                 Log.v("BeautyAndroid", "Score reset in the app preferences");
 
                 // TODO: do not use an static property here
-                TabViewActivity.scoreTransferredFromAnonymousAccount = true;
+                EBTabViewActivity.scoreTransferredFromAnonymousAccount = true;
             }
 
             @Override

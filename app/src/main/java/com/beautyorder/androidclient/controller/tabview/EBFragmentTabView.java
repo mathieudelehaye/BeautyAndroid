@@ -32,7 +32,7 @@ public class EBFragmentTabView extends FragmentTabView {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewPager.setAdapter(new CollectionPagerAdapter(getChildFragmentManager(), getActivity(),
+        mViewPager.setAdapter(new EBCollectionPagerAdapter(getChildFragmentManager(), getActivity(),
             (ResultProvider) getActivity()));
     }
 
@@ -40,7 +40,7 @@ public class EBFragmentTabView extends FragmentTabView {
     public void onResume() {
         super.onResume();
 
-        final int pageToDisplay = CollectionPagerAdapter.getPage();
+        final int pageToDisplay = EBCollectionPagerAdapter.getPage();
         mViewPager.setCurrentItem(pageToDisplay);
     }
 }

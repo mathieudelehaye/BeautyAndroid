@@ -27,11 +27,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.saved.FragmentSavedList;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentSavedList extends FragmentSavedList {
-    private TabViewActivity mActivity;
+    private EBTabViewActivity mActivity;
 
     public EBFragmentSavedList(ResultProvider provider) {
         super(provider);
@@ -41,7 +41,7 @@ public class EBFragmentSavedList extends FragmentSavedList {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mActivity = (TabViewActivity)getActivity();
+        mActivity = (EBTabViewActivity)getActivity();
         setToolbarBackgroundColor(R.color.white);
         setToolbarBackButtonVisibility(false);
     }
