@@ -21,6 +21,7 @@
 
 package com.beautyorder.androidclient.controller.tabview.product
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -83,9 +84,12 @@ class EBFragmentProductDetail : FragmentProductDetail() {
             )
             Row {
                 Spacer(modifier = Modifier.width(40.dp))
-                buttonWithText("Buy Now", Color.Green, width = 150.dp, radius = 30.dp)
+                buttonWithText("Buy Now", Color.Green, width = 150.dp, radius = 30.dp) {}
                 Spacer(modifier = Modifier.width(30.dp))
-                buttonWithText("Freebies", Color(0xFFD0A038), width = 150.dp, radius = 30.dp)     // Orange
+                // Orange color
+                buttonWithText("Freebies", Color(0xFFD0A038), width = 150.dp, radius = 30.dp) {
+                    Toast.makeText(context, "Sample ordered!", Toast.LENGTH_SHORT).show()
+                }
             }
             Spacer(modifier = Modifier
                 .height(5.dp)
