@@ -33,8 +33,8 @@ import androidx.camera.core.ImageCaptureException;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.camera.FragmentCamera;
 import com.android.java.androidjavatools.model.AppUser;
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.android.java.androidjavatools.controller.tabview.dialog.FragmentHelpDialog;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
@@ -60,9 +60,9 @@ public class EBFragmentCamera extends FragmentCamera {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            CollectionPagerAdapter.setPage(1);
+            EBCollectionPagerAdapter.setPage(1);
 
-            var activity = (TabViewActivity)getActivity();
+            var activity = (EBTabViewActivity)getActivity();
             if ((activity) != null) {
                 activity.toggleTabSwiping(true);
             }

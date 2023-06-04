@@ -27,7 +27,7 @@ import android.content.SharedPreferences
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentAccount
 import com.beautyorder.androidclient.R
 import com.beautyorder.androidclient.controller.auth.AuthenticateActivity
-import com.beautyorder.androidclient.controller.tabview.CollectionPagerAdapter
+import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter
 
 class EBFragmentAccount: FragmentAccount() {
     override fun onLogout() {
@@ -37,7 +37,7 @@ class EBFragmentAccount: FragmentAccount() {
         sharedPref.edit().putString(getString(R.string.app_uid), "").commit()
 
         // Display the first page with the result list at next startup
-        CollectionPagerAdapter.setPage(0);
+        EBCollectionPagerAdapter.setPage(0);
 
         // Start the auth activity
         startActivity(Intent(context, AuthenticateActivity::class.java))

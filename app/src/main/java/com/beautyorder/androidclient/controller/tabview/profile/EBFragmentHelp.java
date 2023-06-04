@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentHelp;
-import com.beautyorder.androidclient.controller.tabview.TabViewActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentHelp extends FragmentHelp {
@@ -38,7 +38,7 @@ public class EBFragmentHelp extends FragmentHelp {
             @Override
             public void onClick(View view) {
                 // Go back to the app Menu
-                var activity = (TabViewActivity)getActivity();
+                var activity = (EBTabViewActivity)getActivity();
                 activity.navigator().back();
             }
         });
