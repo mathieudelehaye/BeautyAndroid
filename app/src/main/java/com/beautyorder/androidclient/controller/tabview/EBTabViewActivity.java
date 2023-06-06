@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.TabViewActivity;
-import com.android.java.androidjavatools.controller.tabview.Navigator;
+import com.android.java.androidjavatools.controller.Navigator;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
@@ -72,12 +72,14 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 
         super.onCreate(savedInstanceState);
 
+        // Set layout background
         final var coordinatorLayout = (CoordinatorLayout) findViewById(
             com.android.java.androidjavatools.R.id.main_activity_layout);
         coordinatorLayout.setBackground(getResources().getDrawable(R.drawable.background));
 
+        // Set layout logo icon
         final var mainActivityIcon = (ImageView) findViewById(
-            com.android.java.androidjavatools.R.id.main_activity_icon);
+            com.android.java.androidjavatools.R.id.auth_activity_icon);
         mainActivityIcon.setImageResource(R.drawable.brand_logo);
 
         // Background: initialization

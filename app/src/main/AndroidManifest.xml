@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name=".controller.auth.AuthenticateActivity"
+            android:name=".controller.auth.EBAuthenticateActivity"
             android:enabled="true"
         />
 

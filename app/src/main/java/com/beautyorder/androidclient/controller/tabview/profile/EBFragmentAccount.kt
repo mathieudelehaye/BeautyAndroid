@@ -25,16 +25,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentAccount
-import com.beautyorder.androidclient.R
-import com.beautyorder.androidclient.controller.auth.AuthenticateActivity
+import com.android.java.androidjavatools.controller.auth.AuthenticateActivity
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter
+import com.beautyorder.androidclient.R
 
 class EBFragmentAccount: FragmentAccount() {
     override fun onLogout() {
         // Delete the app current user
         val sharedPref: SharedPreferences = (mActivity!! as Context).getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE)
-        sharedPref.edit().putString(getString(R.string.app_uid), "").commit()
+        sharedPref.edit().putString(getString(com.android.java.androidjavatools.R.string.app_uid), "").commit()
 
         // Display the first page with the result list at next startup
         EBCollectionPagerAdapter.setPage(0);
