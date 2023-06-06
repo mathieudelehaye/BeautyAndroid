@@ -79,7 +79,7 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 
         // Set layout logo icon
         final var mainActivityIcon = (ImageView) findViewById(
-            com.android.java.androidjavatools.R.id.auth_activity_icon);
+            com.android.java.androidjavatools.R.id.main_activity_icon);
         mainActivityIcon.setImageResource(R.drawable.brand_logo);
 
         // Background: initialization

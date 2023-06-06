@@ -32,7 +32,6 @@
 
     <!-- Strings used for fragments for navigation -->
     <string name="back_button">Back</string>
-    <string name="logout_button">Log out</string>
     <string name="tab_bar_readable_label">Choose your screen</string>
 
     <!-- Strings displayed as text in the app -->

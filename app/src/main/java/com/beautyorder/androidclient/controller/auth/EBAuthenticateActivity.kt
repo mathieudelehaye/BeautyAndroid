@@ -22,6 +22,7 @@
 package com.beautyorder.androidclient.controller.auth
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
@@ -38,6 +39,7 @@ import com.beautyorder.androidclient.R
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentLoginDialog
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentSignupDialog
 import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentStartDialog
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry
 import com.beautyorder.androidclient.model.ScoreTransferer
 import com.google.firebase.firestore.FirebaseFirestore
@@ -58,6 +60,10 @@ class EBAuthenticateActivity : AuthenticateActivity() {
         val mainActivityIcon = findViewById<View>(
             com.android.java.androidjavatools.R.id.auth_activity_icon) as ImageView
         mainActivityIcon.setImageResource(R.drawable.brand_logo)
+    }
+
+    override fun startNextActivity() {
+        startActivity(Intent(this, EBTabViewActivity::class.java))
     }
 
     override fun createNavigator() {
