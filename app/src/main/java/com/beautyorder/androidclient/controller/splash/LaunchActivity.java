@@ -28,8 +28,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.auth.EBAuthenticateActivity;
 import com.beautyorder.androidclient.controller.onboard.OnboardActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 
 public class LaunchActivity extends Activity {
 
@@ -56,7 +56,7 @@ public class LaunchActivity extends Activity {
             startActivity(new Intent(this, OnboardActivity.class));
         } else {
             Log.i("BeautyAndroid", "Onboarding activity skipped");
-            startActivity(new Intent(this, EBAuthenticateActivity.class));
+            startActivity(new Intent(this, EBTabViewActivity.class));
         }
 
         finish();

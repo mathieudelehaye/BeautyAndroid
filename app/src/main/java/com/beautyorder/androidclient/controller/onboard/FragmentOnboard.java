@@ -35,7 +35,7 @@ import android.view.*;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.leanback.app.OnboardingFragment;
-import com.android.java.androidjavatools.controller.auth.AuthenticateActivity;
+import com.android.java.androidjavatools.model.AuthManager;
 import com.beautyorder.androidclient.R;
 import java.util.ArrayList;
 
@@ -185,6 +185,6 @@ public class FragmentOnboard extends OnboardingFragment {
             getString(R.string.completed_onboarding), true).apply();
 
         startActivity(new Intent(getContext(),
-            AuthenticateActivity.class));
+            AuthManager.class));
     }
 }

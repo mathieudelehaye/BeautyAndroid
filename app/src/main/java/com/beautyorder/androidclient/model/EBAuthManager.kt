@@ -1,5 +1,5 @@
 //
-//  EBAuthenticateActivity.kt
+//  EBAuthManager.kt
 //
 //  Created by Mathieu Delehaye on 5/06/2023.
 //
@@ -19,75 +19,30 @@
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
 //  <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.auth
+package com.beautyorder.androidclient.model
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.os.Bundle
+import android.app.Activity
+import android.content.Context.MODE_PRIVATE
 import android.os.SystemClock
 import android.util.Log
-import android.view.View
-import android.widget.ImageView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.DialogFragment
 import com.android.java.androidjavatools.Helpers
-import com.android.java.androidjavatools.controller.Navigator
-import com.android.java.androidjavatools.controller.auth.AuthenticateActivity
+import com.android.java.androidjavatools.model.AuthManager
 import com.android.java.androidjavatools.model.AppUser
 import com.android.java.androidjavatools.model.TaskCompletionManager
 import com.beautyorder.androidclient.R
-import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentLoginDialog
-import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentSignupDialog
-import com.beautyorder.androidclient.controller.auth.dialog.EBFragmentStartDialog
-import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity
-import com.beautyorder.androidclient.model.EBUserInfoDBEntry
-import com.beautyorder.androidclient.model.ScoreTransferer
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
-class EBAuthenticateActivity : AuthenticateActivity() {
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Set layout background
-        val coordinatorLayout = findViewById<View>(
-            com.android.java.androidjavatools.R.id.auth_activity_layout) as CoordinatorLayout
-        coordinatorLayout.background = resources.getDrawable(R.drawable.background)
-
-        // Set layout logo icon
-        val mainActivityIcon = findViewById<View>(
-            com.android.java.androidjavatools.R.id.auth_activity_icon) as ImageView
-        mainActivityIcon.setImageResource(R.drawable.brand_logo)
-    }
-
-    override fun startNextActivity() {
-        startActivity(Intent(this, EBTabViewActivity::class.java))
-    }
-
-    override fun createNavigator() {
-        mNavigator = Navigator(this, com.android.java.androidjavatools.R.id.auth_activity_layout)
-
-        mNavigator.createFragment("login", EBFragmentLoginDialog::class.java)
-        mNavigator.createFragment("signup", EBFragmentSignupDialog::class.java)
-        mNavigator.createFragment("start", EBFragmentStartDialog::class.java)
-
-        mNavigator.showFragment("start")
-    }
-
-    override fun showStartDialog() {
-        var newFragment: DialogFragment = EBFragmentStartDialog()
-        newFragment.show(supportFragmentManager, "FragmentStartDialog")
-    }
+class EBAuthManager(activity : Activity) : AuthManager(activity) {
 
     override fun onSignup(credentials: MutableMap<String, String>?) {
         credentials?.put("score", "0")
         credentials?.put("score_time", EBUserInfoDBEntry.scoreTimeFormat.format(
             Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(Date()))))
-        getSharedPreferences(
-            getString(R.string.app_name), MODE_PRIVATE).getString(
-            getString(com.android.java.androidjavatools.R.string.device_id), "")?.let {
+
+        mActivity.getSharedPreferences(
+            mActivity.getString(R.string.app_name), MODE_PRIVATE).getString(
+            mActivity.getString(com.android.java.androidjavatools.R.string.device_id), "")?.let {
                 credentials?.put("device_id", it) }
 
         val userInfo = EBUserInfoDBEntry(mDatabase, credentials?.get("email")!!, credentials)
@@ -106,8 +61,8 @@ class EBAuthenticateActivity : AuthenticateActivity() {
         val userInfo = EBUserInfoDBEntry(mDatabase, userId)
         userInfo.setScoreTime(EBUserInfoDBEntry.scoreTimeFormat.format(
             Helpers.getDayBeforeDate(creationDate)))
-        userInfo.deviceId = mSharedPref.getString(getString(com.android.java.androidjavatools.R.string.device_id),
-            "")
+        userInfo.deviceId = mSharedPref.getString(mActivity.getString(
+            com.android.java.androidjavatools.R.string.device_id), "")
 
         userInfo.createAllDBFields(object : TaskCompletionManager {
             override fun onSuccess() {
@@ -127,7 +82,7 @@ class EBAuthenticateActivity : AuthenticateActivity() {
     override fun onSignin(userId : String) {
         ScoreTransferer(FirebaseFirestore.getInstance(),
             anonymousUidFromPreferences,
-            userId, this)
+            userId, mActivity)
             .run()
     }
 }

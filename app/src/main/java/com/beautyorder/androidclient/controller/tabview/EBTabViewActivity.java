@@ -36,6 +36,9 @@ import com.android.java.androidjavatools.controller.Navigator;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
+import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentLoginDialog;
+import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentSignupDialog;
+import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentStartDialog;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductDetail;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductSelection;
@@ -125,8 +128,11 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
         mNavigator.createFragment("products", EBFragmentProductSelection.class);
         mNavigator.createFragment("product", EBFragmentProductDetail.class);
+        mNavigator.createFragment("login", EBFragmentLoginDialog.class);
+        mNavigator.createFragment("signup", EBFragmentSignupDialog.class);
+        mNavigator.createFragment("start", EBFragmentStartDialog.class);
 
-        mNavigator.showFragment("tab");
+        mNavigator.showFragment("start");
     }
 
     public void showScore(int value) {

@@ -49,11 +49,6 @@
         </activity>
 
         <activity
-            android:name=".controller.auth.EBAuthenticateActivity"
-            android:enabled="true"
-        />
-
-        <activity
             android:name=".controller.onboard.OnboardActivity"
             android:enabled="true"
             android:theme="@style/Theme.Leanback.Onboarding.Beauty"

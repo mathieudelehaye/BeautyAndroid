@@ -21,9 +21,7 @@
 
 package com.beautyorder.androidclient.controller.tabview.profile
 
-import android.content.Intent
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentAccount
-import com.beautyorder.androidclient.controller.auth.EBAuthenticateActivity
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter
 
 class EBFragmentAccount: FragmentAccount() {
@@ -32,6 +30,6 @@ class EBFragmentAccount: FragmentAccount() {
         EBCollectionPagerAdapter.setPage(0);
 
         // Start the auth activity
-        startActivity(Intent(context, EBAuthenticateActivity::class.java))
+//        startActivity(Intent(context, EBAuthManager::class.java))
     }
 }

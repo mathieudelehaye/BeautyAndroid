@@ -19,14 +19,14 @@
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
 //  <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.auth.dialog;
+package com.beautyorder.androidclient.controller.tabview.auth;
 
 import android.app.Dialog;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
-import com.android.java.androidjavatools.controller.auth.dialog.AuthenticateDialogListener;
-import com.android.java.androidjavatools.controller.auth.dialog.FragmentLoginDialog;
+import com.android.java.androidjavatools.controller.tabview.auth.AuthenticateDialogListener;
+import com.android.java.androidjavatools.controller.tabview.auth.FragmentLoginDialog;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentLoginDialog extends FragmentLoginDialog {
