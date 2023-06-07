@@ -49,6 +49,7 @@ import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultD
 import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
+import com.beautyorder.androidclient.model.EBAuthManager;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import com.beautyorder.androidclient.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -117,20 +118,41 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
     protected void createNavigator() {
         mNavigator = new Navigator(this, com.android.java.androidjavatools.R.id.main_activity_layout);
 
+        // Main
         mNavigator.createFragment("tab", EBFragmentTabView.class);
+
+        // Camera
         mNavigator.createFragment("camera", EBFragmentCamera.class);
+
+        // Menu
         mNavigator.createFragment("account", EBFragmentAccount.class);
         mNavigator.createFragment("help", EBFragmentHelp.class);
         mNavigator.createFragment("terms", EBFragmentTerms.class);
+
+        // RP search
         mNavigator.createFragment("list", EBFragmentResultList.class);
         mNavigator.createFragment("map", EBFragmentMap.class);
         mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
+
+        // Products
         mNavigator.createFragment("products", EBFragmentProductSelection.class);
         mNavigator.createFragment("product", EBFragmentProductDetail.class);
+
+        // Authentication
+        var manager = new EBAuthManager(this);
+
         mNavigator.createFragment("login", EBFragmentLoginDialog.class);
+        var logInFragment = (EBFragmentLoginDialog) mNavigator.getFragment("login");
+        logInFragment.setAuthManager(manager);
+
         mNavigator.createFragment("signup", EBFragmentSignupDialog.class);
+        var signUpFragment = (EBFragmentSignupDialog) mNavigator.getFragment("signup");
+        signUpFragment.setAuthManager(manager);
+
         mNavigator.createFragment("start", EBFragmentStartDialog.class);
+        var startFragment = (EBFragmentStartDialog) mNavigator.getFragment("start");
+        startFragment.setAuthManager(manager);
 
         mNavigator.showFragment("start");
     }
