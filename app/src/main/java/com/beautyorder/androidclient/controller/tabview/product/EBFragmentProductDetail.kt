@@ -21,6 +21,7 @@
 
 package com.beautyorder.androidclient.controller.tabview.product
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.java.androidjavatools.controller.tabview.product.FragmentProductDetail
 import com.beautyorder.androidclient.R
+import com.beautyorder.androidclient.controller.auth.EBAuthenticateActivity
 
 class EBFragmentProductDetail : FragmentProductDetail() {
 
@@ -74,6 +76,10 @@ class EBFragmentProductDetail : FragmentProductDetail() {
                 )
             }
         }
+    }
+
+    override fun startAuthActivity() {
+        startActivity(Intent(context, EBAuthenticateActivity::class.java))
     }
 
     @Composable
