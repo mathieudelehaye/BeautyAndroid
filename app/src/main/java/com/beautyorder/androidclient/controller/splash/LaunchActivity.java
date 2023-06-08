@@ -52,10 +52,10 @@ public class LaunchActivity extends Activity {
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
-            Log.i("BeautyAndroid", "Onboarding activity started");
+            Log.i("EBT", "Onboarding activity started");
             startActivity(new Intent(this, OnboardActivity.class));
         } else {
-            Log.i("BeautyAndroid", "Onboarding activity skipped");
+            Log.i("EBT", "Onboarding activity skipped");
             startActivity(new Intent(this, EBTabViewActivity.class));
         }
 

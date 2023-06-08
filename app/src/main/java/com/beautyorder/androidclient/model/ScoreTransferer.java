@@ -62,7 +62,7 @@ public class ScoreTransferer {
 
         if (!mSourceUid.equals("")) {
             // An anonymous uid already was found in the app preferences
-            Log.d("BeautyAndroid", "Try to transfer score from the anonymous uid found in the app preferences: "
+            Log.d("EBT", "Try to transfer score from the anonymous uid found in the app preferences: "
                 + mSourceUid);
 
             // Get the DB
@@ -74,7 +74,7 @@ public class ScoreTransferer {
                 public void onSuccess() {
 
                     if (anonymousUserEntry.getScore() > 0) {
-                        Log.v("BeautyAndroid", "Anonymous user data read from the database: "
+                        Log.v("EBT", "Anonymous user data read from the database: "
                             + anonymousUserEntry.getScore());
 
                         clearAndTransferScoreFromAnonymousUser(anonymousUserEntry);
@@ -102,7 +102,7 @@ public class ScoreTransferer {
         anonymousUserEntry.updateDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
-                Log.v("BeautyAndroid", "Anonymous user data cleared in the database");
+                Log.v("EBT", "Anonymous user data cleared in the database");
 
                 readAndAddToRegisteredUserScore(anonymousUserScore, anonymousUserTimestamp);
             }
@@ -122,7 +122,7 @@ public class ScoreTransferer {
             public void onSuccess() {
                 final int registeredUserScore = registeredUserEntry.getScore();
 
-                Log.v("BeautyAndroid", "Registered user data read from the database: "
+                Log.v("EBT", "Registered user data read from the database: "
                     + registeredUserScore);
 
                 if (scoreToAddTimestamp.compareTo(registeredUserEntry.getScoreTime()) < 0) {
@@ -153,14 +153,14 @@ public class ScoreTransferer {
         userEntry.updateDBFields(new TaskCompletionManager() {
             @Override
             public void onSuccess() {
-                Log.d("BeautyAndroid", "Registered user score updated in the database to: "
+                Log.d("EBT", "Registered user score updated in the database to: "
                     + newScore);
 
                 // Reset the score in the app preferences, so it can be shown after downloading it.
                 String preferenceKey = mActivity.getString(R.string.last_downloaded_score);
                 mActivity.getSharedPreferences("Beauty-Android", Context.MODE_PRIVATE).edit()
                     .putInt(preferenceKey, 0).commit();
-                Log.v("BeautyAndroid", "Score reset in the app preferences");
+                Log.v("EBT", "Score reset in the app preferences");
 
                 // TODO: do not use an static property here
                 EBTabViewActivity.scoreTransferredFromAnonymousAccount = true;

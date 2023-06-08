@@ -176,7 +176,7 @@ public class FragmentOnboard extends OnboardingFragment {
     protected void onFinishFragment() {
         super.onFinishFragment();
 
-        Log.i("BeautyAndroid", "Onboarding activity finished");
+        Log.i("EBT", "Onboarding activity finished");
 
         mSharedPref = getContext().getSharedPreferences(
             getString(R.string.app_name), Context.MODE_PRIVATE);

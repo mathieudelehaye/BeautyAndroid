@@ -37,7 +37,7 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
 
         Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signup);
         if (anonymousSignIn == null) {
-            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on signup dialog");
+            Log.e("EBT", "No view found for the anonymous sign-in button on signup dialog");
             return null;
         }
 
@@ -45,7 +45,7 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
 
         Button confirm = mContainerView.findViewById(R.id.confirm_signup);
         if (confirm == null) {
-            Log.e("BeautyAndroid", "No view found for the confirm button on signup dialog");
+            Log.e("EBT", "No view found for the confirm button on signup dialog");
             return null;
         }
 
@@ -57,7 +57,7 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
 
         Button back = mContainerView.findViewById(R.id.back_signup);
         if (back == null) {
-            Log.e("BeautyAndroid", "No view found for the back button on signup dialog");
+            Log.e("EBT", "No view found for the back button on signup dialog");
             return null;
         }
 

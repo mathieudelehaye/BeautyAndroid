@@ -38,7 +38,7 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
 
         Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_start);
         if (anonymousSignIn == null) {
-            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on start dialog");
+            Log.e("EBT", "No view found for the anonymous sign-in button on start dialog");
             return null;
         }
 
@@ -51,7 +51,7 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
 
         Button emailSignUp = mContainerView.findViewById(R.id.email_sign_up_start);
         if (emailSignUp == null) {
-            Log.e("BeautyAndroid", "No view found when setting the email sign-up button");
+            Log.e("EBT", "No view found when setting the email sign-up button");
             return null;
         }
 
@@ -63,7 +63,7 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
 
         Button facebookSignUp = mContainerView.findViewById(R.id.fb_log_in_start);
         if (facebookSignUp == null) {
-            Log.e("BeautyAndroid", "No view found when setting the Facebook sign-up button");
+            Log.e("EBT", "No view found when setting the Facebook sign-up button");
             return null;
         }
 
@@ -72,7 +72,7 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
 
         Button googleSignUp = mContainerView.findViewById(R.id.google_log_in_start);
         if (googleSignUp == null) {
-            Log.e("BeautyAndroid", "No view found when setting the Google sign-up button");
+            Log.e("EBT", "No view found when setting the Google sign-up button");
             return null;
         }
 
@@ -81,7 +81,7 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
 
         Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
         if (registeredSignIn == null) {
-            Log.e("BeautyAndroid", "No view found when setting the registered sign-in button");
+            Log.e("EBT", "No view found when setting the registered sign-in button");
             return null;
         }
 

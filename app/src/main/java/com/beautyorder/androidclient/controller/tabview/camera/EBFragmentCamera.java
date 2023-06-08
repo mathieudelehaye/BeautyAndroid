@@ -82,7 +82,7 @@ public class EBFragmentCamera extends FragmentCamera {
                 mSharedPref.getString(getString(R.string.photo_date), "1970.01.01"));
 
             if (Helpers.compareYearDays(lastPhotoDate, currentDate) >= 0) {
-                Log.d("BeautyAndroid", "A photo has already been taken today");
+                Log.d("EBT", "A photo has already been taken today");
 
                 var dialogFragment = new FragmentHelpDialog(getString(R.string.one_photo_by_day));
                 dialogFragment.show(getChildFragmentManager(), "Camera no more photo dialog");
@@ -90,7 +90,7 @@ public class EBFragmentCamera extends FragmentCamera {
                 return;
             }
 
-            Log.i("BeautyAndroid", "Capturing a photo with the camera");
+            Log.i("EBT", "Capturing a photo with the camera");
 
             String photoDate = EBUserInfoDBEntry.scoreTimeFormat.format(currentDate);
             String fileName = AppUser.getInstance().getId() + "-" + photoDate;
@@ -106,8 +106,8 @@ public class EBFragmentCamera extends FragmentCamera {
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                        Log.d("BeautyAndroid", "Photo saved to file: " + file);
-                        Log.v("BeautyAndroid", "Photo saved at timestamp: "
+                        Log.d("EBT", "Photo saved to file: " + file);
+                        Log.v("EBT", "Photo saved at timestamp: "
                                 + Helpers.getTimestamp());
 
                         mSharedPref.edit().putString(getString(R.string.photo_date), photoDate).commit();
@@ -125,7 +125,7 @@ public class EBFragmentCamera extends FragmentCamera {
                             mSharedPref.edit().putStringSet(getString(R.string.photos_to_send), photoQueue)
                                 .commit();
 
-                            Log.i("BeautyAndroid", "Photo added to the queue for sending");
+                            Log.i("EBT", "Photo added to the queue for sending");
 
                             final Activity activity = getActivity();
                             activity.runOnUiThread(() -> {
@@ -136,7 +136,7 @@ public class EBFragmentCamera extends FragmentCamera {
                     }
                     @Override
                     public void onError(ImageCaptureException error) {
-                        Log.e("BeautyAndroid", "Error while saving the image: " + error.toString());
+                        Log.e("EBT", "Error while saving the image: " + error.toString());
                     }
                 }
             );

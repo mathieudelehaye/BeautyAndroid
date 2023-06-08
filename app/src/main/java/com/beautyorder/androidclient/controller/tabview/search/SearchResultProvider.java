@@ -46,7 +46,7 @@ public class SearchResultProvider implements SearchProvider {
         final double startLongitude = searchStart.getLongitude();
         final String startLatitudeText = startLatitude+"";
         final String startLongitudeText = startLongitude+"";
-        Log.d("BeautyAndroid", "Display the recycling points around the location (" + startLatitudeText
+        Log.d("EBT", "Display the recycling points around the location (" + startLatitudeText
             + ", " + startLongitudeText + ")");
 
         // Search for the recycling points (RP)

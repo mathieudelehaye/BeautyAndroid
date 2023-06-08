@@ -64,7 +64,7 @@ public class OnboardActivity extends Activity implements GestureDetector.OnGestu
 
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
-        Log.v("BeautyAndroid", "Tap gesture on the onboarding screen");
+        Log.v("EBT", "Tap gesture on the onboarding screen");
         if (mFragment.isLastPageReached()) {
             mFragment.onFinishFragment();
             return true;
@@ -93,18 +93,18 @@ public class OnboardActivity extends Activity implements GestureDetector.OnGestu
 
                 if (Math.abs(diffX) > mSwipeThreshold && Math.abs(v) > mSwipeVelocityThreshold) {
                     if (diffX > 0) {
-                        Log.v("BeautyAndroid", "Left to Right swipe gesture on the onboarding screen");
+                        Log.v("EBT", "Left to Right swipe gesture on the onboarding screen");
                         mFragment.moveToNextPage();
                     }
                     else {
-                        Log.v("BeautyAndroid", "Right to Left swipe gesture on the onboarding screen");
+                        Log.v("EBT", "Right to Left swipe gesture on the onboarding screen");
                         mFragment.moveToPreviousPage();
                     }
                 }
             }
         }
         catch (Exception e) {
-            Log.e("BeautyAndroid", "An error occurred during the swipe gesture");
+            Log.e("EBT", "An error occurred during the swipe gesture");
             return false;
         }
         return true;

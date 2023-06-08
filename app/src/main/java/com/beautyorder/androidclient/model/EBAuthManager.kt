@@ -67,7 +67,7 @@ class EBAuthManager(activity : Activity) : AuthManager(activity) {
         userInfo.createAllDBFields(object : TaskCompletionManager {
             override fun onSuccess() {
                 val uidText: String = userId
-                Log.d("BeautyAndroid", "The user automatic identifier was created: "
+                Log.d("EBT", "The user automatic identifier was created: "
                     + uidText)
                 setAnonymousUidToPreferences(uidText)
                 startAppWithUser(uidText, AppUser.AuthenticationType.NOT_REGISTERED)

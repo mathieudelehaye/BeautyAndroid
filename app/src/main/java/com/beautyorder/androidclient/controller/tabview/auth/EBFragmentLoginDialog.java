@@ -38,7 +38,7 @@ public class EBFragmentLoginDialog extends FragmentLoginDialog {
 
         Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signin);
         if (anonymousSignIn == null) {
-            Log.e("BeautyAndroid", "No view found for the anonymous sign-in button on login dialog");
+            Log.e("EBT", "No view found for the anonymous sign-in button on login dialog");
             return null;
         }
 
@@ -46,7 +46,7 @@ public class EBFragmentLoginDialog extends FragmentLoginDialog {
 
         Button facebookSignIn = mContainerView.findViewById(R.id.fb_log_in_signin);
         if (facebookSignIn == null) {
-            Log.e("BeautyAndroid", "No view found when setting the Facebook sign-in button");
+            Log.e("EBT", "No view found when setting the Facebook sign-in button");
             return null;
         }
 
@@ -55,7 +55,7 @@ public class EBFragmentLoginDialog extends FragmentLoginDialog {
 
         Button googleSignIn = mContainerView.findViewById(R.id.google_log_in_signin);
         if (googleSignIn == null) {
-            Log.e("BeautyAndroid", "No view found when setting the Google sign-in button");
+            Log.e("EBT", "No view found when setting the Google sign-in button");
             return null;
         }
 
@@ -64,7 +64,7 @@ public class EBFragmentLoginDialog extends FragmentLoginDialog {
 
         Button confirm = mContainerView.findViewById(R.id.confirm_signin);
         if (confirm == null) {
-            Log.e("BeautyAndroid", "No view found for the confirm button on login dialog");
+            Log.e("EBT", "No view found for the confirm button on login dialog");
             return null;
         }
 
@@ -76,7 +76,7 @@ public class EBFragmentLoginDialog extends FragmentLoginDialog {
 
         Button resetPassword = mContainerView.findViewById(R.id.reset_password_signin);
         if (resetPassword == null) {
-            Log.e("BeautyAndroid", "No view found for the reset password button on login dialog");
+            Log.e("EBT", "No view found for the reset password button on login dialog");
             return null;
         }
 
@@ -88,7 +88,7 @@ public class EBFragmentLoginDialog extends FragmentLoginDialog {
 
         Button signUp = mContainerView.findViewById(R.id.email_sign_up_signin);
         if (signUp == null) {
-            Log.e("BeautyAndroid", "No view found for the sign-up button on login dialog");
+            Log.e("EBT", "No view found for the sign-up button on login dialog");
             return null;
         }
 
