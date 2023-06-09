@@ -41,7 +41,6 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
             Log.e("EBT", "No view found for the anonymous sign-in button on start dialog");
             return null;
         }
-
         anonymousSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,11 +53,8 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
             Log.e("EBT", "No view found when setting the email sign-up button");
             return null;
         }
-
         emailSignUp.setOnClickListener(view -> {
-            dismiss();
-            var dialog1 = new EBFragmentSignupDialog();
-            dialog1.show(getFragmentManager(), "FragmentSignupDialog");
+            mNavigatorManager.navigator().showFragment("signup");
         });
 
         Button facebookSignUp = mContainerView.findViewById(R.id.fb_log_in_start);
@@ -66,29 +62,24 @@ public class EBFragmentStartDialog extends FragmentStartDialog {
             Log.e("EBT", "No view found when setting the Facebook sign-up button");
             return null;
         }
-
         facebookSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
-                "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show());
+            "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show());
 
         Button googleSignUp = mContainerView.findViewById(R.id.google_log_in_start);
         if (googleSignUp == null) {
             Log.e("EBT", "No view found when setting the Google sign-up button");
             return null;
         }
-
         googleSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
-                "Google sign-up not yet available", Toast.LENGTH_SHORT).show());
+            "Google sign-up not yet available", Toast.LENGTH_SHORT).show());
 
         Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
         if (registeredSignIn == null) {
             Log.e("EBT", "No view found when setting the registered sign-in button");
             return null;
         }
-
         registeredSignIn.setOnClickListener(view -> {
-            dismiss();
-            var dialog2 = new EBFragmentLoginDialog();
-            dialog2.show(getFragmentManager(), "FragmentLoginDialog");
+            mNavigatorManager.navigator().showFragment("login");
         });
 
         return dialog;

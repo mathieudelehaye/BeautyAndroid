@@ -45,7 +45,7 @@ public class EBFragmentHome extends FragmentHome {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSharedPref = mContext.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-        updateUserScore();
+//        updateUserScore();
     }
 
     private void updateUserScore() {

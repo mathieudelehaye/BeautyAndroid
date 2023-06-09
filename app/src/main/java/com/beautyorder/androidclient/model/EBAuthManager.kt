@@ -21,10 +21,10 @@
 
 package com.beautyorder.androidclient.model
 
-import android.app.Activity
 import android.content.Context.MODE_PRIVATE
 import android.os.SystemClock
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.android.java.androidjavatools.Helpers
 import com.android.java.androidjavatools.model.AuthManager
 import com.android.java.androidjavatools.model.AppUser
@@ -33,8 +33,7 @@ import com.beautyorder.androidclient.R
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
-class EBAuthManager(activity : Activity) : AuthManager(activity) {
-
+class EBAuthManager(activity : AppCompatActivity) : AuthManager(activity) {
     override fun onSignup(credentials: MutableMap<String, String>?) {
         credentials?.put("score", "0")
         credentials?.put("score_time", EBUserInfoDBEntry.scoreTimeFormat.format(
@@ -51,7 +50,7 @@ class EBAuthManager(activity : Activity) : AuthManager(activity) {
         SystemClock.sleep(1000)
 
         // Navigate to the next dialog to show
-        mNavigator.showFragment("login")
+        mNavigatorManager.navigator().showFragment("login")
     }
 
     override fun onAnonymousUserCreation(userId : String, creationDate : Date,

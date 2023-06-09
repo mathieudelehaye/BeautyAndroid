@@ -5,7 +5,7 @@
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
 //  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
@@ -35,8 +35,8 @@ import android.view.*;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.leanback.app.OnboardingFragment;
-import com.android.java.androidjavatools.model.AuthManager;
 import com.beautyorder.androidclient.R;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import java.util.ArrayList;
 
 public class FragmentOnboard extends OnboardingFragment {
@@ -185,6 +185,6 @@ public class FragmentOnboard extends OnboardingFragment {
             getString(R.string.completed_onboarding), true).apply();
 
         startActivity(new Intent(getContext(),
-            AuthManager.class));
+            EBTabViewActivity.class));
     }
 }

@@ -62,9 +62,7 @@ public class EBFragmentSignupDialog extends FragmentSignupDialog {
         }
 
         back.setOnClickListener(view -> {
-            dismiss();
-            var dialog1 = new EBFragmentStartDialog();
-            dialog1.show(getFragmentManager(), "FragmentStartDialog");
+            mNavigatorManager.navigator().showFragment("start");
         });
 
         return dialog;
