@@ -21,15 +21,17 @@
 
 package com.beautyorder.androidclient.controller.tabview.profile
 
+import android.content.Intent
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentAccount
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity
 
 class EBFragmentAccount: FragmentAccount() {
     override fun onLogout() {
         // Display the first page with the result list at next startup
         EBCollectionPagerAdapter.setPage(0);
 
-        // Start the auth activity
-//        startActivity(Intent(context, EBAuthManager::class.java))
+        // Restart the main activity
+        startActivity(Intent(context, EBTabViewActivity::class.java))
     }
 }

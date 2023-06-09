@@ -128,7 +128,7 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 //        mNavigator.createFragment("camera", EBFragmentCamera.class);
 
         // Menu
-//        mNavigator.createFragment("account", EBFragmentAccount.class);
+        mNavigator.createFragment("account", EBFragmentAccount.class);
 //        mNavigator.createFragment("help", EBFragmentHelp.class);
 //        mNavigator.createFragment("terms", EBFragmentTerms.class);
 
@@ -157,7 +157,7 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
         var startFragment = (EBFragmentStartDialog) mNavigator.getFragment("start");
         startFragment.setAuthManager(manager);
 
-        mNavigator.showFragment("start");
+        manager.checkPreferenceUserAndStart();
     }
 
     public void showScore(int value) {
