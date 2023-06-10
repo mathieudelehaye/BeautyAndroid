@@ -21,50 +21,44 @@
 
 package com.beautyorder.androidclient.controller.tabview.auth;
 
-import android.app.Dialog;
-import android.util.Log;
 import android.widget.Button;
-import com.android.java.androidjavatools.controller.tabview.auth.AuthenticateDialogListener;
+import android.widget.EditText;
 import com.android.java.androidjavatools.controller.tabview.auth.FragmentSignupDialog;
+import com.android.java.androidjavatools.model.AuthManager;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentSignupDialog extends FragmentSignupDialog {
     @Override
-    protected Dialog initializeGUI(Dialog parentDialog) {
-        // Do not use the parent dialog
+    protected Button getAnonymousLogIn() {
+        return mContainerView.findViewById(R.id.anonymous_log_in_signup);
+    }
 
-        Dialog dialog = buildDialogFromLayout(R.layout.fragment_signup_dialog);
+    @Override
+    protected EditText getEmailToRegister() {
+        return mContainerView.findViewById(R.id.registered_email_signup);
+    }
 
-        Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signup);
-        if (anonymousSignIn == null) {
-            Log.e("EBT", "No view found for the anonymous sign-in button on signup dialog");
-            return null;
-        }
+    @Override
+    protected EditText getPasswordToRegister() {
+        return mContainerView.findViewById(R.id.registered_password_signup);
+    }
 
-        anonymousSignIn.setOnClickListener(view -> mListener.onDialogAnonymousSigninClick(mThis));
+    @Override
+    protected EditText getPasswordConfirmation() {
+        return mContainerView.findViewById(R.id.repeated_password_signup);
+    }
 
-        Button confirm = mContainerView.findViewById(R.id.confirm_signup);
-        if (confirm == null) {
-            Log.e("EBT", "No view found for the confirm button on signup dialog");
-            return null;
-        }
+    @Override
+    protected Button getConfirmSignUp() {
+        return mContainerView.findViewById(R.id.confirm_signup);
+    }
 
-        confirm.setOnClickListener(view -> mListener.onDialogSignupClick(mThis,
-            new AuthenticateDialogListener.SigningDialogCredentialViews(
-                mContainerView.findViewById(R.id.registered_email_signup),
-                mContainerView.findViewById(R.id.registered_password_signup),
-                mContainerView.findViewById(R.id.repeated_password_signup))));
+    @Override
+    protected Button getBack() {
+        return mContainerView.findViewById(R.id.back_signup);
+    }
 
-        Button back = mContainerView.findViewById(R.id.back_signup);
-        if (back == null) {
-            Log.e("EBT", "No view found for the back button on signup dialog");
-            return null;
-        }
-
-        back.setOnClickListener(view -> {
-            mNavigatorManager.navigator().showFragment("start");
-        });
-
-        return dialog;
+    public EBFragmentSignupDialog(AuthManager manager, Integer layoutId) {
+        super(manager, layoutId);
     }
 }

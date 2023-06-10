@@ -21,67 +21,38 @@
 
 package com.beautyorder.androidclient.controller.tabview.auth;
 
-import android.app.Dialog;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import com.android.java.androidjavatools.controller.tabview.auth.FragmentStartDialog;
+import com.android.java.androidjavatools.model.AuthManager;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentStartDialog extends FragmentStartDialog {
+    public EBFragmentStartDialog(AuthManager manager, Integer layoutId) {
+        super(manager, layoutId);
+    }
+
     @Override
-    protected Dialog initializeGUI(Dialog parentDialog) {
-        // Do not use the parent dialog
+    protected Button getAnonymousLogIn() {
+        return mContainerView.findViewById(R.id.anonymous_log_in_start);
+    }
 
-        Dialog dialog = buildDialogFromLayout(R.layout.fragment_start_dialog);
+    @Override
+    protected Button getEmailSignUp() {
+        return mContainerView.findViewById(R.id.email_sign_up_start);
+    }
 
-        Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_start);
-        if (anonymousSignIn == null) {
-            Log.e("EBT", "No view found for the anonymous sign-in button on start dialog");
-            return null;
-        }
-        anonymousSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDialogAnonymousSigninClick(mThis);
-            }
-        });
+    @Override
+    protected Button getFacebookLogIn() {
+        return mContainerView.findViewById(R.id.fb_log_in_start);
+    }
 
-        Button emailSignUp = mContainerView.findViewById(R.id.email_sign_up_start);
-        if (emailSignUp == null) {
-            Log.e("EBT", "No view found when setting the email sign-up button");
-            return null;
-        }
-        emailSignUp.setOnClickListener(view -> {
-            mNavigatorManager.navigator().showFragment("signup");
-        });
+    @Override
+    protected Button getGoogleLogIn() {
+        return mContainerView.findViewById(R.id.google_log_in_start);
+    }
 
-        Button facebookSignUp = mContainerView.findViewById(R.id.fb_log_in_start);
-        if (facebookSignUp == null) {
-            Log.e("EBT", "No view found when setting the Facebook sign-up button");
-            return null;
-        }
-        facebookSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
-            "Facebook sign-up not yet available", Toast.LENGTH_SHORT).show());
-
-        Button googleSignUp = mContainerView.findViewById(R.id.google_log_in_start);
-        if (googleSignUp == null) {
-            Log.e("EBT", "No view found when setting the Google sign-up button");
-            return null;
-        }
-        googleSignUp.setOnClickListener(view -> Toast.makeText(getContext(),
-            "Google sign-up not yet available", Toast.LENGTH_SHORT).show());
-
-        Button registeredSignIn = mContainerView.findViewById(R.id.registered_log_in_start);
-        if (registeredSignIn == null) {
-            Log.e("EBT", "No view found when setting the registered sign-in button");
-            return null;
-        }
-        registeredSignIn.setOnClickListener(view -> {
-            mNavigatorManager.navigator().showFragment("login");
-        });
-
-        return dialog;
+    @Override
+    protected Button getRegisteredLogIn() {
+        return mContainerView.findViewById(R.id.registered_log_in_start);
     }
 }

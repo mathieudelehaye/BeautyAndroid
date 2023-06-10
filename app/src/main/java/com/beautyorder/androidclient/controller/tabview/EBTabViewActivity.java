@@ -145,17 +145,20 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
         // Authentication
         var manager = new EBAuthManager(this);
 
-        mNavigator.createFragment("login", EBFragmentLoginDialog.class);
-        var logInFragment = (EBFragmentLoginDialog) mNavigator.getFragment("login");
-        logInFragment.setAuthManager(manager);
+        mNavigator.createFragment("login", EBFragmentLoginDialog.class,
+            new Navigator.FragmentArgument(AuthManager.class, manager),
+            new Navigator.FragmentArgument(Integer.class, R.layout.fragment_signin_dialog)
+        );
 
-        mNavigator.createFragment("signup", EBFragmentSignupDialog.class);
-        var signUpFragment = (EBFragmentSignupDialog) mNavigator.getFragment("signup");
-        signUpFragment.setAuthManager(manager);
+        mNavigator.createFragment("signup", EBFragmentSignupDialog.class,
+            new Navigator.FragmentArgument(AuthManager.class, manager),
+            new Navigator.FragmentArgument(Integer.class, R.layout.fragment_signup_dialog)
+        );
 
-        mNavigator.createFragment("start", EBFragmentStartDialog.class);
-        var startFragment = (EBFragmentStartDialog) mNavigator.getFragment("start");
-        startFragment.setAuthManager(manager);
+        mNavigator.createFragment("start", EBFragmentStartDialog.class,
+            new Navigator.FragmentArgument(AuthManager.class, manager),
+            new Navigator.FragmentArgument(Integer.class, R.layout.fragment_start_dialog)
+        );
 
         manager.checkPreferenceUserAndStart();
     }

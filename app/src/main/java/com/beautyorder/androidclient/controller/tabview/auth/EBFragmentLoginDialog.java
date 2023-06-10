@@ -21,81 +21,54 @@
 
 package com.beautyorder.androidclient.controller.tabview.auth;
 
-import android.app.Dialog;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
-import com.android.java.androidjavatools.controller.tabview.auth.AuthenticateDialogListener;
+import android.widget.EditText;
 import com.android.java.androidjavatools.controller.tabview.auth.FragmentLoginDialog;
+import com.android.java.androidjavatools.model.AuthManager;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentLoginDialog extends FragmentLoginDialog {
+    public EBFragmentLoginDialog(AuthManager manager, Integer layoutId) {
+        super(manager, layoutId);
+    }
+
     @Override
-    protected Dialog initializeGUI(Dialog parentDialog) {
-        // Do not use the parent dialog
+    protected Button getAnonymousLogIn() {
+        return mContainerView.findViewById(R.id.anonymous_log_in_signin);
+    }
 
-        Dialog dialog = buildDialogFromLayout(R.layout.fragment_signin_dialog);
+    @Override
+    protected Button getFacebookLogIn() {
+        return mContainerView.findViewById(R.id.fb_log_in_signin);
+    }
 
-        Button anonymousSignIn = mContainerView.findViewById(R.id.anonymous_log_in_signin);
-        if (anonymousSignIn == null) {
-            Log.e("EBT", "No view found for the anonymous sign-in button on login dialog");
-            return null;
-        }
+    @Override
+    protected Button getGoogleLogIn() {
+        return mContainerView.findViewById(R.id.google_log_in_signin);
+    }
 
-        anonymousSignIn.setOnClickListener(view -> mListener.onDialogAnonymousSigninClick(mThis));
+    @Override
+    protected Button getConfirmLogIn() {
+        return mContainerView.findViewById(R.id.confirm_signin);
+    }
 
-        Button facebookSignIn = mContainerView.findViewById(R.id.fb_log_in_signin);
-        if (facebookSignIn == null) {
-            Log.e("EBT", "No view found when setting the Facebook sign-in button");
-            return null;
-        }
+    @Override
+    protected Button getResetPassword() {
+        return mContainerView.findViewById(R.id.reset_password_signin);
+    }
 
-        facebookSignIn.setOnClickListener(view -> Toast.makeText(getContext(),
-            "Facebook sign-in not yet available", Toast.LENGTH_SHORT).show());
+    @Override
+    protected Button getEmailSignUp() {
+        return mContainerView.findViewById(R.id.email_sign_up_signin);
+    }
 
-        Button googleSignIn = mContainerView.findViewById(R.id.google_log_in_signin);
-        if (googleSignIn == null) {
-            Log.e("EBT", "No view found when setting the Google sign-in button");
-            return null;
-        }
+    @Override
+    protected EditText getRegisteredEmail() {
+        return mContainerView.findViewById(R.id.registered_email_signin);
+    }
 
-        googleSignIn.setOnClickListener(view -> Toast.makeText(getContext(),
-            "Google sign-in not yet available", Toast.LENGTH_SHORT).show());
-
-        Button confirm = mContainerView.findViewById(R.id.confirm_signin);
-        if (confirm == null) {
-            Log.e("EBT", "No view found for the confirm button on login dialog");
-            return null;
-        }
-
-        confirm.setOnClickListener(view -> mListener.onDialogRegisteredSigninClick(mThis,
-            new AuthenticateDialogListener.SigningDialogCredentialViews(
-                mContainerView.findViewById(R.id.registered_email_signin),
-                mContainerView.findViewById(R.id.registered_password_signin),
-                null)));
-
-        Button resetPassword = mContainerView.findViewById(R.id.reset_password_signin);
-        if (resetPassword == null) {
-            Log.e("EBT", "No view found for the reset password button on login dialog");
-            return null;
-        }
-
-        resetPassword.setOnClickListener(view -> mListener.onDialogResetPasswordClick(mThis,
-            new AuthenticateDialogListener.SigningDialogCredentialViews(
-                mContainerView.findViewById(R.id.registered_email_signin),
-                mContainerView.findViewById(R.id.registered_password_signin),
-                null)));
-
-        Button signUp = mContainerView.findViewById(R.id.email_sign_up_signin);
-        if (signUp == null) {
-            Log.e("EBT", "No view found for the sign-up button on login dialog");
-            return null;
-        }
-
-        signUp.setOnClickListener(view -> {
-            mNavigatorManager.navigator().showFragment("signup");
-        });
-
-        return dialog;
+    @Override
+    protected EditText getRegisteredPassword() {
+        return mContainerView.findViewById(R.id.registered_password_signin);
     }
 }
