@@ -76,10 +76,6 @@ class EBFragmentProductDetail : FragmentProductDetail() {
         }
     }
 
-    override fun startAuthActivity() {
-//        startActivity(Intent(context, EBAuthManager::class.java))
-    }
-
     @Composable
     fun iconRow() {
         val iconSize = 60.dp
