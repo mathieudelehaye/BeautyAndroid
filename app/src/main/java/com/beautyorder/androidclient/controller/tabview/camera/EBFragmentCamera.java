@@ -84,7 +84,7 @@ public class EBFragmentCamera extends FragmentCamera {
             if (Helpers.compareYearDays(lastPhotoDate, currentDate) >= 0) {
                 Log.d("EBT", "A photo has already been taken today");
 
-                var dialogFragment = new FragmentHelpDialog(getString(R.string.one_photo_by_day));
+                var dialogFragment = new FragmentHelpDialog(getString(R.string.one_photo_by_day), () -> null);
                 dialogFragment.show(getChildFragmentManager(), "Camera no more photo dialog");
 
                 return;
@@ -129,7 +129,8 @@ public class EBFragmentCamera extends FragmentCamera {
 
                             final Activity activity = getActivity();
                             activity.runOnUiThread(() -> {
-                                var dialogFragment = new FragmentHelpDialog(getString(R.string.photo_correctly_sent));
+                                var dialogFragment = new FragmentHelpDialog(
+                                    getString(R.string.photo_correctly_sent), () -> null);
                                 dialogFragment.show(getChildFragmentManager(), "Camera photo taken dialog");
                             });
                         }
@@ -147,7 +148,7 @@ public class EBFragmentCamera extends FragmentCamera {
         if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("cam_help_displayed", "false"))) {
                 mSharedPref.edit().putString("cam_help_displayed", "true").commit();
-                var dialogFragment = new FragmentHelpDialog(getString(R.string.camera_help));
+                var dialogFragment = new FragmentHelpDialog(getString(R.string.camera_help), () -> null);
                 dialogFragment.show(getChildFragmentManager(), "Camera help dialog");
             }
         }
