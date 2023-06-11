@@ -22,6 +22,8 @@
 package com.beautyorder.androidclient.controller.tabview.profile
 
 import android.content.Intent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentAccount
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter
 import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity
@@ -33,5 +35,11 @@ class EBFragmentAccount: FragmentAccount() {
 
         // Restart the main activity
         startActivity(Intent(context, EBTabViewActivity::class.java))
+    }
+
+    @Preview
+    @Composable
+    fun accountContentView() {
+        contentView()
     }
 }
