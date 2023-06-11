@@ -21,6 +21,7 @@
 
 package com.beautyorder.androidclient.controller.tabview.product
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -38,9 +39,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.java.androidjavatools.controller.tabview.product.FragmentProductDetail
+import com.android.java.androidjavatools.model.AppUser
+import com.android.java.androidjavatools.model.TaskCompletionManager
 import com.beautyorder.androidclient.R
+import com.beautyorder.androidclient.model.EBUserInfoDBEntry
 
 class EBFragmentProductDetail : FragmentProductDetail() {
+    override val mUserInfoDBEntry = EBUserInfoDBEntry(mDatabase, AppUser.getInstance().id)
 
     @Composable
     override fun productDescription() {
@@ -74,6 +79,20 @@ class EBFragmentProductDetail : FragmentProductDetail() {
                 )
             }
         }
+    }
+
+    override fun onOrdering(productKey : String) {
+        mUserInfoDBEntry.setOrderedSampleKey(productKey)
+        mUserInfoDBEntry.updateDBFields(object : TaskCompletionManager {
+            override fun onSuccess() {
+                Log.i("EBT", "Ordering of product $productKey written to the DB for user " +
+                    "${mUserInfoDBEntry.key}")
+            }
+
+            override fun onFailure() {
+                Log.e("EBT", "Error while writing order for user ${mUserInfoDBEntry.key}")
+            }
+        });
     }
 
     @Composable

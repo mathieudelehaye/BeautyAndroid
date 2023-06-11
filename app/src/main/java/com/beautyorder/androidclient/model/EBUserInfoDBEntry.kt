@@ -77,6 +77,11 @@ class EBUserInfoDBEntry : UserInfoDBEntry {
         mDataChanged[0]["score_time"] = true
     }
 
+    fun setOrderedSampleKey(value: String) {
+        mData[0]["ordered_sample_key"] = value
+        mDataChanged[0]["ordered_sample_key"] = true
+    }
+
     fun readScoreDBFields(vararg cbManager: TaskCompletionManager?): Boolean {
         val fields = arrayOf("score", "score_time")
         return readDBFieldsForCurrentKey(fields, *cbManager)

@@ -39,6 +39,8 @@ class EBAuthManager(activity : AppCompatActivity) : AuthManager(activity) {
         credentials?.put("score_time", EBUserInfoDBEntry.scoreTimeFormat.format(
             Helpers.getDayBeforeDate(Helpers.getDayBeforeDate(Date()))))
 
+        credentials?.put("ordered_sample_key", "")
+
         mActivity.getSharedPreferences(
             mActivity.getString(R.string.app_name), MODE_PRIVATE).getString(
             mActivity.getString(com.android.java.androidjavatools.R.string.device_id), "")?.let {
