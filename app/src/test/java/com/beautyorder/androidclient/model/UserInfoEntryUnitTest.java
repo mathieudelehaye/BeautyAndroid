@@ -49,6 +49,8 @@ public class UserInfoEntryUnitTest {
         mUserInfoMap.put("score", "10");
         mUserInfoMap.put("score_time", "2022.12.20");
 
+        mUserInfoMap.put("ordered_sample_key", "");
+
         mUserInfoMap.put("device_id", "5d944db5c143e59b");
 
         var database = (new FirebaseFirestoreMockManager()).getDatabase();

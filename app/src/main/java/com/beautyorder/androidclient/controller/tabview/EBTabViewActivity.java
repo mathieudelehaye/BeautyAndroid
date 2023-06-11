@@ -32,20 +32,18 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.TabViewActivity;
-import com.android.java.androidjavatools.controller.tabview.Navigator;
+import com.android.java.androidjavatools.controller.template.Navigator;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
 import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
-import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
+import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentLoginDialog;
+import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentSignupDialog;
+import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentStartDialog;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductDetail;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductSelection;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentAccount;
-import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentHelp;
-import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentTerms;
-import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
-import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
-import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
+import com.beautyorder.androidclient.model.EBAuthManager;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import com.beautyorder.androidclient.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -72,18 +70,21 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 
         super.onCreate(savedInstanceState);
 
+        // Set layout background
         final var coordinatorLayout = (CoordinatorLayout) findViewById(
             com.android.java.androidjavatools.R.id.main_activity_layout);
         coordinatorLayout.setBackground(getResources().getDrawable(R.drawable.background));
 
+        // Set layout logo icon
         final var mainActivityIcon = (ImageView) findViewById(
             com.android.java.androidjavatools.R.id.main_activity_icon);
         mainActivityIcon.setImageResource(R.drawable.brand_logo);
 
         // Background: initialization
-        var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
-            , 0);
-        runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
+        // TODO: fix the score display
+//        var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
+//            , 0);
+//        runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
     }
 
     @Override
@@ -112,23 +113,52 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
     protected void createNavigator() {
         mNavigator = new Navigator(this, com.android.java.androidjavatools.R.id.main_activity_layout);
 
+        // TODO: re-enable the disabled fragments
+
+        // Main
         mNavigator.createFragment("tab", EBFragmentTabView.class);
-        mNavigator.createFragment("camera", EBFragmentCamera.class);
+
+        // Camera
+//        mNavigator.createFragment("camera", EBFragmentCamera.class);
+
+        // Menu
         mNavigator.createFragment("account", EBFragmentAccount.class);
-        mNavigator.createFragment("help", EBFragmentHelp.class);
-        mNavigator.createFragment("terms", EBFragmentTerms.class);
-        mNavigator.createFragment("list", EBFragmentResultList.class);
-        mNavigator.createFragment("map", EBFragmentMap.class);
-        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
+//        mNavigator.createFragment("help", EBFragmentHelp.class);
+//        mNavigator.createFragment("terms", EBFragmentTerms.class);
+
+        // RP search
+//        mNavigator.createFragment("list", EBFragmentResultList.class);
+//        mNavigator.createFragment("map", EBFragmentMap.class);
+//        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
+
+        // Products
         mNavigator.createFragment("products", EBFragmentProductSelection.class);
         mNavigator.createFragment("product", EBFragmentProductDetail.class);
 
-        mNavigator.showFragment("tab");
+        // Authentication
+        var manager = new EBAuthManager(this);
+
+        mNavigator.createFragment("login", EBFragmentLoginDialog.class,
+            new Navigator.FragmentArgument(AuthManager.class, manager),
+            new Navigator.FragmentArgument(Integer.class, R.layout.fragment_signin_dialog)
+        );
+
+        mNavigator.createFragment("signup", EBFragmentSignupDialog.class,
+            new Navigator.FragmentArgument(AuthManager.class, manager),
+            new Navigator.FragmentArgument(Integer.class, R.layout.fragment_signup_dialog)
+        );
+
+        mNavigator.createFragment("start", EBFragmentStartDialog.class,
+            new Navigator.FragmentArgument(AuthManager.class, manager),
+            new Navigator.FragmentArgument(Integer.class, R.layout.fragment_start_dialog)
+        );
+
+        manager.checkPreferenceUserAndStart();
     }
 
     public void showScore(int value) {
-        Log.v("BeautyAndroid", "Show score: " + value);
+        Log.v("EBT", "Show score: " + value);
 
         // TODO: fix the score display
 //        TextView appScore = mTabViewFragment.getView().findViewById(R.id.score_text);
@@ -141,18 +171,18 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
     @Override
     public boolean environmentCondition() {
         if (!isNetworkAvailable()) {
-            //Log.v("BeautyAndroid", "Try to write the scanning events but no network");
+            //Log.v("EBT", "Try to write the scanning events but no network");
             return false;
         }
 
         if (AppUser.getInstance().getAuthenticationType() == AppUser.AuthenticationType.NONE) {
-            //Log.v("BeautyAndroid", "Try to write the scanning events but no app user");
+            //Log.v("EBT", "Try to write the scanning events but no app user");
             return false;
         }
 
         mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send), new HashSet<>());
         if (mPhotoQueue.isEmpty()) {
-            //Log.v("BeautyAndroid", "Try to write the scanning events but queue is empty");
+            //Log.v("EBT", "Try to write the scanning events but queue is empty");
             return false;
         }
 
@@ -164,19 +194,19 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 
         final int secondsByMinute = 60; // change it to debug
         if ((cumulatedTimeInSec / secondsByMinute) < mTimeBeforePollingScoreInMin) {
-            //Log.v("BeautyAndroid", "Timed condition not fulfilled: " + cumulatedTimeInSec
+            //Log.v("EBT", "Timed condition not fulfilled: " + cumulatedTimeInSec
             //    + " sec out of " + (mTimeBeforePollingScoreInMin * secondsByMinute));
             return false;
         }
 
-        //Log.v("BeautyAndroid", "Timed condition fulfilled");
+        //Log.v("EBT", "Timed condition fulfilled");
         return true;
     }
 
     @Override
     public void runEnvironmentDependentActions() {
 
-        Log.d("BeautyAndroid", "Number of events to send in the queue: " + mPhotoQueue.size());
+        Log.d("EBT", "Number of events to send in the queue: " + mPhotoQueue.size());
 
         String uid = AppUser.getInstance().getId();
 
@@ -201,10 +231,10 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 
                         uploadPhoto(photoPath);
                     } else {
-                        Log.w("BeautyAndroid", "Photo older than the latest in the database: " + photoPath);
+                        Log.w("EBT", "Photo older than the latest in the database: " + photoPath);
                     }
 
-                    Log.d("BeautyAndroid", "Photo removed from the app queue: " + photoPath);
+                    Log.d("EBT", "Photo removed from the app queue: " + photoPath);
                     mPhotoQueue.remove(photoPath);
                     mSharedPref.edit().putStringSet(getString(R.string.photos_to_send),
                         mPhotoQueue).commit();
@@ -240,22 +270,22 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                Log.i("BeautyAndroid", "Photo sent to the database");
-                Log.v("BeautyAndroid", "Photo uploaded to the database at timestamp: "
+                Log.i("EBT", "Photo sent to the database");
+                Log.v("EBT", "Photo uploaded to the database at timestamp: "
                     + Helpers.getTimestamp());
 
                 if (!photoFile.delete()) {
-                    Log.w("BeautyAndroid", "Unable to delete the local photo file: "
+                    Log.w("EBT", "Unable to delete the local photo file: "
                         + path);
                 } else {
-                    Log.v("BeautyAndroid", "Local image successfully deleted");
+                    Log.v("EBT", "Local image successfully deleted");
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
-                Log.e("BeautyAndroid", "Failed to upload the image with the error:"
+                Log.e("EBT", "Failed to upload the image with the error:"
                     + exception);
             }
         });
@@ -263,7 +293,7 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 
     private void downloadScore() {
 
-        //Log.v("BeautyAndroid", "Start to download the score");  // uncomment to debug
+        //Log.v("EBT", "Start to download the score");  // uncomment to debug
 
         String uid = AppUser.getInstance().getId();
         var entry = new EBUserInfoDBEntry(mDatabase, uid);
@@ -277,11 +307,11 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
                 final int preferenceScore =
                     mSharedPref.getInt(preferenceKey, 0);
 
-                //Log.v("BeautyAndroid", "Score downloaded: current: " + preferenceScore + ", new: "
+                //Log.v("EBT", "Score downloaded: current: " + preferenceScore + ", new: "
                 //    + downloadedScore); // uncomment to debug
 
                 if (preferenceScore < downloadedScore) {
-                    Log.v("BeautyAndroid", "Shown score updated: " + downloadedScore);
+                    Log.v("EBT", "Shown score updated: " + downloadedScore);
 
                     showScore(downloadedScore);
                     // TODO: update the score download

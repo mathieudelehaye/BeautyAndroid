@@ -35,7 +35,7 @@ import com.android.java.androidjavatools.controller.tabview.camera.FragmentCamer
 import com.android.java.androidjavatools.model.AppUser;
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
-import com.android.java.androidjavatools.controller.tabview.dialog.FragmentHelpDialog;
+import com.android.java.androidjavatools.controller.template.FragmentHelpDialog;
 import com.beautyorder.androidclient.R;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
 import java.io.File;
@@ -82,15 +82,15 @@ public class EBFragmentCamera extends FragmentCamera {
                 mSharedPref.getString(getString(R.string.photo_date), "1970.01.01"));
 
             if (Helpers.compareYearDays(lastPhotoDate, currentDate) >= 0) {
-                Log.d("BeautyAndroid", "A photo has already been taken today");
+                Log.d("EBT", "A photo has already been taken today");
 
-                var dialogFragment = new FragmentHelpDialog(getString(R.string.one_photo_by_day));
+                var dialogFragment = new FragmentHelpDialog(getString(R.string.one_photo_by_day), () -> null);
                 dialogFragment.show(getChildFragmentManager(), "Camera no more photo dialog");
 
                 return;
             }
 
-            Log.i("BeautyAndroid", "Capturing a photo with the camera");
+            Log.i("EBT", "Capturing a photo with the camera");
 
             String photoDate = EBUserInfoDBEntry.scoreTimeFormat.format(currentDate);
             String fileName = AppUser.getInstance().getId() + "-" + photoDate;
@@ -106,8 +106,8 @@ public class EBFragmentCamera extends FragmentCamera {
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                        Log.d("BeautyAndroid", "Photo saved to file: " + file);
-                        Log.v("BeautyAndroid", "Photo saved at timestamp: "
+                        Log.d("EBT", "Photo saved to file: " + file);
+                        Log.v("EBT", "Photo saved at timestamp: "
                                 + Helpers.getTimestamp());
 
                         mSharedPref.edit().putString(getString(R.string.photo_date), photoDate).commit();
@@ -125,18 +125,19 @@ public class EBFragmentCamera extends FragmentCamera {
                             mSharedPref.edit().putStringSet(getString(R.string.photos_to_send), photoQueue)
                                 .commit();
 
-                            Log.i("BeautyAndroid", "Photo added to the queue for sending");
+                            Log.i("EBT", "Photo added to the queue for sending");
 
                             final Activity activity = getActivity();
                             activity.runOnUiThread(() -> {
-                                var dialogFragment = new FragmentHelpDialog(getString(R.string.photo_correctly_sent));
+                                var dialogFragment = new FragmentHelpDialog(
+                                    getString(R.string.photo_correctly_sent), () -> null);
                                 dialogFragment.show(getChildFragmentManager(), "Camera photo taken dialog");
                             });
                         }
                     }
                     @Override
                     public void onError(ImageCaptureException error) {
-                        Log.e("BeautyAndroid", "Error while saving the image: " + error.toString());
+                        Log.e("EBT", "Error while saving the image: " + error.toString());
                     }
                 }
             );
@@ -147,7 +148,7 @@ public class EBFragmentCamera extends FragmentCamera {
         if (mIsViewVisible && mSharedPref != null) {
             if (!Boolean.parseBoolean(mSharedPref.getString("cam_help_displayed", "false"))) {
                 mSharedPref.edit().putString("cam_help_displayed", "true").commit();
-                var dialogFragment = new FragmentHelpDialog(getString(R.string.camera_help));
+                var dialogFragment = new FragmentHelpDialog(getString(R.string.camera_help), () -> null);
                 dialogFragment.show(getChildFragmentManager(), "Camera help dialog");
             }
         }

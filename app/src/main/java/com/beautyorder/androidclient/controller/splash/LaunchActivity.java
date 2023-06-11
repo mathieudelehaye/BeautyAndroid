@@ -8,13 +8,16 @@
 //  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
-//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+//  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+//  Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+//  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+//  warranty of MERCHANTABILITY or FITNESS
 //  FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 //
-//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+//  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+//  <https://www.gnu.org/licenses/>.
 
 package com.beautyorder.androidclient.controller.splash;
 
@@ -25,8 +28,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import com.beautyorder.androidclient.R;
-import com.beautyorder.androidclient.controller.auth.AuthenticateActivity;
 import com.beautyorder.androidclient.controller.onboard.OnboardActivity;
+import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 
 public class LaunchActivity extends Activity {
 
@@ -49,11 +52,11 @@ public class LaunchActivity extends Activity {
         if (!mSharedPref.getBoolean(
             getString(R.string.completed_onboarding), false)) {
 
-            Log.i("BeautyAndroid", "Onboarding activity started");
+            Log.i("EBT", "Onboarding activity started");
             startActivity(new Intent(this, OnboardActivity.class));
         } else {
-            Log.i("BeautyAndroid", "Onboarding activity skipped");
-            startActivity(new Intent(this, AuthenticateActivity.class));
+            Log.i("EBT", "Onboarding activity skipped");
+            startActivity(new Intent(this, EBTabViewActivity.class));
         }
 
         finish();

@@ -53,8 +53,8 @@ public class EBFragmentSavedList extends FragmentSavedList {
             return;
         }
 
-        Log.d("AndroidJavaTools", "Saved view becomes " + (isVisibleToUser ? "visible" : "invisible"));
-        Log.v("AndroidJavaTools", (isVisibleToUser ? "Hiding" : "Showing") + " the app regular toolbar");
+        Log.d("EBT", "Saved view becomes " + (isVisibleToUser ? "visible" : "invisible"));
+        Log.v("EBT", (isVisibleToUser ? "Hiding" : "Showing") + " the app regular toolbar");
 
         mActivity.toggleToolbar(!isVisibleToUser);
 

@@ -45,7 +45,7 @@ public class EBFragmentHome extends FragmentHome {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSharedPref = mContext.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-        updateUserScore();
+//        updateUserScore();
     }
 
     private void updateUserScore() {
@@ -68,14 +68,14 @@ public class EBFragmentHome extends FragmentHome {
                         userScore = (!scoreData.equals("")) ? Integer.parseInt(scoreData) : 0;
                     }
                 } else {
-                    Log.d("BeautyAndroid", "Error getting documents: ", task.getException());
+                    Log.d("EBT", "Error getting documents: ", task.getException());
                 }
 
-                Log.d("BeautyAndroid", "userScore = " + userScore);
+                Log.d("EBT", "userScore = " + userScore);
 
                 var mainActivity = (EBTabViewActivity) getActivity();
                 if (mainActivity == null) {
-                    Log.w("BeautyAndroid", "Cannot update the score, as no main activity found");
+                    Log.w("EBT", "Cannot update the score, as no main activity found");
                     return;
                 }
                 mainActivity.showScore(userScore);
@@ -93,23 +93,23 @@ public class EBFragmentHome extends FragmentHome {
 
             View scoreLayout = fragmentRootView.findViewById(layout_id);
             if (scoreLayout == null) {
-                Log.w("BeautyAndroid", "Cannot display or hide the score box in the " + fragmentName
+                Log.w("EBT", "Cannot display or hide the score box in the " + fragmentName
                     + " fragment, as no score layout");
                 return;
             }
 
-            Log.v("BeautyAndroid", "The score box is hidden in the " + fragmentName
+            Log.v("EBT", "The score box is hidden in the " + fragmentName
                     + " fragment");
             scoreLayout.setVisibility(View.GONE);
         } else {
-            Log.v("BeautyAndroid", "The score box is shown in the " + fragmentName
+            Log.v("EBT", "The score box is shown in the " + fragmentName
                     + " fragment");
         }
     }
 
     protected boolean mustShowBrand() {
         if (mContext == null) {
-            Log.w("BeautyAndroid", "Cannot check if brand must be shown, as no context");
+            Log.w("EBT", "Cannot check if brand must be shown, as no context");
             return false;
         }
 
