@@ -5,7 +5,7 @@
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
-//  Copyright © 2022 Mathieu Delehaye. All rights reserved.
+//  Copyright © 2023 Mathieu Delehaye. All rights reserved.
 //
 //
 //  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
@@ -59,7 +59,6 @@ public class ScoreTransferer {
     }
 
     private void checkAndTransferScoreFromAnonymousUser() {
-
         if (!mSourceUid.equals("")) {
             // An anonymous uid already was found in the app preferences
             Log.d("EBT", "Try to transfer score from the anonymous uid found in the app preferences: "

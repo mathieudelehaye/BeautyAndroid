@@ -39,12 +39,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.java.androidjavatools.controller.tabview.product.FragmentProductDetail
+import com.android.java.androidjavatools.controller.template.FragmentHelpDialog
 import com.android.java.androidjavatools.model.AppUser
 import com.android.java.androidjavatools.model.TaskCompletionManager
 import com.beautyorder.androidclient.R
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry
 
 class EBFragmentProductDetail : FragmentProductDetail() {
+    // TODO: confirm the cost to order a product
+    val scoreCostToOrder = 1
+
     override val mUserInfoDBEntry = EBUserInfoDBEntry(mDatabase, AppUser.getInstance().id)
 
     @Composable
@@ -81,18 +85,43 @@ class EBFragmentProductDetail : FragmentProductDetail() {
         }
     }
 
-    override fun onOrdering(productKey : String) {
+    override fun onOrdering(productKey : String, successDialogMessage : String, onSuccessDialogClose: () -> Unit) {
+        // read score and possibly update profile data
+        mUserInfoDBEntry.readScoreDBFields(object : TaskCompletionManager {
+            override fun onSuccess() {
+                val oldScore = mUserInfoDBEntry.getScore()
+                if (oldScore >= scoreCostToOrder) {
+                    updateProfile(productKey, (oldScore - scoreCostToOrder), successDialogMessage,
+                        onSuccessDialogClose)
+                } else {
+                    FragmentHelpDialog("Your score must be at least $scoreCostToOrder to order samples!")
+                        .show(childFragmentManager, "Order refused dialog")
+                }
+            }
+
+            override fun onFailure() {}
+        })
+    }
+
+    private fun updateProfile(productKey : String, newScore : Int, successDialogMessage : String,
+        onSuccessDialogClose: () -> Unit) {
+
         mUserInfoDBEntry.setOrderedSampleKey(productKey)
+        mUserInfoDBEntry.setScore(newScore)
         mUserInfoDBEntry.updateDBFields(object : TaskCompletionManager {
             override fun onSuccess() {
                 Log.i("EBT", "Ordering of product $productKey written to the DB for user " +
-                    "${mUserInfoDBEntry.key}")
+                    "${mUserInfoDBEntry.key}. User score changed to $newScore")
+
+                FragmentHelpDialog("$successDialogMessage. Your score is now $newScore!") {
+                    mNavigatorManager?.navigator()?.back()
+                }.show(childFragmentManager, "Order approved dialog")
             }
 
             override fun onFailure() {
                 Log.e("EBT", "Error while writing order for user ${mUserInfoDBEntry.key}")
             }
-        });
+        })
     }
 
     @Composable
