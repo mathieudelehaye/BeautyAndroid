@@ -94,9 +94,8 @@ class EBFragmentProductDetail : FragmentProductDetail() {
                     updateProfile(productKey, (oldScore - scoreCostToOrder), successDialogMessage,
                         onSuccessDialogClose)
                 } else {
-                    FragmentHelpDialog("Your score must be at least $scoreCostToOrder to order samples!") {
-                        mNavigatorManager?.navigator()?.back()
-                    }.show(childFragmentManager, "Order refused dialog")
+                    FragmentHelpDialog("Your score must be at least $scoreCostToOrder to order samples!")
+                        .show(childFragmentManager, "Order refused dialog")
                 }
             }
 
