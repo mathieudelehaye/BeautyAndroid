@@ -23,7 +23,7 @@
         android:icon="@mipmap/app_logo"
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BeautyAndroid.NoActionBar"
+        android:theme="@style/Theme.AndroidJavaTools.NoActionBar"
         tools:targetApi="30"
     >
 
