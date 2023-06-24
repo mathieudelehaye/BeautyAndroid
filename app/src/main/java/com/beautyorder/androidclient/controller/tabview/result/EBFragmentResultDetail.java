@@ -21,7 +21,7 @@
 
 package com.beautyorder.androidclient.controller.tabview.result;
 
-import com.android.java.androidjavatools.controller.tabview.result.FragmentResultDetail;
+import com.android.java.androidjavatools.controller.tabview.result.detail.FragmentResultDetail;
 
 public class EBFragmentResultDetail extends FragmentResultDetail {
 }

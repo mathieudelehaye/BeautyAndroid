@@ -42,6 +42,8 @@ import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentStartDial
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductDetail;
 import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProductSelection;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentAccount;
+import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
+import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
 import com.beautyorder.androidclient.model.EBAuthManager;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
@@ -127,9 +129,9 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 //        mNavigator.createFragment("terms", EBFragmentTerms.class);
 
         // RP search
-//        mNavigator.createFragment("list", EBFragmentResultList.class);
 //        mNavigator.createFragment("map", EBFragmentMap.class);
-//        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
+        mNavigator.createFragment("list", EBFragmentResultList.class);
+        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
 
         // Products
