@@ -28,8 +28,8 @@
     >
 
         <activity
-            android:name=".controller.splash.LaunchActivity"
-            android:theme="@style/Theme.App.Splash"
+            android:name="com.beautyorder.androidclient.controller.splash.EBLaunchActivity"
+            android:theme="@style/Theme.EB.Splash"
             android:exported="true"
         >
             <intent-filter>

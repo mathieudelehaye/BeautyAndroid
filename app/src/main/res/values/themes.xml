@@ -5,12 +5,22 @@
         <item name="android:textSize">34sp</item>
         <item name="android:lineSpacingExtra">14sp</item>
     </style>
-    <style name="Widget.Leanback.OnboardingDescriptionStyle.Beauty" parent="Widget.Leanback.OnboardingDescriptionStyle">
+    <style name="Widget.Leanback.OnboardingDescriptionStyle.Beauty"
+       parent="Widget.Leanback.OnboardingDescriptionStyle">
+
         <item name="android:textColor">#B39E0C0C</item>
         <item name="android:textSize">20sp</item>
     </style>
     <style name="Theme.Leanback.Onboarding.Beauty" parent="Theme.Leanback.Onboarding">
         <item name="onboardingTitleStyle">@style/Widget.Leanback.OnboardingTitleStyle.Beauty</item>
         <item name="onboardingDescriptionStyle">@style/Widget.Leanback.OnboardingDescriptionStyle.Beauty</item>
+    </style>
+
+    <!-- Splash theme. -->
+    <style name="Theme.EB.Splash" parent="Theme.SplashScreen" splashscreen_icon_size="200dp">
+        <item name="windowSplashScreenBackground">@color/BgSkyBlue</item>
+        <item name="windowSplashScreenAnimatedIcon" splashscreen_icon_size="200dp">@drawable/splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration" splashscreen_icon_size="200dp">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.AndroidJavaTools.NoActionBar</item>
     </style>
 </resources>
