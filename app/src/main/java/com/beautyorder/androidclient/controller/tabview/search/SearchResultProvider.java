@@ -23,6 +23,7 @@ package com.beautyorder.androidclient.controller.tabview.search;
 
 import android.util.Log;
 import com.android.java.androidjavatools.controller.template.SearchProvider;
+import com.android.java.androidjavatools.model.GeoPosition;
 import com.android.java.androidjavatools.model.ResultItemInfo;
 import com.android.java.androidjavatools.model.SearchResult;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
@@ -39,11 +40,11 @@ public class SearchResultProvider implements SearchProvider {
     }
 
     @Override
-    public void searchGeoPointResults(GeoPoint searchStart, double searchRadiusInCoordinate,
-        FirebaseFirestore database, TaskCompletionManager... cbManager) {
+    public void searchGeoPointResults(GeoPosition searchStart, double searchRadiusInCoordinate,
+                                      FirebaseFirestore database, TaskCompletionManager... cbManager) {
 
-        final double startLatitude = searchStart.getLatitude();
-        final double startLongitude = searchStart.getLongitude();
+        final double startLatitude = searchStart.getLocation().getLatitude();
+        final double startLongitude = searchStart.getLocation().getLongitude();
         final String startLatitudeText = startLatitude+"";
         final String startLongitudeText = startLongitude+"";
         Log.d("EBT", "Display the recycling points around the location (" + startLatitudeText
