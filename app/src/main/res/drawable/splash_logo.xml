@@ -9,20 +9,23 @@
     Copyright © 2023 Mathieu Delehaye. All rights reserved.
 
 
-    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
+    Public License as published by
     the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS
     FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-    You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Affero General Public License along with this program. If not, see
+    <https://www.gnu.org/licenses/>.
 -->
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/app_logo"
-        android:left="55dp"
-        android:right="55dp"
-        android:top="55dp"
-        android:bottom="55dp"
+        android:drawable="@drawable/app_logo_200"
+        android:left="5dp"
+        android:right="5dp"
+        android:top="5dp"
+        android:bottom="5dp"
     />
 </layer-list>

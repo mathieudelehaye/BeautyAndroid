@@ -29,7 +29,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/Theme.BeautyAndroid.AppBarOverlay"
+        android:theme="@style/Theme.AndroidJavaTools.AppBarOverlay"
         android:id="@+id/main_activity_app_bar_layout"
     />
 
