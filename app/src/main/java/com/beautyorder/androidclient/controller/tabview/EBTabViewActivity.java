@@ -33,8 +33,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.TabViewActivity;
 import com.android.java.androidjavatools.controller.template.Navigator;
-import com.android.java.androidjavatools.controller.template.ResultProvider;
-import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentLoginDialog;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentSignupDialog;
@@ -57,8 +55,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.*;
 
-public class EBTabViewActivity extends TabViewActivity implements ActivityWithAsyncTask,
-    SearchHistoryManager, ResultProvider, Navigator.NavigatorManager {
+public class EBTabViewActivity extends TabViewActivity {
 
     // Background: properties
     // TODO: do not use a static property here
