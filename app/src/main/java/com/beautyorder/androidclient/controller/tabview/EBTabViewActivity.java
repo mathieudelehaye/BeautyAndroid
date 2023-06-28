@@ -33,8 +33,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.TabViewActivity;
 import com.android.java.androidjavatools.controller.template.Navigator;
-import com.android.java.androidjavatools.controller.template.ResultProvider;
-import com.android.java.androidjavatools.controller.template.SearchHistoryManager;
 import com.android.java.androidjavatools.model.*;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentLoginDialog;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentSignupDialog;
@@ -44,6 +42,7 @@ import com.beautyorder.androidclient.controller.tabview.product.EBFragmentProduc
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentAccount;
 import com.beautyorder.androidclient.controller.tabview.result.EBFragmentResultDetail;
 import com.beautyorder.androidclient.controller.tabview.result.list.EBFragmentResultList;
+import com.beautyorder.androidclient.controller.tabview.result.map.EBFragmentMap;
 import com.beautyorder.androidclient.controller.tabview.search.EBFragmentSuggestion;
 import com.beautyorder.androidclient.model.EBAuthManager;
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry;
@@ -56,8 +55,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.*;
 
-public class EBTabViewActivity extends TabViewActivity implements ActivityWithAsyncTask,
-    SearchHistoryManager, ResultProvider, Navigator.NavigatorManager {
+public class EBTabViewActivity extends TabViewActivity {
 
     // Background: properties
     // TODO: do not use a static property here
@@ -129,7 +127,7 @@ public class EBTabViewActivity extends TabViewActivity implements ActivityWithAs
 //        mNavigator.createFragment("terms", EBFragmentTerms.class);
 
         // RP search
-//        mNavigator.createFragment("map", EBFragmentMap.class);
+        mNavigator.createFragment("map", EBFragmentMap.class);
         mNavigator.createFragment("list", EBFragmentResultList.class);
         mNavigator.createFragment("detail", EBFragmentResultDetail.class);
         mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);

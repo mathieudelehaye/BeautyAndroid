@@ -108,7 +108,7 @@ public class EBFragmentCamera extends FragmentCamera {
                     public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
                         Log.d("EBT", "Photo saved to file: " + file);
                         Log.v("EBT", "Photo saved at timestamp: "
-                                + Helpers.getTimestamp());
+                            + Helpers.getTimestamp());
 
                         mSharedPref.edit().putString(getString(R.string.photo_date), photoDate).commit();
 
