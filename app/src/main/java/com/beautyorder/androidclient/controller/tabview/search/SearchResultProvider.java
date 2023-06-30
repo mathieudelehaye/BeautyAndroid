@@ -25,17 +25,17 @@ import android.util.Log;
 import com.android.java.androidjavatools.controller.template.SearchProvider;
 import com.android.java.androidjavatools.model.GeoPosition;
 import com.android.java.androidjavatools.model.ResultItemInfo;
-import com.android.java.androidjavatools.model.SearchResult;
+import com.android.java.androidjavatools.model.SetWithImages;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
-import com.beautyorder.androidclient.model.ResultInfo;
+import com.beautyorder.androidclient.model.EBResultInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import org.osmdroid.util.GeoPoint;
 
 public class SearchResultProvider implements SearchProvider {
-    private SearchResult mSearchResults;
+    private SetWithImages mSearchResults;
 
     @Override
-    public SearchResult getSearchResults() {
+    public SetWithImages getSearchResults() {
         return mSearchResults;
     }
 
@@ -64,10 +64,10 @@ public class SearchResultProvider implements SearchProvider {
         double[] filterMinRanges = { minSearchLatitude, minSearchLongitude };
         double[] filterMaxRanges = { maxSearchLatitude, maxSearchLongitude };
 
-        var pointInfo = new ResultInfo(database);
+        var pointInfo = new EBResultInfo(database);
         pointInfo.setRangeBasedFilter(filterFields, filterMinRanges, filterMaxRanges);
 
-        mSearchResults = new SearchResult();
+        mSearchResults = new SetWithImages();
 
         pointInfo.readAllDBFields(outputFields, new TaskCompletionManager() {
             @Override
@@ -89,9 +89,9 @@ public class SearchResultProvider implements SearchProvider {
                     mSearchResults.add(
                         key,
                         new ResultItemInfo(
-                            key, itemTitle, itemSnippet, new GeoPoint(latitude,longitude),
-                            null, true),
-                        itemImageUrl);
+                            key, itemTitle, itemSnippet, new GeoPoint(latitude,longitude), true),
+                        itemImageUrl
+                    );
 
                 }
 
