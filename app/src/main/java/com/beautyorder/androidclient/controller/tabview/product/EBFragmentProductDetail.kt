@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.java.androidjavatools.controller.tabview.product.FragmentProductDetail
 import com.android.java.androidjavatools.controller.template.FragmentHelpDialog
-import com.android.java.androidjavatools.model.AppUser
+import com.android.java.androidjavatools.model.user.AppUser
 import com.android.java.androidjavatools.model.TaskCompletionManager
 import com.beautyorder.androidclient.R
 import com.beautyorder.androidclient.model.EBUserInfoDBEntry

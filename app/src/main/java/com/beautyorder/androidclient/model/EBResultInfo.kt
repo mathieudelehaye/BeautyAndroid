@@ -21,7 +21,7 @@
 
 package com.beautyorder.androidclient.model
 
-import com.android.java.androidjavatools.model.ResultInfo
+import com.android.java.androidjavatools.model.result.ResultInfo
 import com.google.firebase.firestore.FirebaseFirestore
 
 class EBResultInfo(database : FirebaseFirestore) : ResultInfo(database) {

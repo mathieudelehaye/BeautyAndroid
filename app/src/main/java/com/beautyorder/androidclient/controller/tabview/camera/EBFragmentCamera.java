@@ -32,7 +32,7 @@ import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.camera.FragmentCamera;
-import com.android.java.androidjavatools.model.AppUser;
+import com.android.java.androidjavatools.model.user.AppUser;
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter;
 import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.android.java.androidjavatools.controller.template.FragmentHelpDialog;

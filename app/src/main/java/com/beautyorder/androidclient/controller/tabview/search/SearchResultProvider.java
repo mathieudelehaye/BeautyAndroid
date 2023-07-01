@@ -24,7 +24,7 @@ package com.beautyorder.androidclient.controller.tabview.search;
 import android.util.Log;
 import com.android.java.androidjavatools.controller.template.SearchProvider;
 import com.android.java.androidjavatools.model.GeoPosition;
-import com.android.java.androidjavatools.model.ResultItemInfo;
+import com.android.java.androidjavatools.model.result.ResultItemInfo;
 import com.android.java.androidjavatools.model.SetWithImages;
 import com.android.java.androidjavatools.model.TaskCompletionManager;
 import com.beautyorder.androidclient.model.EBResultInfo;

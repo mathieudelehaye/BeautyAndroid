@@ -34,6 +34,8 @@ import com.android.java.androidjavatools.Helpers;
 import com.android.java.androidjavatools.controller.tabview.TabViewActivity;
 import com.android.java.androidjavatools.controller.template.Navigator;
 import com.android.java.androidjavatools.model.*;
+import com.android.java.androidjavatools.model.user.AppUser;
+import com.android.java.androidjavatools.model.user.AuthManager;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentLoginDialog;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentSignupDialog;
 import com.beautyorder.androidclient.controller.tabview.auth.EBFragmentStartDialog;
