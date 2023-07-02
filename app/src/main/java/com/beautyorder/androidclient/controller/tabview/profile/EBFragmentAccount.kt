@@ -33,7 +33,7 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.android.java.androidjavatools.R
 import com.android.java.androidjavatools.controller.tabview.profile.FragmentAccount
 import com.android.java.androidjavatools.controller.template.Navigator
-import com.android.java.androidjavatools.model.AppUser
+import com.android.java.androidjavatools.model.user.AppUser
 import com.android.java.androidjavatools.model.TaskCompletionManager
 import com.beautyorder.androidclient.controller.tabview.EBCollectionPagerAdapter
 import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity

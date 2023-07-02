@@ -29,7 +29,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.home.FragmentHome;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
-import com.android.java.androidjavatools.model.AppUser;
+import com.android.java.androidjavatools.model.user.AppUser;
 import com.beautyorder.androidclient.controller.tabview.EBTabViewActivity;
 import com.beautyorder.androidclient.R;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

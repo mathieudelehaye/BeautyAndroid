@@ -26,8 +26,8 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.android.java.androidjavatools.Helpers
-import com.android.java.androidjavatools.model.AuthManager
-import com.android.java.androidjavatools.model.AppUser
+import com.android.java.androidjavatools.model.user.AuthManager
+import com.android.java.androidjavatools.model.user.AppUser
 import com.android.java.androidjavatools.model.TaskCompletionManager
 import com.beautyorder.androidclient.R
 import com.google.firebase.firestore.FirebaseFirestore

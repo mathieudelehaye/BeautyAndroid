@@ -23,7 +23,7 @@ package com.beautyorder.androidclient.model
 
 import com.android.java.androidjavatools.Helpers
 import com.android.java.androidjavatools.model.TaskCompletionManager
-import com.android.java.androidjavatools.model.UserInfoDBEntry
+import com.android.java.androidjavatools.model.user.UserInfoDBEntry
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*

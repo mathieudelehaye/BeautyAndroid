@@ -1,7 +1,7 @@
 //
-//  EBSamplesDBEntry.kt
+//  EBResultInfo.java
 //
-//  Created by Mathieu Delehaye on 28/05/2023.
+//  Created by Mathieu Delehaye on 30/06/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -21,7 +21,19 @@
 
 package com.beautyorder.androidclient.model
 
-import com.android.java.androidjavatools.model.ProductDBEntry
+import com.android.java.androidjavatools.model.result.ResultInfo
 import com.google.firebase.firestore.FirebaseFirestore
 
-class EBSamplesDBEntry(database: FirebaseFirestore, key: String) : ProductDBEntry(database, "samples", key)
+class EBResultInfo(database : FirebaseFirestore) : ResultInfo(database) {
+    override fun getCollectionName(): String {
+        return "recyclePointInfos"
+    }
+
+    override fun getExtraSnippetInfoAtIndex(i : Int): String? {
+        val recyclingProgram : String? = mData[i]["RecyclingProgram"]
+
+        return if ((recyclingProgram != null) && recyclingProgram != "?")
+            ("\n\nBrands: $recyclingProgram")
+            else ""
+    }
+}

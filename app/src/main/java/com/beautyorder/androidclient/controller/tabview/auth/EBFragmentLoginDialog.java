@@ -24,7 +24,7 @@ package com.beautyorder.androidclient.controller.tabview.auth;
 import android.widget.Button;
 import android.widget.EditText;
 import com.android.java.androidjavatools.controller.tabview.auth.FragmentLoginDialog;
-import com.android.java.androidjavatools.model.AuthManager;
+import com.android.java.androidjavatools.model.user.AuthManager;
 import com.beautyorder.androidclient.R;
 
 public class EBFragmentLoginDialog extends FragmentLoginDialog {
