@@ -1,7 +1,7 @@
 //
-//  EBFragmentResultList.java
+//  EBSearchResultProvider.kt
 //
-//  Created by Mathieu Delehaye on 23/04/2023.
+//  Created by Mathieu Delehaye on 4/07/2023.
 //
 //  BeautyAndroid: An Android app to order and recycle cosmetics.
 //
@@ -19,13 +19,16 @@
 //  You should have received a copy of the GNU Affero General Public License along with this program. If not, see
 //  <https://www.gnu.org/licenses/>.
 
-package com.beautyorder.androidclient.controller.tabview.result.list;
+package com.beautyorder.androidclient.controller.tabview.search
 
-import com.android.java.androidjavatools.controller.tabview.result.list.FragmentResultList;
-import com.beautyorder.androidclient.controller.tabview.search.EBSearchResultProvider;
+import com.android.java.androidjavatools.controller.tabview.search.SearchResultProvider
+import com.android.java.androidjavatools.model.result.ResultInfo
+import com.beautyorder.androidclient.model.EBResultInfo
+import com.google.firebase.firestore.FirebaseFirestore
 
-public class EBFragmentResultList extends FragmentResultList {
-    public EBFragmentResultList() {
-        super(new EBSearchResultProvider());
+class EBSearchResultProvider : SearchResultProvider() {
+
+    override fun createResultInfo(database : FirebaseFirestore): ResultInfo {
+        return EBResultInfo(database)
     }
 }

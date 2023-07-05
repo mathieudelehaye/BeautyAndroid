@@ -26,14 +26,23 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import com.android.java.androidjavatools.controller.tabview.FragmentTabView;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
+import com.beautyorder.androidclient.controller.tabview.search.EBSearchResultProvider;
 
 public class EBFragmentTabView extends FragmentTabView {
+    public EBFragmentTabView() {
+        super(new EBSearchResultProvider());
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewPager.setAdapter(new EBCollectionPagerAdapter(getChildFragmentManager(), getActivity(),
-            (ResultProvider) getActivity()));
+        mViewPager.setAdapter(new EBCollectionPagerAdapter(
+            getChildFragmentManager(),
+            getActivity(),
+            (ResultProvider) getActivity(),
+            mSearchProvider
+        ));
     }
 
     @Override

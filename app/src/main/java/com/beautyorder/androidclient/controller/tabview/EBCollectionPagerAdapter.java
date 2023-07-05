@@ -26,14 +26,20 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import com.android.java.androidjavatools.controller.tabview.CollectionPagerAdapter;
 import com.android.java.androidjavatools.controller.template.ResultProvider;
+import com.android.java.androidjavatools.controller.template.SearchProvider;
 import com.beautyorder.androidclient.controller.tabview.camera.EBFragmentCamera;
 import com.beautyorder.androidclient.controller.tabview.home.EBFragmentHome;
 import com.beautyorder.androidclient.controller.tabview.profile.EBFragmentProfileMenu;
 import com.beautyorder.androidclient.controller.tabview.saved.EBFragmentSavedList;
 
 public class EBCollectionPagerAdapter extends CollectionPagerAdapter {
-    public EBCollectionPagerAdapter(FragmentManager fm, FragmentActivity fa, ResultProvider resultProvider) {
-        super(fm, fa, resultProvider);
+    public EBCollectionPagerAdapter(
+        FragmentManager fm,
+        FragmentActivity fa,
+        ResultProvider rProvider,
+        SearchProvider sProvider) {
+
+        super(fm, fa, rProvider, sProvider);
     }
 
     @Override
@@ -42,10 +48,10 @@ public class EBCollectionPagerAdapter extends CollectionPagerAdapter {
 
         switch (i) {
             case 0:
-                fragment = new EBFragmentHome(mSearchResultProvider);
+                fragment = new EBFragmentHome(mResultProvider);
                 break;
             case 1:
-                fragment = new EBFragmentSavedList(mSearchResultProvider);
+                fragment = new EBFragmentSavedList(mResultProvider, mSearchProvider);
                 break;
             case 2:
                 fragment = new EBFragmentCamera();
