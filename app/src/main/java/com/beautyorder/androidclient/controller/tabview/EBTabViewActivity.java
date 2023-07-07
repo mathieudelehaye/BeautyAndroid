@@ -64,7 +64,6 @@ public class EBTabViewActivity extends TabViewActivity {
     public static boolean scoreTransferredFromAnonymousAccount = false;
     private Set<String> mPhotoQueue;
     final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
-    private final int mTimeBeforePollingScoreInMin = 1;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -159,55 +158,26 @@ public class EBTabViewActivity extends TabViewActivity {
         manager.checkPreferenceUserAndStart();
     }
 
-    public void showScore(int value) {
-        Log.v("EBT", "Show score: " + value);
-
-        // TODO: fix the score display
-//        TextView appScore = mTabViewFragment.getView().findViewById(R.id.score_text);
-//        if (appScore != null) {
-//            appScore.setText(value + " pts");
-//        }
-    }
-
-    // Background: methods
     @Override
-    public boolean environmentCondition() {
-        if (!isNetworkAvailable()) {
-            //Log.v("EBT", "Try to write the scanning events but no network");
-            return false;
-        }
+    protected boolean onEnvironmentConditionCheck() {
+        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send),
+            new HashSet<>());
 
-        if (AppUser.getInstance().getAuthenticationType() == AppUser.AuthenticationType.NONE) {
-            //Log.v("EBT", "Try to write the scanning events but no app user");
-            return false;
-        }
-
-        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send), new HashSet<>());
         if (mPhotoQueue.isEmpty()) {
             //Log.v("EBT", "Try to write the scanning events but queue is empty");
             return false;
-        }
+        };
 
         return true;
     }
 
     @Override
-    public boolean timeCondition(long cumulatedTimeInSec) {
-
-        final int secondsByMinute = 60; // change it to debug
-        if ((cumulatedTimeInSec / secondsByMinute) < mTimeBeforePollingScoreInMin) {
-            //Log.v("EBT", "Timed condition not fulfilled: " + cumulatedTimeInSec
-            //    + " sec out of " + (mTimeBeforePollingScoreInMin * secondsByMinute));
-            return false;
-        }
-
-        //Log.v("EBT", "Timed condition fulfilled");
+    protected boolean onTimeConditionCheck() {
         return true;
     }
 
     @Override
-    public void runEnvironmentDependentActions() {
-
+    protected void onEnvironmentDependentActionRun() {
         Log.d("EBT", "Number of events to send in the queue: " + mPhotoQueue.size());
 
         String uid = AppUser.getInstance().getId();
@@ -238,8 +208,7 @@ public class EBTabViewActivity extends TabViewActivity {
 
                     Log.d("EBT", "Photo removed from the app queue: " + photoPath);
                     mPhotoQueue.remove(photoPath);
-                    mSharedPref.edit().putStringSet(getString(R.string.photos_to_send),
-                        mPhotoQueue).commit();
+                    mSharedPref.edit().putStringSet(getString(R.string.photos_to_send), mPhotoQueue).commit();
                 }
 
                 @Override
@@ -252,8 +221,18 @@ public class EBTabViewActivity extends TabViewActivity {
     }
 
     @Override
-    public void runTimesDependentActions() {
+    protected void onTimeDependentActionRun() {
         downloadScore();
+    }
+
+    public void showScore(int value) {
+        Log.v("EBT", "Show score: " + value);
+
+        // TODO: fix the score display
+//        TextView appScore = mTabViewFragment.getView().findViewById(R.id.score_text);
+//        if (appScore != null) {
+//            appScore.setText(value + " pts");
+//        }
     }
 
     private void uploadPhoto(String path) {
