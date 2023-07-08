@@ -63,7 +63,6 @@ public class EBTabViewActivity extends TabViewActivity {
     // TODO: do not use a static property here
     public static boolean scoreTransferredFromAnonymousAccount = false;
     private Set<String> mPhotoQueue;
-    final private int mDelayBeforePhotoSendingInSec = 5;  // time in s to wait between two score writing attempts
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -80,12 +79,6 @@ public class EBTabViewActivity extends TabViewActivity {
         final var mainActivityIcon = (ImageView) findViewById(
             com.android.java.androidjavatools.R.id.main_activity_icon);
         mainActivityIcon.setImageResource(R.drawable.brand_logo);
-
-        // Background: initialization
-        // TODO: fix the score display
-//        var runner = new AsyncTaskRunner(this, mDatabase, mDelayBeforePhotoSendingInSec
-//            , 0);
-//        runner.execute(String.valueOf(mDelayBeforePhotoSendingInSec));
     }
 
     @Override
@@ -160,69 +153,72 @@ public class EBTabViewActivity extends TabViewActivity {
 
     @Override
     protected boolean onEnvironmentConditionCheck() {
-        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send),
-            new HashSet<>());
+//        mPhotoQueue = mSharedPref.getStringSet(getString(R.string.photos_to_send),
+//            new HashSet<>());
+//
+//        if (mPhotoQueue.isEmpty()) {
+//            //Log.v("EBT", "Try to write the scanning events but queue is empty");
+//            return false;
+//        };
+//
+//        return true;
 
-        if (mPhotoQueue.isEmpty()) {
-            //Log.v("EBT", "Try to write the scanning events but queue is empty");
-            return false;
-        };
-
-        return true;
+        return false;
     }
 
     @Override
     protected boolean onTimeConditionCheck() {
-        return true;
+//        return true;
+        return false;
     }
 
     @Override
     protected void onEnvironmentDependentActionRun() {
-        Log.d("EBT", "Number of events to send in the queue: " + mPhotoQueue.size());
-
-        String uid = AppUser.getInstance().getId();
-
-        // Process the first event in the queue: increment the score in the database then removing the event
-        // from the queue
-        for(String photoPath: mPhotoQueue) {
-
-            var entry = new EBUserInfoDBEntry(mDatabase, uid);
-
-            entry.readScoreDBFields(new TaskCompletionManager() {
-                @Override
-                public void onSuccess() {
-
-                    // Get the date from the photo name
-                    Date photoDate = Helpers.parseTime(EBUserInfoDBEntry.scoreTimeFormat,
-                        photoPath.substring(photoPath.lastIndexOf("-") + 1));
-
-                    // Only update the score if the event date is after the DB score time
-                    if (photoDate.compareTo(entry.getScoreTime()) > 0) {
-                        // The app won't increase the score, as the photo must first be verified at the backend
-                        // server
-
-                        uploadPhoto(photoPath);
-                    } else {
-                        Log.w("EBT", "Photo older than the latest in the database: " + photoPath);
-                    }
-
-                    Log.d("EBT", "Photo removed from the app queue: " + photoPath);
-                    mPhotoQueue.remove(photoPath);
-                    mSharedPref.edit().putStringSet(getString(R.string.photos_to_send), mPhotoQueue).commit();
-                }
-
-                @Override
-                public void onFailure() {
-                }
-            });
-
-            break;
-        }
+//        Log.d("EBT", "Number of events to send in the queue: " + mPhotoQueue.size());
+//
+//        String uid = AppUser.getInstance().getId();
+//
+//        // Process the first event in the queue: increment the score in the database then removing the event
+//        // from the queue
+//        for(String photoPath: mPhotoQueue) {
+//
+//            var entry = new EBUserInfoDBEntry(mDatabase, uid);
+//
+//            entry.readScoreDBFields(new TaskCompletionManager() {
+//                @Override
+//                public void onSuccess() {
+//
+//                    // Get the date from the photo name
+//                    Date photoDate = Helpers.parseTime(EBUserInfoDBEntry.scoreTimeFormat,
+//                        photoPath.substring(photoPath.lastIndexOf("-") + 1));
+//
+//                    // Only update the score if the event date is after the DB score time
+//                    if (photoDate.compareTo(entry.getScoreTime()) > 0) {
+//                        // The app won't increase the score, as the photo must first be verified at the backend
+//                        // server
+//
+//                        uploadPhoto(photoPath);
+//                    } else {
+//                        Log.w("EBT", "Photo older than the latest in the database: " + photoPath);
+//                    }
+//
+//                    Log.d("EBT", "Photo removed from the app queue: " + photoPath);
+//                    mPhotoQueue.remove(photoPath);
+//                    mSharedPref.edit().putStringSet(getString(R.string.photos_to_send), mPhotoQueue).commit();
+//                }
+//
+//                @Override
+//                public void onFailure() {
+//                }
+//            });
+//
+//            break;
+//        }
     }
 
     @Override
     protected void onTimeDependentActionRun() {
-        downloadScore();
+//        downloadScore();
     }
 
     public void showScore(int value) {
