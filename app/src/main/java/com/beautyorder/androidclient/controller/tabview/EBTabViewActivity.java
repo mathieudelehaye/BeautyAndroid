@@ -110,40 +110,40 @@ public class EBTabViewActivity extends TabViewActivity {
         // TODO: re-enable the disabled fragments
 
         // Main
-        mNavigator.createFragment("tab", EBFragmentTabView.class);
+        mNavigator.declareFragment("tab", EBFragmentTabView.class);
 
         // Camera
 //        mNavigator.createFragment("camera", EBFragmentCamera.class);
 
         // Menu
-        mNavigator.createFragment("account", EBFragmentAccount.class);
+        mNavigator.declareFragment("account", EBFragmentAccount.class);
 //        mNavigator.createFragment("help", EBFragmentHelp.class);
 //        mNavigator.createFragment("terms", EBFragmentTerms.class);
 
         // RP search
-        mNavigator.createFragment("map", EBFragmentMap.class);
-        mNavigator.createFragment("list", EBFragmentResultList.class);
-        mNavigator.createFragment("detail", EBFragmentResultDetail.class);
-        mNavigator.createFragment("suggestion", EBFragmentSuggestion.class);
+        mNavigator.declareFragment("map", EBFragmentMap.class);
+        mNavigator.declareFragment("list", EBFragmentResultList.class);
+        mNavigator.declareFragment("detail", EBFragmentResultDetail.class);
+        mNavigator.declareFragment("suggestion", EBFragmentSuggestion.class);
 
         // Products
-        mNavigator.createFragment("products", EBFragmentProductSelection.class);
-        mNavigator.createFragment("product", EBFragmentProductDetail.class);
+        mNavigator.declareFragment("products", EBFragmentProductSelection.class);
+        mNavigator.declareFragment("product", EBFragmentProductDetail.class);
 
         // Authentication
         var manager = new EBAuthManager(this);
 
-        mNavigator.createFragment("login", EBFragmentLoginDialog.class,
+        mNavigator.declareFragment("login", EBFragmentLoginDialog.class,
             new Navigator.FragmentArgument(AuthManager.class, manager),
             new Navigator.FragmentArgument(Integer.class, R.layout.fragment_signin_dialog)
         );
 
-        mNavigator.createFragment("signup", EBFragmentSignupDialog.class,
+        mNavigator.declareFragment("signup", EBFragmentSignupDialog.class,
             new Navigator.FragmentArgument(AuthManager.class, manager),
             new Navigator.FragmentArgument(Integer.class, R.layout.fragment_signup_dialog)
         );
 
-        mNavigator.createFragment("start", EBFragmentStartDialog.class,
+        mNavigator.declareFragment("start", EBFragmentStartDialog.class,
             new Navigator.FragmentArgument(AuthManager.class, manager),
             new Navigator.FragmentArgument(Integer.class, R.layout.fragment_start_dialog)
         );
