@@ -1,12 +1,10 @@
 # BeautyAndroid
-A mobile app I built as part of a start-up collaboration.
 
-The application is written in Java and Kotlin for Android.
+A mobile application I developed as part of a start-up collaboration.
 
-It is based on a framework library I developed as well: https://github.com/mathieudelehaye/AndroidJavaTools 
+The application is built for Android using Java and Kotlin and leverages a custom framework library I developed: https://github.com/mathieudelehaye/AndroidJavaTools
 
-The following views are managed by this mobile application:
-
+This mobile application manages the following key views:
 - OpenStreetMap map view: src/main/java/com/android/java/androidjavatools/controller/tabview/result/map
 - camera: src/main/java/com/android/java/androidjavatools/controller/tabview/camera
 - onboarding screen: src/main/java/com/android/java/androidjavatools/controller/onboard
